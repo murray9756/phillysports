@@ -11,10 +11,10 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhillySports.com - Your Ultimate Philly Sports Hub</title>
-    <meta name="description" content="The ultimate destination for Philadelphia sports fans. Curated content, trivia, games, and community - all in one place.">
+    <title>PhillySports.com - Philadelphia Sports News, Scores & More</title>
+    <meta name="description" content="Your Philadelphia sports portal. Eagles, Phillies, 76ers, Flyers, and Union news, scores, schedules, and trivia.">
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --eagles-green: #004C54;
@@ -24,9 +24,12 @@
             --flyers-orange: #F74902;
             --union-gold: #B49759;
             --dark-bg: #0a0a0a;
-            --card-bg: #1a1a1a;
+            --card-bg: #151515;
+            --card-bg-hover: #1a1a1a;
+            --border-color: #252525;
             --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
+            --text-secondary: #888888;
+            --text-muted: #666666;
         }
 
         * {
@@ -39,473 +42,541 @@
             font-family: 'Montserrat', sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
+            line-height: 1.5;
         }
 
-        /* Header Navigation */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Header */
         .header {
-            position: fixed;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
             z-index: 1000;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-            background: transparent;
         }
 
-        .header.scrolled {
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 0.75rem 2rem;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .header-logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            color: var(--text-primary);
+            gap: 0.5rem;
         }
 
         .header-logo img {
-            width: 55px;
-            height: auto;
-            border-radius: 8px;
-            opacity: 0.95;
-        }
-
-        .header.scrolled .header-logo img {
-            width: 45px;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
         }
 
         .header-logo span {
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.9;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 0.4rem 0.85rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            opacity: 0.9;
-        }
-
-        .nav-menu a:hover {
-            background: rgba(255,255,255,0.1);
-            color: var(--eagles-silver);
-        }
-
-        .nav-cta {
-            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)) !important;
-            color: white !important;
-        }
-
-        .nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(232, 24, 40, 0.3);
-        }
-
-        /* Mobile menu toggle */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 0.5rem;
-            z-index: 1001;
-        }
-
-        .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: var(--text-primary);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
-
-        /* Animated gradient background */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6rem 2rem 2rem;
-            position: relative;
-            background: linear-gradient(135deg,
-                var(--eagles-green) 0%,
-                var(--dark-bg) 25%,
-                var(--dark-bg) 50%,
-                var(--phillies-red) 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, transparent 0%, var(--dark-bg) 70%);
-            pointer-events: none;
-        }
-
-        .hero-wrapper {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4rem;
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        .hero-content {
-            flex: 1;
-            max-width: 550px;
-            text-align: center;
-        }
-
-        .logo {
-            width: 180px;
-            height: auto;
-            margin-bottom: 1.5rem;
-            border-radius: 16px;
-            opacity: 0.95;
-            transition: opacity 0.3s ease;
-        }
-
-        .logo:hover {
-            opacity: 1;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, var(--text-primary), var(--eagles-silver));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero .tagline {
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-weight: 400;
-        }
-
-        .value-props {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-        }
-
-        .value-prop {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .value-prop .icon {
-            font-size: 1.5rem;
-        }
-
-        .cta-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .cta-button {
-            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
-            color: white;
-            border: none;
-            padding: 1rem 3rem;
-            font-size: 1.2rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+            font-size: 1.1rem;
+            color: var(--text-primary);
         }
 
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(232, 24, 40, 0.4);
-        }
-
-        .email-form {
+        .header-signup {
             display: flex;
+            align-items: center;
             gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 500px;
-            width: 100%;
         }
 
-        .email-input {
-            flex: 1;
-            min-width: 250px;
-            padding: 1rem 1.5rem;
-            border: 2px solid var(--eagles-silver);
-            border-radius: 50px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-size: 1rem;
+        .header-signup input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            width: 180px;
             font-family: inherit;
         }
 
-        .email-input::placeholder {
-            color: var(--text-secondary);
+        .header-signup input::placeholder {
+            color: var(--text-muted);
         }
 
-        .email-input:focus {
-            outline: none;
-            border-color: var(--eagles-green);
-            background: rgba(255,255,255,0.15);
+        .header-signup button {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
         }
 
-        /* Features Section */
-        .features {
-            padding: 5rem 2rem;
+        .header-signup button:hover {
+            opacity: 0.9;
+        }
+
+        /* Team Navigation */
+        .team-nav {
             background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .team-nav-inner {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            overflow-x: auto;
+        }
+
+        .team-tab {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .team-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .team-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--phillies-red);
+        }
+
+        .team-tab[data-team="eagles"]:hover, .team-tab[data-team="eagles"].active { border-bottom-color: var(--eagles-green); }
+        .team-tab[data-team="phillies"]:hover, .team-tab[data-team="phillies"].active { border-bottom-color: var(--phillies-red); }
+        .team-tab[data-team="sixers"]:hover, .team-tab[data-team="sixers"].active { border-bottom-color: var(--sixers-blue); }
+        .team-tab[data-team="flyers"]:hover, .team-tab[data-team="flyers"].active { border-bottom-color: var(--flyers-orange); }
+        .team-tab[data-team="union"]:hover, .team-tab[data-team="union"].active { border-bottom-color: var(--union-gold); }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 1.5rem;
+        }
+
+        /* News Feed */
+        .news-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .section-title {
-            text-align: center;
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 3rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--eagles-green), var(--sixers-blue), var(--phillies-red), var(--flyers-orange));
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            margin-bottom: 1rem;
             text-transform: uppercase;
-        }
-
-        .feature-card p {
+            letter-spacing: 0.5px;
             color: var(--text-secondary);
-            font-size: 1rem;
         }
 
-        /* Teams Section */
-        .teams {
-            padding: 5rem 2rem;
-            background: linear-gradient(180deg, var(--dark-bg), var(--card-bg));
+        .featured-article {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s;
         }
 
-        .teams-grid {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            max-width: 800px;
-            margin: 0 auto;
+        .featured-article:hover {
+            border-color: var(--text-muted);
         }
 
-        .team-badge {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
+        .featured-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--eagles-green), var(--sixers-blue));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            font-size: 0.9rem;
+        }
+
+        .featured-image span {
+            font-size: 4rem;
+        }
+
+        .featured-content {
+            padding: 1.25rem;
+        }
+
+        .article-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
             text-transform: uppercase;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            border-radius: 3px;
+            margin-bottom: 0.5rem;
         }
 
-        .team-badge:hover {
-            transform: scale(1.1);
+        .tag-eagles { background: var(--eagles-green); }
+        .tag-phillies { background: var(--phillies-red); }
+        .tag-sixers { background: var(--sixers-blue); }
+        .tag-flyers { background: var(--flyers-orange); }
+        .tag-union { background: var(--union-gold); color: #000; }
+
+        .featured-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
         }
 
-        .team-eagles { background: var(--eagles-green); }
-        .team-phillies { background: var(--phillies-red); }
-        .team-sixers { background: var(--sixers-blue); }
-        .team-flyers { background: var(--flyers-orange); }
-        .team-union { background: var(--union-gold); color: #000; }
+        .featured-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .article-meta {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Article List */
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .article-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.2s;
+        }
+
+        .article-item:hover {
+            border-color: var(--text-muted);
+        }
+
+        .article-thumb {
+            width: 100px;
+            height: 70px;
+            background: var(--border-color);
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .article-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .article-info .article-tag {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .article-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-item .article-meta {
+            margin-top: 0.25rem;
+        }
+
+        /* Podcast Section */
+        .podcast-section {
+            margin-top: 1rem;
+        }
+
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .podcast-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: border-color 0.2s;
+        }
+
+        .podcast-card:hover {
+            border-color: var(--text-muted);
+        }
+
+        .podcast-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .podcast-info h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+        }
+
+        .podcast-info p {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .widget {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .widget-header {
+            padding: 0.75rem 1rem;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .widget-header span {
+            font-size: 1rem;
+        }
+
+        .widget-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget-content {
+            padding: 0.75rem;
+        }
+
+        /* Scores Widget */
+        .score-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .score-teams {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .score-team {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .team-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-eagles { background: var(--eagles-green); }
+        .dot-phillies { background: var(--phillies-red); }
+        .dot-sixers { background: var(--sixers-blue); }
+        .dot-flyers { background: var(--flyers-orange); }
+        .dot-union { background: var(--union-gold); }
+
+        .score-result {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .score-final {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Schedule Widget */
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-date {
+            text-align: center;
+            min-width: 40px;
+        }
+
+        .schedule-day {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .schedule-month {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .schedule-info {
+            flex: 1;
+        }
+
+        .schedule-matchup {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .schedule-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .schedule-team-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
 
         /* Trivia Widget */
-        .hero-trivia {
-            flex: 1;
-            max-width: 400px;
-        }
-
         .trivia-widget {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(255,255,255,0.15);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .trivia-widget::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--eagles-green), var(--sixers-blue), var(--phillies-red), var(--flyers-orange), var(--union-gold));
+            padding: 0;
         }
 
         .trivia-header {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--dark-bg);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .trivia-icon {
-            font-size: 2rem;
+            font-size: 1rem;
         }
 
         .trivia-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
         .trivia-team-badge {
             margin-left: auto;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
         }
 
+        .trivia-body {
+            padding: 1rem;
+        }
+
         .trivia-question {
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 0.95rem;
+            font-weight: 600;
             line-height: 1.4;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
         }
 
         .trivia-options {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
+            gap: 0.5rem;
         }
 
         .trivia-option {
-            background: rgba(255,255,255,0.08);
-            border: 2px solid rgba(255,255,255,0.15);
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.6rem 0.75rem;
             color: var(--text-primary);
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 500;
             font-family: inherit;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             text-align: left;
         }
 
         .trivia-option:hover:not(:disabled) {
-            background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.3);
+            background: var(--card-bg-hover);
+            border-color: var(--text-muted);
         }
 
         .trivia-option:disabled {
@@ -513,542 +584,500 @@
         }
 
         .trivia-option.correct {
-            background: rgba(0, 76, 84, 0.4);
+            background: rgba(0, 76, 84, 0.3);
             border-color: var(--eagles-green);
             color: #4ade80;
         }
 
         .trivia-option.incorrect {
-            background: rgba(232, 24, 40, 0.3);
+            background: rgba(232, 24, 40, 0.2);
             border-color: var(--phillies-red);
             color: #f87171;
         }
 
         .trivia-result {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-weight: 700;
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
             text-align: center;
             display: none;
         }
 
         .trivia-result.show {
             display: block;
-            animation: fadeIn 0.3s ease;
         }
 
         .trivia-result.correct {
-            background: rgba(0, 76, 84, 0.3);
+            background: rgba(0, 76, 84, 0.2);
             color: #4ade80;
         }
 
         .trivia-result.incorrect {
-            background: rgba(232, 24, 40, 0.2);
+            background: rgba(232, 24, 40, 0.15);
             color: #f87171;
         }
 
         .trivia-new-btn {
-            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
-            color: white;
-            border: none;
-            padding: 0.7rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            margin-top: 1rem;
             display: none;
+            width: 100%;
+            margin-top: 0.75rem;
+            padding: 0.6rem;
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: inherit;
         }
 
         .trivia-new-btn.show {
-            display: inline-block;
-        }
-
-        .trivia-new-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(232, 24, 40, 0.3);
-        }
-
-        /* Coming Soon Section */
-        .coming-soon {
-            padding: 5rem 2rem;
-            text-align: center;
-            background: var(--card-bg);
-        }
-
-        .coming-soon h2 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 1rem;
-        }
-
-        .coming-soon p {
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-
-        .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .countdown-item {
-            text-align: center;
-        }
-
-        .countdown-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--eagles-green);
-        }
-
-        .countdown-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
+            display: block;
         }
 
         /* Footer */
-        footer {
-            padding: 3rem 2rem;
+        .footer {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
             text-align: center;
-            background: var(--dark-bg);
-            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .social-links {
+        .footer-links {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
-        .social-link {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: var(--eagles-green);
-            transform: translateY(-3px);
-        }
-
-        .footer-text {
+        .footer-links a {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            transition: color 0.2s;
         }
 
-        .footer-text a {
-            color: var(--eagles-silver);
-            text-decoration: none;
+        .footer-links a:hover {
+            color: var(--text-primary);
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 968px) {
-            .hero-wrapper {
-                flex-direction: column;
-                gap: 2.5rem;
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
             }
 
-            .hero-content {
-                max-width: 100%;
-            }
-
-            .hero-trivia {
-                max-width: 500px;
-                width: 100%;
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
         }
 
         @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
+            .header-signup {
+                display: none;
             }
 
-            .nav-menu {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 80%;
-                max-width: 300px;
-                height: 100vh;
-                background: var(--dark-bg);
-                flex-direction: column;
-                padding: 5rem 2rem 2rem;
-                gap: 0.5rem;
-                transition: right 0.3s ease;
-                box-shadow: -5px 0 30px rgba(0,0,0,0.5);
+            .mobile-menu-btn {
+                display: block;
             }
 
-            .nav-menu.active {
-                right: 0;
+            .team-nav-inner {
+                padding: 0 1rem;
             }
 
-            .nav-menu a {
+            .team-tab {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .main-container {
                 padding: 1rem;
-                font-size: 1rem;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                border-radius: 0;
             }
 
-            .nav-cta {
-                margin-top: 1rem;
-                text-align: center;
-                border-radius: 25px !important;
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-image {
+                height: 180px;
+            }
+
+            .featured-title {
+                font-size: 1.2rem;
+            }
+
+            .podcast-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .article-thumb {
+                width: 80px;
+                height: 55px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-top {
+                padding: 0.5rem 1rem;
             }
 
             .header-logo span {
                 display: none;
             }
 
-            .value-props {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .email-form {
+            .article-item {
                 flex-direction: column;
             }
 
-            .email-input {
-                min-width: auto;
+            .article-thumb {
+                width: 100%;
+                height: 120px;
             }
-
-            .team-badge {
-                width: 70px;
-                height: 70px;
-                font-size: 0.7rem;
-            }
-
-            .hero {
-                min-height: auto;
-                padding: 5rem 1.5rem 3rem;
-            }
-
-            .trivia-widget {
-                padding: 1.5rem;
-            }
-        }
-
-        /* Success/Error messages */
-        .success-message,
-        .error-message {
-            display: none;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .success-message {
-            color: var(--eagles-green);
-        }
-
-        .error-message {
-            color: var(--phillies-red);
-        }
-
-        .success-message.show,
-        .error-message.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .cta-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <!-- Header Navigation -->
-    <header class="header" id="header">
-        <a href="#home" class="header-logo">
-            <img src="logo.png" alt="PhillySports.com">
-            <span>PhillySports</span>
-        </a>
-        <nav class="nav-menu" id="navMenu">
-            <a href="#features">Features</a>
-            <a href="#teams">Teams</a>
-            <a href="#trivia">Trivia</a>
-            <a href="#community">Community</a>
-            <a href="#deals">Deals</a>
-            <a href="#home" class="nav-cta">Join Now</a>
-        </nav>
-        <div class="menu-toggle" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="logo.png" alt="PhillySports.com">
+                <span>PhillySports</span>
+            </a>
+            <form class="header-signup" id="signupForm">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+            <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
         </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <div class="team-tab active" data-team="all">All Teams</div>
+                <div class="team-tab" data-team="eagles">Eagles</div>
+                <div class="team-tab" data-team="phillies">Phillies</div>
+                <div class="team-tab" data-team="sixers">76ers</div>
+                <div class="team-tab" data-team="flyers">Flyers</div>
+                <div class="team-tab" data-team="union">Union</div>
+            </div>
+        </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-wrapper">
-            <div class="hero-content">
-                <img src="logo.png" alt="PhillySports.com Logo" class="logo">
-                <h1>PhillySports.com</h1>
-                <p class="tagline">Your Ultimate Philadelphia Sports Hub</p>
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- News Feed -->
+        <div class="news-section">
+            <div class="section-header">
+                <h2 class="section-title">Latest News</h2>
+            </div>
 
-                <div class="value-props">
-                    <div class="value-prop">
-                        <span class="icon">&#9201;</span>
-                        <span>Save Time</span>
-                    </div>
-                    <div class="value-prop">
-                        <span class="icon">&#128176;</span>
-                        <span>Save Money</span>
-                    </div>
-                    <div class="value-prop">
-                        <span class="icon">&#127918;</span>
-                        <span>Have Fun</span>
-                    </div>
+            <!-- Featured Article -->
+            <article class="featured-article">
+                <div class="featured-image">
+                    <span>&#127944;</span>
                 </div>
+                <div class="featured-content">
+                    <span class="article-tag tag-eagles">Eagles</span>
+                    <h3 class="featured-title">Eagles Prepare for Playoff Push as NFC Race Heats Up</h3>
+                    <p class="featured-excerpt">With the postseason in sight, the Birds are gearing up for what could be another memorable January run. Here's everything you need to know about their playoff positioning.</p>
+                    <div class="article-meta">2 hours ago</div>
+                </div>
+            </article>
 
-                <div class="cta-container">
-                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Be the first to know when we launch!</p>
-                    <form class="email-form" id="signupForm">
-                        <input type="email" class="email-input" placeholder="Enter your email" required>
-                        <button type="submit" class="cta-button">Join the Team</button>
-                    </form>
-                    <p class="success-message" id="successMessage">You're on the list! Welcome to the team.</p>
-                    <p class="error-message" id="errorMessage">Something went wrong. Please try again.</p>
+            <!-- Article List -->
+            <div class="article-list">
+                <article class="article-item">
+                    <div class="article-thumb" style="background: var(--phillies-red);">&#9918;</div>
+                    <div class="article-info">
+                        <span class="article-tag tag-phillies">Phillies</span>
+                        <h4 class="article-title">Phillies Spring Training: Top Prospects to Watch in 2025</h4>
+                        <div class="article-meta">4 hours ago</div>
+                    </div>
+                </article>
+
+                <article class="article-item">
+                    <div class="article-thumb" style="background: var(--sixers-blue);">&#127936;</div>
+                    <div class="article-info">
+                        <span class="article-tag tag-sixers">76ers</span>
+                        <h4 class="article-title">Sixers Trade Rumors: What the Latest Reports Mean for the Roster</h4>
+                        <div class="article-meta">5 hours ago</div>
+                    </div>
+                </article>
+
+                <article class="article-item">
+                    <div class="article-thumb" style="background: var(--flyers-orange);">&#127954;</div>
+                    <div class="article-info">
+                        <span class="article-tag tag-flyers">Flyers</span>
+                        <h4 class="article-title">Flyers Prospect Update: The Future is Bright in Orange</h4>
+                        <div class="article-meta">6 hours ago</div>
+                    </div>
+                </article>
+
+                <article class="article-item">
+                    <div class="article-thumb" style="background: var(--union-gold);">&#9917;</div>
+                    <div class="article-info">
+                        <span class="article-tag tag-union">Union</span>
+                        <h4 class="article-title">Union Season Preview: Can They Repeat as Shield Winners?</h4>
+                        <div class="article-meta">8 hours ago</div>
+                    </div>
+                </article>
+
+                <article class="article-item">
+                    <div class="article-thumb" style="background: var(--eagles-green);">&#127944;</div>
+                    <div class="article-info">
+                        <span class="article-tag tag-eagles">Eagles</span>
+                        <h4 class="article-title">Jalen Hurts Injury Update: What We Know So Far</h4>
+                        <div class="article-meta">10 hours ago</div>
+                    </div>
+                </article>
+
+                <article class="article-item">
+                    <div class="article-thumb" style="background: var(--phillies-red);">&#9918;</div>
+                    <div class="article-info">
+                        <span class="article-tag tag-phillies">Phillies</span>
+                        <h4 class="article-title">Bryce Harper Named NL MVP Finalist for Third Time</h4>
+                        <div class="article-meta">12 hours ago</div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Podcasts Section -->
+            <section class="podcast-section">
+                <div class="section-header">
+                    <h2 class="section-title">Podcasts & Shows</h2>
+                </div>
+                <div class="podcast-grid">
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon" style="background: var(--eagles-green);">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>Bleeding Green Nation</h4>
+                            <p>Eagles coverage</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon" style="background: var(--phillies-red);">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>The Phillies Show</h4>
+                            <p>Daily Phillies talk</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon" style="background: var(--sixers-blue);">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>Rights to Ricky Sanchez</h4>
+                            <p>Sixers podcast</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon" style="background: var(--flyers-orange);">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>Broad Street Hockey</h4>
+                            <p>Flyers coverage</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon">&#128251;</div>
+                        <div class="podcast-info">
+                            <h4>WIP Sports Radio</h4>
+                            <p>Philly sports talk</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon">&#127909;</div>
+                        <div class="podcast-info">
+                            <h4>NBC Sports Philly</h4>
+                            <p>Video highlights</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Scores Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127942;</span>
+                    <h3 class="widget-title">Recent Scores</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="score-item">
+                        <div class="score-teams">
+                            <div class="score-team"><span class="team-dot dot-eagles"></span> Eagles</div>
+                            <div class="score-team"><span class="team-dot" style="background:#203731;"></span> Packers</div>
+                        </div>
+                        <div class="score-result">
+                            <span>34</span>
+                            <span>29</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-teams">
+                            <div class="score-team"><span class="team-dot dot-phillies"></span> Phillies</div>
+                            <div class="score-team"><span class="team-dot" style="background:#002D72;"></span> Mets</div>
+                        </div>
+                        <div class="score-result">
+                            <span>6</span>
+                            <span>3</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-teams">
+                            <div class="score-team"><span class="team-dot dot-sixers"></span> 76ers</div>
+                            <div class="score-team"><span class="team-dot" style="background:#CE1141;"></span> Heat</div>
+                        </div>
+                        <div class="score-result">
+                            <span>112</span>
+                            <span>98</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-teams">
+                            <div class="score-team"><span class="team-dot dot-flyers"></span> Flyers</div>
+                            <div class="score-team"><span class="team-dot" style="background:#C8102E;"></span> Devils</div>
+                        </div>
+                        <div class="score-result">
+                            <span>4</span>
+                            <span>2</span>
+                        </div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-teams">
+                            <div class="score-team"><span class="team-dot dot-union"></span> Union</div>
+                            <div class="score-team"><span class="team-dot" style="background:#80000A;"></span> Atlanta</div>
+                        </div>
+                        <div class="score-result">
+                            <span>2</span>
+                            <span>1</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="hero-trivia" id="trivia">
-                <div class="trivia-widget">
-                    <div class="trivia-header">
-                        <span class="trivia-icon">&#129504;</span>
-                        <span class="trivia-label">Philly Trivia</span>
-                        <span class="trivia-team-badge" id="triviaBadge">Eagles</span>
-                    </div>
+            <!-- Trivia Widget -->
+            <div class="widget trivia-widget">
+                <div class="trivia-header">
+                    <span class="trivia-icon">&#129504;</span>
+                    <span class="trivia-label">Philly Trivia</span>
+                    <span class="trivia-team-badge" id="triviaBadge">Eagles</span>
+                </div>
+                <div class="trivia-body">
                     <p class="trivia-question" id="triviaQuestion">Loading question...</p>
                     <div class="trivia-options" id="triviaOptions"></div>
                     <div class="trivia-result" id="triviaResult"></div>
                     <button class="trivia-new-btn" id="triviaNewBtn">Next Question</button>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2 class="section-title">Everything Philly Sports</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">&#128240;</div>
-                <h3>Curated Content</h3>
-                <p>The best podcasts, articles, videos, and hot takes from across the Philly sports universe - all in one place. Community-voted so you see what matters most.</p>
+            <!-- Schedule Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128197;</span>
+                    <h3 class="widget-title">Upcoming Games</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="schedule-item">
+                        <div class="schedule-date">
+                            <div class="schedule-day">12</div>
+                            <div class="schedule-month">Jan</div>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="schedule-matchup"><span class="schedule-team-dot dot-eagles"></span> Eagles vs Cowboys</div>
+                            <div class="schedule-time">Sun 4:25 PM - FOX</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-date">
+                            <div class="schedule-day">13</div>
+                            <div class="schedule-month">Jan</div>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="schedule-matchup"><span class="schedule-team-dot dot-sixers"></span> 76ers @ Celtics</div>
+                            <div class="schedule-time">Mon 7:30 PM - ESPN</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-date">
+                            <div class="schedule-day">14</div>
+                            <div class="schedule-month">Jan</div>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="schedule-matchup"><span class="schedule-team-dot dot-flyers"></span> Flyers vs Rangers</div>
+                            <div class="schedule-time">Tue 7:00 PM - NBCSP</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-date">
+                            <div class="schedule-day">15</div>
+                            <div class="schedule-month">Jan</div>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="schedule-matchup"><span class="schedule-team-dot dot-sixers"></span> 76ers vs Knicks</div>
+                            <div class="schedule-time">Wed 7:00 PM - NBCSP</div>
+                        </div>
+                    </div>
+                    <div class="schedule-item">
+                        <div class="schedule-date">
+                            <div class="schedule-day">18</div>
+                            <div class="schedule-month">Jan</div>
+                        </div>
+                        <div class="schedule-info">
+                            <div class="schedule-matchup"><span class="schedule-team-dot dot-flyers"></span> Flyers @ Penguins</div>
+                            <div class="schedule-time">Sat 1:00 PM - ABC</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">&#129504;</div>
-                <h3>Trivia & Games</h3>
-                <p>Test your Philly sports knowledge with daily trivia, compete head-to-head with other fans, and climb the leaderboards for prizes and bragging rights.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">&#127944;</div>
-                <h3>Pick 'Em & Pools</h3>
-                <p>Run your block pools, pick 'em leagues, and fantasy games with ease. Auto-scoring, leaderboards, and money management built right in.</p>
-            </div>
-            <div class="feature-card" id="community">
-                <div class="feature-icon">&#128101;</div>
-                <h3>Community</h3>
-                <p>Connect with fellow Philly fans, chat during games, organize watch parties, and feel like you're part of something bigger than just watching sports.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">&#127915;</div>
-                <h3>E-Sports</h3>
-                <p>Gaming tournaments, Fortnite leagues, and competitive gaming for the next generation of Philly fans. Because winning is in our blood.</p>
-            </div>
-            <div class="feature-card" id="deals">
-                <div class="feature-icon">&#128722;</div>
-                <h3>Exclusive Deals</h3>
-                <p>Group buying power for jerseys, tickets, and gear. Access to wholesale prices and face-value tickets for premium members.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Teams Section -->
-    <section class="teams" id="teams">
-        <h2 class="section-title">All Your Teams</h2>
-        <div class="teams-grid">
-            <div class="team-badge team-eagles">Eagles</div>
-            <div class="team-badge team-phillies">Phillies</div>
-            <div class="team-badge team-sixers">76ers</div>
-            <div class="team-badge team-flyers">Flyers</div>
-            <div class="team-badge team-union">Union</div>
-        </div>
-    </section>
-
-    <!-- Coming Soon Section -->
-    <section class="coming-soon">
-        <h2>Launching Soon</h2>
-        <p>We're putting the finishing touches on your new Philly sports home. Sign up above to get early access and exclusive launch perks.</p>
-        <div class="countdown" id="countdown">
-            <div class="countdown-item">
-                <div class="countdown-number" id="days">--</div>
-                <div class="countdown-label">Days</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="hours">--</div>
-                <div class="countdown-label">Hours</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="minutes">--</div>
-                <div class="countdown-label">Minutes</div>
-            </div>
-            <div class="countdown-item">
-                <div class="countdown-number" id="seconds">--</div>
-                <div class="countdown-label">Seconds</div>
-            </div>
-        </div>
-    </section>
+        </aside>
+    </main>
 
     <!-- Footer -->
-    <footer>
-        <div class="social-links">
-            <a href="https://twitter.com/phillysports" class="social-link" aria-label="Twitter">&#120143;</a>
-            <a href="#" class="social-link" aria-label="Instagram">&#128247;</a>
-            <a href="#" class="social-link" aria-label="Facebook">&#102;</a>
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
         </div>
-        <p class="footer-text">
-            &copy; 2024 PhillySports.com | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-        </p>
-        <p class="footer-text" style="margin-top: 0.5rem;">
-            Made with &#10084; in Philadelphia
-        </p>
+        <p class="footer-copy">&copy; 2025 PhillySports.com - Made with love in Philadelphia</p>
     </footer>
 
     <script>
+        // Team tab switching
+        const teamTabs = document.querySelectorAll('.team-tab');
+        teamTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                teamTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
         // Email signup form
-        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const emailInput = this.querySelector('.email-input');
-            const submitBtn = this.querySelector('.cta-button');
-            const email = emailInput.value;
-            const successMsg = document.getElementById('successMessage');
-            const errorMsg = document.getElementById('errorMessage');
-
-            // Reset messages
-            successMsg.classList.remove('show');
-            errorMsg.classList.remove('show');
-
-            // Disable button during submission
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Joining...';
-
-            try {
-                const response = await fetch('subscribe.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    successMsg.classList.add('show');
-                    emailInput.value = '';
-                } else {
-                    errorMsg.textContent = result.message || 'Something went wrong. Please try again.';
-                    errorMsg.classList.add('show');
-                }
-            } catch (error) {
-                console.error('Signup error:', error);
-                errorMsg.textContent = 'Unable to connect. Please try again later.';
-                errorMsg.classList.add('show');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Join the Team';
-            }
-        });
-
-        // Countdown timer (set to 30 days from now for demo)
-        function updateCountdown() {
-            const launchDate = new Date();
-            launchDate.setDate(launchDate.getDate() + 30);
-
-            const now = new Date();
-            const diff = launchDate - now;
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
-
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        // Header scroll effect
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Mobile menu toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const navMenu = document.getElementById('navMenu');
-
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking a link
-        navMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-
-        // Smooth scroll for anchor links with header offset
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const target = document.querySelector(targetId);
-                if (target) {
-                    const headerHeight = header.offsetHeight;
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+            alert('Thanks for subscribing! Welcome to the team.');
+            this.reset();
         });
 
         // Philly Sports Trivia - Multiple Choice
@@ -1135,12 +1164,10 @@
             document.getElementById('triviaBadge').textContent = currentTrivia.team;
             document.getElementById('triviaBadge').style.background = currentTrivia.color;
 
-            // Create shuffled options while tracking correct answer
             const correctAnswer = currentTrivia.options[currentTrivia.correct];
             const shuffledOptions = shuffleArray(currentTrivia.options);
             const newCorrectIndex = shuffledOptions.indexOf(correctAnswer);
 
-            // Generate option buttons
             const optionsContainer = document.getElementById('triviaOptions');
             optionsContainer.innerHTML = '';
 
@@ -1154,7 +1181,6 @@
                 optionsContainer.appendChild(button);
             });
 
-            // Reset state
             document.getElementById('triviaResult').className = 'trivia-result';
             document.getElementById('triviaResult').textContent = '';
             document.getElementById('triviaNewBtn').classList.remove('show');
@@ -1165,7 +1191,6 @@
             const isCorrect = selectedButton.dataset.correct === 'true';
             const allButtons = document.querySelectorAll('.trivia-option');
 
-            // Disable all buttons
             allButtons.forEach(btn => {
                 btn.disabled = true;
                 if (btn.dataset.correct === 'true') {
@@ -1173,22 +1198,19 @@
                 }
             });
 
-            // Mark selected as incorrect if wrong
             if (!isCorrect) {
                 selectedButton.classList.add('incorrect');
             }
 
-            // Show result message
             const resultDiv = document.getElementById('triviaResult');
             if (isCorrect) {
-                resultDiv.textContent = 'Correct! Nice job!';
+                resultDiv.textContent = 'Correct!';
                 resultDiv.className = 'trivia-result show correct';
             } else {
-                resultDiv.textContent = 'Not quite! The correct answer is highlighted.';
+                resultDiv.textContent = 'Not quite!';
                 resultDiv.className = 'trivia-result show incorrect';
             }
 
-            // Show next question button
             document.getElementById('triviaNewBtn').classList.add('show');
         }
 
