@@ -160,11 +160,9 @@
         .hero {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 2rem;
+            padding: 6rem 2rem 2rem;
             position: relative;
             background: linear-gradient(135deg,
                 var(--eagles-green) 0%,
@@ -192,10 +190,21 @@
             pointer-events: none;
         }
 
-        .hero-content {
+        .hero-wrapper {
             position: relative;
             z-index: 1;
-            max-width: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 550px;
+            text-align: center;
         }
 
         .logo {
@@ -414,20 +423,19 @@
         .team-union { background: var(--union-gold); color: #000; }
 
         /* Trivia Widget */
-        .trivia-section {
-            padding: 5rem 2rem;
-            background: var(--dark-bg);
+        .hero-trivia {
+            flex: 1;
+            max-width: 400px;
         }
 
         .trivia-widget {
-            max-width: 600px;
-            margin: 0 auto;
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 2.5rem;
-            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.15);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         .trivia-widget::before {
@@ -469,10 +477,10 @@
         }
 
         .trivia-question {
-            font-size: 1.4rem;
+            font-size: 1.15rem;
             font-weight: 700;
             line-height: 1.4;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .trivia-answer-container {
@@ -629,6 +637,22 @@
         }
 
         /* Mobile Adjustments */
+        @media (max-width: 968px) {
+            .hero-wrapper {
+                flex-direction: column;
+                gap: 2.5rem;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-trivia {
+                max-width: 500px;
+                width: 100%;
+            }
+        }
+
         @media (max-width: 768px) {
             .menu-toggle {
                 display: flex;
@@ -687,6 +711,15 @@
                 width: 70px;
                 height: 70px;
                 font-size: 0.7rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 5rem 1.5rem 3rem;
+            }
+
+            .trivia-widget {
+                padding: 1.5rem;
             }
         }
 
@@ -748,34 +781,52 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="hero-content">
-            <img src="logo.png" alt="PhillySports.com Logo" class="logo">
-            <h1>PhillySports.com</h1>
-            <p class="tagline">Your Ultimate Philadelphia Sports Hub</p>
+        <div class="hero-wrapper">
+            <div class="hero-content">
+                <img src="logo.png" alt="PhillySports.com Logo" class="logo">
+                <h1>PhillySports.com</h1>
+                <p class="tagline">Your Ultimate Philadelphia Sports Hub</p>
 
-            <div class="value-props">
-                <div class="value-prop">
-                    <span class="icon">&#9201;</span>
-                    <span>Save Time</span>
+                <div class="value-props">
+                    <div class="value-prop">
+                        <span class="icon">&#9201;</span>
+                        <span>Save Time</span>
+                    </div>
+                    <div class="value-prop">
+                        <span class="icon">&#128176;</span>
+                        <span>Save Money</span>
+                    </div>
+                    <div class="value-prop">
+                        <span class="icon">&#127918;</span>
+                        <span>Have Fun</span>
+                    </div>
                 </div>
-                <div class="value-prop">
-                    <span class="icon">&#128176;</span>
-                    <span>Save Money</span>
-                </div>
-                <div class="value-prop">
-                    <span class="icon">&#127918;</span>
-                    <span>Have Fun</span>
+
+                <div class="cta-container">
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Be the first to know when we launch!</p>
+                    <form class="email-form" id="signupForm">
+                        <input type="email" class="email-input" placeholder="Enter your email" required>
+                        <button type="submit" class="cta-button">Join the Team</button>
+                    </form>
+                    <p class="success-message" id="successMessage">You're on the list! Welcome to the team.</p>
+                    <p class="error-message" id="errorMessage">Something went wrong. Please try again.</p>
                 </div>
             </div>
 
-            <div class="cta-container">
-                <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Be the first to know when we launch!</p>
-                <form class="email-form" id="signupForm">
-                    <input type="email" class="email-input" placeholder="Enter your email" required>
-                    <button type="submit" class="cta-button">Join the Team</button>
-                </form>
-                <p class="success-message" id="successMessage">You're on the list! Welcome to the team.</p>
-                <p class="error-message" id="errorMessage">Something went wrong. Please try again.</p>
+            <div class="hero-trivia" id="trivia">
+                <div class="trivia-widget">
+                    <div class="trivia-header">
+                        <span class="trivia-icon">&#129504;</span>
+                        <span class="trivia-label">Philly Trivia</span>
+                        <span class="trivia-team-badge" id="triviaBadge">Eagles</span>
+                    </div>
+                    <p class="trivia-question" id="triviaQuestion">Loading question...</p>
+                    <div class="trivia-answer-container">
+                        <button class="trivia-reveal-btn" id="triviaRevealBtn">Reveal Answer</button>
+                        <p class="trivia-answer" id="triviaAnswer"></p>
+                        <button class="trivia-new-btn" id="triviaNewBtn">Next Question</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -826,24 +877,6 @@
             <div class="team-badge team-sixers">76ers</div>
             <div class="team-badge team-flyers">Flyers</div>
             <div class="team-badge team-union">Union</div>
-        </div>
-    </section>
-
-    <!-- Trivia Section -->
-    <section class="trivia-section" id="trivia">
-        <h2 class="section-title">Test Your Knowledge</h2>
-        <div class="trivia-widget">
-            <div class="trivia-header">
-                <span class="trivia-icon">&#129504;</span>
-                <span class="trivia-label">Philly Sports Trivia</span>
-                <span class="trivia-team-badge" id="triviaBadge">Eagles</span>
-            </div>
-            <p class="trivia-question" id="triviaQuestion">Loading question...</p>
-            <div class="trivia-answer-container">
-                <button class="trivia-reveal-btn" id="triviaRevealBtn">Reveal Answer</button>
-                <p class="trivia-answer" id="triviaAnswer"></p>
-                <button class="trivia-new-btn" id="triviaNewBtn">Next Question</button>
-            </div>
         </div>
     </section>
 
