@@ -765,8 +765,8 @@
                 <img src="logo.png" alt="PhillySports.com">
                 <span>PhillySports</span>
             </a>
-            <form class="header-signup" id="signupForm">
-                <input type="email" placeholder="Enter your email" required>
+            <form class="header-signup" id="signupForm" action="https://embeds.beehiiv.com/51eefbfb-8a77-4569-baa2-40ca11d0a0c2" method="POST" target="_blank">
+                <input type="email" name="email" placeholder="Enter your email" required>
                 <button type="submit">Subscribe</button>
             </form>
             <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
@@ -1073,12 +1073,7 @@
             });
         });
 
-        // Email signup form
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thanks for subscribing! Welcome to the team.');
-            this.reset();
-        });
+        // Email signup form - now handled by Beehiiv
 
         // Philly Sports Trivia - Multiple Choice
         const triviaQuestions = [
