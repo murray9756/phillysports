@@ -164,14 +164,20 @@
         .team-tab[data-team="flyers"]:hover, .team-tab[data-team="flyers"].active { border-bottom-color: var(--flyers-orange); }
         .team-tab[data-team="union"]:hover, .team-tab[data-team="union"].active { border-bottom-color: var(--union-gold); }
 
-        /* Main Layout */
+        /* Main Layout - 3 Column */
         .main-container {
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             padding: 1.5rem;
             display: grid;
-            grid-template-columns: 1fr 350px;
+            grid-template-columns: 280px 1fr 300px;
             gap: 1.5rem;
+        }
+
+        .left-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         /* News Feed */
@@ -754,7 +760,17 @@
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 280px;
+            }
+
+            .left-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
             .main-container {
                 grid-template-columns: 1fr;
             }
@@ -858,7 +874,70 @@
 
     <!-- Main Content -->
     <main class="main-container">
-        <!-- News Feed -->
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <!-- Scores Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127942;</span>
+                    <h3 class="widget-title">Recent Scores</h3>
+                </div>
+                <div class="widget-content" id="scoresContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
+                </div>
+            </div>
+
+            <!-- Schedule Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128197;</span>
+                    <h3 class="widget-title">Upcoming Games</h3>
+                </div>
+                <div class="widget-content" id="scheduleContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
+                </div>
+            </div>
+
+            <!-- Podcasts Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127911;</span>
+                    <h3 class="widget-title">Podcasts</h3>
+                </div>
+                <div class="widget-content" style="padding:0.5rem;">
+                    <a href="#" class="podcast-card" style="margin-bottom:0.5rem;">
+                        <div class="podcast-icon" style="background: var(--eagles-green);width:40px;height:40px;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>Bleeding Green Nation</h4>
+                            <p>Eagles coverage</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card" style="margin-bottom:0.5rem;">
+                        <div class="podcast-icon" style="background: var(--phillies-red);width:40px;height:40px;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>The Phillies Show</h4>
+                            <p>Daily Phillies talk</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card" style="margin-bottom:0.5rem;">
+                        <div class="podcast-icon" style="background: var(--sixers-blue);width:40px;height:40px;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>Rights to Ricky Sanchez</h4>
+                            <p>Sixers podcast</p>
+                        </div>
+                    </a>
+                    <a href="#" class="podcast-card">
+                        <div class="podcast-icon" style="background: var(--flyers-orange);width:40px;height:40px;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>Broad Street Hockey</h4>
+                            <p>Flyers coverage</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- News Feed (Center) -->
         <div class="news-section">
             <div class="section-header">
                 <h2 class="section-title">Latest News</h2>
@@ -882,60 +961,9 @@
             <div class="article-list" id="articleList">
                 <div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading news...</div>
             </div>
-
-            <!-- Podcasts Section -->
-            <section class="podcast-section">
-                <div class="section-header">
-                    <h2 class="section-title">Podcasts & Shows</h2>
-                </div>
-                <div class="podcast-grid">
-                    <a href="#" class="podcast-card">
-                        <div class="podcast-icon" style="background: var(--eagles-green);">&#127911;</div>
-                        <div class="podcast-info">
-                            <h4>Bleeding Green Nation</h4>
-                            <p>Eagles coverage</p>
-                        </div>
-                    </a>
-                    <a href="#" class="podcast-card">
-                        <div class="podcast-icon" style="background: var(--phillies-red);">&#127911;</div>
-                        <div class="podcast-info">
-                            <h4>The Phillies Show</h4>
-                            <p>Daily Phillies talk</p>
-                        </div>
-                    </a>
-                    <a href="#" class="podcast-card">
-                        <div class="podcast-icon" style="background: var(--sixers-blue);">&#127911;</div>
-                        <div class="podcast-info">
-                            <h4>Rights to Ricky Sanchez</h4>
-                            <p>Sixers podcast</p>
-                        </div>
-                    </a>
-                    <a href="#" class="podcast-card">
-                        <div class="podcast-icon" style="background: var(--flyers-orange);">&#127911;</div>
-                        <div class="podcast-info">
-                            <h4>Broad Street Hockey</h4>
-                            <p>Flyers coverage</p>
-                        </div>
-                    </a>
-                    <a href="#" class="podcast-card">
-                        <div class="podcast-icon">&#128251;</div>
-                        <div class="podcast-info">
-                            <h4>WIP Sports Radio</h4>
-                            <p>Philly sports talk</p>
-                        </div>
-                    </a>
-                    <a href="#" class="podcast-card">
-                        <div class="podcast-icon">&#127909;</div>
-                        <div class="podcast-info">
-                            <h4>NBC Sports Philly</h4>
-                            <p>Video highlights</p>
-                        </div>
-                    </a>
-                </div>
-            </section>
         </div>
 
-        <!-- Sidebar -->
+        <!-- Right Sidebar -->
         <aside class="sidebar">
             <!-- Newsletter Widget -->
             <div class="widget newsletter-widget">
@@ -948,17 +976,6 @@
                         <button type="submit">Subscribe Free</button>
                     </form>
                     <p class="newsletter-note">Join 1,000+ Philly fans. Unsubscribe anytime.</p>
-                </div>
-            </div>
-
-            <!-- Scores Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#127942;</span>
-                    <h3 class="widget-title">Recent Scores</h3>
-                </div>
-                <div class="widget-content" id="scoresContainer">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
                 </div>
             </div>
 
@@ -977,14 +994,28 @@
                 </div>
             </div>
 
-            <!-- Schedule Widget -->
+            <!-- Quick Links -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#128197;</span>
-                    <h3 class="widget-title">Upcoming Games</h3>
+                    <span>&#128279;</span>
+                    <h3 class="widget-title">Quick Links</h3>
                 </div>
-                <div class="widget-content" id="scheduleContainer">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
+                <div class="widget-content" style="padding:0.75rem;">
+                    <a href="https://www.philadelphiaeagles.com" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span class="team-dot dot-eagles"></span> Eagles Official
+                    </a>
+                    <a href="https://www.mlb.com/phillies" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span class="team-dot dot-phillies"></span> Phillies Official
+                    </a>
+                    <a href="https://www.nba.com/sixers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span class="team-dot dot-sixers"></span> 76ers Official
+                    </a>
+                    <a href="https://www.nhl.com/flyers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span class="team-dot dot-flyers"></span> Flyers Official
+                    </a>
+                    <a href="https://www.philadelphiaunion.com" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">
+                        <span class="team-dot dot-union"></span> Union Official
+                    </a>
                 </div>
             </div>
         </aside>
