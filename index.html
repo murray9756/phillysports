@@ -865,73 +865,22 @@
             </div>
 
             <!-- Featured Article -->
-            <article class="featured-article">
-                <div class="featured-image">
-                    <span>&#127944;</span>
+            <div id="featuredArticle">
+                <div class="featured-article">
+                    <div class="featured-image">
+                        <span>&#128240;</span>
+                    </div>
+                    <div class="featured-content">
+                        <span class="article-tag tag-eagles">Loading</span>
+                        <h3 class="featured-title">Loading latest news...</h3>
+                        <p class="featured-excerpt">Fetching the latest Philly sports stories...</p>
+                    </div>
                 </div>
-                <div class="featured-content">
-                    <span class="article-tag tag-eagles">Eagles</span>
-                    <h3 class="featured-title">Eagles Prepare for Playoff Push as NFC Race Heats Up</h3>
-                    <p class="featured-excerpt">With the postseason in sight, the Birds are gearing up for what could be another memorable January run. Here's everything you need to know about their playoff positioning.</p>
-                    <div class="article-meta">2 hours ago</div>
-                </div>
-            </article>
+            </div>
 
             <!-- Article List -->
-            <div class="article-list">
-                <article class="article-item">
-                    <div class="article-thumb" style="background: var(--phillies-red);">&#9918;</div>
-                    <div class="article-info">
-                        <span class="article-tag tag-phillies">Phillies</span>
-                        <h4 class="article-title">Phillies Spring Training: Top Prospects to Watch in 2025</h4>
-                        <div class="article-meta">4 hours ago</div>
-                    </div>
-                </article>
-
-                <article class="article-item">
-                    <div class="article-thumb" style="background: var(--sixers-blue);">&#127936;</div>
-                    <div class="article-info">
-                        <span class="article-tag tag-sixers">76ers</span>
-                        <h4 class="article-title">Sixers Trade Rumors: What the Latest Reports Mean for the Roster</h4>
-                        <div class="article-meta">5 hours ago</div>
-                    </div>
-                </article>
-
-                <article class="article-item">
-                    <div class="article-thumb" style="background: var(--flyers-orange);">&#127954;</div>
-                    <div class="article-info">
-                        <span class="article-tag tag-flyers">Flyers</span>
-                        <h4 class="article-title">Flyers Prospect Update: The Future is Bright in Orange</h4>
-                        <div class="article-meta">6 hours ago</div>
-                    </div>
-                </article>
-
-                <article class="article-item">
-                    <div class="article-thumb" style="background: var(--union-gold);">&#9917;</div>
-                    <div class="article-info">
-                        <span class="article-tag tag-union">Union</span>
-                        <h4 class="article-title">Union Season Preview: Can They Repeat as Shield Winners?</h4>
-                        <div class="article-meta">8 hours ago</div>
-                    </div>
-                </article>
-
-                <article class="article-item">
-                    <div class="article-thumb" style="background: var(--eagles-green);">&#127944;</div>
-                    <div class="article-info">
-                        <span class="article-tag tag-eagles">Eagles</span>
-                        <h4 class="article-title">Jalen Hurts Injury Update: What We Know So Far</h4>
-                        <div class="article-meta">10 hours ago</div>
-                    </div>
-                </article>
-
-                <article class="article-item">
-                    <div class="article-thumb" style="background: var(--phillies-red);">&#9918;</div>
-                    <div class="article-info">
-                        <span class="article-tag tag-phillies">Phillies</span>
-                        <h4 class="article-title">Bryce Harper Named NL MVP Finalist for Third Time</h4>
-                        <div class="article-meta">12 hours ago</div>
-                    </div>
-                </article>
+            <div class="article-list" id="articleList">
+                <div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading news...</div>
             </div>
 
             <!-- Podcasts Section -->
@@ -1297,13 +1246,103 @@
             }
         }
 
+        // Fetch and render news
+        function timeAgo(dateString) {
+            const now = new Date();
+            const date = new Date(dateString);
+            const seconds = Math.floor((now - date) / 1000);
+
+            if (seconds < 60) return 'Just now';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            const days = Math.floor(hours / 24);
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        }
+
+        const sportEmoji = {
+            'Eagles': '&#127944;',
+            '76ers': '&#127936;',
+            'Phillies': '&#9918;',
+            'Flyers': '&#127954;',
+            'Union': '&#9917;'
+        };
+
+        async function loadNews() {
+            const featuredContainer = document.getElementById('featuredArticle');
+            const listContainer = document.getElementById('articleList');
+
+            try {
+                const response = await fetch('/api/news');
+                const data = await response.json();
+
+                if (data.featured) {
+                    const featured = data.featured;
+                    const imageStyle = featured.image
+                        ? `background-image:url('${featured.image}');background-size:cover;background-position:center;`
+                        : `background:${featured.teamColor};`;
+                    featuredContainer.innerHTML = `
+                        <a href="${featured.link}" target="_blank" class="featured-article">
+                            <div class="featured-image" style="${imageStyle}">
+                                ${!featured.image ? sportEmoji[featured.team] || '&#128240;' : ''}
+                            </div>
+                            <div class="featured-content">
+                                <span class="article-tag ${featured.tagClass}">${featured.team}</span>
+                                <h3 class="featured-title">${featured.headline}</h3>
+                                <p class="featured-excerpt">${featured.description}</p>
+                                <div class="article-meta">${timeAgo(featured.published)}</div>
+                            </div>
+                        </a>
+                    `;
+                }
+
+                if (data.articles && data.articles.length > 1) {
+                    const otherArticles = data.articles.slice(1);
+                    listContainer.innerHTML = otherArticles.map(article => {
+                        const thumbStyle = article.image
+                            ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
+                            : `background:${article.teamColor};`;
+                        return `
+                            <a href="${article.link}" target="_blank" class="article-item">
+                                <div class="article-thumb" style="${thumbStyle}">
+                                    ${!article.image ? sportEmoji[article.team] || '&#128240;' : ''}
+                                </div>
+                                <div class="article-info">
+                                    <span class="article-tag ${article.tagClass}">${article.team}</span>
+                                    <h4 class="article-title">${article.headline}</h4>
+                                    <div class="article-meta">${timeAgo(article.published)}</div>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                } else {
+                    listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">No additional news available</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load news:', error);
+                featuredContainer.innerHTML = `
+                    <div class="featured-article">
+                        <div class="featured-image" style="background:var(--border-color);">&#128240;</div>
+                        <div class="featured-content">
+                            <h3 class="featured-title">Unable to load news</h3>
+                            <p class="featured-excerpt">Please try again later.</p>
+                        </div>
+                    </div>
+                `;
+                listContainer.innerHTML = '';
+            }
+        }
+
         // Load live data on page load
         loadScores();
         loadSchedule();
+        loadNews();
 
         // Refresh data every 5 minutes
         setInterval(loadScores, 5 * 60 * 1000);
         setInterval(loadSchedule, 5 * 60 * 1000);
+        setInterval(loadNews, 5 * 60 * 1000);
     </script>
 </body>
 </html>
