@@ -25,12 +25,28 @@ export default async function handler(req, res) {
     try {
         const scores = [];
 
-        // Fetch NFL (Eagles) scores
+        // Fetch NFL (Eagles) scores - check both regular season and playoffs
         try {
-            const nflRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule');
-            const nflData = await nflRes.json();
-            const eaglesGames = nflData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-            const recentEaglesGame = eaglesGames[eaglesGames.length - 1];
+            // Try playoff schedule first, then regular season
+            let recentEaglesGame = null;
+
+            // Check playoff games (seasontype=3)
+            const playoffRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule?seasontype=3');
+            const playoffData = await playoffRes.json();
+            const playoffGames = playoffData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
+            if (playoffGames.length > 0) {
+                recentEaglesGame = playoffGames[playoffGames.length - 1];
+            }
+
+            // If no playoff games, check regular season (seasontype=2)
+            if (!recentEaglesGame) {
+                const regRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule?seasontype=2');
+                const regData = await regRes.json();
+                const regGames = regData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
+                if (regGames.length > 0) {
+                    recentEaglesGame = regGames[regGames.length - 1];
+                }
+            }
             if (recentEaglesGame) {
                 const comp = recentEaglesGame.competitions[0];
                 const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
