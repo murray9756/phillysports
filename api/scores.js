@@ -4,6 +4,10 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
+    // Get team filter from query params
+    const { team } = req.query;
+    const teamFilter = team ? team.toLowerCase() : null;
+
     // Helper to extract score value (ESPN API sometimes returns objects)
     const getScore = (score) => {
         if (typeof score === 'object' && score !== null) {
@@ -135,7 +139,24 @@ export default async function handler(req, res) {
             }
         } catch (e) { console.error('MLS fetch error:', e); }
 
-        res.status(200).json({ scores, updated: new Date().toISOString() });
+        // Filter by team if specified
+        let filteredScores = scores;
+        if (teamFilter) {
+            const teamMap = {
+                'eagles': 'Eagles',
+                'phillies': 'Phillies',
+                'sixers': '76ers',
+                '76ers': '76ers',
+                'flyers': 'Flyers',
+                'union': 'Union'
+            };
+            const targetTeam = teamMap[teamFilter];
+            if (targetTeam) {
+                filteredScores = scores.filter(s => s.team === targetTeam);
+            }
+        }
+
+        res.status(200).json({ scores: filteredScores, updated: new Date().toISOString() });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch scores', message: error.message });
     }

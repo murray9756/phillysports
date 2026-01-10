@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eagles - PhillySports.com</title>
+    <meta name="description" content="Philadelphia Eagles news, scores, schedule, and more.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --team-color: #004C54;
+            --team-secondary: #A5ACAF;
+            --dark-bg: #0a0a0a;
+            --card-bg: #151515;
+            --card-bg-hover: #1a1a1a;
+            --border-color: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #666666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.5; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--card-bg); border-bottom: 3px solid var(--team-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+
+        .team-nav { background: var(--dark-bg); border-bottom: 1px solid var(--border-color); }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: var(--text-primary); }
+        .team-tab.active { color: var(--text-primary); border-bottom-color: var(--team-color); }
+
+        .team-hero { background: linear-gradient(135deg, var(--team-color), #000); padding: 2rem 1.5rem; text-align: center; }
+        .team-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .team-hero p { color: var(--text-secondary); font-size: 1rem; }
+
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
+
+        .content-section { display: flex; flex-direction: column; gap: 1rem; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+
+        .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 1rem; }
+        .widget-header { padding: 0.75rem 1rem; background: var(--dark-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
+        .widget-header span { font-size: 1rem; }
+        .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .widget-content { padding: 0.75rem; }
+
+        .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); transition: border-color 0.2s; }
+        .article-item:hover { border-color: var(--team-color); }
+        .article-thumb { width: 120px; height: 80px; background: var(--team-color); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; background-size: cover; background-position: center; }
+        .article-info { flex: 1; min-width: 0; }
+        .article-title { font-size: 1rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
+        .article-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+        .score-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .score-item:last-child { border-bottom: none; }
+        .score-teams { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; }
+        .score-team { display: flex; align-items: center; gap: 0.5rem; }
+        .team-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--team-color); }
+        .score-result { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; font-size: 0.8rem; font-weight: 600; }
+
+        .schedule-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .schedule-item:last-child { border-bottom: none; }
+        .schedule-date { text-align: center; min-width: 40px; }
+        .schedule-day { font-size: 1rem; font-weight: 700; }
+        .schedule-month { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+        .schedule-info { flex: 1; }
+        .schedule-matchup { font-size: 0.8rem; font-weight: 600; }
+        .schedule-time { font-size: 0.7rem; color: var(--text-muted); }
+
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .team-hero h1 { font-size: 1.8rem; }
+        }
+        @media (max-width: 600px) {
+            .article-item { flex-direction: column; }
+            .article-thumb { width: 100%; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports</span>
+            </a>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/" class="team-tab" data-team="all">All Teams</a>
+                <a href="/eagles" class="team-tab active" data-team="eagles">Eagles</a>
+                <a href="/phillies" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers" class="team-tab" data-team="flyers">Flyers</a>
+                <a href="/union" class="team-tab" data-team="union">Union</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="team-hero">
+        <h1>Philadelphia Eagles</h1>
+        <p>News, Scores & Schedule</p>
+    </div>
+
+    <main class="main-container">
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Latest Eagles News</h2>
+            </div>
+            <div class="article-list" id="articleList">
+                <div style="text-align:center;color:var(--text-muted);padding:2rem;">Loading news...</div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127942;</span>
+                    <h3 class="widget-title">Recent Score</h3>
+                </div>
+                <div class="widget-content" id="scoresContainer">
+                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128197;</span>
+                    <h3 class="widget-title">Upcoming Games</h3>
+                </div>
+                <div class="widget-content" id="scheduleContainer">
+                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128279;</span>
+                    <h3 class="widget-title">Quick Links</h3>
+                </div>
+                <div class="widget-content">
+                    <a href="https://www.philadelphiaeagles.com" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Website</a>
+                    <a href="https://www.philadelphiaeagles.com/tickets/" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Buy Tickets</a>
+                    <a href="https://open.spotify.com/show/6kLubboUPSinfnMesa8xhj" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Bleeding Green Nation Podcast</a>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p>
+    </footer>
+
+    <script>
+        const TEAM = 'eagles';
+
+        function timeAgo(dateString) {
+            const now = new Date();
+            const date = new Date(dateString);
+            const seconds = Math.floor((now - date) / 1000);
+            if (seconds < 60) return 'Just now';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            return `${days}d ago`;
+        }
+
+        function formatGameDate(dateString) {
+            const date = new Date(dateString);
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
+        }
+
+        async function loadNews() {
+            const container = document.getElementById('articleList');
+            try {
+                const response = await fetch(`/api/news?team=${TEAM}`);
+                const data = await response.json();
+                if (data.articles && data.articles.length > 0) {
+                    container.innerHTML = data.articles.map(article => {
+                        const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
+                        return `
+                            <a href="${article.link}" target="_blank" class="article-item">
+                                <div class="article-thumb" style="${thumbStyle}">${!article.image ? '&#127944;' : ''}</div>
+                                <div class="article-info">
+                                    <h4 class="article-title">${article.headline}</h4>
+                                    <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''}</div>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;">No Eagles news available</div>';
+                }
+            } catch (e) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;">Unable to load news</div>';
+            }
+        }
+
+        async function loadScores() {
+            const container = document.getElementById('scoresContainer');
+            try {
+                const response = await fetch(`/api/scores?team=${TEAM}`);
+                const data = await response.json();
+                if (data.scores && data.scores.length > 0) {
+                    container.innerHTML = data.scores.map(score => `
+                        <div class="score-item">
+                            <div class="score-teams">
+                                <div class="score-team"><span class="team-dot" style="background:${score.isHome ? score.teamColor : '#666'}"></span> ${score.homeTeam}</div>
+                                <div class="score-team"><span class="team-dot" style="background:${!score.isHome ? score.teamColor : '#666'}"></span> ${score.awayTeam}</div>
+                            </div>
+                            <div class="score-result"><span>${score.homeScore}</span><span>${score.awayScore}</span></div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores</div>';
+                }
+            } catch (e) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';
+            }
+        }
+
+        async function loadSchedule() {
+            const container = document.getElementById('scheduleContainer');
+            try {
+                const response = await fetch(`/api/schedule?team=${TEAM}`);
+                const data = await response.json();
+                if (data.schedule && data.schedule.length > 0) {
+                    container.innerHTML = data.schedule.map(game => {
+                        const d = formatGameDate(game.date);
+                        const matchup = game.isHome ? `vs ${game.opponent}` : `@ ${game.opponent}`;
+                        return `
+                            <div class="schedule-item">
+                                <div class="schedule-date"><div class="schedule-day">${d.day}</div><div class="schedule-month">${d.month}</div></div>
+                                <div class="schedule-info"><div class="schedule-matchup">${matchup}</div><div class="schedule-time">${d.dayName} ${d.time}${game.broadcast ? ' · ' + game.broadcast : ''}</div></div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';
+                }
+            } catch (e) {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';
+            }
+        }
+
+        loadNews();
+        loadScores();
+        loadSchedule();
+    </script>
+</body>
+</html>

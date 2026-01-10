@@ -4,6 +4,10 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
+    // Get team filter from query params
+    const { team } = req.query;
+    const teamFilter = team ? team.toLowerCase() : null;
+
     try {
         const schedule = [];
         const now = new Date();
@@ -141,7 +145,24 @@ export default async function handler(req, res) {
         // Sort by date
         schedule.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        res.status(200).json({ schedule: schedule.slice(0, 8), updated: new Date().toISOString() });
+        // Filter by team if specified
+        let filteredSchedule = schedule;
+        if (teamFilter) {
+            const teamMap = {
+                'eagles': 'Eagles',
+                'phillies': 'Phillies',
+                'sixers': '76ers',
+                '76ers': '76ers',
+                'flyers': 'Flyers',
+                'union': 'Union'
+            };
+            const targetTeam = teamMap[teamFilter];
+            if (targetTeam) {
+                filteredSchedule = schedule.filter(s => s.team === targetTeam);
+            }
+        }
+
+        res.status(200).json({ schedule: filteredSchedule.slice(0, 8), updated: new Date().toISOString() });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch schedule', message: error.message });
     }

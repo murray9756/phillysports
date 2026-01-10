@@ -4,6 +4,10 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
+    // Get team filter from query params
+    const { team } = req.query;
+    const teamFilter = team ? team.toLowerCase() : null;
+
     // Philly team identifiers to filter news
     const phillyKeywords = ['philadelphia', 'eagles', 'phillies', '76ers', 'sixers', 'flyers', 'union', 'philly', 'jalen hurts', 'saquon', 'embiid', 'maxey'];
 
@@ -191,9 +195,26 @@ export default async function handler(req, res) {
             } catch (e) { console.error('Fallback news error:', e); }
         }
 
+        // Filter by team if specified
+        let filteredArticles = articles;
+        if (teamFilter) {
+            const teamMap = {
+                'eagles': 'Eagles',
+                'phillies': 'Phillies',
+                'sixers': '76ers',
+                '76ers': '76ers',
+                'flyers': 'Flyers',
+                'union': 'Union'
+            };
+            const targetTeam = teamMap[teamFilter];
+            if (targetTeam) {
+                filteredArticles = articles.filter(a => a.team === targetTeam);
+            }
+        }
+
         res.status(200).json({
-            articles: articles.slice(0, 12),
-            featured: articles[0] || null,
+            articles: filteredArticles.slice(0, 12),
+            featured: filteredArticles[0] || null,
             updated: new Date().toISOString()
         });
     } catch (error) {
