@@ -4,6 +4,14 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
+    // Helper to extract score value (ESPN API sometimes returns objects)
+    const getScore = (score) => {
+        if (typeof score === 'object' && score !== null) {
+            return String(score.displayValue || score.value || '0');
+        }
+        return String(score || '0');
+    };
+
     try {
         const scores = [];
 
@@ -22,9 +30,9 @@ export default async function handler(req, res) {
                     team: 'Eagles',
                     teamColor: '#004C54',
                     homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: homeTeam?.score || '0',
+                    homeScore: getScore(homeTeam?.score),
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: awayTeam?.score || '0',
+                    awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
                     date: recentEaglesGame.date
                 });
@@ -46,9 +54,9 @@ export default async function handler(req, res) {
                     team: '76ers',
                     teamColor: '#006BB6',
                     homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: homeTeam?.score || '0',
+                    homeScore: getScore(homeTeam?.score),
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: awayTeam?.score || '0',
+                    awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
                     date: recentSixersGame.date
                 });
@@ -70,9 +78,9 @@ export default async function handler(req, res) {
                     team: 'Flyers',
                     teamColor: '#F74902',
                     homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: homeTeam?.score || '0',
+                    homeScore: getScore(homeTeam?.score),
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: awayTeam?.score || '0',
+                    awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
                     date: recentFlyersGame.date
                 });
@@ -94,9 +102,9 @@ export default async function handler(req, res) {
                     team: 'Phillies',
                     teamColor: '#E81828',
                     homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: homeTeam?.score || '0',
+                    homeScore: getScore(homeTeam?.score),
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: awayTeam?.score || '0',
+                    awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
                     date: recentPhilliesGame.date
                 });
@@ -118,9 +126,9 @@ export default async function handler(req, res) {
                     team: 'Union',
                     teamColor: '#B49759',
                     homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: homeTeam?.score || '0',
+                    homeScore: getScore(homeTeam?.score),
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: awayTeam?.score || '0',
+                    awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.displayName?.includes('Philadelphia'),
                     date: recentUnionGame.date
                 });
