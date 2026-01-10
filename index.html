@@ -638,6 +638,79 @@
             display: block;
         }
 
+        /* Newsletter Widget */
+        .newsletter-widget {
+            background: linear-gradient(135deg, var(--eagles-green), var(--sixers-blue));
+            border: none;
+        }
+
+        .newsletter-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .newsletter-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter-desc {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .newsletter-form input {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.95);
+            color: #1a1a1a;
+            font-size: 0.9rem;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .newsletter-form input::placeholder {
+            color: #666;
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem 1rem;
+            background: var(--phillies-red);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .newsletter-form button:hover {
+            background: #c91523;
+        }
+
+        .newsletter-note {
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+        }
+
         /* Footer */
         .footer {
             margin-top: 2rem;
@@ -915,6 +988,20 @@
 
         <!-- Sidebar -->
         <aside class="sidebar">
+            <!-- Newsletter Widget -->
+            <div class="widget newsletter-widget">
+                <div class="newsletter-content">
+                    <div class="newsletter-icon">&#128239;</div>
+                    <h3 class="newsletter-title">Get the Daily Rundown</h3>
+                    <p class="newsletter-desc">Philly sports news, hot takes, and trivia delivered to your inbox.</p>
+                    <form class="newsletter-form" action="https://embeds.beehiiv.com/51eefbfb-8a77-4569-baa2-40ca11d0a0c2" method="POST" target="_blank">
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe Free</button>
+                    </form>
+                    <p class="newsletter-note">Join 1,000+ Philly fans. Unsubscribe anytime.</p>
+                </div>
+            </div>
+
             <!-- Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
