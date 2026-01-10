@@ -16,6 +16,12 @@ export default async function handler(req, res) {
         return String(score || '0');
     };
 
+    // Helper to extract game link from event
+    const getGameLink = (event) => {
+        const summaryLink = event.links?.find(l => l.rel?.includes('summary') && l.rel?.includes('desktop'));
+        return summaryLink?.href || null;
+    };
+
     try {
         const scores = [];
 
@@ -38,7 +44,8 @@ export default async function handler(req, res) {
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
                     awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentEaglesGame.date
+                    date: recentEaglesGame.date,
+                    link: getGameLink(recentEaglesGame)
                 });
             }
         } catch (e) { console.error('NFL fetch error:', e); }
@@ -62,7 +69,8 @@ export default async function handler(req, res) {
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
                     awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentSixersGame.date
+                    date: recentSixersGame.date,
+                    link: getGameLink(recentSixersGame)
                 });
             }
         } catch (e) { console.error('NBA fetch error:', e); }
@@ -86,7 +94,8 @@ export default async function handler(req, res) {
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
                     awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentFlyersGame.date
+                    date: recentFlyersGame.date,
+                    link: getGameLink(recentFlyersGame)
                 });
             }
         } catch (e) { console.error('NHL fetch error:', e); }
@@ -110,7 +119,8 @@ export default async function handler(req, res) {
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
                     awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentPhilliesGame.date
+                    date: recentPhilliesGame.date,
+                    link: getGameLink(recentPhilliesGame)
                 });
             }
         } catch (e) { console.error('MLB fetch error:', e); }
@@ -134,7 +144,8 @@ export default async function handler(req, res) {
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
                     awayScore: getScore(awayTeam?.score),
                     isHome: homeTeam?.team?.displayName?.includes('Philadelphia'),
-                    date: recentUnionGame.date
+                    date: recentUnionGame.date,
+                    link: getGameLink(recentUnionGame)
                 });
             }
         } catch (e) { console.error('MLS fetch error:', e); }
