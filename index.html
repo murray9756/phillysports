@@ -1212,8 +1212,8 @@
                 const data = await response.json();
 
                 if (data.scores && data.scores.length > 0) {
-                    container.innerHTML = data.scores.map(score => `
-                        <div class="score-item">
+                    container.innerHTML = data.scores.map(score => {
+                        const content = `
                             <div class="score-teams">
                                 <div class="score-team">
                                     <span class="team-dot" style="background:${score.isHome ? score.teamColor : '#666'}"></span>
@@ -1228,8 +1228,11 @@
                                 <span>${score.homeScore}</span>
                                 <span>${score.awayScore}</span>
                             </div>
-                        </div>
-                    `).join('');
+                        `;
+                        return score.link
+                            ? `<a href="${score.link}" target="_blank" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`
+                            : `<div class="score-item">${content}</div>`;
+                    }).join('');
                 } else {
                     container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores available</div>';
                 }
