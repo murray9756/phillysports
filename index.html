@@ -413,6 +413,137 @@
         .team-flyers { background: var(--flyers-orange); }
         .team-union { background: var(--union-gold); color: #000; }
 
+        /* Trivia Widget */
+        .trivia-section {
+            padding: 5rem 2rem;
+            background: var(--dark-bg);
+        }
+
+        .trivia-widget {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .trivia-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--eagles-green), var(--sixers-blue), var(--phillies-red), var(--flyers-orange), var(--union-gold));
+        }
+
+        .trivia-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trivia-icon {
+            font-size: 2rem;
+        }
+
+        .trivia-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .trivia-team-badge {
+            margin-left: auto;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .trivia-question {
+            font-size: 1.4rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 1.5rem;
+        }
+
+        .trivia-answer-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .trivia-answer {
+            display: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--eagles-green);
+        }
+
+        .trivia-answer.revealed {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .trivia-reveal-btn {
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .trivia-reveal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(232, 24, 40, 0.3);
+        }
+
+        .trivia-reveal-btn.hidden {
+            display: none;
+        }
+
+        .trivia-new-btn {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 2px solid var(--text-secondary);
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .trivia-new-btn.show {
+            display: inline-block;
+        }
+
+        .trivia-new-btn:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+        }
+
         /* Coming Soon Section */
         .coming-soon {
             padding: 5rem 2rem;
@@ -603,6 +734,7 @@
         <nav class="nav-menu" id="navMenu">
             <a href="#features">Features</a>
             <a href="#teams">Teams</a>
+            <a href="#trivia">Trivia</a>
             <a href="#community">Community</a>
             <a href="#deals">Deals</a>
             <a href="#home" class="nav-cta">Join Now</a>
@@ -694,6 +826,24 @@
             <div class="team-badge team-sixers">76ers</div>
             <div class="team-badge team-flyers">Flyers</div>
             <div class="team-badge team-union">Union</div>
+        </div>
+    </section>
+
+    <!-- Trivia Section -->
+    <section class="trivia-section" id="trivia">
+        <h2 class="section-title">Test Your Knowledge</h2>
+        <div class="trivia-widget">
+            <div class="trivia-header">
+                <span class="trivia-icon">&#129504;</span>
+                <span class="trivia-label">Philly Sports Trivia</span>
+                <span class="trivia-team-badge" id="triviaBadge">Eagles</span>
+            </div>
+            <p class="trivia-question" id="triviaQuestion">Loading question...</p>
+            <div class="trivia-answer-container">
+                <button class="trivia-reveal-btn" id="triviaRevealBtn">Reveal Answer</button>
+                <p class="trivia-answer" id="triviaAnswer"></p>
+                <button class="trivia-new-btn" id="triviaNewBtn">Next Question</button>
+            </div>
         </div>
     </section>
 
@@ -847,6 +997,68 @@
                 }
             });
         });
+
+        // Philly Sports Trivia
+        const triviaQuestions = [
+            // Eagles
+            { team: 'Eagles', color: '#004C54', question: 'In what year did the Eagles win their first Super Bowl?', answer: '2018 (Super Bowl LII)' },
+            { team: 'Eagles', color: '#004C54', question: 'Who caught the famous "Philly Special" touchdown pass in Super Bowl LII?', answer: 'Nick Foles' },
+            { team: 'Eagles', color: '#004C54', question: 'Which Eagles quarterback has the most career passing yards?', answer: 'Donovan McNabb' },
+            { team: 'Eagles', color: '#004C54', question: 'What year did the Eagles move to Lincoln Financial Field?', answer: '2003' },
+            { team: 'Eagles', color: '#004C54', question: 'Who holds the Eagles single-season rushing record?', answer: 'LeSean McCoy (1,607 yards in 2013)' },
+            // Phillies
+            { team: 'Phillies', color: '#E81828', question: 'In what year did the Phillies win their most recent World Series?', answer: '2008' },
+            { team: 'Phillies', color: '#E81828', question: 'Who threw the only perfect game in Phillies history?', answer: 'Roy Halladay (2010)' },
+            { team: 'Phillies', color: '#E81828', question: 'Which Phillie holds the franchise record for career home runs?', answer: 'Mike Schmidt (548)' },
+            { team: 'Phillies', color: '#E81828', question: 'What is the name of the Phillies mascot?', answer: 'The Phillie Phanatic' },
+            { team: 'Phillies', color: '#E81828', question: 'How many World Series have the Phillies won in their history?', answer: 'Two (1980 and 2008)' },
+            // 76ers
+            { team: '76ers', color: '#006BB6', question: 'Which 76er won four NBA MVP awards?', answer: 'Wilt Chamberlain' },
+            { team: '76ers', color: '#006BB6', question: 'In what year did the 76ers last win an NBA Championship?', answer: '1983' },
+            { team: '76ers', color: '#006BB6', question: 'Who is the 76ers all-time leading scorer?', answer: 'Allen Iverson' },
+            { team: '76ers', color: '#006BB6', question: 'What was the 76ers team name before moving to Philadelphia?', answer: 'Syracuse Nationals' },
+            { team: '76ers', color: '#006BB6', question: 'Which 76er scored 100 points in a single NBA game?', answer: 'Wilt Chamberlain (March 2, 1962)' },
+            // Flyers
+            { team: 'Flyers', color: '#F74902', question: 'How many Stanley Cups have the Flyers won?', answer: 'Two (1974 and 1975)' },
+            { team: 'Flyers', color: '#F74902', question: 'What nickname were the 1970s Flyers known by?', answer: 'The Broad Street Bullies' },
+            { team: 'Flyers', color: '#F74902', question: 'Who is the Flyers all-time leading scorer?', answer: 'Bobby Clarke' },
+            { team: 'Flyers', color: '#F74902', question: 'In what year were the Flyers founded?', answer: '1967' },
+            { team: 'Flyers', color: '#F74902', question: 'Who was the Flyers goalie for both Stanley Cup wins?', answer: 'Bernie Parent' },
+            // Union
+            { team: 'Union', color: '#B49759', question: 'In what year did the Philadelphia Union join MLS?', answer: '2010' },
+            { team: 'Union', color: '#B49759', question: 'What is the name of the Union home stadium?', answer: 'Subaru Park' },
+            { team: 'Union', color: '#B49759', question: 'In what year did the Union win their first Supporters Shield?', answer: '2020' },
+            { team: 'Union', color: '#B49759', question: 'Who is the Union all-time leading goal scorer?', answer: 'Sebastien Le Toux' },
+            { team: 'Union', color: '#B49759', question: 'What city is Subaru Park located in?', answer: 'Chester, Pennsylvania' }
+        ];
+
+        let currentTrivia = null;
+
+        function loadRandomTrivia() {
+            const randomIndex = Math.floor(Math.random() * triviaQuestions.length);
+            currentTrivia = triviaQuestions[randomIndex];
+
+            document.getElementById('triviaQuestion').textContent = currentTrivia.question;
+            document.getElementById('triviaAnswer').textContent = currentTrivia.answer;
+            document.getElementById('triviaBadge').textContent = currentTrivia.team;
+            document.getElementById('triviaBadge').style.background = currentTrivia.color;
+
+            // Reset state
+            document.getElementById('triviaAnswer').classList.remove('revealed');
+            document.getElementById('triviaRevealBtn').classList.remove('hidden');
+            document.getElementById('triviaNewBtn').classList.remove('show');
+        }
+
+        document.getElementById('triviaRevealBtn').addEventListener('click', function() {
+            document.getElementById('triviaAnswer').classList.add('revealed');
+            this.classList.add('hidden');
+            document.getElementById('triviaNewBtn').classList.add('show');
+        });
+
+        document.getElementById('triviaNewBtn').addEventListener('click', loadRandomTrivia);
+
+        // Load initial trivia question
+        loadRandomTrivia();
     </script>
 </body>
 </html>
