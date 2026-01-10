@@ -172,6 +172,46 @@ export default async function handler(req, res) {
             });
         } catch (e) { console.error('Crossing Broad RSS error:', e); }
 
+        // Fetch On Pattison articles (scrape homepage)
+        try {
+            const opRes = await fetch('https://onpattison.com/');
+            const opHtml = await opRes.text();
+
+            // Extract article links and headlines from homepage
+            const opArticles = [];
+            const linkMatches = opHtml.matchAll(/<a href="(\/news\/[^"]+)"[^>]*class="black-link"[^>]*><h1[^>]*>([^<]+)<\/h1><\/a>/g);
+
+            for (const match of linkMatches) {
+                const link = 'https://onpattison.com' + match[1];
+                const headline = match[2].replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+
+                // Detect team from headline
+                const teamInfo = detectTeamFromRSS({ title: headline, categories: [] });
+
+                opArticles.push({
+                    team: teamInfo.team,
+                    sport: 'On Pattison',
+                    teamColor: teamInfo.color,
+                    tagClass: teamInfo.tagClass,
+                    headline: headline,
+                    description: '',
+                    link: link,
+                    image: null,
+                    published: new Date().toISOString(),
+                    source: 'On Pattison'
+                });
+            }
+
+            // Add up to 5 unique articles
+            const seenHeadlines = new Set();
+            opArticles.slice(0, 8).forEach(article => {
+                if (!seenHeadlines.has(article.headline)) {
+                    seenHeadlines.add(article.headline);
+                    articles.push(article);
+                }
+            });
+        } catch (e) { console.error('On Pattison scrape error:', e); }
+
         // Sort by published date (newest first)
         articles.sort((a, b) => new Date(b.published) - new Date(a.published));
 
