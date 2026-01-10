@@ -224,6 +224,16 @@
         function startCarousel() { stopCarousel(); carouselInterval = setInterval(nextSlide, 5000); }
         function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
 
+        const sourceLogos = {
+            'Crossing Broad': 'https://www.crossingbroad.com/wp-content/uploads/2023/03/cropped-CB-Favicon-1-192x192.png',
+            'On Pattison': 'https://onpattison.com/images/logo-white.png',
+            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
+        };
+        function getSourceLogo(source) {
+            const logo = source && sourceLogos[source] ? sourceLogos[source] : sourceLogos['ESPN'];
+            return `<img src="${logo}" alt="${source || 'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;
+        }
+
         function timeAgo(dateString) {
             const now = new Date();
             const date = new Date(dateString);
@@ -263,7 +273,7 @@
                         return `
                             <div class="carousel-slide">
                                 <a href="${article.link}" target="_blank" class="featured-article">
-                                    <div class="featured-image" style="${imgStyle}">${!article.image ? '&#127944;' : ''}</div>
+                                    <div class="featured-image" style="${imgStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
                                     <div class="featured-content">
                                         <span class="article-tag">${article.team || 'Eagles'}</span>
                                         <h3 class="featured-title">${article.headline}</h3>
@@ -287,7 +297,7 @@
                             const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
                             return `
                                 <a href="${article.link}" target="_blank" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? '&#127944;' : ''}</div>
+                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
                                     <div class="article-info">
                                         <h4 class="article-title">${article.headline}</h4>
                                         <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''}</div>

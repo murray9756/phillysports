@@ -1390,6 +1390,23 @@
             'Union': '&#9917;'
         };
 
+        const sourceLogos = {
+            'Crossing Broad': 'https://www.crossingbroad.com/wp-content/uploads/2023/03/cropped-CB-Favicon-1-192x192.png',
+            'On Pattison': 'https://onpattison.com/images/logo-white.png',
+            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
+        };
+
+        function getSourceLogo(source, fallbackEmoji) {
+            if (source && sourceLogos[source]) {
+                return `<img src="${sourceLogos[source]}" alt="${source}" style="max-width:60%;max-height:60%;object-fit:contain;">`;
+            }
+            // Default to ESPN logo for articles without a source (most ESPN articles)
+            if (!source) {
+                return `<img src="${sourceLogos['ESPN']}" alt="ESPN" style="max-width:60%;max-height:60%;object-fit:contain;">`;
+            }
+            return fallbackEmoji || '&#128240;';
+        }
+
         // Carousel state
         let currentSlide = 0;
         let carouselInterval = null;
@@ -1442,7 +1459,7 @@
                             <div class="carousel-slide">
                                 <a href="${article.link}" target="_blank" class="featured-article">
                                     <div class="featured-image" style="${imageStyle}">
-                                        ${!article.image ? sportEmoji[article.team] || '&#128240;' : ''}
+                                        ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
                                     </div>
                                     <div class="featured-content">
                                         <span class="article-tag ${article.tagClass}">${article.team}</span>
@@ -1478,7 +1495,7 @@
                             return `
                                 <a href="${article.link}" target="_blank" class="article-item">
                                     <div class="article-thumb" style="${thumbStyle}">
-                                        ${!article.image ? sportEmoji[article.team] || '&#128240;' : ''}
+                                        ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
                                     </div>
                                     <div class="article-info">
                                         <span class="article-tag ${article.tagClass}">${article.team}</span>
