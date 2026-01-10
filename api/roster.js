@@ -29,26 +29,34 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         const players = [];
-        const groups = data.athletes || [];
+        const athletes = data.athletes || [];
 
-        // Process each position group
-        for (const group of groups) {
-            const items = group.items || [];
-            for (const player of items) {
-                players.push({
-                    name: player.displayName || player.fullName,
-                    firstName: player.firstName,
-                    lastName: player.lastName,
-                    number: player.jersey || '',
-                    position: player.position?.abbreviation || player.position?.name || '',
-                    positionFull: player.position?.displayName || player.position?.name || '',
-                    headshot: player.headshot?.href || null,
-                    status: player.status?.name || 'Active',
-                    college: player.college?.name || '',
-                    experience: player.experience?.years || 0,
-                    height: player.displayHeight || '',
-                    weight: player.displayWeight || ''
-                });
+        // Helper to extract player data
+        const extractPlayer = (player) => ({
+            name: player.displayName || player.fullName,
+            firstName: player.firstName,
+            lastName: player.lastName,
+            number: player.jersey || '',
+            position: player.position?.abbreviation || player.position?.name || '',
+            positionFull: player.position?.displayName || player.position?.name || '',
+            headshot: player.headshot?.href || null,
+            status: player.status?.name || 'Active',
+            college: player.college?.name || '',
+            experience: player.experience?.years || 0,
+            height: player.displayHeight || '',
+            weight: player.displayWeight || ''
+        });
+
+        // Check if athletes array contains direct players or position groups
+        for (const item of athletes) {
+            if (item.items) {
+                // NFL/MLB style: grouped by position with items array
+                for (const player of item.items) {
+                    players.push(extractPlayer(player));
+                }
+            } else if (item.displayName || item.fullName) {
+                // NBA/NHL style: direct player objects
+                players.push(extractPlayer(item));
             }
         }
 
