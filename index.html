@@ -1008,57 +1008,8 @@
                     <span>&#127942;</span>
                     <h3 class="widget-title">Recent Scores</h3>
                 </div>
-                <div class="widget-content">
-                    <div class="score-item">
-                        <div class="score-teams">
-                            <div class="score-team"><span class="team-dot dot-eagles"></span> Eagles</div>
-                            <div class="score-team"><span class="team-dot" style="background:#203731;"></span> Packers</div>
-                        </div>
-                        <div class="score-result">
-                            <span>34</span>
-                            <span>29</span>
-                        </div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-teams">
-                            <div class="score-team"><span class="team-dot dot-phillies"></span> Phillies</div>
-                            <div class="score-team"><span class="team-dot" style="background:#002D72;"></span> Mets</div>
-                        </div>
-                        <div class="score-result">
-                            <span>6</span>
-                            <span>3</span>
-                        </div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-teams">
-                            <div class="score-team"><span class="team-dot dot-sixers"></span> 76ers</div>
-                            <div class="score-team"><span class="team-dot" style="background:#CE1141;"></span> Heat</div>
-                        </div>
-                        <div class="score-result">
-                            <span>112</span>
-                            <span>98</span>
-                        </div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-teams">
-                            <div class="score-team"><span class="team-dot dot-flyers"></span> Flyers</div>
-                            <div class="score-team"><span class="team-dot" style="background:#C8102E;"></span> Devils</div>
-                        </div>
-                        <div class="score-result">
-                            <span>4</span>
-                            <span>2</span>
-                        </div>
-                    </div>
-                    <div class="score-item">
-                        <div class="score-teams">
-                            <div class="score-team"><span class="team-dot dot-union"></span> Union</div>
-                            <div class="score-team"><span class="team-dot" style="background:#80000A;"></span> Atlanta</div>
-                        </div>
-                        <div class="score-result">
-                            <span>2</span>
-                            <span>1</span>
-                        </div>
-                    </div>
+                <div class="widget-content" id="scoresContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
                 </div>
             </div>
 
@@ -1083,57 +1034,8 @@
                     <span>&#128197;</span>
                     <h3 class="widget-title">Upcoming Games</h3>
                 </div>
-                <div class="widget-content">
-                    <div class="schedule-item">
-                        <div class="schedule-date">
-                            <div class="schedule-day">12</div>
-                            <div class="schedule-month">Jan</div>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="schedule-matchup"><span class="schedule-team-dot dot-eagles"></span> Eagles vs Cowboys</div>
-                            <div class="schedule-time">Sun 4:25 PM - FOX</div>
-                        </div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-date">
-                            <div class="schedule-day">13</div>
-                            <div class="schedule-month">Jan</div>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="schedule-matchup"><span class="schedule-team-dot dot-sixers"></span> 76ers @ Celtics</div>
-                            <div class="schedule-time">Mon 7:30 PM - ESPN</div>
-                        </div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-date">
-                            <div class="schedule-day">14</div>
-                            <div class="schedule-month">Jan</div>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="schedule-matchup"><span class="schedule-team-dot dot-flyers"></span> Flyers vs Rangers</div>
-                            <div class="schedule-time">Tue 7:00 PM - NBCSP</div>
-                        </div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-date">
-                            <div class="schedule-day">15</div>
-                            <div class="schedule-month">Jan</div>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="schedule-matchup"><span class="schedule-team-dot dot-sixers"></span> 76ers vs Knicks</div>
-                            <div class="schedule-time">Wed 7:00 PM - NBCSP</div>
-                        </div>
-                    </div>
-                    <div class="schedule-item">
-                        <div class="schedule-date">
-                            <div class="schedule-day">18</div>
-                            <div class="schedule-month">Jan</div>
-                        </div>
-                        <div class="schedule-info">
-                            <div class="schedule-matchup"><span class="schedule-team-dot dot-flyers"></span> Flyers @ Penguins</div>
-                            <div class="schedule-time">Sat 1:00 PM - ABC</div>
-                        </div>
-                    </div>
+                <div class="widget-content" id="scheduleContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
                 </div>
             </div>
         </aside>
@@ -1300,6 +1202,108 @@
 
         // Load initial trivia question
         loadRandomTrivia();
+
+        // Live Scores and Schedule from API
+        const teamDotClass = {
+            'Eagles': 'dot-eagles',
+            '76ers': 'dot-sixers',
+            'Phillies': 'dot-phillies',
+            'Flyers': 'dot-flyers',
+            'Union': 'dot-union'
+        };
+
+        function formatGameDate(dateString) {
+            const date = new Date(dateString);
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return {
+                day: date.getDate(),
+                month: months[date.getMonth()],
+                dayName: days[date.getDay()],
+                time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+            };
+        }
+
+        // Fetch and render scores
+        async function loadScores() {
+            const container = document.getElementById('scoresContainer');
+            try {
+                const response = await fetch('/api/scores');
+                const data = await response.json();
+
+                if (data.scores && data.scores.length > 0) {
+                    container.innerHTML = data.scores.map(score => `
+                        <div class="score-item">
+                            <div class="score-teams">
+                                <div class="score-team">
+                                    <span class="team-dot" style="background:${score.isHome ? score.teamColor : '#666'}"></span>
+                                    ${score.homeTeam}
+                                </div>
+                                <div class="score-team">
+                                    <span class="team-dot" style="background:${!score.isHome ? score.teamColor : '#666'}"></span>
+                                    ${score.awayTeam}
+                                </div>
+                            </div>
+                            <div class="score-result">
+                                <span>${score.homeScore}</span>
+                                <span>${score.awayScore}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores available</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load scores:', error);
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load scores</div>';
+            }
+        }
+
+        // Fetch and render schedule
+        async function loadSchedule() {
+            const container = document.getElementById('scheduleContainer');
+            try {
+                const response = await fetch('/api/schedule');
+                const data = await response.json();
+
+                if (data.schedule && data.schedule.length > 0) {
+                    container.innerHTML = data.schedule.map(game => {
+                        const dateInfo = formatGameDate(game.date);
+                        const dotClass = teamDotClass[game.team] || '';
+                        const matchup = game.isHome ? `${game.team} vs ${game.opponent}` : `${game.team} @ ${game.opponent}`;
+                        const broadcast = game.broadcast ? ` - ${game.broadcast}` : '';
+                        return `
+                            <div class="schedule-item">
+                                <div class="schedule-date">
+                                    <div class="schedule-day">${dateInfo.day}</div>
+                                    <div class="schedule-month">${dateInfo.month}</div>
+                                </div>
+                                <div class="schedule-info">
+                                    <div class="schedule-matchup">
+                                        <span class="schedule-team-dot ${dotClass}"></span>
+                                        ${matchup}
+                                    </div>
+                                    <div class="schedule-time">${dateInfo.dayName} ${dateInfo.time}${broadcast}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load schedule:', error);
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load schedule</div>';
+            }
+        }
+
+        // Load live data on page load
+        loadScores();
+        loadSchedule();
+
+        // Refresh data every 5 minutes
+        setInterval(loadScores, 5 * 60 * 1000);
+        setInterval(loadSchedule, 5 * 60 * 1000);
     </script>
 </body>
 </html>
