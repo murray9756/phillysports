@@ -7,6 +7,54 @@ export default async function handler(req, res) {
     // Philly team identifiers to filter news
     const phillyKeywords = ['philadelphia', 'eagles', 'phillies', '76ers', 'sixers', 'flyers', 'union', 'philly', 'jalen hurts', 'saquon', 'embiid', 'maxey'];
 
+    // Parse RSS XML to extract items
+    function parseRSS(xml) {
+        const items = [];
+        const itemMatches = xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
+
+        for (const itemXml of itemMatches) {
+            const getTag = (tag) => {
+                const match = itemXml.match(new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>|<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`));
+                return match ? (match[1] || match[2] || '').trim() : '';
+            };
+
+            const categories = [];
+            const catMatches = itemXml.match(/<category[^>]*>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/category>/g) || [];
+            catMatches.forEach(cat => {
+                const val = cat.replace(/<\/?category[^>]*>/g, '').replace(/<!\[CDATA\[|\]\]>/g, '').trim();
+                if (val) categories.push(val.toLowerCase());
+            });
+
+            // Extract image from content:encoded or media:content
+            let image = null;
+            const imgMatch = itemXml.match(/<img[^>]+src=["']([^"']+)["']/);
+            if (imgMatch) image = imgMatch[1];
+            const mediaMatch = itemXml.match(/<media:content[^>]+url=["']([^"']+)["']/);
+            if (mediaMatch && !image) image = mediaMatch[1];
+
+            items.push({
+                title: getTag('title'),
+                link: getTag('link'),
+                description: getTag('description').replace(/<[^>]+>/g, '').substring(0, 200),
+                pubDate: getTag('pubDate'),
+                categories,
+                image
+            });
+        }
+        return items;
+    }
+
+    // Detect team from Crossing Broad categories or content
+    function detectTeamFromRSS(item) {
+        const text = `${item.title} ${item.categories.join(' ')}`.toLowerCase();
+        if (text.includes('eagle') || text.includes('nfl') || text.includes('birds')) return { team: 'Eagles', color: '#004C54', tagClass: 'tag-eagles' };
+        if (text.includes('phillie') || text.includes('mlb')) return { team: 'Phillies', color: '#E81828', tagClass: 'tag-phillies' };
+        if (text.includes('sixer') || text.includes('76er') || text.includes('nba')) return { team: '76ers', color: '#006BB6', tagClass: 'tag-sixers' };
+        if (text.includes('flyer') || text.includes('nhl')) return { team: 'Flyers', color: '#F74902', tagClass: 'tag-flyers' };
+        if (text.includes('union') || text.includes('mls') || text.includes('soccer')) return { team: 'Union', color: '#B49759', tagClass: 'tag-union' };
+        return { team: 'Philly', color: '#004C54', tagClass: 'tag-eagles' };
+    }
+
     function isPhillyRelated(article) {
         const text = `${article.headline} ${article.description || ''} ${JSON.stringify(article.categories || [])}`.toLowerCase();
         return phillyKeywords.some(keyword => text.includes(keyword));
@@ -97,6 +145,29 @@ export default async function handler(req, res) {
             articles.push(...processArticles(mlsData, 'Union', 'MLS', '#B49759', 'tag-union', 2));
         } catch (e) { console.error('MLS news error:', e); }
 
+        // Fetch Crossing Broad RSS feed
+        try {
+            const cbRes = await fetch('https://www.crossingbroad.com/feed');
+            const cbXml = await cbRes.text();
+            const cbItems = parseRSS(cbXml);
+
+            cbItems.slice(0, 6).forEach(item => {
+                const teamInfo = detectTeamFromRSS(item);
+                articles.push({
+                    team: teamInfo.team,
+                    sport: 'Crossing Broad',
+                    teamColor: teamInfo.color,
+                    tagClass: teamInfo.tagClass,
+                    headline: item.title,
+                    description: item.description,
+                    link: item.link,
+                    image: item.image,
+                    published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                    source: 'Crossing Broad'
+                });
+            });
+        } catch (e) { console.error('Crossing Broad RSS error:', e); }
+
         // Sort by published date (newest first)
         articles.sort((a, b) => new Date(b.published) - new Date(a.published));
 
@@ -121,7 +192,7 @@ export default async function handler(req, res) {
         }
 
         res.status(200).json({
-            articles: articles.slice(0, 10),
+            articles: articles.slice(0, 12),
             featured: articles[0] || null,
             updated: new Date().toISOString()
         });

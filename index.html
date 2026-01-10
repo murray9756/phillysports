@@ -1282,6 +1282,7 @@
                     const imageStyle = featured.image
                         ? `background-image:url('${featured.image}');background-size:cover;background-position:center;`
                         : `background:${featured.teamColor};`;
+                    const featuredSource = featured.source ? ` · ${featured.source}` : '';
                     featuredContainer.innerHTML = `
                         <a href="${featured.link}" target="_blank" class="featured-article">
                             <div class="featured-image" style="${imageStyle}">
@@ -1291,7 +1292,7 @@
                                 <span class="article-tag ${featured.tagClass}">${featured.team}</span>
                                 <h3 class="featured-title">${featured.headline}</h3>
                                 <p class="featured-excerpt">${featured.description}</p>
-                                <div class="article-meta">${timeAgo(featured.published)}</div>
+                                <div class="article-meta">${timeAgo(featured.published)}${featuredSource}</div>
                             </div>
                         </a>
                     `;
@@ -1303,6 +1304,7 @@
                         const thumbStyle = article.image
                             ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
                             : `background:${article.teamColor};`;
+                        const sourceText = article.source ? ` · ${article.source}` : '';
                         return `
                             <a href="${article.link}" target="_blank" class="article-item">
                                 <div class="article-thumb" style="${thumbStyle}">
@@ -1311,7 +1313,7 @@
                                 <div class="article-info">
                                     <span class="article-tag ${article.tagClass}">${article.team}</span>
                                     <h4 class="article-title">${article.headline}</h4>
-                                    <div class="article-meta">${timeAgo(article.published)}</div>
+                                    <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
                                 </div>
                             </a>
                         `;
