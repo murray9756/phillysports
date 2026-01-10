@@ -32,20 +32,25 @@ export default async function handler(req, res) {
         const athletes = data.athletes || [];
 
         // Helper to extract player data
-        const extractPlayer = (player) => ({
-            name: player.displayName || player.fullName,
-            firstName: player.firstName,
-            lastName: player.lastName,
-            number: player.jersey || '',
-            position: player.position?.abbreviation || player.position?.name || '',
-            positionFull: player.position?.displayName || player.position?.name || '',
-            headshot: player.headshot?.href || null,
-            status: player.status?.name || 'Active',
-            college: player.college?.name || '',
-            experience: player.experience?.years || 0,
-            height: player.displayHeight || '',
-            weight: player.displayWeight || ''
-        });
+        const extractPlayer = (player) => {
+            // Find player card link from links array
+            const playerLink = player.links?.find(l => l.rel?.includes('playercard'))?.href || null;
+            return {
+                name: player.displayName || player.fullName,
+                firstName: player.firstName,
+                lastName: player.lastName,
+                number: player.jersey || '',
+                position: player.position?.abbreviation || player.position?.name || '',
+                positionFull: player.position?.displayName || player.position?.name || '',
+                headshot: player.headshot?.href || null,
+                status: player.status?.name || 'Active',
+                college: player.college?.name || '',
+                experience: player.experience?.years || 0,
+                height: player.displayHeight || '',
+                weight: player.displayWeight || '',
+                link: playerLink
+            };
+        };
 
         // Check if athletes array contains direct players or position groups
         for (const item of athletes) {
