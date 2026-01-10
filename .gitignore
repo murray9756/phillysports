@@ -1,0 +1,12 @@
+# User data
+email_subscribers.txt
+
+# Requirements docs
+*.docx
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/

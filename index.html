@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhillySports.com - Your Ultimate Philly Sports Hub</title>
+    <meta name="description" content="The ultimate destination for Philadelphia sports fans. Curated content, trivia, games, and community - all in one place.">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --eagles-silver: #A5ACAF;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --union-gold: #B49759;
+            --dark-bg: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .header.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 2rem;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .header-logo img {
+            width: 55px;
+            height: auto;
+            border-radius: 8px;
+            opacity: 0.95;
+        }
+
+        .header.scrolled .header-logo img {
+            width: 45px;
+        }
+
+        .header-logo span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.4rem 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--eagles-silver);
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)) !important;
+            color: white !important;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(232, 24, 40, 0.3);
+        }
+
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Animated gradient background */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            background: linear-gradient(135deg,
+                var(--eagles-green) 0%,
+                var(--dark-bg) 25%,
+                var(--dark-bg) 50%,
+                var(--phillies-red) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, var(--dark-bg) 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            opacity: 0.95;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--text-primary), var(--eagles-silver));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .value-props {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .value-prop {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .value-prop .icon {
+            font-size: 1.5rem;
+        }
+
+        .cta-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(232, 24, 40, 0.4);
+        }
+
+        .email-form {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--eagles-silver);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .email-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--eagles-green);
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: var(--dark-bg);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--eagles-green), var(--sixers-blue), var(--phillies-red), var(--flyers-orange));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Teams Section */
+        .teams {
+            padding: 5rem 2rem;
+            background: linear-gradient(180deg, var(--dark-bg), var(--card-bg));
+        }
+
+        .teams-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .team-badge {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .team-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .team-eagles { background: var(--eagles-green); }
+        .team-phillies { background: var(--phillies-red); }
+        .team-sixers { background: var(--sixers-blue); }
+        .team-flyers { background: var(--flyers-orange); }
+        .team-union { background: var(--union-gold); color: #000; }
+
+        /* Coming Soon Section */
+        .coming-soon {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: var(--card-bg);
+        }
+
+        .coming-soon h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .coming-soon p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--eagles-green);
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: var(--dark-bg);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--eagles-green);
+            transform: translateY(-3px);
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--eagles-silver);
+            text-decoration: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: var(--dark-bg);
+                flex-direction: column;
+                padding: 5rem 2rem 2rem;
+                gap: 0.5rem;
+                transition: right 0.3s ease;
+                box-shadow: -5px 0 30px rgba(0,0,0,0.5);
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-menu a {
+                padding: 1rem;
+                font-size: 1rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                border-radius: 0;
+            }
+
+            .nav-cta {
+                margin-top: 1rem;
+                text-align: center;
+                border-radius: 25px !important;
+            }
+
+            .header-logo span {
+                display: none;
+            }
+
+            .value-props {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+
+            .email-input {
+                min-width: auto;
+            }
+
+            .team-badge {
+                width: 70px;
+                height: 70px;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Success/Error messages */
+        .success-message,
+        .error-message {
+            display: none;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .success-message {
+            color: var(--eagles-green);
+        }
+
+        .error-message {
+            color: var(--phillies-red);
+        }
+
+        .success-message.show,
+        .error-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .cta-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+        <a href="#home" class="header-logo">
+            <img src="logo.png" alt="PhillySports.com">
+            <span>PhillySports</span>
+        </a>
+        <nav class="nav-menu" id="navMenu">
+            <a href="#features">Features</a>
+            <a href="#teams">Teams</a>
+            <a href="#community">Community</a>
+            <a href="#deals">Deals</a>
+            <a href="#home" class="nav-cta">Join Now</a>
+        </nav>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <img src="logo.png" alt="PhillySports.com Logo" class="logo">
+            <h1>PhillySports.com</h1>
+            <p class="tagline">Your Ultimate Philadelphia Sports Hub</p>
+
+            <div class="value-props">
+                <div class="value-prop">
+                    <span class="icon">&#9201;</span>
+                    <span>Save Time</span>
+                </div>
+                <div class="value-prop">
+                    <span class="icon">&#128176;</span>
+                    <span>Save Money</span>
+                </div>
+                <div class="value-prop">
+                    <span class="icon">&#127918;</span>
+                    <span>Have Fun</span>
+                </div>
+            </div>
+
+            <div class="cta-container">
+                <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Be the first to know when we launch!</p>
+                <form class="email-form" id="signupForm">
+                    <input type="email" class="email-input" placeholder="Enter your email" required>
+                    <button type="submit" class="cta-button">Join the Team</button>
+                </form>
+                <p class="success-message" id="successMessage">You're on the list! Welcome to the team.</p>
+                <p class="error-message" id="errorMessage">Something went wrong. Please try again.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Everything Philly Sports</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">&#128240;</div>
+                <h3>Curated Content</h3>
+                <p>The best podcasts, articles, videos, and hot takes from across the Philly sports universe - all in one place. Community-voted so you see what matters most.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#129504;</div>
+                <h3>Trivia & Games</h3>
+                <p>Test your Philly sports knowledge with daily trivia, compete head-to-head with other fans, and climb the leaderboards for prizes and bragging rights.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#127944;</div>
+                <h3>Pick 'Em & Pools</h3>
+                <p>Run your block pools, pick 'em leagues, and fantasy games with ease. Auto-scoring, leaderboards, and money management built right in.</p>
+            </div>
+            <div class="feature-card" id="community">
+                <div class="feature-icon">&#128101;</div>
+                <h3>Community</h3>
+                <p>Connect with fellow Philly fans, chat during games, organize watch parties, and feel like you're part of something bigger than just watching sports.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#127915;</div>
+                <h3>E-Sports</h3>
+                <p>Gaming tournaments, Fortnite leagues, and competitive gaming for the next generation of Philly fans. Because winning is in our blood.</p>
+            </div>
+            <div class="feature-card" id="deals">
+                <div class="feature-icon">&#128722;</div>
+                <h3>Exclusive Deals</h3>
+                <p>Group buying power for jerseys, tickets, and gear. Access to wholesale prices and face-value tickets for premium members.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teams Section -->
+    <section class="teams" id="teams">
+        <h2 class="section-title">All Your Teams</h2>
+        <div class="teams-grid">
+            <div class="team-badge team-eagles">Eagles</div>
+            <div class="team-badge team-phillies">Phillies</div>
+            <div class="team-badge team-sixers">76ers</div>
+            <div class="team-badge team-flyers">Flyers</div>
+            <div class="team-badge team-union">Union</div>
+        </div>
+    </section>
+
+    <!-- Coming Soon Section -->
+    <section class="coming-soon">
+        <h2>Launching Soon</h2>
+        <p>We're putting the finishing touches on your new Philly sports home. Sign up above to get early access and exclusive launch perks.</p>
+        <div class="countdown" id="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">--</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">--</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">--</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">--</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="https://twitter.com/phillysports" class="social-link" aria-label="Twitter">&#120143;</a>
+            <a href="#" class="social-link" aria-label="Instagram">&#128247;</a>
+            <a href="#" class="social-link" aria-label="Facebook">&#102;</a>
+        </div>
+        <p class="footer-text">
+            &copy; 2024 PhillySports.com | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        </p>
+        <p class="footer-text" style="margin-top: 0.5rem;">
+            Made with &#10084; in Philadelphia
+        </p>
+    </footer>
+
+    <script>
+        // Email signup form
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const emailInput = this.querySelector('.email-input');
+            const submitBtn = this.querySelector('.cta-button');
+            const email = emailInput.value;
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            // Reset messages
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+
+            // Disable button during submission
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Joining...';
+
+            try {
+                const response = await fetch('subscribe.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    successMsg.classList.add('show');
+                    emailInput.value = '';
+                } else {
+                    errorMsg.textContent = result.message || 'Something went wrong. Please try again.';
+                    errorMsg.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                errorMsg.textContent = 'Unable to connect. Please try again later.';
+                errorMsg.classList.add('show');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Join the Team';
+            }
+        });
+
+        // Countdown timer (set to 30 days from now for demo)
+        function updateCountdown() {
+            const launchDate = new Date();
+            launchDate.setDate(launchDate.getDate() + 30);
+
+            const now = new Date();
+            const diff = launchDate - now;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Header scroll effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Smooth scroll for anchor links with header offset
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                if (target) {
+                    const headerHeight = header.offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
