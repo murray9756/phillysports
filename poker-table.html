@@ -9,6 +9,7 @@
     <meta name="description" content="Play Texas Hold'em poker on PhillySports.com">
     <link rel="icon" type="image/png" href="/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <style>
         :root {
             --poker-green: #1a5c3a;
@@ -615,6 +616,14 @@
         let gameState = null;
         let pollInterval = null;
         let myPosition = null;
+        let pusher = null;
+        let tableChannel = null;
+        let privateChannel = null;
+        let myHoleCards = null;
+        let usePusher = false;
+
+        // Pusher configuration
+        const PUSHER_KEY = 'YOUR_PUSHER_KEY'; // Will be replaced with actual key
 
         // Card rendering
         const SUITS = { h: { symbol: '♥', class: 'hearts' }, d: { symbol: '♦', class: 'diamonds' },
@@ -656,8 +665,109 @@
             // Load initial state
             await loadGameState();
 
-            // Start polling
-            pollInterval = setInterval(loadGameState, 2000);
+            // Initialize Pusher for real-time updates
+            initPusher();
+
+            // Start polling as fallback (slower if Pusher is active)
+            pollInterval = setInterval(loadGameState, usePusher ? 10000 : 2000);
+        }
+
+        // Initialize Pusher connection
+        function initPusher() {
+            if (PUSHER_KEY === 'YOUR_PUSHER_KEY' || !PUSHER_KEY) {
+                console.log('Pusher not configured, using polling');
+                return;
+            }
+
+            try {
+                pusher = new Pusher(PUSHER_KEY, {
+                    cluster: 'us2',
+                    authEndpoint: '/api/pusher/auth',
+                    auth: {
+                        headers: {}
+                    }
+                });
+
+                // Subscribe to table channel (public events)
+                tableChannel = pusher.subscribe(`table-${tableId}`);
+
+                tableChannel.bind('new-hand', handleNewHand);
+                tableChannel.bind('player-action', handlePlayerAction);
+                tableChannel.bind('community-cards', handleCommunityCards);
+                tableChannel.bind('hand-complete', handleHandComplete);
+                tableChannel.bind('pot-update', handlePotUpdate);
+
+                // Subscribe to private channel for hole cards
+                if (currentUser) {
+                    privateChannel = pusher.subscribe(`private-user-${currentUser.userId}`);
+                    privateChannel.bind('hole-cards', handleHoleCards);
+                }
+
+                usePusher = true;
+                console.log('Pusher connected');
+
+            } catch (e) {
+                console.error('Pusher initialization failed:', e);
+                usePusher = false;
+            }
+        }
+
+        // Pusher event handlers
+        function handleNewHand(data) {
+            console.log('New hand:', data);
+            myHoleCards = null; // Reset hole cards
+            loadGameState(); // Refresh full state
+        }
+
+        function handlePlayerAction(data) {
+            console.log('Player action:', data);
+            // Update pot and current bet immediately
+            if (gameState && gameState.table && gameState.table.currentHand) {
+                gameState.table.currentHand.pot = data.pot;
+                gameState.table.currentHand.currentBet = data.currentBet;
+                gameState.table.currentHand.actingPosition = data.actingPosition;
+                gameState.table.currentHand.status = data.status;
+
+                // Update the player who acted
+                const seat = gameState.table.seats.find(s => s.position === data.position);
+                if (seat) {
+                    seat.lastAction = data.action;
+                }
+            }
+            renderTable();
+            loadGameState(); // Get full updated state
+        }
+
+        function handleCommunityCards(data) {
+            console.log('Community cards:', data);
+            if (gameState && gameState.table && gameState.table.currentHand) {
+                gameState.table.currentHand.communityCards = data.communityCards;
+                gameState.table.currentHand.status = data.status;
+            }
+            renderTable();
+        }
+
+        function handleHandComplete(data) {
+            console.log('Hand complete:', data);
+            if (data.winners && data.winners.length > 0) {
+                showWinner(data.winners[0]);
+            }
+            loadGameState(); // Refresh full state
+        }
+
+        function handlePotUpdate(data) {
+            if (gameState && gameState.table && gameState.table.currentHand) {
+                gameState.table.currentHand.pot = data.pot;
+            }
+            document.getElementById('potDisplay').textContent = `Pot: ${data.pot}`;
+        }
+
+        function handleHoleCards(data) {
+            console.log('Received hole cards:', data);
+            if (data.tableId === tableId) {
+                myHoleCards = data.cards;
+                renderTable();
+            }
         }
 
         async function checkAuth() {
@@ -775,8 +885,10 @@
                     // Player cards
                     let cardsHtml = '';
                     if (hand && isActive) {
-                        if (isMe && table?.userSeat?.cards) {
-                            cardsHtml = `<div class="player-cards">${table.userSeat.cards.map(c => renderCard(c)).join('')}</div>`;
+                        // Check for cards from Pusher (myHoleCards), API (table.userSeat.cards), or showdown (handPlayer.holeCards)
+                        if (isMe && (myHoleCards || table?.userSeat?.cards)) {
+                            const cards = myHoleCards || table.userSeat.cards;
+                            cardsHtml = `<div class="player-cards">${cards.map(c => renderCard(c)).join('')}</div>`;
                         } else if (handPlayer?.holeCards) {
                             cardsHtml = `<div class="player-cards">${handPlayer.holeCards.map(c => renderCard(c)).join('')}</div>`;
                         } else if (!handPlayer?.isFolded) {
@@ -973,6 +1085,9 @@
         window.addEventListener('beforeunload', () => {
             if (pollInterval) clearInterval(pollInterval);
             if (botLoopInterval) clearInterval(botLoopInterval);
+            if (pusher) {
+                pusher.disconnect();
+            }
         });
 
         // ============ Test Controls ============

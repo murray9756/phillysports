@@ -6,6 +6,7 @@ import { getCollection } from '../mongodb.js';
 import { createDeck, shuffleDeck, dealHoleCards, dealFlop, dealTurn, dealRiver } from './deck.js';
 import { evaluateHand, compareHands, findWinners } from './evaluator.js';
 import { HAND_STATUS, ACTIONS, DEFAULTS } from './constants.js';
+import { broadcastTableUpdate, sendPrivateCards, PUSHER_EVENTS } from '../pusher.js';
 
 /**
  * Initialize a new hand at a table
@@ -171,6 +172,30 @@ export async function startNewHand(tableId, blinds = { small: 10, big: 20, ante:
     );
   }
 
+  // Broadcast new hand started (without revealing cards)
+  broadcastTableUpdate(tableId, PUSHER_EVENTS.NEW_HAND, {
+    handId: handId.toString(),
+    handNumber: hand.handNumber,
+    dealerPosition,
+    smallBlindPosition: sbPosition,
+    bigBlindPosition: bbPosition,
+    actingPosition: hand.actingPosition,
+    pot: hand.pot,
+    currentBet: hand.currentBet,
+    players: handPlayers.map(p => ({
+      playerId: p.playerId.toString(),
+      position: p.position,
+      chipStack: p.chipStackCurrent,
+      currentBet: p.currentRoundBet,
+      isAllIn: p.isAllIn
+    }))
+  });
+
+  // Send private hole cards to each player
+  for (const player of handPlayers) {
+    sendPrivateCards(player.playerId.toString(), tableId, player.holeCards);
+  }
+
   return { handId, hand };
 }
 
@@ -269,6 +294,43 @@ export async function processAction(handId, playerId, action, amount = 0) {
         }
       }
     );
+  }
+
+  // Broadcast player action
+  const tableIdStr = hand.tableId.toString();
+  broadcastTableUpdate(tableIdStr, PUSHER_EVENTS.PLAYER_ACTION, {
+    playerId: playerId.toString(),
+    position: player.position,
+    action,
+    amount: actionResult.amount,
+    pot: hand.pot,
+    currentBet: hand.currentBet,
+    actingPosition: hand.actingPosition,
+    status: hand.status
+  });
+
+  // Broadcast community cards if new street was dealt
+  if (hand.communityCards.length > 0) {
+    broadcastTableUpdate(tableIdStr, PUSHER_EVENTS.COMMUNITY_CARDS, {
+      communityCards: hand.communityCards,
+      status: hand.status
+    });
+  }
+
+  // Broadcast hand complete if applicable
+  if (hand.status === HAND_STATUS.COMPLETE) {
+    broadcastTableUpdate(tableIdStr, PUSHER_EVENTS.HAND_COMPLETE, {
+      winners: hand.winners,
+      players: hand.players.map(p => ({
+        playerId: p.playerId.toString(),
+        position: p.position,
+        holeCards: p.holeCards,
+        chipStack: p.chipStackCurrent,
+        isFolded: p.isFolded
+      })),
+      pot: hand.pot,
+      communityCards: hand.communityCards
+    });
   }
 
   return {

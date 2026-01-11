@@ -6,6 +6,7 @@
   "dependencies": {
     "mongodb": "^5.9.0",
     "jsonwebtoken": "^9.0.2",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "pusher": "^5.2.0"
   }
 }
