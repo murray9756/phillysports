@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Betting Odds | PhillySports.com</title>
+    <meta name="description" content="Live betting odds for NFL, NBA, MLB, NHL, and college sports. Spreads, moneylines, and totals updated throughout the day.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #1565c0;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --positive-odds: #2e7d32;
+            --negative-odds: #1a1a1a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1565c0, #0d47a1); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
+        .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { font-size: 1rem; opacity: 0.9; }
+        .bookmaker-badge { background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-weight: 600; font-size: 0.85rem; }
+
+        /* Sport Tabs */
+        .sport-tabs { display: flex; justify-content: center; gap: 0.5rem; padding: 1rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .sport-tab { display: flex; align-items: center; gap: 0.35rem; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; border: 2px solid var(--border-color); background: transparent; }
+        .sport-tab:hover { border-color: var(--accent-color); }
+        .sport-tab.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .tab-icon { font-size: 1rem; }
+
+        /* Date Selector */
+        .date-selector { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 1rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); }
+        .date-nav-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border-color); background: transparent; cursor: pointer; font-size: 1.1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+        .date-nav-btn:hover { border-color: var(--accent-color); background: rgba(21, 101, 192, 0.05); }
+        .date-display { display: flex; flex-direction: column; align-items: center; min-width: 150px; }
+        .date-display input[type="date"] { border: none; background: transparent; font-family: inherit; font-size: 1rem; font-weight: 600; text-align: center; cursor: pointer; color: var(--text-primary); }
+        .date-label { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Main Container */
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Odds Header */
+        .odds-legend { display: flex; justify-content: flex-end; gap: 1.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .legend-item { min-width: 70px; text-align: center; }
+
+        /* Sport Section */
+        .sport-section { margin-bottom: 2rem; }
+        .sport-section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Odds Card */
+        .odds-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 1rem; }
+        .odds-card-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #f8f7f5; border-bottom: 1px solid var(--border-color); }
+        .sport-badge { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; color: white; }
+        .sport-badge.NFL { background: #013369; }
+        .sport-badge.NBA { background: #C9082A; }
+        .sport-badge.MLB { background: #002D72; }
+        .sport-badge.NHL { background: #000000; }
+        .sport-badge.NCAAF { background: #8B4513; }
+        .sport-badge.NCAAB { background: #FF6B00; }
+        .game-time { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+        /* Team Rows */
+        .odds-matchup { }
+        .team-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .team-row:last-child { border-bottom: none; }
+        .team-info { display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 0; }
+        .team-name { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .home-indicator { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); background: #f0f0f0; padding: 0.15rem 0.35rem; border-radius: 3px; flex-shrink: 0; }
+
+        /* Odds Cells */
+        .odds-cells { display: flex; gap: 0.5rem; flex-shrink: 0; }
+        .odds-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 70px; padding: 0.5rem; background: #f8f7f5; border-radius: 6px; cursor: default; transition: background 0.2s; }
+        .odds-cell:hover { background: #e8e5e0; }
+        .odds-value { font-weight: 700; font-size: 0.9rem; }
+        .odds-value.positive { color: var(--positive-odds); }
+        .odds-price { font-size: 0.7rem; color: var(--text-muted); }
+        .odds-label { font-size: 0.6rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .odds-na { color: var(--text-muted); font-size: 0.8rem; }
+
+        /* Card Footer */
+        .odds-card-footer { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; background: #f8f7f5; font-size: 0.7rem; color: var(--text-muted); }
+
+        /* States */
+        .loading-state, .empty-state, .error-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .error-state h3, .empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+        .retry-btn { margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .retry-btn:hover { opacity: 0.9; }
+
+        /* Warning Banner */
+        .warning-banner { background: #fff3e0; color: #e65100; padding: 0.75rem 1rem; text-align: center; font-size: 0.85rem; font-weight: 500; display: none; }
+
+        /* Demo Banner */
+        .demo-banner { background: #e3f2fd; color: #1565c0; padding: 0.75rem 1rem; text-align: center; font-size: 0.85rem; font-weight: 500; }
+
+        /* Footer */
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 1.75rem; }
+            .sport-tabs { gap: 0.35rem; padding: 0.75rem; }
+            .sport-tab { padding: 0.4rem 0.75rem; font-size: 0.75rem; }
+            .tab-icon { display: none; }
+            .main-container { padding: 1rem; }
+            .odds-legend { display: none; }
+            .team-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .team-info { width: 100%; }
+            .odds-cells { width: 100%; justify-content: space-between; }
+            .odds-cell { min-width: 60px; flex: 1; }
+            .team-name { font-size: 0.9rem; }
+        }
+
+        @media (max-width: 480px) {
+            .sport-tabs { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.5rem; }
+            .sport-tabs::-webkit-scrollbar { display: none; }
+            .sport-tab { flex-shrink: 0; }
+            .odds-cell { min-width: 55px; padding: 0.4rem; }
+            .odds-value { font-size: 0.8rem; }
+            .date-selector { gap: 0.5rem; }
+            .date-display { min-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <h1>Betting Odds</h1>
+        <p>Live spreads, moneylines, and totals for today's games</p>
+        <div class="bookmaker-badge">
+            <span>Odds via DraftKings & FanDuel</span>
+        </div>
+    </section>
+
+    <div class="sport-tabs" id="sportTabs">
+        <button class="sport-tab active" data-sport="all">All Sports</button>
+        <button class="sport-tab" data-sport="NFL"><span class="tab-icon">&#127944;</span> NFL</button>
+        <button class="sport-tab" data-sport="NBA"><span class="tab-icon">&#127936;</span> NBA</button>
+        <button class="sport-tab" data-sport="MLB"><span class="tab-icon">&#9918;</span> MLB</button>
+        <button class="sport-tab" data-sport="NHL"><span class="tab-icon">&#127954;</span> NHL</button>
+        <button class="sport-tab" data-sport="NCAAF"><span class="tab-icon">&#127944;</span> NCAAF</button>
+        <button class="sport-tab" data-sport="NCAAB"><span class="tab-icon">&#127936;</span> NCAAB</button>
+    </div>
+
+    <div class="date-selector">
+        <button class="date-nav-btn" id="prevDay" title="Previous Day">&larr;</button>
+        <div class="date-display">
+            <input type="date" id="dateInput">
+            <span class="date-label" id="dateLabel">Today</span>
+        </div>
+        <button class="date-nav-btn" id="nextDay" title="Next Day">&rarr;</button>
+    </div>
+
+    <div class="warning-banner" id="warningBanner"></div>
+    <div class="demo-banner" id="demoBanner" style="display: none;">Demo Mode - Showing sample odds data</div>
+
+    <main class="main-container">
+        <div class="odds-legend">
+            <span class="legend-item">Spread</span>
+            <span class="legend-item">Moneyline</span>
+            <span class="legend-item">Total</span>
+        </div>
+        <div id="oddsContent">
+            <div class="loading-state">Loading odds...</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved. Odds for informational purposes only.</p>
+    </footer>
+
+    <script>
+        let selectedSport = 'all';
+        let selectedDate = new Date().toISOString().split('T')[0];
+        let currentUser = null;
+
+        // Auth check
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    document.getElementById('headerAuth').innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars">
+                            <span>&#129689;</span>
+                            <span>${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        window.location.href = '/';
+                    });
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+
+        // Format helpers
+        function formatGameTime(isoString) {
+            const date = new Date(isoString);
+            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function formatOdds(value) {
+            if (value === undefined || value === null) return '-';
+            if (value > 0) return '+' + value;
+            return value.toString();
+        }
+
+        function formatPoint(value) {
+            if (value === undefined || value === null) return '-';
+            if (value > 0) return '+' + value;
+            return value.toString();
+        }
+
+        function timeAgo(isoString) {
+            const now = new Date();
+            const date = new Date(isoString);
+            const minutes = Math.floor((now - date) / 60000);
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return minutes + ' min ago';
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + ' hr ago';
+            return Math.floor(hours / 24) + ' days ago';
+        }
+
+        // Load odds
+        async function loadOdds() {
+            const container = document.getElementById('oddsContent');
+            container.innerHTML = '<div class="loading-state">Loading odds...</div>';
+
+            try {
+                const sportParam = selectedSport !== 'all' ? `&sport=${selectedSport}` : '';
+                const response = await fetch(`/api/odds?date=${selectedDate}${sportParam}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load odds');
+                }
+
+                // Show demo banner if in demo mode
+                if (data.demo) {
+                    document.getElementById('demoBanner').style.display = 'block';
+                } else {
+                    document.getElementById('demoBanner').style.display = 'none';
+                }
+
+                // Show warning if stale data
+                if (data.stale) {
+                    showWarning(data.warning || 'Showing cached data');
+                }
+
+                if (!data.games || data.games.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Games Available</h3>
+                            <p>No games with odds found for this date. Try selecting a different sport or date.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderOddsCards(data.games);
+
+            } catch (error) {
+                console.error('Load odds error:', error);
+                container.innerHTML = `
+                    <div class="error-state">
+                        <h3>Unable to Load Odds</h3>
+                        <p>${error.message || 'Please try again later.'}</p>
+                        <button class="retry-btn" onclick="loadOdds()">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
+        function showWarning(message) {
+            const banner = document.getElementById('warningBanner');
+            banner.textContent = message;
+            banner.style.display = 'block';
+        }
+
+        // Render odds cards
+        function renderOddsCards(games) {
+            const container = document.getElementById('oddsContent');
+
+            // Group games by sport
+            const groupedGames = games.reduce((acc, game) => {
+                const sport = game.sport;
+                if (!acc[sport]) acc[sport] = [];
+                acc[sport].push(game);
+                return acc;
+            }, {});
+
+            let html = '';
+
+            // Sport order
+            const sportOrder = ['NFL', 'NBA', 'NHL', 'MLB', 'NCAAF', 'NCAAB'];
+
+            for (const sport of sportOrder) {
+                const sportGames = groupedGames[sport];
+                if (!sportGames || sportGames.length === 0) continue;
+
+                html += `<div class="sport-section">`;
+                html += `<h2 class="sport-section-title"><span class="sport-badge ${sport}">${sport}</span> ${getFullSportName(sport)}</h2>`;
+
+                for (const game of sportGames) {
+                    html += renderOddsCard(game);
+                }
+
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function getFullSportName(sport) {
+            const names = {
+                'NFL': 'Pro Football',
+                'NBA': 'Pro Basketball',
+                'MLB': 'Pro Baseball',
+                'NHL': 'Pro Hockey',
+                'NCAAF': 'College Football',
+                'NCAAB': 'College Basketball'
+            };
+            return names[sport] || sport;
+        }
+
+        function renderOddsCard(game) {
+            const spread = game.odds?.spread;
+            const moneyline = game.odds?.moneyline;
+            const total = game.odds?.total;
+
+            return `
+                <div class="odds-card" data-sport="${game.sport}">
+                    <div class="odds-card-header">
+                        <span class="sport-badge ${game.sport}">${game.sport}</span>
+                        <span class="game-time">${formatGameTime(game.commenceTime)}</span>
+                    </div>
+
+                    <div class="odds-matchup">
+                        <!-- Away Team -->
+                        <div class="team-row away">
+                            <div class="team-info">
+                                <span class="team-name">${game.awayTeam}</span>
+                            </div>
+                            <div class="odds-cells">
+                                <div class="odds-cell spread" title="Spread">
+                                    ${spread ? `
+                                        <span class="odds-value">${formatPoint(spread.away?.point)}</span>
+                                        <span class="odds-price">${formatOdds(spread.away?.price)}</span>
+                                    ` : '<span class="odds-na">-</span>'}
+                                </div>
+                                <div class="odds-cell moneyline" title="Moneyline">
+                                    ${moneyline ? `
+                                        <span class="odds-value ${moneyline.away > 0 ? 'positive' : ''}">${formatOdds(moneyline.away)}</span>
+                                    ` : '<span class="odds-na">-</span>'}
+                                </div>
+                                <div class="odds-cell total" title="Total">
+                                    ${total ? `
+                                        <span class="odds-label">O</span>
+                                        <span class="odds-value">${total.over?.point || '-'}</span>
+                                        <span class="odds-price">${formatOdds(total.over?.price)}</span>
+                                    ` : '<span class="odds-na">-</span>'}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Home Team -->
+                        <div class="team-row home">
+                            <div class="team-info">
+                                <span class="team-name">${game.homeTeam}</span>
+                                <span class="home-indicator">HOME</span>
+                            </div>
+                            <div class="odds-cells">
+                                <div class="odds-cell spread" title="Spread">
+                                    ${spread ? `
+                                        <span class="odds-value">${formatPoint(spread.home?.point)}</span>
+                                        <span class="odds-price">${formatOdds(spread.home?.price)}</span>
+                                    ` : '<span class="odds-na">-</span>'}
+                                </div>
+                                <div class="odds-cell moneyline" title="Moneyline">
+                                    ${moneyline ? `
+                                        <span class="odds-value ${moneyline.home > 0 ? 'positive' : ''}">${formatOdds(moneyline.home)}</span>
+                                    ` : '<span class="odds-na">-</span>'}
+                                </div>
+                                <div class="odds-cell total" title="Total">
+                                    ${total ? `
+                                        <span class="odds-label">U</span>
+                                        <span class="odds-value">${total.under?.point || '-'}</span>
+                                        <span class="odds-price">${formatOdds(total.under?.price)}</span>
+                                    ` : '<span class="odds-na">-</span>'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="odds-card-footer">
+                        <span class="bookmaker-info">via ${game.bookmaker || 'DraftKings'}</span>
+                        <span class="last-update">${timeAgo(game.lastUpdate)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Tab handling
+        document.querySelectorAll('.sport-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                selectedSport = tab.dataset.sport;
+                loadOdds();
+            });
+        });
+
+        // Date navigation
+        function initDateSelector() {
+            const dateInput = document.getElementById('dateInput');
+            const dateLabel = document.getElementById('dateLabel');
+            const prevBtn = document.getElementById('prevDay');
+            const nextBtn = document.getElementById('nextDay');
+
+            dateInput.value = selectedDate;
+            updateDateLabel();
+
+            dateInput.addEventListener('change', () => {
+                selectedDate = dateInput.value;
+                updateDateLabel();
+                loadOdds();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                const date = new Date(selectedDate);
+                date.setDate(date.getDate() - 1);
+                selectedDate = date.toISOString().split('T')[0];
+                dateInput.value = selectedDate;
+                updateDateLabel();
+                loadOdds();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const date = new Date(selectedDate);
+                date.setDate(date.getDate() + 1);
+                selectedDate = date.toISOString().split('T')[0];
+                dateInput.value = selectedDate;
+                updateDateLabel();
+                loadOdds();
+            });
+
+            function updateDateLabel() {
+                const today = new Date().toISOString().split('T')[0];
+                const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+                if (selectedDate === today) {
+                    dateLabel.textContent = 'Today';
+                } else if (selectedDate === tomorrow) {
+                    dateLabel.textContent = 'Tomorrow';
+                } else if (selectedDate === yesterday) {
+                    dateLabel.textContent = 'Yesterday';
+                } else {
+                    dateLabel.textContent = new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long' });
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            initDateSelector();
+            loadOdds();
+        });
+    </script>
+</body>
+</html>
