@@ -203,7 +203,8 @@
                     <span class="stats-attribution">Data from <a href="https://www.basketball-reference.com/teams/PHI/" target="_blank">Basketball-Reference.com</a></span>
                 </div>
                 <div class="stats-tabs" id="statsTabs">
-                    <button class="stats-tab active" data-category="points">Points</button>
+                    <button class="stats-tab active" data-category="currentSeason">2024-25 Season</button>
+                    <button class="stats-tab" data-category="points">Points</button>
                     <button class="stats-tab" data-category="rebounds">Rebounds</button>
                     <button class="stats-tab" data-category="assists">Assists</button>
                     <button class="stats-tab" data-category="steals">Steals</button>
@@ -259,7 +260,7 @@
             try {
                 const r = await fetch('/api/stats/sixers');
                 statsData = await r.json();
-                renderStatsTable('points');
+                renderStatsTable('currentSeason');
                 if (statsData.lastUpdated) {
                     const date = new Date(statsData.lastUpdated);
                     document.getElementById('statsLastUpdated').textContent =
@@ -267,22 +268,40 @@
                 }
             } catch (e) {
                 document.getElementById('statsTableBody').innerHTML =
-                    '<tr><td colspan="4" class="stats-loading">Unable to load stats</td></tr>';
+                    '<tr><td colspan="8" class="stats-loading">Unable to load stats</td></tr>';
             }
         }
         function renderStatsTable(category) {
-            if (!statsData || !statsData[category]) return;
             const thead = document.getElementById('statsTableHead');
             const tbody = document.getElementById('statsTableBody');
-            const label = categoryLabels[category] || category;
-            thead.innerHTML = `<tr><th>#</th><th>Player</th><th class="stat-highlight">${label}</th></tr>`;
-            tbody.innerHTML = statsData[category].map(p => `
-                <tr>
-                    <td>${p.rank}</td>
-                    <td><span class="player-name">${p.player}</span><br><span class="player-years">${p.years}</span></td>
-                    <td class="stat-highlight">${p.value.toLocaleString()}</td>
-                </tr>
-            `).join('');
+            if (category === 'currentSeason') {
+                if (!statsData || !statsData.currentSeason) return;
+                const season = statsData.currentSeason;
+                thead.innerHTML = `<tr><th>Player</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th></tr>`;
+                const teamRow = `<tr style="background:#e8f4fc;font-weight:600;">
+                    <td>Team Averages</td><td>-</td><td>-</td>
+                    <td class="stat-highlight">${season.team.ppg}</td>
+                    <td>${season.team.rpg}</td><td>${season.team.apg}</td>
+                    <td>-</td><td>-</td></tr>`;
+                const playerRows = season.players.map(p => `
+                    <tr><td><span class="player-name">${p.player}</span></td>
+                    <td>${p.gp}</td><td>${p.mpg}</td>
+                    <td class="stat-highlight">${p.ppg}</td>
+                    <td>${p.rpg}</td><td>${p.apg}</td>
+                    <td>${p.spg}</td><td>${p.bpg}</td></tr>`).join('');
+                tbody.innerHTML = teamRow + playerRows;
+            } else {
+                if (!statsData || !statsData[category]) return;
+                const label = categoryLabels[category] || category;
+                thead.innerHTML = `<tr><th>#</th><th>Player</th><th class="stat-highlight">${label}</th></tr>`;
+                tbody.innerHTML = statsData[category].map(p => `
+                    <tr>
+                        <td>${p.rank}</td>
+                        <td><span class="player-name">${p.player}</span><br><span class="player-years">${p.years}</span></td>
+                        <td class="stat-highlight">${p.value.toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            }
         }
         document.getElementById('statsTabs').addEventListener('click', (e) => {
             if (e.target.classList.contains('stats-tab')) {

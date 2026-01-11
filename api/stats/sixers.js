@@ -44,6 +44,7 @@ export default async function handler(req, res) {
         fieldGoals: cachedStats.fieldGoals,
         threePointers: cachedStats.threePointers,
         freeThrows: cachedStats.freeThrows,
+        currentSeason: cachedStats.currentSeason,
         lastUpdated: cachedStats.lastUpdated,
         source: cachedStats.source,
         cached: true
