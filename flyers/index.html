@@ -43,6 +43,8 @@
         .header-logo { display: flex; align-items: center; gap: 0.5rem; }
         .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
         .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-logo .tagline { font-size: 0.65rem; font-weight: 500; color: #ffd700; font-style: italic; margin-top: -2px; }
+        .header-logo .logo-text { display: flex; flex-direction: column; line-height: 1.2; }
         .header-auth { display: flex; align-items: center; gap: 1rem; }
         .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
         .header-auth a:hover { background: rgba(255,255,255,0.1); }
@@ -148,7 +150,7 @@
 </head>
 <body>
     <header class="header">
-        <div class="header-top"><a href="/" class="header-logo"><img src="/logo.png" alt="PhillySports.com"><span>PhillySports</span></a><div class="header-auth" id="headerAuth"><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
+        <div class="header-top"><a href="/" class="header-logo"><img src="/logo.png" alt="PhillySports.com"><div class="logo-text"><span>PhillySports</span><span class="tagline">Where the Diehards, Play Hard</span></div></a><div class="header-auth" id="headerAuth"><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
         <nav class="team-nav"><div class="team-nav-inner">
             <a href="/" class="team-tab">All Teams</a>
             <a href="/eagles" class="team-tab">Eagles</a>

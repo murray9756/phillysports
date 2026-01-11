@@ -139,6 +139,20 @@
             color: #ffffff;
         }
 
+        .header-logo .tagline {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: #ffd700;
+            font-style: italic;
+            margin-top: -2px;
+        }
+
+        .header-logo .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
         .header-signup {
             display: flex;
             align-items: center;
@@ -1013,7 +1027,10 @@
         <div class="header-top">
             <a href="/" class="header-logo">
                 <img src="logo.png" alt="PhillySports.com">
-                <span>PhillySports</span>
+                <div class="logo-text">
+                    <span>PhillySports</span>
+                    <span class="tagline">Where the Diehards, Play Hard</span>
+                </div>
             </a>
             <div class="header-auth" id="headerAuth">
                 <a href="/login.html">Login</a>
