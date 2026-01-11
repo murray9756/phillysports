@@ -14,7 +14,7 @@
     <title>PhillySports.com - Philadelphia Sports News, Scores & More</title>
     <meta name="description" content="Your Philadelphia sports portal. Eagles, Phillies, 76ers, Flyers, and Union news, scores, schedules, and trivia.">
     <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --eagles-green: #004C54;
@@ -23,13 +23,15 @@
             --sixers-blue: #006BB6;
             --flyers-orange: #F74902;
             --union-gold: #B49759;
-            --dark-bg: #0a0a0a;
-            --card-bg: #151515;
-            --card-bg-hover: #1a1a1a;
-            --border-color: #252525;
-            --text-primary: #ffffff;
-            --text-secondary: #888888;
-            --text-muted: #666666;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --card-bg-hover: #fafafa;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
         }
 
         * {
@@ -39,10 +41,10 @@
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         a {
@@ -52,8 +54,8 @@
 
         /* Header */
         .header {
-            background: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+            background: var(--header-bg);
+            border-bottom: 3px solid var(--accent-color);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -83,7 +85,7 @@
         .header-logo span {
             font-weight: 700;
             font-size: 1.1rem;
-            color: var(--text-primary);
+            color: #ffffff;
         }
 
         .header-signup {
@@ -94,17 +96,17 @@
 
         .header-signup input {
             padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color);
+            border: 1px solid #444;
             border-radius: 4px;
-            background: var(--dark-bg);
-            color: var(--text-primary);
+            background: #3a3a3a;
+            color: #ffffff;
             font-size: 0.8rem;
             width: 180px;
             font-family: inherit;
         }
 
         .header-signup input::placeholder {
-            color: var(--text-muted);
+            color: #999999;
         }
 
         .header-signup button {
@@ -126,8 +128,8 @@
 
         /* Team Navigation */
         .team-nav {
-            background: var(--dark-bg);
-            border-bottom: 1px solid var(--border-color);
+            background: var(--header-bg);
+            border-bottom: 1px solid #444;
         }
 
         .team-nav-inner {
@@ -142,7 +144,7 @@
             padding: 0.75rem 1.25rem;
             font-size: 0.85rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: #aaaaaa;
             border-bottom: 3px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
@@ -150,11 +152,11 @@
         }
 
         .team-tab:hover {
-            color: var(--text-primary);
+            color: #ffffff;
         }
 
         .team-tab.active {
-            color: var(--text-primary);
+            color: #ffffff;
             border-bottom-color: var(--phillies-red);
         }
 
@@ -208,11 +210,13 @@
             border-radius: 8px;
             overflow: hidden;
             border: 1px solid var(--border-color);
-            transition: border-color 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: box-shadow 0.2s, border-color 0.2s;
         }
 
         .featured-article:hover {
             border-color: var(--text-muted);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
         }
 
         .featured-image {
@@ -242,10 +246,10 @@
             margin-bottom: 0.5rem;
         }
 
-        .tag-eagles { background: var(--eagles-green); }
-        .tag-phillies { background: var(--phillies-red); }
-        .tag-sixers { background: var(--sixers-blue); }
-        .tag-flyers { background: var(--flyers-orange); }
+        .tag-eagles { background: var(--eagles-green); color: #fff; }
+        .tag-phillies { background: var(--phillies-red); color: #fff; }
+        .tag-sixers { background: var(--sixers-blue); color: #fff; }
+        .tag-flyers { background: var(--flyers-orange); color: #fff; }
         .tag-union { background: var(--union-gold); color: #000; }
 
         .featured-title {
@@ -363,11 +367,13 @@
             background: var(--card-bg);
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            transition: border-color 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s, border-color 0.2s;
         }
 
         .article-item:hover {
             border-color: var(--text-muted);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .article-thumb {
@@ -468,12 +474,13 @@
             background: var(--card-bg);
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             overflow: hidden;
         }
 
         .widget-header {
             padding: 0.75rem 1rem;
-            background: var(--dark-bg);
+            background: #e8e3db;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
@@ -607,7 +614,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1rem;
-            background: var(--dark-bg);
+            background: #e8e3db;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -835,7 +842,7 @@
             display: none;
             background: none;
             border: none;
-            color: var(--text-primary);
+            color: #ffffff;
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.25rem;
