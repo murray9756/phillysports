@@ -1,0 +1,112 @@
+{
+  "points": [
+    { "rank": 1, "player": "Hal Greer", "years": "1958-1973", "value": 21586 },
+    { "rank": 2, "player": "Allen Iverson", "years": "1996-2010", "value": 19931 },
+    { "rank": 3, "player": "Dolph Schayes", "years": "1949-1964", "value": 18438 },
+    { "rank": 4, "player": "Julius Erving", "years": "1976-1987", "value": 18364 },
+    { "rank": 5, "player": "Charles Barkley", "years": "1984-1992", "value": 14184 },
+    { "rank": 6, "player": "Billy Cunningham", "years": "1965-1976", "value": 13626 },
+    { "rank": 7, "player": "Joel Embiid", "years": "2016-present", "value": 12970 },
+    { "rank": 8, "player": "Red Kerr", "years": "1954-1965", "value": 11699 },
+    { "rank": 9, "player": "Maurice Cheeks", "years": "1978-1989", "value": 10429 },
+    { "rank": 10, "player": "Andre Iguodala", "years": "2004-2012", "value": 9422 }
+  ],
+  "rebounds": [
+    { "rank": 1, "player": "Dolph Schayes", "years": "1949-1964", "value": 11256 },
+    { "rank": 2, "player": "Red Kerr", "years": "1954-1965", "value": 9506 },
+    { "rank": 3, "player": "Charles Barkley", "years": "1984-1992", "value": 7079 },
+    { "rank": 4, "player": "Billy Cunningham", "years": "1965-1976", "value": 6638 },
+    { "rank": 5, "player": "Wilt Chamberlain", "years": "1965-1968", "value": 6632 },
+    { "rank": 6, "player": "Hal Greer", "years": "1958-1973", "value": 5665 },
+    { "rank": 7, "player": "Julius Erving", "years": "1976-1987", "value": 5601 },
+    { "rank": 8, "player": "Joel Embiid", "years": "2016-present", "value": 5121 },
+    { "rank": 9, "player": "Samuel Dalembert", "years": "2001-2010", "value": 4844 },
+    { "rank": 10, "player": "Luke Jackson", "years": "1964-1972", "value": 4613 }
+  ],
+  "assists": [
+    { "rank": 1, "player": "Maurice Cheeks", "years": "1978-1989", "value": 6212 },
+    { "rank": 2, "player": "Hal Greer", "years": "1958-1973", "value": 4540 },
+    { "rank": 3, "player": "Allen Iverson", "years": "1996-2010", "value": 4385 },
+    { "rank": 4, "player": "Julius Erving", "years": "1976-1987", "value": 3224 },
+    { "rank": 5, "player": "Dolph Schayes", "years": "1949-1964", "value": 3072 },
+    { "rank": 6, "player": "Andre Iguodala", "years": "2004-2012", "value": 2991 },
+    { "rank": 7, "player": "Eric Snow", "years": "1998-2004", "value": 2965 },
+    { "rank": 8, "player": "Larry Costello", "years": "1954-1968", "value": 2901 },
+    { "rank": 9, "player": "Billy Cunningham", "years": "1965-1976", "value": 2625 },
+    { "rank": 10, "player": "Paul Seymour", "years": "1949-1960", "value": 2335 }
+  ],
+  "steals": [
+    { "rank": 1, "player": "Maurice Cheeks", "years": "1978-1989", "value": 1942 },
+    { "rank": 2, "player": "Allen Iverson", "years": "1996-2010", "value": 1644 },
+    { "rank": 3, "player": "Julius Erving", "years": "1976-1987", "value": 1508 },
+    { "rank": 4, "player": "Andre Iguodala", "years": "2004-2012", "value": 1076 },
+    { "rank": 5, "player": "Charles Barkley", "years": "1984-1992", "value": 1007 },
+    { "rank": 6, "player": "Steve Mix", "years": "1973-1982", "value": 851 },
+    { "rank": 7, "player": "Bobby Jones", "years": "1978-1986", "value": 727 },
+    { "rank": 8, "player": "Hersey Hawkins", "years": "1988-1993", "value": 722 },
+    { "rank": 9, "player": "Thaddeus Young", "years": "2007-2014", "value": 708 },
+    { "rank": 10, "player": "Eric Snow", "years": "1998-2004", "value": 702 }
+  ],
+  "blocks": [
+    { "rank": 1, "player": "Julius Erving", "years": "1976-1987", "value": 1293 },
+    { "rank": 2, "player": "Samuel Dalembert", "years": "2001-2010", "value": 1131 },
+    { "rank": 3, "player": "Caldwell Jones", "years": "1976-1982", "value": 926 },
+    { "rank": 4, "player": "Joel Embiid", "years": "2016-present", "value": 762 },
+    { "rank": 5, "player": "Theo Ratliff", "years": "1995-2001", "value": 757 },
+    { "rank": 6, "player": "Bobby Jones", "years": "1978-1986", "value": 694 },
+    { "rank": 7, "player": "Darryl Dawkins", "years": "1975-1982", "value": 635 },
+    { "rank": 8, "player": "Charles Barkley", "years": "1984-1992", "value": 606 },
+    { "rank": 9, "player": "Manute Bol", "years": "1990-1993", "value": 580 },
+    { "rank": 10, "player": "Clarence Weatherspoon", "years": "1992-1997", "value": 496 }
+  ],
+  "games": [
+    { "rank": 1, "player": "Hal Greer", "years": "1958-1973", "value": 1122 },
+    { "rank": 2, "player": "Dolph Schayes", "years": "1949-1964", "value": 996 },
+    { "rank": 3, "player": "Maurice Cheeks", "years": "1978-1989", "value": 853 },
+    { "rank": 4, "player": "Julius Erving", "years": "1976-1987", "value": 836 },
+    { "rank": 5, "player": "Red Kerr", "years": "1954-1965", "value": 834 },
+    { "rank": 6, "player": "Allen Iverson", "years": "1996-2010", "value": 722 },
+    { "rank": 7, "player": "Al Bianchi", "years": "1956-1966", "value": 687 },
+    { "rank": 8, "player": "Steve Mix", "years": "1973-1982", "value": 668 },
+    { "rank": 9, "player": "Billy Cunningham", "years": "1965-1976", "value": 654 },
+    { "rank": 10, "player": "Bobby Jones", "years": "1978-1986", "value": 617 }
+  ],
+  "fieldGoals": [
+    { "rank": 1, "player": "Hal Greer", "years": "1958-1973", "value": 8504 },
+    { "rank": 2, "player": "Julius Erving", "years": "1976-1987", "value": 7237 },
+    { "rank": 3, "player": "Allen Iverson", "years": "1996-2010", "value": 6962 },
+    { "rank": 4, "player": "Dolph Schayes", "years": "1949-1964", "value": 5863 },
+    { "rank": 5, "player": "Billy Cunningham", "years": "1965-1976", "value": 5116 },
+    { "rank": 6, "player": "Charles Barkley", "years": "1984-1992", "value": 5025 },
+    { "rank": 7, "player": "Red Kerr", "years": "1954-1965", "value": 4623 },
+    { "rank": 8, "player": "Joel Embiid", "years": "2016-present", "value": 4269 },
+    { "rank": 9, "player": "Maurice Cheeks", "years": "1978-1989", "value": 4192 },
+    { "rank": 10, "player": "Chet Walker", "years": "1962-1969", "value": 3318 }
+  ],
+  "threePointers": [
+    { "rank": 1, "player": "Allen Iverson", "years": "1996-2010", "value": 885 },
+    { "rank": 2, "player": "Tyrese Maxey", "years": "2020-present", "value": 823 },
+    { "rank": 3, "player": "Robert Covington", "years": "2014-2018", "value": 724 },
+    { "rank": 4, "player": "Kyle Korver", "years": "2003-2007", "value": 661 },
+    { "rank": 5, "player": "Tobias Harris", "years": "2019-2024", "value": 575 },
+    { "rank": 6, "player": "Andre Iguodala", "years": "2004-2012", "value": 563 },
+    { "rank": 7, "player": "Joel Embiid", "years": "2016-present", "value": 550 },
+    { "rank": 8, "player": "Hersey Hawkins", "years": "1988-1993", "value": 476 },
+    { "rank": 9, "player": "JJ Redick", "years": "2017-2019", "value": 433 },
+    { "rank": 10, "player": "Furkan Korkmaz", "years": "2017-2023", "value": 405 }
+  ],
+  "freeThrows": [
+    { "rank": 1, "player": "Dolph Schayes", "years": "1949-1964", "value": 6712 },
+    { "rank": 2, "player": "Allen Iverson", "years": "1996-2010", "value": 5122 },
+    { "rank": 3, "player": "Hal Greer", "years": "1958-1973", "value": 4578 },
+    { "rank": 4, "player": "Charles Barkley", "years": "1984-1992", "value": 3920 },
+    { "rank": 5, "player": "Joel Embiid", "years": "2016-present", "value": 3882 },
+    { "rank": 6, "player": "Julius Erving", "years": "1976-1987", "value": 3844 },
+    { "rank": 7, "player": "Billy Cunningham", "years": "1965-1976", "value": 3394 },
+    { "rank": 8, "player": "Moses Malone", "years": "1982-1986", "value": 2589 },
+    { "rank": 9, "player": "Red Kerr", "years": "1954-1965", "value": 2453 },
+    { "rank": 10, "player": "Chet Walker", "years": "1962-1969", "value": 2407 }
+  ],
+  "lastUpdated": "2025-01-11T00:00:00.000Z",
+  "source": "Basketball-Reference.com"
+}

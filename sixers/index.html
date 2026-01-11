@@ -117,8 +117,32 @@
         .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
         .carousel-arrow.prev { left: 0.5rem; }
         .carousel-arrow.next { right: 0.5rem; }
+        /* All-Time Leaders Section */
+        .stats-section { grid-column: 1 / -1; margin-top: 1rem; }
+        .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .stats-header { padding: 1rem; background: linear-gradient(135deg, var(--team-color), #ED174C); color: #fff; display: flex; align-items: center; justify-content: space-between; }
+        .stats-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-attribution { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+        .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
+        .stats-tabs { display: flex; flex-wrap: wrap; background: #e8e3db; border-bottom: 1px solid var(--border-color); }
+        .stats-tab { padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .stats-tab:hover { color: var(--team-color); background: rgba(0,107,182,0.05); }
+        .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: #fff; }
+        .stats-table-container { overflow-x: auto; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .stats-table th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .stats-table th:first-child { width: 40px; text-align: center; }
+        .stats-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .stats-table td:first-child { text-align: center; font-weight: 600; color: var(--text-muted); }
+        .stats-table tr:hover { background: rgba(0,107,182,0.03); }
+        .stats-table tr:last-child td { border-bottom: none; }
+        .stats-table .player-name { font-weight: 600; color: var(--text-primary); }
+        .stats-table .player-years { font-size: 0.7rem; color: var(--text-muted); }
+        .stats-table .stat-highlight { font-weight: 700; color: var(--team-color); }
+        .stats-footer { padding: 0.75rem 1rem; background: #f5f2ed; font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+        .stats-loading { padding: 2rem; text-align: center; color: var(--text-muted); }
         @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .team-hero h1 { font-size: 1.8rem; } }
-        @media (max-width: 600px) { .article-item { flex-direction: column; } .article-thumb { width: 100%; height: 150px; } }
+        @media (max-width: 600px) { .article-item { flex-direction: column; } .article-thumb { width: 100%; height: 150px; } .stats-tab { padding: 0.5rem 0.6rem; font-size: 0.7rem; } .stats-table { font-size: 0.75rem; } .stats-table th, .stats-table td { padding: 0.5rem; } }
     </style>
 </head>
 <body>
@@ -171,6 +195,38 @@
                 </div>
             </div>
         </aside>
+        <!-- All-Time Leaders Section -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stats-header">
+                    <h2>&#127942; All-Time Sixers Leaders</h2>
+                    <span class="stats-attribution">Data from <a href="https://www.basketball-reference.com/teams/PHI/" target="_blank">Basketball-Reference.com</a></span>
+                </div>
+                <div class="stats-tabs" id="statsTabs">
+                    <button class="stats-tab active" data-category="points">Points</button>
+                    <button class="stats-tab" data-category="rebounds">Rebounds</button>
+                    <button class="stats-tab" data-category="assists">Assists</button>
+                    <button class="stats-tab" data-category="steals">Steals</button>
+                    <button class="stats-tab" data-category="blocks">Blocks</button>
+                    <button class="stats-tab" data-category="games">Games</button>
+                    <button class="stats-tab" data-category="fieldGoals">Field Goals</button>
+                    <button class="stats-tab" data-category="threePointers">3-Pointers</button>
+                    <button class="stats-tab" data-category="freeThrows">Free Throws</button>
+                </div>
+                <div class="stats-table-container">
+                    <table class="stats-table" id="statsTable">
+                        <thead id="statsTableHead"></thead>
+                        <tbody id="statsTableBody">
+                            <tr><td colspan="4" class="stats-loading">Loading stats...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="stats-footer">
+                    <span id="statsLastUpdated">Loading...</span>
+                    <span>Philadelphia 76ers Franchise History</span>
+                </div>
+            </div>
+        </section>
     </main>
     <footer class="footer"><p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p></footer>
     <script>
@@ -191,7 +247,51 @@
         async function loadScores(){const c=document.getElementById('scoresContainer');try{const r=await fetch(`/api/scores?team=${TEAM}`);const d=await r.json();if(d.scores?.length>0){c.innerHTML=d.scores.map(s=>{const content=`<div class="score-teams"><div class="score-team"><span class="team-dot" style="background:${s.isHome?s.teamColor:'#666'}"></span> ${s.homeTeam}</div><div class="score-team"><span class="team-dot" style="background:${!s.isHome?s.teamColor:'#666'}"></span> ${s.awayTeam}</div></div><div class="score-result"><span>${s.homeScore}</span><span>${s.awayScore}</span></div>`;return s.link?`<a href="${s.link}" target="_blank" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`:`<div class="score-item">${content}</div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadSchedule(){const c=document.getElementById('scheduleContainer');try{const r=await fetch(`/api/schedule?team=${TEAM}`);const d=await r.json();if(d.schedule?.length>0){c.innerHTML=d.schedule.map(g=>{const f=formatGameDate(g.date);return`<div class="schedule-item"><div class="schedule-date"><div class="schedule-day">${f.day}</div><div class="schedule-month">${f.month}</div></div><div class="schedule-info"><div class="schedule-matchup">${g.isHome?'vs':'@'} ${g.opponent}</div><div class="schedule-time">${f.dayName} ${f.time}${g.broadcast?' · '+g.broadcast:''}</div></div></div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadRoster(){const c=document.getElementById('rosterContainer');try{const r=await fetch(`/api/roster?team=${TEAM}`);const d=await r.json();if(d.players?.length>0){c.innerHTML=d.players.map(p=>`<div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;"><span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${p.number||'-'}</span>${p.link?`<a href="${p.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${p.name}</a>`:`<span style="flex:1;font-weight:500;">${p.name}</span>`}<span style="color:var(--text-muted);font-size:0.75rem;">${p.position}</span></div>`).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No roster available</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load roster</div>';}}
-        loadNews();loadScores();loadSchedule();loadRoster();
+        // Stats section functionality
+        let statsData = null;
+        const categoryLabels = {
+            points: 'Points', rebounds: 'Rebounds', assists: 'Assists',
+            steals: 'Steals', blocks: 'Blocks', games: 'Games Played',
+            fieldGoals: 'Field Goals Made', threePointers: '3-Point Field Goals',
+            freeThrows: 'Free Throws Made'
+        };
+        async function loadStats() {
+            try {
+                const r = await fetch('/api/stats/sixers');
+                statsData = await r.json();
+                renderStatsTable('points');
+                if (statsData.lastUpdated) {
+                    const date = new Date(statsData.lastUpdated);
+                    document.getElementById('statsLastUpdated').textContent =
+                        'Last updated: ' + date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                }
+            } catch (e) {
+                document.getElementById('statsTableBody').innerHTML =
+                    '<tr><td colspan="4" class="stats-loading">Unable to load stats</td></tr>';
+            }
+        }
+        function renderStatsTable(category) {
+            if (!statsData || !statsData[category]) return;
+            const thead = document.getElementById('statsTableHead');
+            const tbody = document.getElementById('statsTableBody');
+            const label = categoryLabels[category] || category;
+            thead.innerHTML = `<tr><th>#</th><th>Player</th><th class="stat-highlight">${label}</th></tr>`;
+            tbody.innerHTML = statsData[category].map(p => `
+                <tr>
+                    <td>${p.rank}</td>
+                    <td><span class="player-name">${p.player}</span><br><span class="player-years">${p.years}</span></td>
+                    <td class="stat-highlight">${p.value.toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+        document.getElementById('statsTabs').addEventListener('click', (e) => {
+            if (e.target.classList.contains('stats-tab')) {
+                document.querySelectorAll('.stats-tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                renderStatsTable(e.target.dataset.category);
+            }
+        });
+        loadNews();loadScores();loadSchedule();loadRoster();loadStats();
         async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<div class="coin-display" title="Diehard Dollars"><span>&#129689;</span><span>${d.user.coinBalance||0}</span></div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
     </script>
 </body>
