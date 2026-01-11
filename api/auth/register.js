@@ -76,6 +76,6 @@ export default async function handler(req, res) {
         });
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ error: 'Registration failed', details: error.message });
+        res.status(500).json({ error: 'Registration failed' });
     }
 }
