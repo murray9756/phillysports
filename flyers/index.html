@@ -89,8 +89,8 @@
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
         .carousel { position: relative; width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
-        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; }
-        .carousel-slide { min-width: 100%; flex-shrink: 0; }
+        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; will-change: transform; }
+        .carousel-slide { width: 100%; flex: 0 0 100%; }
         .carousel-slide .featured-article { display: block; background: var(--card-bg); }
         .carousel-slide .featured-image { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
         .carousel-slide .featured-content { padding: 1rem; }
