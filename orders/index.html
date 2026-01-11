@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --error-color: #dc2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-nav { display: flex; gap: 1rem; }
+        .header-nav a { color: #ffffff; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 6px; transition: background 0.2s; }
+        .header-nav a:hover { background: rgba(255,255,255,0.1); }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); padding: 2rem 1.5rem; border-bottom: 3px solid var(--accent-color); }
+        .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+        .page-hero h1 { color: #ffffff; font-size: 1.75rem; font-weight: 800; }
+        .page-hero p { color: #aaaaaa; font-size: 0.95rem; margin-top: 0.25rem; }
+
+        /* Main Container */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .tab { padding: 0.75rem 1.25rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .tab:hover { background: #f5f5f5; }
+        .tab.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        /* Content Card */
+        .content-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
+
+        /* Order List */
+        .order-card { border-bottom: 1px solid var(--border-color); padding: 1.25rem; transition: background 0.2s; }
+        .order-card:last-child { border-bottom: none; }
+        .order-card:hover { background: #fafafa; }
+
+        .order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .order-number { font-weight: 700; font-size: 1rem; }
+        .order-date { font-size: 0.85rem; color: var(--text-muted); }
+        .order-badges { display: flex; gap: 0.5rem; }
+
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-paid { background: #dcfce7; color: #166534; }
+        .status-shipped { background: #dbeafe; color: #1e40af; }
+        .status-delivered { background: #e0e7ff; color: #3730a3; }
+        .status-refunded { background: #fee2e2; color: #991b1b; }
+        .status-failed { background: #f3f4f6; color: #6b7280; }
+
+        .order-items { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+        .order-item { display: flex; gap: 0.75rem; align-items: center; }
+        .item-image { width: 50px; height: 50px; border-radius: 6px; object-fit: cover; background: #f0f0f0; }
+        .item-info { min-width: 0; }
+        .item-name { font-weight: 500; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .item-qty { font-size: 0.8rem; color: var(--text-muted); }
+
+        .order-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+        .order-total { font-weight: 700; }
+        .order-actions { display: flex; gap: 0.5rem; }
+
+        .btn { padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { background: #6b0000; }
+        .btn-secondary { background: var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: #d0cbc3; }
+
+        /* Empty State */
+        .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+        .empty-state p { margin-bottom: 1.5rem; }
+
+        /* Login Required */
+        .login-required { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 3rem; text-align: center; }
+        .login-required h2 { margin-bottom: 0.5rem; }
+        .login-required p { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+        /* Order Detail Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 1rem; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; background: var(--card-bg); }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .modal-body { padding: 1.25rem; }
+
+        .detail-section { margin-bottom: 1.5rem; }
+        .detail-section:last-child { margin-bottom: 0; }
+        .detail-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .detail-row .label { color: var(--text-muted); }
+
+        .tracking-link { color: var(--accent-color); text-decoration: underline; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .order-header { flex-direction: column; }
+            .order-footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <nav class="header-nav">
+                <a href="/shop/">Shop</a>
+                <a href="/marketplace/">Marketplace</a>
+                <a href="/marketplace/my-listings.html">My Listings</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <h1>Order History</h1>
+            <p>View and track your purchases</p>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Login Required -->
+        <div class="login-required" id="loginRequired" style="display: none;">
+            <h2>Login Required</h2>
+            <p>You need to be logged in to view your orders.</p>
+            <a href="/login.html?redirect=/orders/" class="btn btn-primary">Log In</a>
+        </div>
+
+        <!-- Orders Content -->
+        <div id="ordersContent" style="display: none;">
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-status="all">All Orders</div>
+                <div class="tab" data-status="pending">Pending</div>
+                <div class="tab" data-status="processing">Processing</div>
+                <div class="tab" data-status="shipped">Shipped</div>
+                <div class="tab" data-status="delivered">Delivered</div>
+            </div>
+
+            <!-- Orders List -->
+            <div class="content-card" id="ordersContainer">
+                <div class="empty-state">
+                    <div class="icon">&#128230;</div>
+                    <h3>Loading orders...</h3>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;"></div>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalOrderNumber">Order Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let currentUser = null;
+        let currentStatus = 'all';
+        let currentPage = 1;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/session`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        currentUser = data.user;
+                        document.getElementById('loginRequired').style.display = 'none';
+                        document.getElementById('ordersContent').style.display = 'block';
+                        setupTabs();
+                        await loadOrders();
+
+                        // Check if viewing specific order
+                        const params = new URLSearchParams(window.location.search);
+                        const orderId = params.get('id');
+                        if (orderId) {
+                            await viewOrderDetail(orderId);
+                        }
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('Not authenticated');
+            }
+            document.getElementById('loginRequired').style.display = 'block';
+            document.getElementById('ordersContent').style.display = 'none';
+        }
+
+        function setupTabs() {
+            document.querySelectorAll('.tabs .tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentStatus = tab.dataset.status;
+                    currentPage = 1;
+                    loadOrders();
+                });
+            });
+        }
+
+        async function loadOrders() {
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = `<div class="empty-state"><div class="icon">&#8987;</div><h3>Loading orders...</h3></div>`;
+
+            try {
+                let url = `${API_URL}/orders?page=${currentPage}&limit=10`;
+                if (currentStatus !== 'all') {
+                    url += `&status=${currentStatus}`;
+                }
+
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (data.success) {
+                    renderOrders(data.orders);
+                    renderPagination(data.pagination);
+                } else {
+                    container.innerHTML = `<div class="empty-state"><div class="icon">&#9888;</div><h3>Error loading orders</h3><p>${data.error}</p></div>`;
+                }
+            } catch (error) {
+                console.error('Load orders error:', error);
+                container.innerHTML = `<div class="empty-state"><div class="icon">&#9888;</div><h3>Failed to load orders</h3></div>`;
+            }
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById('ordersContainer');
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">&#128230;</div>
+                        <h3>No orders found</h3>
+                        <p>${currentStatus === 'all' ? "You haven't made any purchases yet." : 'No orders match this filter.'}</p>
+                        <a href="/shop/" class="btn btn-primary" style="display: inline-block;">Browse Shop</a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-number">${order.orderNumber}</div>
+                            <div class="order-date">${formatDate(order.createdAt)}</div>
+                        </div>
+                        <div class="order-badges">
+                            ${getPaymentBadge(order.paymentStatus)}
+                            ${getFulfillmentBadge(order)}
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.slice(0, 3).map(item => `
+                            <div class="order-item">
+                                <img src="/placeholder.png" alt="" class="item-image">
+                                <div class="item-info">
+                                    <div class="item-name">${escapeHtml(item.name)}</div>
+                                    <div class="item-qty">Qty: ${item.quantity}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        ${order.items.length > 3 ? `<div style="color: var(--text-muted); align-self: center;">+${order.items.length - 3} more</div>` : ''}
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            ${order.totalUSD ? `$${(order.totalUSD / 100).toFixed(2)}` : ''}
+                            ${order.totalUSD && order.totalDiehardDollars ? ' + ' : ''}
+                            ${order.totalDiehardDollars ? `${order.totalDiehardDollars} DD` : ''}
+                        </div>
+                        <div class="order-actions">
+                            ${order.trackingUrl ? `<a href="${order.trackingUrl}" target="_blank" class="btn btn-secondary">Track Package</a>` : ''}
+                            <button class="btn btn-primary" onclick="viewOrderDetail('${order._id}')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getPaymentBadge(status) {
+            const badges = {
+                pending: '<span class="status-badge status-pending">Payment Pending</span>',
+                paid: '<span class="status-badge status-paid">Paid</span>',
+                refunded: '<span class="status-badge status-refunded">Refunded</span>',
+                failed: '<span class="status-badge status-failed">Failed</span>'
+            };
+            return badges[status] || '';
+        }
+
+        function getFulfillmentBadge(order) {
+            if (order.paymentStatus !== 'paid') return '';
+
+            const badges = {
+                unfulfilled: '<span class="status-badge status-pending">Processing</span>',
+                shipped: '<span class="status-badge status-shipped">Shipped</span>',
+                delivered: '<span class="status-badge status-delivered">Delivered</span>'
+            };
+            return badges[order.fulfillmentStatus] || '';
+        }
+
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+
+            if (pagination.totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let buttons = [];
+            for (let i = 1; i <= pagination.totalPages; i++) {
+                buttons.push(`
+                    <button class="btn ${i === pagination.page ? 'btn-primary' : 'btn-secondary'}" onclick="goToPage(${i})">${i}</button>
+                `);
+            }
+            container.innerHTML = buttons.join('');
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadOrders();
+        }
+
+        async function viewOrderDetail(orderId) {
+            document.getElementById('orderModal').classList.add('active');
+            document.getElementById('modalBody').innerHTML = '<div style="text-align: center; padding: 2rem;">Loading...</div>';
+
+            try {
+                const res = await fetch(`${API_URL}/orders/${orderId}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    renderOrderDetail(data.order);
+                } else {
+                    document.getElementById('modalBody').innerHTML = `<div style="text-align: center; padding: 2rem; color: var(--error-color);">${data.error}</div>`;
+                }
+            } catch (error) {
+                console.error('Load order detail error:', error);
+                document.getElementById('modalBody').innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--error-color);">Failed to load order details</div>';
+            }
+        }
+
+        function renderOrderDetail(order) {
+            document.getElementById('modalOrderNumber').textContent = order.orderNumber;
+
+            const isBuyer = order.userRole === 'buyer';
+
+            let html = `
+                <div class="detail-section">
+                    <div class="detail-title">Order Status</div>
+                    <div class="detail-row">
+                        <span class="label">Payment</span>
+                        <span>${formatPaymentStatus(order.paymentStatus)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Fulfillment</span>
+                        <span>${formatFulfillmentStatus(order.fulfillmentStatus)}</span>
+                    </div>
+                    ${order.trackingNumber ? `
+                        <div class="detail-row">
+                            <span class="label">Tracking</span>
+                            <span>${order.trackingUrl ? `<a href="${order.trackingUrl}" target="_blank" class="tracking-link">${order.trackingNumber}</a>` : order.trackingNumber}</span>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-title">Items</div>
+                    ${order.items.map(item => `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>${escapeHtml(item.name)} x ${item.quantity}</span>
+                            <span>${item.currency === 'diehard_dollars' ? `${item.totalPrice} DD` : `$${(item.totalPrice / 100).toFixed(2)}`}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-title">Order Summary</div>
+                    ${order.subtotalUSD ? `<div class="detail-row"><span class="label">Subtotal</span><span>$${(order.subtotalUSD / 100).toFixed(2)}</span></div>` : ''}
+                    ${order.shippingUSD ? `<div class="detail-row"><span class="label">Shipping</span><span>$${(order.shippingUSD / 100).toFixed(2)}</span></div>` : ''}
+                    ${order.taxUSD ? `<div class="detail-row"><span class="label">Tax</span><span>$${(order.taxUSD / 100).toFixed(2)}</span></div>` : ''}
+                    ${order.totalUSD ? `<div class="detail-row" style="font-weight: 700;"><span>Total (USD)</span><span>$${(order.totalUSD / 100).toFixed(2)}</span></div>` : ''}
+                    ${order.totalDiehardDollars ? `<div class="detail-row" style="font-weight: 700;"><span>Total (DD)</span><span>${order.totalDiehardDollars} DD</span></div>` : ''}
+                </div>
+
+                ${order.shippingAddress ? `
+                    <div class="detail-section">
+                        <div class="detail-title">Shipping Address</div>
+                        <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                            ${escapeHtml(order.shippingAddress.fullName)}<br>
+                            ${escapeHtml(order.shippingAddress.addressLine1)}<br>
+                            ${order.shippingAddress.addressLine2 ? escapeHtml(order.shippingAddress.addressLine2) + '<br>' : ''}
+                            ${escapeHtml(order.shippingAddress.city)}, ${escapeHtml(order.shippingAddress.state)} ${escapeHtml(order.shippingAddress.postalCode)}
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="detail-section">
+                    <div class="detail-title">Timeline</div>
+                    <div class="detail-row"><span class="label">Ordered</span><span>${formatDateTime(order.createdAt)}</span></div>
+                    ${order.paidAt ? `<div class="detail-row"><span class="label">Paid</span><span>${formatDateTime(order.paidAt)}</span></div>` : ''}
+                    ${order.shippedAt ? `<div class="detail-row"><span class="label">Shipped</span><span>${formatDateTime(order.shippedAt)}</span></div>` : ''}
+                    ${order.deliveredAt ? `<div class="detail-row"><span class="label">Delivered</span><span>${formatDateTime(order.deliveredAt)}</span></div>` : ''}
+                </div>
+
+                ${order.orderType === 'marketplace' ? `
+                    <div class="detail-section">
+                        <div class="detail-title">Seller</div>
+                        <div style="font-size: 0.9rem;">${escapeHtml(order.sellerUsername || 'Unknown')}</div>
+                    </div>
+                ` : ''}
+            `;
+
+            document.getElementById('modalBody').innerHTML = html;
+        }
+
+        function formatPaymentStatus(status) {
+            const labels = {
+                pending: 'Pending',
+                paid: 'Paid',
+                refunded: 'Refunded',
+                failed: 'Failed'
+            };
+            return labels[status] || status;
+        }
+
+        function formatFulfillmentStatus(status) {
+            const labels = {
+                unfulfilled: 'Processing',
+                shipped: 'Shipped',
+                delivered: 'Delivered'
+            };
+            return labels[status] || status;
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function formatDateTime(dateStr) {
+            return new Date(dateStr).toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.remove('active');
+            // Remove order ID from URL
+            window.history.replaceState({}, '', '/orders/');
+        }
+    </script>
+</body>
+</html>

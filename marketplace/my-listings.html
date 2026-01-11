@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings - PhillySports.com Marketplace</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --error-color: #dc2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-nav { display: flex; gap: 1rem; }
+        .header-nav a { color: #ffffff; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 6px; transition: background 0.2s; }
+        .header-nav a:hover { background: rgba(255,255,255,0.1); }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); padding: 2rem 1.5rem; border-bottom: 3px solid var(--accent-color); }
+        .page-hero-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .page-hero h1 { color: #ffffff; font-size: 1.75rem; font-weight: 800; }
+        .page-hero p { color: #aaaaaa; font-size: 0.95rem; margin-top: 0.25rem; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; display: inline-block; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { background: #6b0000; }
+        .btn-secondary { background: var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: #d0cbc3; }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
+        /* Main Container */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.25rem; }
+        .stat-card .label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .stat-card .value { font-size: 1.75rem; font-weight: 700; }
+        .stat-card .sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .tab { padding: 0.75rem 1.25rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .tab:hover { background: #f5f5f5; }
+        .tab.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .tab .count { background: rgba(0,0,0,0.1); padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.8rem; margin-left: 0.5rem; }
+        .tab.active .count { background: rgba(255,255,255,0.2); }
+
+        /* Content Card */
+        .content-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
+        .content-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .content-header h2 { font-size: 1.1rem; font-weight: 700; }
+
+        /* Listings Table */
+        .listings-table { width: 100%; }
+        .listings-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; background: #fafafa; border-bottom: 1px solid var(--border-color); }
+        .listings-table td { padding: 1rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .listings-table tr:last-child td { border-bottom: none; }
+        .listings-table tr:hover { background: #fafafa; }
+
+        .listing-item { display: flex; align-items: center; gap: 1rem; }
+        .listing-image { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; background: #f0f0f0; }
+        .listing-info { flex: 1; min-width: 0; }
+        .listing-title { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 300px; }
+        .listing-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-sold { background: #e0e7ff; color: #3730a3; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .status-expired { background: #f3f4f6; color: #6b7280; }
+
+        .price-cell { font-weight: 600; }
+        .price-usd { color: var(--success-color); }
+        .price-dd { color: var(--sixers-blue); }
+
+        .actions-cell { display: flex; gap: 0.5rem; }
+
+        /* Empty State */
+        .empty-state { padding: 3rem; text-align: center; color: var(--text-muted); }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+        .empty-state p { margin-bottom: 1.5rem; }
+
+        /* Login Required */
+        .login-required { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 3rem; text-align: center; }
+        .login-required h2 { margin-bottom: 0.5rem; }
+        .login-required p { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+        /* Sales Section */
+        .section-title { font-size: 1.25rem; font-weight: 700; margin: 2rem 0 1rem; }
+
+        .sales-table th, .sales-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .sales-table th { background: #fafafa; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .order-status { display: flex; align-items: center; gap: 0.5rem; }
+        .order-status .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .order-status.needs-shipping .dot { background: var(--warning-color); }
+        .order-status.shipped .dot { background: var(--success-color); }
+        .order-status.delivered .dot { background: var(--sixers-blue); }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .form-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; font-family: inherit; }
+        .form-input:focus { outline: none; border-color: var(--accent-color); }
+        .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .listings-table { display: block; overflow-x: auto; }
+            .page-hero-inner { flex-direction: column; text-align: center; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <nav class="header-nav">
+                <a href="/marketplace/">Browse</a>
+                <a href="/marketplace/sell.html">Sell</a>
+                <a href="/orders/">Orders</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <div>
+                <h1>My Listings</h1>
+                <p>Manage your marketplace listings and sales</p>
+            </div>
+            <a href="/marketplace/sell.html" class="btn btn-primary">+ Create Listing</a>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Login Required -->
+        <div class="login-required" id="loginRequired" style="display: none;">
+            <h2>Login Required</h2>
+            <p>You need to be logged in to view your listings.</p>
+            <a href="/login.html?redirect=/marketplace/my-listings.html" class="btn btn-primary">Log In</a>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" style="display: none;">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label">Total Earnings (USD)</div>
+                    <div class="value" id="statEarningsUSD">$0.00</div>
+                    <div class="sub" id="statCommissionUSD">$0.00 in fees paid</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Total Earnings (DD)</div>
+                    <div class="value" id="statEarningsDD">0 DD</div>
+                    <div class="sub" id="statCommissionDD">0 DD in fees paid</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Total Sales</div>
+                    <div class="value" id="statTotalSales">0</div>
+                    <div class="sub">orders completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Needs Shipping</div>
+                    <div class="value" id="statNeedsShipping">0</div>
+                    <div class="sub">orders to fulfill</div>
+                </div>
+            </div>
+
+            <!-- Listings Tabs -->
+            <div class="tabs" id="listingTabs">
+                <div class="tab active" data-status="all">All <span class="count" id="countAll">0</span></div>
+                <div class="tab" data-status="active">Active <span class="count" id="countActive">0</span></div>
+                <div class="tab" data-status="pending">Pending <span class="count" id="countPending">0</span></div>
+                <div class="tab" data-status="sold">Sold <span class="count" id="countSold">0</span></div>
+                <div class="tab" data-status="rejected">Rejected <span class="count" id="countRejected">0</span></div>
+            </div>
+
+            <!-- Listings Table -->
+            <div class="content-card">
+                <table class="listings-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Status</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Views</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listingsBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div class="icon">&#128230;</div>
+                                <h3>No listings yet</h3>
+                                <p>Start selling by creating your first listing.</p>
+                                <a href="/marketplace/sell.html" class="btn btn-primary">Create Listing</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sales Section -->
+            <h2 class="section-title">Recent Sales</h2>
+            <div class="content-card">
+                <table class="listings-table sales-table">
+                    <thead>
+                        <tr>
+                            <th>Order</th>
+                            <th>Buyer</th>
+                            <th>Items</th>
+                            <th>Your Payout</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div class="icon">&#128176;</div>
+                                <h3>No sales yet</h3>
+                                <p>When someone buys your items, they'll appear here.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ship Modal -->
+    <div class="modal-overlay" id="shipModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Mark as Shipped</h3>
+                <button class="modal-close" onclick="closeShipModal()">&times;</button>
+            </div>
+            <form id="shipForm">
+                <input type="hidden" id="shipOrderId">
+                <div class="form-group">
+                    <label>Carrier</label>
+                    <select class="form-input" id="shipCarrier">
+                        <option value="">Select carrier...</option>
+                        <option value="usps">USPS</option>
+                        <option value="ups">UPS</option>
+                        <option value="fedex">FedEx</option>
+                        <option value="dhl">DHL</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tracking Number</label>
+                    <input type="text" class="form-input" id="shipTrackingNumber" placeholder="Enter tracking number">
+                </div>
+                <div class="form-group">
+                    <label>Tracking URL (optional)</label>
+                    <input type="url" class="form-input" id="shipTrackingUrl" placeholder="https://...">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeShipModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Mark as Shipped</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let currentUser = null;
+        let currentStatus = 'all';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/session`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        currentUser = data.user;
+                        document.getElementById('loginRequired').style.display = 'none';
+                        document.getElementById('dashboardContent').style.display = 'block';
+                        setupTabs();
+                        await loadDashboard();
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('Not authenticated');
+            }
+            document.getElementById('loginRequired').style.display = 'block';
+            document.getElementById('dashboardContent').style.display = 'none';
+        }
+
+        function setupTabs() {
+            document.querySelectorAll('#listingTabs .tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('#listingTabs .tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentStatus = tab.dataset.status;
+                    loadListings();
+                });
+            });
+        }
+
+        async function loadDashboard() {
+            await Promise.all([
+                loadListings(),
+                loadSales()
+            ]);
+        }
+
+        async function loadListings() {
+            try {
+                const res = await fetch(`${API_URL}/marketplace/my-listings?status=${currentStatus}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    updateListingCounts(data.counts);
+                    renderListings(data.listings);
+                }
+            } catch (error) {
+                console.error('Error loading listings:', error);
+            }
+        }
+
+        function updateListingCounts(counts) {
+            document.getElementById('countAll').textContent = counts.total;
+            document.getElementById('countActive').textContent = counts.active;
+            document.getElementById('countPending').textContent = counts.pending;
+            document.getElementById('countSold').textContent = counts.sold;
+            document.getElementById('countRejected').textContent = counts.rejected;
+        }
+
+        function renderListings(listings) {
+            const tbody = document.getElementById('listingsBody');
+
+            if (listings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="icon">&#128230;</div>
+                            <h3>No listings found</h3>
+                            <p>No listings match this filter.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = listings.map(listing => {
+                const status = getListingStatus(listing);
+                const primaryImage = listing.images?.[0]?.url || '/placeholder.png';
+                const priceDisplay = formatPrice(listing);
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="listing-item">
+                                <img src="${primaryImage}" alt="${listing.title}" class="listing-image">
+                                <div class="listing-info">
+                                    <div class="listing-title">${escapeHtml(listing.title)}</div>
+                                    <div class="listing-meta">${listing.category} ${listing.team ? '- ' + listing.team : ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-${status.class}">${status.label}</span>
+                            ${listing.moderationNotes ? `<div style="font-size: 0.75rem; color: var(--error-color); margin-top: 0.25rem;">${escapeHtml(listing.moderationNotes)}</div>` : ''}
+                        </td>
+                        <td class="price-cell">${priceDisplay}</td>
+                        <td>${listing.quantity} / ${(listing.quantity || 0) + (listing.quantitySold || 0)}</td>
+                        <td>${listing.viewCount || 0}</td>
+                        <td class="actions-cell">
+                            <a href="/marketplace/listing.html?id=${listing._id}" class="btn btn-sm btn-secondary">View</a>
+                            ${status.class === 'rejected' ? `<a href="/marketplace/sell.html?edit=${listing._id}" class="btn btn-sm btn-secondary">Edit</a>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getListingStatus(listing) {
+            if (listing.moderationStatus === 'pending') {
+                return { label: 'Pending Review', class: 'pending' };
+            }
+            if (listing.moderationStatus === 'rejected') {
+                return { label: 'Rejected', class: 'rejected' };
+            }
+            if (listing.status === 'sold') {
+                return { label: 'Sold', class: 'sold' };
+            }
+            if (listing.isExpired) {
+                return { label: 'Expired', class: 'expired' };
+            }
+            return { label: 'Active', class: 'active' };
+        }
+
+        function formatPrice(listing) {
+            let parts = [];
+            if (listing.acceptsUSD && listing.priceUSD) {
+                parts.push(`<span class="price-usd">$${(listing.priceUSD / 100).toFixed(2)}</span>`);
+            }
+            if (listing.acceptsDiehardDollars && listing.priceDiehardDollars) {
+                parts.push(`<span class="price-dd">${listing.priceDiehardDollars} DD</span>`);
+            }
+            return parts.join(' / ') || '-';
+        }
+
+        async function loadSales() {
+            try {
+                const res = await fetch(`${API_URL}/orders/sales`);
+                const data = await res.json();
+
+                if (data.success) {
+                    updateSalesStats(data.stats);
+                    renderSales(data.sales);
+                }
+            } catch (error) {
+                console.error('Error loading sales:', error);
+            }
+        }
+
+        function updateSalesStats(stats) {
+            document.getElementById('statEarningsUSD').textContent = `$${((stats.totalEarningsUSD || 0) / 100).toFixed(2)}`;
+            document.getElementById('statEarningsDD').textContent = `${stats.totalEarningsDD || 0} DD`;
+            document.getElementById('statCommissionUSD').textContent = `$${((stats.totalCommissionPaidUSD || 0) / 100).toFixed(2)} in fees paid`;
+            document.getElementById('statCommissionDD').textContent = `${stats.totalCommissionPaidDD || 0} DD in fees paid`;
+            document.getElementById('statTotalSales').textContent = stats.totalOrders || 0;
+            document.getElementById('statNeedsShipping').textContent = stats.needsShipping || 0;
+        }
+
+        function renderSales(sales) {
+            const tbody = document.getElementById('salesBody');
+
+            if (sales.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="icon">&#128176;</div>
+                            <h3>No sales yet</h3>
+                            <p>When someone buys your items, they'll appear here.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = sales.map(sale => {
+                const status = getSaleStatus(sale);
+                const payoutDisplay = formatSalePayout(sale);
+                const itemsList = sale.items.map(i => `${i.quantity}x ${escapeHtml(i.name)}`).join(', ');
+
+                return `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600;">${sale.orderNumber}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(sale.createdAt)}</div>
+                        </td>
+                        <td>${escapeHtml(sale.buyerUsername)}</td>
+                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${itemsList}</td>
+                        <td class="price-cell">${payoutDisplay}</td>
+                        <td>
+                            <div class="order-status ${status.class}">
+                                <span class="dot"></span>
+                                ${status.label}
+                            </div>
+                        </td>
+                        <td class="actions-cell">
+                            ${status.class === 'needs-shipping' ? `<button class="btn btn-sm btn-primary" onclick="openShipModal('${sale._id}')">Ship</button>` : ''}
+                            <a href="/orders/?id=${sale._id}" class="btn btn-sm btn-secondary">View</a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getSaleStatus(sale) {
+            if (sale.paymentStatus !== 'paid') {
+                return { label: 'Awaiting Payment', class: 'pending' };
+            }
+            if (sale.fulfillmentStatus === 'delivered') {
+                return { label: 'Delivered', class: 'delivered' };
+            }
+            if (sale.fulfillmentStatus === 'shipped') {
+                return { label: 'Shipped', class: 'shipped' };
+            }
+            return { label: 'Needs Shipping', class: 'needs-shipping' };
+        }
+
+        function formatSalePayout(sale) {
+            let parts = [];
+            if (sale.sellerPayoutUSD) {
+                parts.push(`<span class="price-usd">$${(sale.sellerPayoutUSD / 100).toFixed(2)}</span>`);
+            }
+            if (sale.sellerPayoutDD) {
+                parts.push(`<span class="price-dd">${sale.sellerPayoutDD} DD</span>`);
+            }
+            return parts.join(' + ') || '-';
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Ship Modal
+        function openShipModal(orderId) {
+            document.getElementById('shipOrderId').value = orderId;
+            document.getElementById('shipCarrier').value = '';
+            document.getElementById('shipTrackingNumber').value = '';
+            document.getElementById('shipTrackingUrl').value = '';
+            document.getElementById('shipModal').classList.add('active');
+        }
+
+        function closeShipModal() {
+            document.getElementById('shipModal').classList.remove('active');
+        }
+
+        document.getElementById('shipForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const orderId = document.getElementById('shipOrderId').value;
+            const carrier = document.getElementById('shipCarrier').value;
+            const trackingNumber = document.getElementById('shipTrackingNumber').value;
+            const trackingUrl = document.getElementById('shipTrackingUrl').value;
+
+            try {
+                const res = await fetch(`${API_URL}/orders/${orderId}/ship`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ carrier, trackingNumber, trackingUrl })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    closeShipModal();
+                    await loadSales();
+                } else {
+                    alert(data.error || 'Failed to mark as shipped');
+                }
+            } catch (error) {
+                console.error('Ship error:', error);
+                alert('Failed to mark as shipped');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing - PhillySports.com Marketplace</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --error-color: #dc2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-nav { display: flex; gap: 1rem; }
+        .header-nav a { color: #ffffff; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 6px; transition: background 0.2s; }
+        .header-nav a:hover { background: rgba(255,255,255,0.1); }
+
+        /* Breadcrumb */
+        .breadcrumb { max-width: 1200px; margin: 0 auto; padding: 1rem 1.5rem; font-size: 0.9rem; }
+        .breadcrumb a { color: var(--accent-color); }
+        .breadcrumb span { color: var(--text-muted); margin: 0 0.5rem; }
+
+        /* Main Container */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+
+        /* Listing Grid */
+        .listing-grid { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
+
+        /* Image Gallery */
+        .gallery { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
+        .main-image { width: 100%; aspect-ratio: 1; object-fit: contain; background: #f5f5f5; }
+        .thumbnails { display: flex; gap: 0.5rem; padding: 0.75rem; overflow-x: auto; }
+        .thumbnail { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.2s; }
+        .thumbnail:hover, .thumbnail.active { border-color: var(--accent-color); }
+
+        /* Listing Details */
+        .details-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; position: sticky; top: 80px; }
+        .listing-category { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+        .listing-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .listing-price { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+        .price-usd { color: var(--success-color); }
+        .price-dd { color: var(--sixers-blue); }
+        .price-or { font-size: 1rem; font-weight: 400; color: var(--text-muted); margin: 0 0.5rem; }
+
+        .listing-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .meta-tag { background: #f5f5f5; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.85rem; }
+        .meta-tag.team-eagles { background: var(--eagles-green); color: white; }
+        .meta-tag.team-phillies { background: var(--phillies-red); color: white; }
+        .meta-tag.team-sixers { background: var(--sixers-blue); color: white; }
+        .meta-tag.team-flyers { background: var(--flyers-orange); color: white; }
+
+        .seller-info { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .seller-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-color); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+        .seller-name { font-weight: 600; }
+        .seller-since { font-size: 0.8rem; color: var(--text-muted); }
+
+        .shipping-info { background: #f9f9f9; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; font-size: 0.9rem; }
+        .shipping-info .icon { margin-right: 0.5rem; }
+        .shipping-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+        .shipping-row:last-child { margin-bottom: 0; }
+
+        .quantity-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .quantity-row label { font-weight: 600; }
+        .quantity-input { width: 80px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; text-align: center; font-size: 1rem; }
+        .qty-available { font-size: 0.85rem; color: var(--text-muted); }
+
+        .btn { padding: 0.875rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; display: block; width: 100%; text-align: center; margin-bottom: 0.75rem; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { background: #6b0000; }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: #d0cbc3; }
+        .btn-paypal { background: #0070ba; color: white; }
+        .btn-paypal:hover { background: #005ea6; }
+        .btn-dd { background: var(--sixers-blue); color: white; }
+        .btn-dd:hover { background: #0058a0; }
+
+        /* Description Section */
+        .description-section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-top: 1.5rem; }
+        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .description-text { white-space: pre-wrap; color: var(--text-secondary); }
+
+        /* Loading/Error States */
+        .loading, .error-state, .not-found { text-align: center; padding: 4rem 2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); }
+        .loading .spinner { width: 40px; height: 40px; border: 3px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error-state { color: var(--error-color); }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .form-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; font-family: inherit; }
+        .form-input:focus { outline: none; border-color: var(--accent-color); }
+        .modal-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+        .modal-actions .btn { flex: 1; margin-bottom: 0; }
+
+        .address-list { max-height: 200px; overflow-y: auto; margin-bottom: 1rem; }
+        .address-option { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; }
+        .address-option:hover { background: #f9f9f9; }
+        .address-option.selected { border-color: var(--accent-color); background: #fff5f5; }
+        .address-option .label { font-weight: 600; margin-bottom: 0.25rem; }
+        .address-option .address { font-size: 0.85rem; color: var(--text-secondary); }
+
+        .payment-option { display: flex; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.75rem; cursor: pointer; }
+        .payment-option:hover { background: #f9f9f9; }
+        .payment-option.selected { border-color: var(--accent-color); background: #fff5f5; }
+        .payment-option input { display: none; }
+        .payment-icon { font-size: 1.5rem; }
+        .payment-details { flex: 1; }
+        .payment-name { font-weight: 600; }
+        .payment-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+        .order-summary { background: #f9f9f9; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .summary-row.total { font-weight: 700; font-size: 1rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem; }
+
+        .message { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .message.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .listing-grid { grid-template-columns: 1fr; }
+            .details-card { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <nav class="header-nav">
+                <a href="/marketplace/">Browse</a>
+                <a href="/marketplace/sell.html">Sell</a>
+                <a href="/orders/">Orders</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/marketplace/">Marketplace</a>
+        <span>/</span>
+        <span id="breadcrumbTitle">Loading...</span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading listing...</p>
+        </div>
+
+        <!-- Error State -->
+        <div class="error-state" id="errorState" style="display: none;">
+            <h2>Error Loading Listing</h2>
+            <p id="errorMessage">Something went wrong.</p>
+            <a href="/marketplace/" class="btn btn-primary" style="width: auto; display: inline-block; margin-top: 1rem;">Back to Marketplace</a>
+        </div>
+
+        <!-- Not Found -->
+        <div class="not-found" id="notFoundState" style="display: none;">
+            <h2>Listing Not Found</h2>
+            <p>This listing may have been removed or is no longer available.</p>
+            <a href="/marketplace/" class="btn btn-primary" style="width: auto; display: inline-block; margin-top: 1rem;">Browse Marketplace</a>
+        </div>
+
+        <!-- Listing Content -->
+        <div id="listingContent" style="display: none;">
+            <div class="listing-grid">
+                <!-- Image Gallery -->
+                <div>
+                    <div class="gallery">
+                        <img src="" alt="" class="main-image" id="mainImage">
+                        <div class="thumbnails" id="thumbnails"></div>
+                    </div>
+
+                    <div class="description-section">
+                        <h2 class="section-title">Description</h2>
+                        <div class="description-text" id="descriptionText"></div>
+                    </div>
+                </div>
+
+                <!-- Details Card -->
+                <div class="details-card">
+                    <div class="listing-category" id="listingCategory"></div>
+                    <h1 class="listing-title" id="listingTitle"></h1>
+                    <div class="listing-price" id="listingPrice"></div>
+
+                    <div class="listing-meta" id="listingMeta"></div>
+
+                    <div class="seller-info">
+                        <div class="seller-avatar" id="sellerAvatar"></div>
+                        <div>
+                            <div class="seller-name" id="sellerName"></div>
+                            <div class="seller-since" id="sellerSince"></div>
+                        </div>
+                    </div>
+
+                    <div class="shipping-info" id="shippingInfo"></div>
+
+                    <div class="quantity-row" id="quantityRow">
+                        <label>Quantity:</label>
+                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1">
+                        <span class="qty-available" id="qtyAvailable"></span>
+                    </div>
+
+                    <div id="purchaseButtons"></div>
+
+                    <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+                        All transactions are secure and protected.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchase Modal -->
+    <div class="modal-overlay" id="purchaseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Complete Purchase</h3>
+                <button class="modal-close" onclick="closePurchaseModal()">&times;</button>
+            </div>
+
+            <div id="purchaseMessage" class="message" style="display: none;"></div>
+
+            <!-- Step 1: Shipping Address (for physical items) -->
+            <div id="step1" class="purchase-step">
+                <h4 style="margin-bottom: 1rem;">Shipping Address</h4>
+                <div class="address-list" id="addressList">
+                    <p style="color: var(--text-muted);">Loading addresses...</p>
+                </div>
+                <button class="btn btn-secondary" style="width: auto;" onclick="showNewAddressForm()">+ Add New Address</button>
+
+                <div id="newAddressForm" style="display: none; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-input" id="addrFullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Address Line 1</label>
+                        <input type="text" class="form-input" id="addrLine1">
+                    </div>
+                    <div class="form-group">
+                        <label>Address Line 2 (optional)</label>
+                        <input type="text" class="form-input" id="addrLine2">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" class="form-input" id="addrCity">
+                        </div>
+                        <div class="form-group">
+                            <label>State</label>
+                            <input type="text" class="form-input" id="addrState">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>ZIP Code</label>
+                            <input type="text" class="form-input" id="addrPostal">
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <input type="text" class="form-input" id="addrCountry" value="United States">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="closePurchaseModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="goToStep2()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Payment Method -->
+            <div id="step2" class="purchase-step" style="display: none;">
+                <h4 style="margin-bottom: 1rem;">Payment Method</h4>
+
+                <div id="paymentOptions"></div>
+
+                <div class="order-summary" id="orderSummary"></div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="goToStep1()">Back</button>
+                    <button class="btn btn-primary" id="confirmPurchaseBtn" onclick="confirmPurchase()">Confirm Purchase</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let listing = null;
+        let currentUser = null;
+        let selectedAddressId = null;
+        let selectedPayment = null;
+        let userAddresses = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadListing();
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/session`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        currentUser = data.user;
+                    }
+                }
+            } catch (e) {
+                console.log('Not authenticated');
+            }
+        }
+
+        async function loadListing() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                showError('No listing ID provided');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/marketplace/listings/${id}`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    if (res.status === 404) {
+                        showNotFound();
+                    } else {
+                        showError(data.error || 'Failed to load listing');
+                    }
+                    return;
+                }
+
+                listing = data.listing;
+                renderListing();
+            } catch (error) {
+                console.error('Load error:', error);
+                showError('Failed to load listing');
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorState').style.display = 'block';
+        }
+
+        function showNotFound() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('notFoundState').style.display = 'block';
+        }
+
+        function renderListing() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('listingContent').style.display = 'block';
+
+            // Breadcrumb
+            document.getElementById('breadcrumbTitle').textContent = listing.title;
+            document.title = `${listing.title} - PhillySports.com Marketplace`;
+
+            // Images
+            const images = listing.images || [];
+            const mainImg = document.getElementById('mainImage');
+            mainImg.src = images[0]?.url || '/placeholder.png';
+            mainImg.alt = listing.title;
+
+            const thumbs = document.getElementById('thumbnails');
+            if (images.length > 1) {
+                thumbs.innerHTML = images.map((img, i) => `
+                    <img src="${img.url}" alt="" class="thumbnail ${i === 0 ? 'active' : ''}" onclick="selectImage(${i})">
+                `).join('');
+            }
+
+            // Details
+            document.getElementById('listingCategory').textContent = listing.category;
+            document.getElementById('listingTitle').textContent = listing.title;
+            document.getElementById('descriptionText').textContent = listing.description;
+
+            // Price
+            const priceEl = document.getElementById('listingPrice');
+            let priceHtml = [];
+            if (listing.acceptsUSD && listing.priceUSD) {
+                priceHtml.push(`<span class="price-usd">$${(listing.priceUSD / 100).toFixed(2)}</span>`);
+            }
+            if (listing.acceptsDiehardDollars && listing.priceDiehardDollars) {
+                priceHtml.push(`<span class="price-dd">${listing.priceDiehardDollars} DD</span>`);
+            }
+            priceEl.innerHTML = priceHtml.join('<span class="price-or">or</span>');
+
+            // Meta tags
+            const metaEl = document.getElementById('listingMeta');
+            let metaHtml = [];
+            if (listing.team) {
+                metaHtml.push(`<span class="meta-tag team-${listing.team}">${formatTeam(listing.team)}</span>`);
+            }
+            metaHtml.push(`<span class="meta-tag">${formatCondition(listing.condition)}</span>`);
+            metaHtml.push(`<span class="meta-tag">${listing.productType === 'digital' ? 'Digital' : 'Physical'}</span>`);
+            metaEl.innerHTML = metaHtml.join('');
+
+            // Seller
+            document.getElementById('sellerAvatar').textContent = listing.sellerUsername.charAt(0).toUpperCase();
+            document.getElementById('sellerName').textContent = listing.sellerUsername;
+            document.getElementById('sellerSince').textContent = `Seller since ${formatDate(listing.sellerJoinedAt || listing.createdAt)}`;
+
+            // Shipping
+            const shippingEl = document.getElementById('shippingInfo');
+            if (listing.productType === 'physical' && listing.shippingInfo) {
+                const ship = listing.shippingInfo;
+                shippingEl.innerHTML = `
+                    <div class="shipping-row"><span>&#128230; Ships from:</span><span>${escapeHtml(ship.shipsFrom)}</span></div>
+                    <div class="shipping-row"><span>Handling time:</span><span>${ship.handlingTime} business day(s)</span></div>
+                    ${ship.shippingOptions?.map(opt => `
+                        <div class="shipping-row"><span>${opt.method}:</span><span>$${(opt.priceUSD / 100).toFixed(2)} (${opt.estimatedDays})</span></div>
+                    `).join('')}
+                `;
+            } else if (listing.productType === 'digital') {
+                shippingEl.innerHTML = `<div>&#128187; Digital delivery via ${listing.digitalDelivery?.type || 'email'}</div>`;
+            } else {
+                shippingEl.style.display = 'none';
+            }
+
+            // Quantity
+            const qtyInput = document.getElementById('quantityInput');
+            qtyInput.max = listing.quantity;
+            document.getElementById('qtyAvailable').textContent = `${listing.quantity} available`;
+
+            if (listing.quantity <= 0) {
+                document.getElementById('quantityRow').innerHTML = '<span style="color: var(--error-color); font-weight: 600;">Sold Out</span>';
+            }
+
+            // Purchase buttons
+            renderPurchaseButtons();
+        }
+
+        function renderPurchaseButtons() {
+            const container = document.getElementById('purchaseButtons');
+
+            if (!listing || listing.quantity <= 0) {
+                container.innerHTML = `<button class="btn btn-primary" disabled>Sold Out</button>`;
+                return;
+            }
+
+            // Check if user is the seller
+            if (currentUser && listing.sellerId === currentUser.userId) {
+                container.innerHTML = `<p style="text-align: center; color: var(--text-muted);">This is your listing</p>`;
+                return;
+            }
+
+            if (!currentUser) {
+                container.innerHTML = `<a href="/login.html?redirect=${encodeURIComponent(window.location.href)}" class="btn btn-primary">Log in to Purchase</a>`;
+                return;
+            }
+
+            let buttons = [];
+            if (listing.acceptsUSD) {
+                buttons.push(`<button class="btn btn-primary" onclick="startPurchase('stripe')">Buy with Card - $${(listing.priceUSD / 100).toFixed(2)}</button>`);
+                buttons.push(`<button class="btn btn-paypal" onclick="startPurchase('paypal')">Pay with PayPal</button>`);
+            }
+            if (listing.acceptsDiehardDollars) {
+                buttons.push(`<button class="btn btn-dd" onclick="startPurchase('diehard_dollars')">Buy with ${listing.priceDiehardDollars} DD</button>`);
+            }
+
+            container.innerHTML = buttons.join('');
+        }
+
+        function selectImage(index) {
+            const images = listing.images || [];
+            document.getElementById('mainImage').src = images[index]?.url || '/placeholder.png';
+            document.querySelectorAll('.thumbnail').forEach((t, i) => {
+                t.classList.toggle('active', i === index);
+            });
+        }
+
+        function formatTeam(team) {
+            const names = { eagles: 'Eagles', phillies: 'Phillies', sixers: '76ers', flyers: 'Flyers' };
+            return names[team] || team;
+        }
+
+        function formatCondition(condition) {
+            const labels = { new: 'New', like_new: 'Like New', good: 'Good', fair: 'Fair', poor: 'Poor' };
+            return labels[condition] || condition;
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Purchase Flow
+        async function startPurchase(method) {
+            selectedPayment = method;
+            document.getElementById('purchaseMessage').style.display = 'none';
+
+            if (listing.productType === 'physical') {
+                await loadAddresses();
+                document.getElementById('step1').style.display = 'block';
+                document.getElementById('step2').style.display = 'none';
+            } else {
+                // Digital - skip to step 2
+                document.getElementById('step1').style.display = 'none';
+                setupStep2();
+                document.getElementById('step2').style.display = 'block';
+            }
+
+            document.getElementById('purchaseModal').classList.add('active');
+        }
+
+        async function loadAddresses() {
+            try {
+                const res = await fetch(`${API_URL}/addresses`);
+                const data = await res.json();
+                userAddresses = data.addresses || [];
+                renderAddresses();
+            } catch (error) {
+                console.error('Load addresses error:', error);
+            }
+        }
+
+        function renderAddresses() {
+            const container = document.getElementById('addressList');
+
+            if (userAddresses.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">No saved addresses. Add one below.</p>';
+                showNewAddressForm();
+                return;
+            }
+
+            container.innerHTML = userAddresses.map((addr, i) => `
+                <div class="address-option ${i === 0 ? 'selected' : ''}" onclick="selectAddress('${addr._id}', this)">
+                    <div class="label">${escapeHtml(addr.label || 'Address')}</div>
+                    <div class="address">${escapeHtml(addr.fullName)}, ${escapeHtml(addr.addressLine1)}, ${escapeHtml(addr.city)}, ${addr.state} ${addr.postalCode}</div>
+                </div>
+            `).join('');
+
+            selectedAddressId = userAddresses[0]._id;
+        }
+
+        function selectAddress(id, el) {
+            selectedAddressId = id;
+            document.querySelectorAll('.address-option').forEach(a => a.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('newAddressForm').style.display = 'none';
+        }
+
+        function showNewAddressForm() {
+            selectedAddressId = null;
+            document.querySelectorAll('.address-option').forEach(a => a.classList.remove('selected'));
+            document.getElementById('newAddressForm').style.display = 'block';
+        }
+
+        function goToStep1() {
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').style.display = 'none';
+        }
+
+        function goToStep2() {
+            // Validate address
+            if (!selectedAddressId && listing.productType === 'physical') {
+                // Using new address form
+                const fullName = document.getElementById('addrFullName').value.trim();
+                const line1 = document.getElementById('addrLine1').value.trim();
+                const city = document.getElementById('addrCity').value.trim();
+                const state = document.getElementById('addrState').value.trim();
+                const postal = document.getElementById('addrPostal').value.trim();
+
+                if (!fullName || !line1 || !city || !state || !postal) {
+                    showPurchaseMessage('Please fill in all required address fields', 'error');
+                    return;
+                }
+            }
+
+            setupStep2();
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+        }
+
+        function setupStep2() {
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+
+            // Payment options
+            const paymentContainer = document.getElementById('paymentOptions');
+            let options = [];
+
+            if (listing.acceptsUSD) {
+                options.push({
+                    id: 'stripe',
+                    icon: '&#128179;',
+                    name: 'Credit/Debit Card',
+                    desc: 'Pay securely with Stripe',
+                    selected: selectedPayment === 'stripe'
+                });
+                options.push({
+                    id: 'paypal',
+                    icon: '&#127760;',
+                    name: 'PayPal',
+                    desc: 'Pay with your PayPal account',
+                    selected: selectedPayment === 'paypal'
+                });
+            }
+
+            if (listing.acceptsDiehardDollars) {
+                options.push({
+                    id: 'diehard_dollars',
+                    icon: '&#128176;',
+                    name: 'Diehard Dollars',
+                    desc: `Your balance: ${currentUser?.coinBalance || 0} DD`,
+                    selected: selectedPayment === 'diehard_dollars'
+                });
+            }
+
+            paymentContainer.innerHTML = options.map(opt => `
+                <label class="payment-option ${opt.selected ? 'selected' : ''}" onclick="selectPayment('${opt.id}', this)">
+                    <input type="radio" name="payment" value="${opt.id}" ${opt.selected ? 'checked' : ''}>
+                    <span class="payment-icon">${opt.icon}</span>
+                    <div class="payment-details">
+                        <div class="payment-name">${opt.name}</div>
+                        <div class="payment-desc">${opt.desc}</div>
+                    </div>
+                </label>
+            `).join('');
+
+            // Order summary
+            updateOrderSummary();
+        }
+
+        function selectPayment(method, el) {
+            selectedPayment = method;
+            document.querySelectorAll('.payment-option').forEach(p => p.classList.remove('selected'));
+            el.classList.add('selected');
+            updateOrderSummary();
+        }
+
+        function updateOrderSummary() {
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+            const summaryEl = document.getElementById('orderSummary');
+
+            let rows = [];
+            rows.push(`<div class="summary-row"><span>${escapeHtml(listing.title)} x ${quantity}</span></div>`);
+
+            if (selectedPayment === 'diehard_dollars') {
+                const total = listing.priceDiehardDollars * quantity;
+                rows.push(`<div class="summary-row total"><span>Total</span><span>${total} DD</span></div>`);
+            } else {
+                const subtotal = listing.priceUSD * quantity;
+                const shipping = listing.shippingInfo?.shippingOptions?.[0]?.priceUSD || 0;
+                const total = subtotal + (listing.productType === 'physical' ? shipping : 0);
+
+                rows.push(`<div class="summary-row"><span>Subtotal</span><span>$${(subtotal / 100).toFixed(2)}</span></div>`);
+                if (listing.productType === 'physical') {
+                    rows.push(`<div class="summary-row"><span>Shipping</span><span>$${(shipping / 100).toFixed(2)}</span></div>`);
+                }
+                rows.push(`<div class="summary-row total"><span>Total</span><span>$${(total / 100).toFixed(2)}</span></div>`);
+            }
+
+            summaryEl.innerHTML = rows.join('');
+        }
+
+        async function confirmPurchase() {
+            const btn = document.getElementById('confirmPurchaseBtn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+
+            // Build shipping address
+            let shippingAddress = null;
+            if (listing.productType === 'physical') {
+                if (selectedAddressId) {
+                    const addr = userAddresses.find(a => a._id === selectedAddressId);
+                    if (addr) {
+                        shippingAddress = {
+                            fullName: addr.fullName,
+                            addressLine1: addr.addressLine1,
+                            addressLine2: addr.addressLine2,
+                            city: addr.city,
+                            state: addr.state,
+                            postalCode: addr.postalCode,
+                            country: addr.country
+                        };
+                    }
+                } else {
+                    shippingAddress = {
+                        fullName: document.getElementById('addrFullName').value.trim(),
+                        addressLine1: document.getElementById('addrLine1').value.trim(),
+                        addressLine2: document.getElementById('addrLine2').value.trim() || null,
+                        city: document.getElementById('addrCity').value.trim(),
+                        state: document.getElementById('addrState').value.trim(),
+                        postalCode: document.getElementById('addrPostal').value.trim(),
+                        country: document.getElementById('addrCountry').value.trim() || 'United States'
+                    };
+                }
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/marketplace/purchase`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        listingId: listing._id,
+                        quantity,
+                        paymentMethod: selectedPayment,
+                        shippingAddress,
+                        shippingMethod: listing.shippingInfo?.shippingOptions?.[0]?.method || 'standard'
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.redirectUrl) {
+                        // Stripe - redirect to checkout
+                        window.location.href = data.redirectUrl;
+                    } else if (data.paypalApprovalUrl) {
+                        // PayPal - redirect to approval
+                        window.location.href = data.paypalApprovalUrl;
+                    } else {
+                        // Diehard Dollars - instant purchase
+                        showPurchaseMessage('Purchase complete! Redirecting to your orders...', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/orders/';
+                        }, 2000);
+                    }
+                } else {
+                    showPurchaseMessage(data.error || 'Purchase failed', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Confirm Purchase';
+                }
+            } catch (error) {
+                console.error('Purchase error:', error);
+                showPurchaseMessage('Purchase failed. Please try again.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Confirm Purchase';
+            }
+        }
+
+        function showPurchaseMessage(text, type) {
+            const msgEl = document.getElementById('purchaseMessage');
+            msgEl.textContent = text;
+            msgEl.className = `message ${type}`;
+            msgEl.style.display = 'block';
+        }
+
+        function closePurchaseModal() {
+            document.getElementById('purchaseModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
