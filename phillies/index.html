@@ -57,7 +57,16 @@
         .team-hero { background: linear-gradient(135deg, var(--team-color), #000); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
         .team-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 1rem; }
-        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr 320px; gap: 1.5rem; }
+        .left-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .standings-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .standings-table th { text-align: left; padding: 0.5rem 0.4rem; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-size: 0.65rem; text-transform: uppercase; }
+        .standings-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border-color); }
+        .standings-table tr:last-child td { border-bottom: none; }
+        .standings-table .team-name { font-weight: 600; }
+        .standings-table .team-name.highlight { color: var(--team-color); }
+        .standings-table .record { text-align: center; }
+        .standings-table .pct { text-align: right; color: var(--text-muted); }
         .content-section { display: flex; flex-direction: column; gap: 1rem; }
         .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
         .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
@@ -163,6 +172,17 @@
     </header>
     <div class="team-hero"><h1>Philadelphia Phillies</h1><p>News, Scores & Schedule</p></div>
     <main class="main-container">
+        <aside class="left-sidebar">
+            <div class="widget">
+                <div class="widget-header"><span>&#127942;</span><h3 class="widget-title">NL East Standings</h3></div>
+                <div class="widget-content" style="padding: 0;">
+                    <table class="standings-table" id="standingsTable">
+                        <thead><tr><th>Team</th><th class="record">W-L</th><th class="pct">PCT</th></tr></thead>
+                        <tbody id="standingsBody"><tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:1rem;">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </aside>
         <div class="content-section">
             <div class="section-header"><h2 class="section-title">Latest Phillies News</h2></div>
             <div class="carousel" id="newsCarousel">
@@ -247,7 +267,8 @@
         async function loadScores(){const c=document.getElementById('scoresContainer');try{const r=await fetch(`/api/scores?team=${TEAM}`);const d=await r.json();if(d.scores?.length>0){c.innerHTML=d.scores.map(s=>{const content=`<div class="score-teams"><div class="score-team"><span class="team-dot" style="background:${s.isHome?s.teamColor:'#666'}"></span> ${s.homeTeam}</div><div class="score-team"><span class="team-dot" style="background:${!s.isHome?s.teamColor:'#666'}"></span> ${s.awayTeam}</div></div><div class="score-result"><span>${s.homeScore}</span><span>${s.awayScore}</span></div>`;return s.link?`<a href="${s.link}" target="_blank" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`:`<div class="score-item">${content}</div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadSchedule(){const c=document.getElementById('scheduleContainer');try{const r=await fetch(`/api/schedule?team=${TEAM}`);const d=await r.json();if(d.schedule?.length>0){c.innerHTML=d.schedule.map(g=>{const f=formatGameDate(g.date);return`<div class="schedule-item"><div class="schedule-date"><div class="schedule-day">${f.day}</div><div class="schedule-month">${f.month}</div></div><div class="schedule-info"><div class="schedule-matchup">${g.isHome?'vs':'@'} ${g.opponent}</div><div class="schedule-time">${f.dayName} ${f.time}${g.broadcast?' · '+g.broadcast:''}</div></div></div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadRoster(){const c=document.getElementById('rosterContainer');try{const r=await fetch(`/api/roster?team=${TEAM}`);const d=await r.json();if(d.players?.length>0){c.innerHTML=d.players.map(p=>`<div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;"><span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${p.number||'-'}</span>${p.link?`<a href="${p.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${p.name}</a>`:`<span style="flex:1;font-weight:500;">${p.name}</span>`}<span style="color:var(--text-muted);font-size:0.75rem;">${p.position}</span></div>`).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No roster available</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load roster</div>';}}
-        loadNews();loadScores();loadSchedule();loadRoster();
+        async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('https://site.api.espn.com/apis/v2/sports/baseball/mlb/standings');const d=await r.json();let nlEast=null;for(const g of d.children||[]){for(const div of g.children||[]){if(div.name==='NL East'){nlEast=div.standings?.entries||[];break;}}if(nlEast)break;}if(nlEast?.length>0){c.innerHTML=nlEast.map(e=>{const t=e.team;const s=e.stats||[];const w=s.find(x=>x.name==='wins')?.value||0;const l=s.find(x=>x.name==='losses')?.value||0;const pct=s.find(x=>x.name==='winPercent')?.value||0;const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${w}-${l}</td><td class="pct">${pct.toFixed(3)}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">NYM</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">ATL</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">MIA</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">WSH</span></td><td class="record">--</td><td class="pct">---</td></tr>`;}}
+        loadNews();loadScores();loadSchedule();loadRoster();loadStandings();
 
         // All-Time Leaders Stats
         let statsData = null;

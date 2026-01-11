@@ -97,7 +97,16 @@
         .team-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 1rem; }
 
-        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; }
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr 320px; gap: 1.5rem; }
+        .left-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .standings-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .standings-table th { text-align: left; padding: 0.5rem 0.4rem; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-size: 0.65rem; text-transform: uppercase; }
+        .standings-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border-color); }
+        .standings-table tr:last-child td { border-bottom: none; }
+        .standings-table .team-name { font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
+        .standings-table .team-name.highlight { color: var(--team-color); }
+        .standings-table .record { text-align: center; }
+        .standings-table .pct { text-align: right; color: var(--text-muted); }
 
         .content-section { display: flex; flex-direction: column; gap: 1rem; }
         .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
@@ -240,6 +249,25 @@
     </div>
 
     <main class="main-container">
+        <aside class="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127942;</span>
+                    <h3 class="widget-title">NFC East Standings</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <table class="standings-table" id="standingsTable">
+                        <thead>
+                            <tr><th>Team</th><th class="record">W-L</th><th class="pct">PCT</th></tr>
+                        </thead>
+                        <tbody id="standingsBody">
+                            <tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:1rem;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aside>
+
         <div class="content-section">
             <div class="section-header">
                 <h2 class="section-title">Latest Eagles News</h2>
@@ -532,10 +560,58 @@
             }
         }
 
+        async function loadStandings() {
+            const container = document.getElementById('standingsBody');
+            try {
+                // NFC East teams with their typical records (can be updated from API)
+                const response = await fetch('https://site.api.espn.com/apis/v2/sports/football/nfl/standings');
+                const data = await response.json();
+
+                // Find NFC East division
+                let nfcEast = null;
+                for (const group of data.children || []) {
+                    for (const division of group.children || []) {
+                        if (division.name === 'NFC East') {
+                            nfcEast = division.standings?.entries || [];
+                            break;
+                        }
+                    }
+                    if (nfcEast) break;
+                }
+
+                if (nfcEast && nfcEast.length > 0) {
+                    container.innerHTML = nfcEast.map(entry => {
+                        const team = entry.team;
+                        const stats = entry.stats || [];
+                        const wins = stats.find(s => s.name === 'wins')?.value || 0;
+                        const losses = stats.find(s => s.name === 'losses')?.value || 0;
+                        const pct = stats.find(s => s.name === 'winPercent')?.value || 0;
+                        const isEagles = team.abbreviation === 'PHI';
+                        return `<tr>
+                            <td><span class="team-name ${isEagles ? 'highlight' : ''}">${team.abbreviation}</span></td>
+                            <td class="record">${wins}-${losses}</td>
+                            <td class="pct">${pct.toFixed(3)}</td>
+                        </tr>`;
+                    }).join('');
+                } else {
+                    throw new Error('No standings data');
+                }
+            } catch (e) {
+                // Fallback with placeholder data
+                container.innerHTML = `
+                    <tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr>
+                    <tr><td><span class="team-name">DAL</span></td><td class="record">--</td><td class="pct">---</td></tr>
+                    <tr><td><span class="team-name">WAS</span></td><td class="record">--</td><td class="pct">---</td></tr>
+                    <tr><td><span class="team-name">NYG</span></td><td class="record">--</td><td class="pct">---</td></tr>
+                `;
+            }
+        }
+
         loadNews();
         loadScores();
         loadSchedule();
         loadRoster();
+        loadStandings();
 
         // All-Time Leaders Stats
         let statsData = null;
