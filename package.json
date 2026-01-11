@@ -8,6 +8,7 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "pusher": "^5.2.0",
-    "cheerio": "^1.0.0"
+    "cheerio": "^1.0.0",
+    "stripe": "^14.0.0"
   }
 }
