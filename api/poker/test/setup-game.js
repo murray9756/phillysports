@@ -2,7 +2,6 @@
 // POST: Create bot players, register them for tournament, and start the game
 
 import { getCollection } from '../../lib/mongodb.js';
-import { authenticate } from '../../lib/auth.js';
 import { addCoins } from '../../lib/coins.js';
 import { startTournament } from '../../lib/poker/tournamentManager.js';
 import { TOURNAMENT_STATUS } from '../../lib/poker/constants.js';
@@ -28,11 +27,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const user = await authenticate(req);
-    if (!user) {
-      return res.status(401).json({ error: 'Login required to test' });
-    }
-
+    // Note: Auth check removed for easier testing
     const { tournamentId, botCount = 2 } = req.body;
 
     if (!tournamentId) {
