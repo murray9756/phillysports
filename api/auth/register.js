@@ -53,9 +53,9 @@ export default async function handler(req, res) {
             followers: [],
             savedArticles: [],
             notifications: [],
-            // Coin system fields
-            coinBalance: 0,
-            lifetimeCoins: 0,
+            // Coin system fields - new users start with 5000 DD
+            coinBalance: 5000,
+            lifetimeCoins: 5000,
             lastDailyLogin: null,
             dailyLoginStreak: 0,
             badges: [],

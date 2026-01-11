@@ -162,9 +162,21 @@
             <a href="/login.html" class="btn btn-primary">Login to Play</a>
         </div>
 
-        <!-- Available Tournaments -->
+        <!-- Cash Games -->
         <div class="section-header">
-            <h2 class="section-title"><span>&#127183;</span> Available Tournaments</h2>
+            <h2 class="section-title"><span>&#128176;</span> Cash Games - Heads Up</h2>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">10/20 Blinds | 1,000 DD Buy-in</span>
+        </div>
+        <div class="tournament-grid" id="cashGamesGrid">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#9203;</div>
+                <h3>Loading cash tables...</h3>
+            </div>
+        </div>
+
+        <!-- Available Tournaments -->
+        <div class="section-header" style="margin-top: 2rem;">
+            <h2 class="section-title"><span>&#127183;</span> Tournaments</h2>
         </div>
         <div class="tournament-grid" id="tournamentGrid">
             <div class="empty-state">
@@ -451,8 +463,144 @@
             document.getElementById('confirmModal').classList.remove('active');
         }
 
+        // Load cash games
+        async function loadCashGames() {
+            const grid = document.getElementById('cashGamesGrid');
+            try {
+                const response = await fetch('/api/poker/cash-games');
+                const data = await response.json();
+
+                if (data.success && data.tables.length > 0) {
+                    grid.innerHTML = data.tables.map(t => renderCashTable(t)).join('');
+                } else {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">&#128176;</div>
+                            <h3>No Cash Tables Available</h3>
+                            <p>Check back soon!</p>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">&#9888;</div>
+                        <h3>Unable to Load</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderCashTable(t) {
+            const isFull = t.playerCount >= 2;
+            const isSeated = t.isSeated;
+            const isEmpty = t.playerCount === 0;
+
+            let statusText = isEmpty ? 'Empty' : isFull ? 'Full (In Play)' : 'Waiting for Opponent';
+            let statusClass = isEmpty ? 'status-completed' : isFull ? 'status-running' : 'status-registration';
+
+            let actionButton = '';
+            if (isSeated) {
+                actionButton = `<a href="/poker-table.html?cash=${t._id}" class="btn btn-primary">Return to Table</a>`;
+            } else if (isFull) {
+                actionButton = `<a href="/poker-table.html?cash=${t._id}" class="btn btn-secondary">Watch</a>`;
+            } else if (currentUser) {
+                actionButton = `<button class="btn btn-primary" onclick="joinCashTable('${t._id}', '${t.name}')">Join Table (1,000 &#129689;)</button>`;
+            } else {
+                actionButton = `<a href="/login.html" class="btn btn-primary">Login to Play</a>`;
+            }
+
+            const playersHtml = t.players.length > 0
+                ? t.players.map(p => `<span style="background: var(--dark-bg); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">${p.username} (${p.chipStack})</span>`).join(' ')
+                : '<span style="color: var(--text-muted);">No players seated</span>';
+
+            return `
+                <div class="tournament-card">
+                    <div class="tournament-header" style="background: linear-gradient(135deg, #8b4513, #a0522d);">
+                        <div class="tournament-name">${t.name}</div>
+                        <div class="tournament-type">Heads-Up</div>
+                    </div>
+                    <div class="tournament-body">
+                        <div class="tournament-stats">
+                            <div class="tournament-stat">
+                                <div class="stat-value">10/20</div>
+                                <div class="stat-label">Blinds</div>
+                            </div>
+                            <div class="tournament-stat">
+                                <div class="stat-value">1,000</div>
+                                <div class="stat-label">Buy-In</div>
+                            </div>
+                            <div class="tournament-stat">
+                                <div class="stat-value">${t.playerCount}/2</div>
+                                <div class="stat-label">Players</div>
+                            </div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-info-row">
+                                <span>Status</span>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="tournament-info-row">
+                                <span>Players</span>
+                                <span>${playersHtml}</span>
+                            </div>
+                            <div class="tournament-info-row">
+                                <span>Hands Played</span>
+                                <span>${t.handsPlayed}</span>
+                            </div>
+                        </div>
+                        <div class="tournament-actions">
+                            ${actionButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function joinCashTable(tableId, tableName) {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const buyIn = 1000;
+            if (buyIn > (currentUser.coinBalance || 0)) {
+                alert(`Insufficient Diehard Dollars. You need ${buyIn} but only have ${currentUser.coinBalance || 0}.`);
+                return;
+            }
+
+            showModal(
+                'Join Cash Table',
+                `Join "${tableName}" for 1,000 Diehard Dollars? You can leave anytime and cash out your remaining chips.`,
+                async () => {
+                    try {
+                        const response = await fetch(`/api/poker/cash-games/${tableId}/join`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const data = await response.json();
+
+                        if (data.success) {
+                            currentUser.coinBalance = data.newBalance;
+                            updateHeader();
+                            window.location.href = `/poker-table.html?cash=${tableId}`;
+                        } else {
+                            alert(data.error || 'Failed to join table');
+                        }
+                    } catch (e) {
+                        alert('Failed to join table. Please try again.');
+                    }
+                    closeModal();
+                }
+            );
+        }
+
         // Initialize
-        checkAuth().then(() => loadTournaments());
+        checkAuth().then(() => {
+            loadCashGames();
+            loadTournaments();
+        });
     </script>
 </body>
 </html>

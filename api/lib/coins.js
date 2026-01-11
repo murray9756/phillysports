@@ -48,6 +48,52 @@ export async function addCoins(userId, amount, category, description, metadata =
 }
 
 /**
+ * Deduct coins as a penalty (won't go below 0)
+ */
+export async function deductCoins(userId, amount, category, description, metadata = {}) {
+    const users = await getCollection('users');
+    const transactions = await getCollection('transactions');
+
+    const userIdObj = typeof userId === 'string' ? new ObjectId(userId) : userId;
+
+    // Get current balance
+    const user = await users.findOne({ _id: userIdObj });
+    if (!user) throw new Error('User not found');
+
+    // Calculate actual deduction (don't go below 0)
+    const currentBalance = user.coinBalance || 0;
+    const actualDeduction = Math.min(amount, currentBalance);
+
+    if (actualDeduction <= 0) {
+        return currentBalance; // Nothing to deduct
+    }
+
+    // Deduct coins
+    const result = await users.findOneAndUpdate(
+        { _id: userIdObj },
+        {
+            $inc: { coinBalance: -actualDeduction },
+            $set: { updatedAt: new Date() }
+        },
+        { returnDocument: 'after' }
+    );
+
+    // Log transaction
+    await transactions.insertOne({
+        userId: userIdObj,
+        type: 'penalty',
+        category,
+        amount: -actualDeduction,
+        balance: result.coinBalance,
+        description,
+        metadata,
+        createdAt: new Date()
+    });
+
+    return { newBalance: result.coinBalance, deducted: actualDeduction };
+}
+
+/**
  * Spend coins from a user's balance
  */
 export async function spendCoins(userId, amount, category, description, metadata = {}) {

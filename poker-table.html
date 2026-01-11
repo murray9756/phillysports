@@ -898,6 +898,7 @@
         let privateChannel = null;
         let myHoleCards = null;
         let usePusher = false;
+        let isCashGame = false; // Cash game mode flag
 
         // Pusher configuration
         const PUSHER_KEY = 'YOUR_PUSHER_KEY'; // Will be replaced with actual key
@@ -928,7 +929,15 @@
         async function init() {
             // Get table ID from URL
             const params = new URLSearchParams(window.location.search);
-            tableId = params.get('table') || params.get('id');
+            tableId = params.get('table') || params.get('id') || params.get('tournament');
+
+            // Check if this is a cash game
+            const cashTableId = params.get('cash');
+            if (cashTableId) {
+                tableId = cashTableId;
+                isCashGame = true;
+                setupCashGameUI();
+            }
 
             if (!tableId) {
                 alert('No table specified');
@@ -1281,7 +1290,11 @@
 
         async function loadGameState() {
             try {
-                const response = await fetch(`/api/poker/tables/${tableId}`);
+                const apiPath = isCashGame
+                    ? `/api/poker/cash-games/${tableId}`
+                    : `/api/poker/tables/${tableId}`;
+
+                const response = await fetch(apiPath);
                 const data = await response.json();
 
                 if (!data.success) {
@@ -1292,7 +1305,12 @@
                 gameState = data;
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
-                updateTournamentStatus();
+
+                if (isCashGame) {
+                    updateCashGameUI();
+                } else {
+                    updateTournamentStatus();
+                }
 
             } catch (e) {
                 console.error('Error loading game state:', e);
@@ -1527,13 +1545,17 @@
 
         async function doAction(action, amount = 0) {
             try {
-                const response = await fetch(`/api/poker/tables/${tableId}/action`, {
+                const apiPath = isCashGame
+                    ? `/api/poker/cash-games/${tableId}/action`
+                    : `/api/poker/tables/${tableId}/action`;
+
+                const response = await fetch(apiPath, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action,
                         amount,
-                        handId: gameState.table.currentHand?._id
+                        handId: gameState.table?.currentHand?._id || gameState.currentHand?._id
                     })
                 });
 
@@ -1546,6 +1568,16 @@
 
                 // Immediately reload state
                 await loadGameState();
+
+                // For cash games, poll more frequently for a bit to catch bot actions
+                // (bot actions are triggered server-side with a delay)
+                if (isCashGame && !data.isHandComplete) {
+                    // Poll a few times quickly to catch bot action
+                    for (let i = 0; i < 3; i++) {
+                        await new Promise(r => setTimeout(r, 1500));
+                        await loadGameState();
+                    }
+                }
 
             } catch (e) {
                 console.error('Action error:', e);
@@ -1602,10 +1634,17 @@
         async function triggerBotAction() {
             setTestStatus('Running bot action...');
             try {
-                const response = await fetch('/api/poker/test/bot-action', {
+                // Use cash game bot endpoint if in cash game mode
+                const endpoint = isCashGame
+                    ? `/api/poker/cash-games/${tableId}/bot-action`
+                    : '/api/poker/test/bot-action';
+
+                const body = isCashGame ? {} : { tableId };
+
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tableId })
+                    body: JSON.stringify(body)
                 });
                 const data = await response.json();
 
@@ -1635,12 +1674,18 @@
             document.getElementById('stopBotsBtn').style.display = 'block';
             setTestStatus('Auto-play running...');
 
+            // Use cash game bot endpoint if in cash game mode
+            const endpoint = isCashGame
+                ? `/api/poker/cash-games/${tableId}/bot-action`
+                : '/api/poker/test/bot-action';
+            const body = isCashGame ? {} : { tableId };
+
             botLoopInterval = setInterval(async () => {
                 try {
-                    const response = await fetch('/api/poker/test/bot-action', {
+                    const response = await fetch(endpoint, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ tableId })
+                        body: JSON.stringify(body)
                     });
                     const data = await response.json();
 
@@ -1649,11 +1694,15 @@
                             setTestStatus(`Your turn! (${data.waitingFor})`);
                         } else if (data.handComplete) {
                             setTestStatus('Hand complete! Starting new...', 'success');
-                            // Auto-start new hand after short delay
-                            setTimeout(startNewHand, 1500);
+                            // For cash games, new hand starts automatically
+                            if (!isCashGame) {
+                                setTimeout(startNewHand, 1500);
+                            }
                         } else if (data.needsNewHand) {
                             setTestStatus('Starting new hand...');
-                            startNewHand();
+                            if (!isCashGame) {
+                                startNewHand();
+                            }
                         } else {
                             setTestStatus(`${data.bot}: ${data.action}`, 'success');
                         }
@@ -1663,7 +1712,7 @@
                 } catch (e) {
                     console.error('Bot loop error:', e);
                 }
-            }, 1000);
+            }, 1500); // Slightly slower for cash games
         }
 
         function stopBotLoop() {
@@ -1700,6 +1749,139 @@
             setTestStatus('Refreshing...');
             await loadGameState();
             setTestStatus('State refreshed', 'success');
+        }
+
+        // Cash Game Functions
+        function setupCashGameUI() {
+            // Hide tournament-specific elements
+            document.getElementById('tournamentStatusBar').classList.add('hidden');
+            document.getElementById('levelDisplay').parentElement.style.display = 'none';
+
+            // Update header to show cash game info
+            document.getElementById('blindsDisplay').textContent = '10/20';
+
+            // Change Leave Table button behavior for cash games
+            const leaveBtn = document.querySelector('.btn-leave');
+            if (leaveBtn) {
+                leaveBtn.textContent = 'Cash Out';
+                leaveBtn.href = '#';
+                leaveBtn.onclick = (e) => {
+                    e.preventDefault();
+                    leaveCashTable();
+                };
+            }
+
+            // Update title
+            document.title = 'Cash Game | PhillySports.com';
+        }
+
+        function updateCashGameUI() {
+            const table = gameState.table;
+
+            // Update blinds display
+            document.getElementById('blindsDisplay').textContent =
+                `${table.blinds?.small || 10}/${table.blinds?.big || 20}`;
+
+            // Update players display
+            const playerCount = table.seats.filter(s => s.playerId).length;
+            document.getElementById('playersDisplay').textContent = `${playerCount}/2`;
+
+            // Show rebuy button if player is busted
+            if (gameState.canRebuy) {
+                showRebuyOption();
+            } else {
+                hideRebuyOption();
+            }
+
+            // Update leave button state
+            const leaveBtn = document.querySelector('.btn-leave');
+            if (leaveBtn) {
+                if (gameState.canLeave) {
+                    leaveBtn.style.opacity = '1';
+                    leaveBtn.style.cursor = 'pointer';
+                } else {
+                    leaveBtn.style.opacity = '0.5';
+                    leaveBtn.style.cursor = 'not-allowed';
+                }
+            }
+        }
+
+        function showRebuyOption() {
+            // Add rebuy button if not already present
+            if (!document.getElementById('rebuyBtn')) {
+                const actionPanel = document.getElementById('actionPanel');
+                const rebuyBtn = document.createElement('button');
+                rebuyBtn.id = 'rebuyBtn';
+                rebuyBtn.className = 'action-btn call';
+                rebuyBtn.style.background = '#ffc107';
+                rebuyBtn.style.color = '#000';
+                rebuyBtn.textContent = 'Rebuy (1,000 DD)';
+                rebuyBtn.onclick = rebuyCashGame;
+                actionPanel.insertBefore(rebuyBtn, actionPanel.firstChild);
+                actionPanel.classList.remove('hidden');
+            }
+        }
+
+        function hideRebuyOption() {
+            const rebuyBtn = document.getElementById('rebuyBtn');
+            if (rebuyBtn) {
+                rebuyBtn.remove();
+            }
+        }
+
+        async function leaveCashTable() {
+            if (!gameState.canLeave) {
+                alert('Cannot leave during an active hand. Fold first or wait for the hand to complete.');
+                return;
+            }
+
+            const chipStack = gameState.userSeat?.chipStack || 0;
+            if (!confirm(`Cash out and leave table? You will receive ${chipStack} Diehard Dollars.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/poker/cash-games/${tableId}/leave`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Cashed out ${data.cashOut} Diehard Dollars!`);
+                    window.location.href = '/poker.html';
+                } else {
+                    alert(data.error || 'Failed to leave table');
+                }
+            } catch (e) {
+                alert('Failed to leave table');
+            }
+        }
+
+        async function rebuyCashGame() {
+            if (!confirm('Buy back in for 1,000 Diehard Dollars?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/poker/cash-games/${tableId}/rebuy`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Rebuy successful! You have 1,000 chips.');
+                    hideRebuyOption();
+                    await loadGameState();
+                } else {
+                    alert(data.error || 'Rebuy failed');
+                }
+            } catch (e) {
+                alert('Rebuy failed');
+            }
         }
 
         // Initialize

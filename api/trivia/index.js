@@ -3,12 +3,25 @@ const require = createRequire(import.meta.url);
 const { MongoClient, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
-import { addCoins, getDailyEarnings } from '../lib/coins.js';
+import { addCoins, deductCoins, getDailyEarnings } from '../lib/coins.js';
 
 const uri = process.env.MONGODB_URI;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-const COINS_PER_CORRECT = 10;
+// Difficulty-based rewards (correct answers)
+const REWARDS_BY_DIFFICULTY = {
+    easy: 5,
+    medium: 10,
+    hard: 20
+};
+
+// Difficulty-based penalties (incorrect answers - inverse)
+const PENALTIES_BY_DIFFICULTY = {
+    easy: 20,    // Easy questions should be easy - big penalty for wrong
+    medium: 10,  // Balanced
+    hard: 5      // Hard questions are tough - small penalty for trying
+};
+
 const DAILY_TRIVIA_LIMIT = 20; // Max correct answers per day
 
 // Philly sports trivia questions
@@ -220,7 +233,9 @@ export default async function handler(req, res) {
             });
 
             const isCorrect = selectedAnswer === question.answer;
+            const difficulty = question.difficulty || 'medium';
             let coinsEarned = 0;
+            let coinsLost = 0;
 
             // Record the answer
             await answersCollection.insertOne({
@@ -228,19 +243,34 @@ export default async function handler(req, res) {
                 questionId: questionId,
                 selectedAnswer,
                 correct: isCorrect,
+                difficulty: difficulty,
                 answeredAt: new Date()
             });
 
-            // Award coins if correct and under daily limit
-            if (isCorrect && dailyCorrect < DAILY_TRIVIA_LIMIT) {
-                await addCoins(
+            if (isCorrect) {
+                // Award coins based on difficulty (if under daily limit)
+                if (dailyCorrect < DAILY_TRIVIA_LIMIT) {
+                    const reward = REWARDS_BY_DIFFICULTY[difficulty] || 10;
+                    await addCoins(
+                        decoded.userId,
+                        reward,
+                        'trivia',
+                        `Correct ${difficulty} trivia: ${question.team}`,
+                        { questionId, team: question.team, difficulty }
+                    );
+                    coinsEarned = reward;
+                }
+            } else {
+                // Deduct coins based on difficulty (inverse - easy wrong = big penalty)
+                const penalty = PENALTIES_BY_DIFFICULTY[difficulty] || 10;
+                const result = await deductCoins(
                     decoded.userId,
-                    COINS_PER_CORRECT,
-                    'trivia',
-                    `Correct trivia answer: ${question.team}`,
-                    { questionId, team: question.team }
+                    penalty,
+                    'trivia_penalty',
+                    `Incorrect ${difficulty} trivia: ${question.team}`,
+                    { questionId, team: question.team, difficulty }
                 );
-                coinsEarned = COINS_PER_CORRECT;
+                coinsLost = typeof result === 'object' ? result.deducted : 0;
             }
 
             // Get updated stats
@@ -260,7 +290,9 @@ export default async function handler(req, res) {
                 success: true,
                 correct: isCorrect,
                 correctAnswer: question.answer,
+                difficulty: difficulty,
                 coinsEarned,
+                coinsLost,
                 dailyCorrect: dailyCorrect + (isCorrect ? 1 : 0),
                 dailyLimit: DAILY_TRIVIA_LIMIT,
                 stats: {

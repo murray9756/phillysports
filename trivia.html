@@ -65,6 +65,10 @@
         .result-message.incorrect { background: #ffebee; color: #c62828; }
         .result-message h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
         .coins-earned { display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; color: #ff9800; margin-top: 0.5rem; }
+        .coins-lost { display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(244,67,54,0.15); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; color: #c62828; margin-top: 0.5rem; }
+        .reward-indicator { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; display: flex; justify-content: center; gap: 1rem; }
+        .reward-indicator .earn { color: #4caf50; }
+        .reward-indicator .risk { color: #f44336; }
         .next-btn { width: 100%; padding: 1rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.2s; }
         .next-btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
@@ -103,7 +107,7 @@
         <p>Test your knowledge and earn Diehard Dollars!</p>
         <div class="reward-badge">
             <span>&#129689;</span>
-            <span>10 dollars per correct answer</span>
+            <span>Earn 5-20 DD | Risk 5-20 DD</span>
         </div>
     </section>
 
@@ -224,19 +228,30 @@
             }
         }
 
+        const REWARDS = { easy: 5, medium: 10, hard: 20 };
+        const PENALTIES = { easy: 20, medium: 10, hard: 5 };
+
         function renderQuestion(question, remaining) {
             const container = document.getElementById('questionContainer');
+            const difficulty = question.difficulty || 'medium';
+            const reward = REWARDS[difficulty] || 10;
+            const penalty = PENALTIES[difficulty] || 10;
+
             container.innerHTML = `
                 <div class="question-card">
                     <div>
                         <span class="question-team ${question.team}">${question.team}</span>
-                        <span class="question-difficulty ${question.difficulty}">${question.difficulty}</span>
+                        <span class="question-difficulty ${difficulty}">${difficulty}</span>
                     </div>
                     <p class="question-text">${question.question}</p>
                     <div class="options-list">
                         ${question.options.map((option, index) => `
                             <button class="option-btn" data-option="${option}" onclick="selectAnswer('${escapeHtml(option)}')">${option}</button>
                         `).join('')}
+                    </div>
+                    <div class="reward-indicator">
+                        <span class="earn">&#10003; Correct: +${reward} DD</span>
+                        <span class="risk">&#10007; Wrong: -${penalty} DD</span>
                     </div>
                     <div id="resultArea"></div>
                 </div>
@@ -265,8 +280,8 @@
             });
 
             if (!currentUser) {
-                // Show answer without earning coins
-                showAnswerResult(selectedOption, selectedOption === currentQuestion.options[0], currentQuestion.options[0], 0);
+                // Show answer without earning/losing coins
+                showAnswerResult(selectedOption, selectedOption === currentQuestion.options[0], currentQuestion.options[0], 0, 0);
                 return;
             }
 
@@ -306,14 +321,14 @@
                     }
                 }
 
-                showAnswerResult(selectedOption, data.correct, data.correctAnswer, data.coinsEarned);
+                showAnswerResult(selectedOption, data.correct, data.correctAnswer, data.coinsEarned, data.coinsLost);
             } catch (error) {
                 console.error('Submit answer error:', error);
                 showToast(error.message, 'error');
             }
         }
 
-        function showAnswerResult(selected, isCorrect, correctAnswer, coinsEarned) {
+        function showAnswerResult(selected, isCorrect, correctAnswer, coinsEarned, coinsLost = 0) {
             // Highlight correct/incorrect
             document.querySelectorAll('.option-btn').forEach(btn => {
                 if (btn.dataset.option === correctAnswer) {
@@ -328,6 +343,10 @@
                 }
             });
 
+            // Hide reward indicator after answering
+            const rewardIndicator = document.querySelector('.reward-indicator');
+            if (rewardIndicator) rewardIndicator.style.display = 'none';
+
             const resultArea = document.getElementById('resultArea');
             resultArea.innerHTML = `
                 <div class="result-message ${isCorrect ? 'correct' : 'incorrect'}">
@@ -339,12 +358,20 @@
                             <span>+${coinsEarned} Diehard Dollars</span>
                         </div>
                     ` : ''}
+                    ${coinsLost > 0 ? `
+                        <div class="coins-lost">
+                            <span>&#129689;</span>
+                            <span>-${coinsLost} Diehard Dollars</span>
+                        </div>
+                    ` : ''}
                 </div>
                 <button class="next-btn" onclick="loadQuestion()">Next Question</button>
             `;
 
             if (isCorrect && coinsEarned > 0) {
                 showToast(`+${coinsEarned} Diehard Dollars!`, 'success');
+            } else if (coinsLost > 0) {
+                showToast(`-${coinsLost} Diehard Dollars`, 'error');
             }
         }
 

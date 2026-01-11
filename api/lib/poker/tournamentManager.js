@@ -7,20 +7,36 @@ import { addCoins } from '../coins.js';
 import { startNewHand } from './gameEngine.js';
 import { TOURNAMENT_STATUS, GAME_STATUS, DEFAULTS } from './constants.js';
 import { broadcastTableUpdate, PUSHER_EVENTS } from '../pusher.js';
+import { fillTournamentWithBots } from './botManager.js';
 
 /**
  * Start a tournament (create tables and seat players)
  */
-export async function startTournament(tournamentId) {
+export async function startTournament(tournamentId, options = {}) {
+  const { fillWithBots = true } = options;
   const tournaments = await getCollection('tournaments');
   const tables = await getCollection('poker_tables');
   const users = await getCollection('users');
 
-  const tournament = await tournaments.findOne({ _id: new ObjectId(tournamentId) });
+  let tournament = await tournaments.findOne({ _id: new ObjectId(tournamentId) });
   if (!tournament) throw new Error('Tournament not found');
 
   if (tournament.status !== TOURNAMENT_STATUS.REGISTRATION) {
     throw new Error('Tournament is not in registration phase');
+  }
+
+  // Fill empty seats with bots to ensure tournament can always start
+  if (fillWithBots) {
+    const currentPlayerCount = tournament.registeredPlayers?.length || 0;
+    if (currentPlayerCount < tournament.maxPlayers) {
+      try {
+        await fillTournamentWithBots(tournamentId, tournament.maxPlayers);
+        // Refresh tournament data after adding bots
+        tournament = await tournaments.findOne({ _id: new ObjectId(tournamentId) });
+      } catch (e) {
+        console.error('Error filling tournament with bots:', e);
+      }
+    }
   }
 
   if (tournament.registeredPlayers.length < tournament.minPlayers) {
