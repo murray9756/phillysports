@@ -153,7 +153,7 @@
         function prevSlide() { goToSlide(currentSlide - 1); }
         function startCarousel() { stopCarousel(); carouselInterval = setInterval(nextSlide, 5000); }
         function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
-        const sourceLogos={'Crossing Broad':'https://www.crossingbroad.com/wp-content/uploads/2023/03/cropped-CB-Favicon-1-192x192.png','On Pattison':'https://onpattison.com/images/logo-white.png','ESPN':'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'};
+        const sourceLogos={'Crossing Broad':'https://www.crossingbroad.com/wp-content/uploads/2023/03/cropped-CB-Favicon-1-192x192.png','On Pattison':'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png?v=2','ESPN':'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'};
         function getSourceLogo(s){const l=s&&sourceLogos[s]?sourceLogos[s]:sourceLogos['ESPN'];return`<img src="${l}" alt="${s||'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;}
         function timeAgo(d){const s=Math.floor((new Date()-new Date(d))/1000);if(s<60)return'Just now';const m=Math.floor(s/60);if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
         function formatGameDate(d){const date=new Date(d);return{day:date.getDate(),month:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.getMonth()],dayName:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][date.getDay()],time:date.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};}
