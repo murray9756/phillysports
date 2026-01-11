@@ -4,11 +4,12 @@
     { "abbreviation": "WSH", "name": "Washington Capitals", "wins": 27, "losses": 10, "otLosses": 5, "points": 59 },
     { "abbreviation": "CAR", "name": "Carolina Hurricanes", "wins": 25, "losses": 14, "otLosses": 3, "points": 53 },
     { "abbreviation": "NJD", "name": "New Jersey Devils", "wins": 24, "losses": 15, "otLosses": 5, "points": 53 },
-    { "abbreviation": "PHI", "name": "Philadelphia Flyers", "wins": 20, "losses": 18, "otLosses": 5, "points": 45 },
-    { "abbreviation": "NYR", "name": "New York Rangers", "wins": 20, "losses": 19, "otLosses": 3, "points": 43 },
-    { "abbreviation": "PIT", "name": "Pittsburgh Penguins", "wins": 18, "losses": 18, "otLosses": 7, "points": 43 },
-    { "abbreviation": "CBJ", "name": "Columbus Blue Jackets", "wins": 17, "losses": 19, "otLosses": 6, "points": 40 },
-    { "abbreviation": "NYI", "name": "New York Islanders", "wins": 16, "losses": 18, "otLosses": 7, "points": 39 }
+    { "abbreviation": "PHI", "name": "Philadelphia Flyers", "wins": 22, "losses": 16, "otLosses": 5, "points": 49 },
+    { "abbreviation": "PIT", "name": "Pittsburgh Penguins", "wins": 20, "losses": 15, "otLosses": 8, "points": 48 },
+    { "abbreviation": "NYI", "name": "New York Islanders", "wins": 20, "losses": 17, "otLosses": 5, "points": 45 },
+    { "abbreviation": "NYR", "name": "New York Rangers", "wins": 20, "losses": 19, "otLosses": 4, "points": 44 },
+    { "abbreviation": "CBJ", "name": "Columbus Blue Jackets", "wins": 19, "losses": 20, "otLosses": 5, "points": 43 }
   ],
-  "lastUpdated": "2025-01-11"
+  "season": "2025-26",
+  "lastUpdated": "2026-01-11"
 }

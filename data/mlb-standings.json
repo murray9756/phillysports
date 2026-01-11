@@ -1,11 +1,12 @@
 {
   "division": "NL East",
   "standings": [
-    { "abbreviation": "PHI", "name": "Philadelphia Phillies", "wins": 95, "losses": 67, "pct": 0.586 },
-    { "abbreviation": "NYM", "name": "New York Mets", "wins": 89, "losses": 73, "pct": 0.549 },
-    { "abbreviation": "ATL", "name": "Atlanta Braves", "wins": 89, "losses": 73, "pct": 0.549 },
-    { "abbreviation": "MIA", "name": "Miami Marlins", "wins": 62, "losses": 100, "pct": 0.383 },
-    { "abbreviation": "WSH", "name": "Washington Nationals", "wins": 71, "losses": 91, "pct": 0.438 }
+    { "abbreviation": "PHI", "name": "Philadelphia Phillies", "wins": 90, "losses": 61, "pct": 0.596 },
+    { "abbreviation": "NYM", "name": "New York Mets", "wins": 77, "losses": 73, "pct": 0.513 },
+    { "abbreviation": "MIA", "name": "Miami Marlins", "wins": 70, "losses": 80, "pct": 0.467 },
+    { "abbreviation": "ATL", "name": "Atlanta Braves", "wins": 67, "losses": 83, "pct": 0.447 },
+    { "abbreviation": "WSH", "name": "Washington Nationals", "wins": 62, "losses": 89, "pct": 0.411 }
   ],
-  "lastUpdated": "2025-01-11"
+  "season": "2025",
+  "lastUpdated": "2026-01-11"
 }
