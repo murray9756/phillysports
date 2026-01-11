@@ -32,7 +32,7 @@ export async function startTournament(tournamentId) {
   }).toArray();
 
   const players = playerDocs.map(p => ({
-    odPlayerId: p._id,
+    playerId: p._id,
     username: p.username,
     chipStack: tournament.startingChips
   }));
