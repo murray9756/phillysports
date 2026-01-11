@@ -1,0 +1,11 @@
+{
+  "division": "Atlantic",
+  "standings": [
+    { "abbreviation": "BOS", "name": "Boston Celtics", "wins": 30, "losses": 12, "pct": 0.714 },
+    { "abbreviation": "NYK", "name": "New York Knicks", "wins": 27, "losses": 16, "pct": 0.628 },
+    { "abbreviation": "PHI", "name": "Philadelphia 76ers", "wins": 17, "losses": 23, "pct": 0.425 },
+    { "abbreviation": "BKN", "name": "Brooklyn Nets", "wins": 14, "losses": 27, "pct": 0.341 },
+    { "abbreviation": "TOR", "name": "Toronto Raptors", "wins": 10, "losses": 32, "pct": 0.238 }
+  ],
+  "lastUpdated": "2025-01-11"
+}

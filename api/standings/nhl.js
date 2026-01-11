@@ -1,53 +1,90 @@
-import { createResponse, createOptionsResponse } from '../lib/utils.js';
+// NHL Standings API - Metropolitan Division
+import { getCollection } from '../lib/mongodb.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-export default async function handler(req) {
-    if (req.method === 'OPTIONS') {
-        return createOptionsResponse();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour cache
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    // Try to get cached data from MongoDB
+    const cache = await getCollection('standings_cache');
+    const cachedData = await cache.findOne({
+      league: 'nhl',
+      expiresAt: { $gt: new Date() }
+    });
+
+    if (cachedData) {
+      return res.status(200).json({
+        standings: cachedData.standings,
+        division: cachedData.division,
+        lastUpdated: cachedData.lastUpdated,
+        cached: true
+      });
     }
 
-    if (req.method !== 'GET') {
-        return createResponse({ error: 'Method not allowed' }, 405);
+    // Fall back to static JSON file
+    const staticDataPath = path.join(__dirname, '../../data/nhl-standings.json');
+
+    if (fs.existsSync(staticDataPath)) {
+      const staticData = JSON.parse(fs.readFileSync(staticDataPath, 'utf8'));
+
+      // Store in cache for future requests
+      await cache.updateOne(
+        { league: 'nhl' },
+        {
+          $set: {
+            ...staticData,
+            league: 'nhl',
+            expiresAt: new Date(Date.now() + CACHE_DURATION_MS),
+            updatedAt: new Date()
+          }
+        },
+        { upsert: true }
+      );
+
+      return res.status(200).json({
+        standings: staticData.standings,
+        division: staticData.division,
+        lastUpdated: staticData.lastUpdated,
+        cached: false
+      });
     }
 
+    return res.status(404).json({ error: 'No standings data available' });
+
+  } catch (error) {
+    console.error('NHL standings error:', error);
+
+    // Last resort: try to read static file without caching
     try {
-        const response = await fetch('https://site.api.espn.com/apis/v2/sports/hockey/nhl/standings');
-        const data = await response.json();
-
-        // Find Metropolitan division
-        let metro = null;
-        for (const group of data.children || []) {
-            for (const division of group.children || []) {
-                if (division.name === 'Metropolitan') {
-                    metro = division.standings?.entries || [];
-                    break;
-                }
-            }
-            if (metro) break;
-        }
-
-        if (metro && metro.length > 0) {
-            const standings = metro.map(entry => {
-                const team = entry.team;
-                const stats = entry.stats || [];
-                const wins = stats.find(s => s.name === 'wins')?.value || 0;
-                const losses = stats.find(s => s.name === 'losses')?.value || 0;
-                const otLosses = stats.find(s => s.name === 'otLosses')?.value || 0;
-                const points = stats.find(s => s.name === 'points')?.value || 0;
-                return {
-                    abbreviation: team.abbreviation,
-                    name: team.displayName,
-                    wins,
-                    losses,
-                    otLosses,
-                    points
-                };
-            });
-            return createResponse({ standings, division: 'Metropolitan' });
-        }
-
-        return createResponse({ error: 'No standings data available' }, 404);
-    } catch (error) {
-        console.error('NHL standings error:', error);
-        return createResponse({ error: 'Failed to fetch standings' }, 500);
+      const staticDataPath = path.join(__dirname, '../../data/nhl-standings.json');
+      const staticData = JSON.parse(fs.readFileSync(staticDataPath, 'utf8'));
+      return res.status(200).json({
+        standings: staticData.standings,
+        division: staticData.division,
+        lastUpdated: staticData.lastUpdated,
+        cached: false,
+        dbError: true
+      });
+    } catch (fallbackError) {
+      return res.status(500).json({ error: 'Failed to load standings' });
     }
+  }
 }

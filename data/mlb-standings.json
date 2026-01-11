@@ -1,0 +1,11 @@
+{
+  "division": "NL East",
+  "standings": [
+    { "abbreviation": "PHI", "name": "Philadelphia Phillies", "wins": 95, "losses": 67, "pct": 0.586 },
+    { "abbreviation": "NYM", "name": "New York Mets", "wins": 89, "losses": 73, "pct": 0.549 },
+    { "abbreviation": "ATL", "name": "Atlanta Braves", "wins": 89, "losses": 73, "pct": 0.549 },
+    { "abbreviation": "MIA", "name": "Miami Marlins", "wins": 62, "losses": 100, "pct": 0.383 },
+    { "abbreviation": "WSH", "name": "Washington Nationals", "wins": 71, "losses": 91, "pct": 0.438 }
+  ],
+  "lastUpdated": "2025-01-11"
+}

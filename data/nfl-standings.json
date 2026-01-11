@@ -1,0 +1,10 @@
+{
+  "division": "NFC East",
+  "standings": [
+    { "abbreviation": "PHI", "name": "Philadelphia Eagles", "wins": 14, "losses": 3, "pct": 0.824 },
+    { "abbreviation": "WAS", "name": "Washington Commanders", "wins": 12, "losses": 5, "pct": 0.706 },
+    { "abbreviation": "DAL", "name": "Dallas Cowboys", "wins": 7, "losses": 10, "pct": 0.412 },
+    { "abbreviation": "NYG", "name": "New York Giants", "wins": 3, "losses": 14, "pct": 0.176 }
+  ],
+  "lastUpdated": "2025-01-11"
+}
