@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "mongodb": "^6.3.0",
+    "mongodb": "^5.9.0",
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3"
   }
