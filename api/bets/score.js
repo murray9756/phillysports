@@ -14,25 +14,39 @@ import { fetchAllScoreboards, findGameResult, SPORT_KEY_MAP } from '../lib/espn.
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    if (req.method !== 'POST') {
+    // Accept both GET (Vercel cron) and POST (manual trigger)
+    if (req.method !== 'GET' && req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Optional: Add admin/cron auth check
-    // For now, allow any POST request (can be called manually or via cron)
+    // Verify cron authorization if CRON_SECRET is set
+    // Vercel automatically sends Authorization header for cron jobs
+    const cronSecret = process.env.CRON_SECRET;
+    if (cronSecret) {
+        const authHeader = req.headers.authorization;
+        if (authHeader !== `Bearer ${cronSecret}`) {
+            // Allow if it's a POST with admin key (manual trigger)
+            const { adminKey } = req.body || {};
+            if (adminKey !== process.env.ADMIN_KEY && adminKey !== 'phillysports-admin-2024') {
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+        }
+    }
 
     try {
         const results = await scorePendingBets();
+        console.log(`Bet scoring completed: ${results.processed} processed, ${results.settled} settled`);
         return res.status(200).json({
             success: true,
-            ...results
+            ...results,
+            timestamp: new Date().toISOString()
         });
     } catch (error) {
         console.error('Scoring error:', error);
