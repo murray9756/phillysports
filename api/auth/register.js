@@ -1,9 +1,8 @@
-const { getCollection } = require('../lib/mongodb');
-const { hashPassword, generateToken, setAuthCookie } = require('../lib/auth');
-const { validateRegistration, sanitizeString } = require('../lib/validate');
+import { getCollection } from '../lib/mongodb.js';
+import { hashPassword, generateToken, setAuthCookie } from '../lib/auth.js';
+import { validateRegistration, sanitizeString } from '../lib/validate.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -19,40 +18,35 @@ module.exports = async function handler(req, res) {
     try {
         const { username, email, password, favoriteTeam } = req.body;
 
-        // Validate input
         const validation = validateRegistration({ username, email, password });
         if (!validation.isValid) {
-            return res.status(400).json({ error: validation.errors[0], errors: validation.errors });
+            return res.status(400).json({ error: validation.errors[0] });
         }
 
         const users = await getCollection('users');
 
-        // Check if username already exists
-        const existingUsername = await users.findOne({
-            username: username.toLowerCase()
+        const existingUser = await users.findOne({
+            $or: [
+                { email: email.toLowerCase() },
+                { username: username.toLowerCase() }
+            ]
         });
-        if (existingUsername) {
+
+        if (existingUser) {
+            if (existingUser.email === email.toLowerCase()) {
+                return res.status(400).json({ error: 'Email already registered' });
+            }
             return res.status(400).json({ error: 'Username already taken' });
         }
 
-        // Check if email already exists
-        const existingEmail = await users.findOne({
-            email: email.toLowerCase()
-        });
-        if (existingEmail) {
-            return res.status(400).json({ error: 'Email already registered' });
-        }
-
-        // Hash password
         const hashedPassword = await hashPassword(password);
 
-        // Create user
         const newUser = {
-            username: username.toLowerCase(),
-            displayName: username,
+            username: sanitizeString(username, 20),
             email: email.toLowerCase(),
             password: hashedPassword,
-            favoriteTeam: favoriteTeam?.toLowerCase() || null,
+            favoriteTeam: favoriteTeam || null,
+            displayName: sanitizeString(username, 50),
             profilePhoto: null,
             bio: '',
             following: [],
@@ -66,22 +60,22 @@ module.exports = async function handler(req, res) {
         const result = await users.insertOne(newUser);
         newUser._id = result.insertedId;
 
-        // Generate token
         const token = generateToken(newUser);
-
-        // Set cookie
         setAuthCookie(res, token);
 
-        // Return user (without password)
-        const { password: _, ...userWithoutPassword } = newUser;
-
         res.status(201).json({
-            message: 'Account created successfully',
-            user: userWithoutPassword,
-            token
+            message: 'Registration successful',
+            token,
+            user: {
+                _id: newUser._id.toString(),
+                username: newUser.username,
+                email: newUser.email,
+                displayName: newUser.displayName,
+                favoriteTeam: newUser.favoriteTeam
+            }
         });
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ error: 'Failed to create account' });
+        res.status(500).json({ error: 'Registration failed' });
     }
-};
+}

@@ -1,7 +1,6 @@
-const { getCollection } = require('../lib/mongodb');
+import { getCollection } from '../lib/mongodb.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -23,7 +22,6 @@ module.exports = async function handler(req, res) {
 
         const users = await getCollection('users');
 
-        // Search by username or display name
         const results = await users.find(
             {
                 $or: [
@@ -32,12 +30,7 @@ module.exports = async function handler(req, res) {
                 ]
             },
             {
-                projection: {
-                    password: 0,
-                    email: 0,
-                    notifications: 0,
-                    savedArticles: 0
-                }
+                projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 }
             }
         )
         .limit(parseInt(limit))
@@ -45,14 +38,16 @@ module.exports = async function handler(req, res) {
 
         res.status(200).json({
             users: results.map(user => ({
-                ...user,
                 _id: user._id.toString(),
-                followersCount: user.followers?.length || 0,
-                followingCount: user.following?.length || 0
+                username: user.username,
+                displayName: user.displayName,
+                favoriteTeam: user.favoriteTeam,
+                profilePhoto: user.profilePhoto,
+                followersCount: user.followers?.length || 0
             }))
         });
     } catch (error) {
-        console.error('Search users error:', error);
-        res.status(500).json({ error: 'Failed to search users' });
+        console.error('Search error:', error);
+        res.status(500).json({ error: 'Search failed' });
     }
-};
+}

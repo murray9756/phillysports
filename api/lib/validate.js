@@ -1,39 +1,33 @@
 // Validation utilities
 
-// Validate email format
-function isValidEmail(email) {
+export function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Validate username (3-20 chars, alphanumeric and underscores)
-function isValidUsername(username) {
+export function isValidUsername(username) {
     const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
     return usernameRegex.test(username);
 }
 
-// Validate password (minimum 8 characters)
-function isValidPassword(password) {
+export function isValidPassword(password) {
     return password && password.length >= 8;
 }
 
-// Validate favorite team
-function isValidTeam(team) {
+export function isValidTeam(team) {
     const validTeams = ['eagles', 'phillies', 'sixers', 'flyers', null, ''];
     return validTeams.includes(team?.toLowerCase());
 }
 
-// Sanitize string (remove HTML tags, trim)
-function sanitizeString(str, maxLength = 500) {
+export function sanitizeString(str, maxLength = 500) {
     if (!str) return '';
     return str
-        .replace(/<[^>]*>/g, '') // Remove HTML tags
+        .replace(/<[^>]*>/g, '')
         .trim()
         .substring(0, maxLength);
 }
 
-// Validate registration input
-function validateRegistration(data) {
+export function validateRegistration(data) {
     const errors = [];
 
     if (!data.username) {
@@ -60,8 +54,7 @@ function validateRegistration(data) {
     };
 }
 
-// Validate login input
-function validateLogin(data) {
+export function validateLogin(data) {
     const errors = [];
 
     if (!data.email) {
@@ -78,8 +71,7 @@ function validateLogin(data) {
     };
 }
 
-// Validate profile update input
-function validateProfileUpdate(data) {
+export function validateProfileUpdate(data) {
     const errors = [];
 
     if (data.username !== undefined && !isValidUsername(data.username)) {
@@ -103,14 +95,3 @@ function validateProfileUpdate(data) {
         errors
     };
 }
-
-module.exports = {
-    isValidEmail,
-    isValidUsername,
-    isValidPassword,
-    isValidTeam,
-    sanitizeString,
-    validateRegistration,
-    validateLogin,
-    validateProfileUpdate
-};

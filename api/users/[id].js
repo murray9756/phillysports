@@ -1,8 +1,7 @@
-const { ObjectId } = require('mongodb');
-const { getCollection } = require('../lib/mongodb');
+import { ObjectId } from 'mongodb';
+import { getCollection } from '../lib/mongodb.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -23,22 +22,19 @@ module.exports = async function handler(req, res) {
         }
 
         const users = await getCollection('users');
-
         let user;
 
-        // Try to find by ObjectId first, then by username
         if (ObjectId.isValid(id)) {
             user = await users.findOne(
                 { _id: new ObjectId(id) },
-                { projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 } }
+                { projection: { password: 0, email: 0, notifications: 0 } }
             );
         }
 
         if (!user) {
-            // Try finding by username
             user = await users.findOne(
                 { username: id.toLowerCase() },
-                { projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 } }
+                { projection: { password: 0, email: 0, notifications: 0 } }
             );
         }
 
@@ -48,14 +44,20 @@ module.exports = async function handler(req, res) {
 
         res.status(200).json({
             user: {
-                ...user,
                 _id: user._id.toString(),
-                followersCount: user.followers?.length || 0,
-                followingCount: user.following?.length || 0
+                username: user.username,
+                displayName: user.displayName,
+                favoriteTeam: user.favoriteTeam,
+                profilePhoto: user.profilePhoto,
+                bio: user.bio,
+                following: user.following?.map(id => id.toString()) || [],
+                followers: user.followers?.map(id => id.toString()) || [],
+                savedArticles: user.savedArticles || [],
+                createdAt: user.createdAt
             }
         });
     } catch (error) {
         console.error('Get user error:', error);
         res.status(500).json({ error: 'Failed to get user' });
     }
-};
+}

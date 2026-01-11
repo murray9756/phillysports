@@ -1,9 +1,8 @@
-const { ObjectId } = require('mongodb');
-const { getCollection } = require('../lib/mongodb');
-const { authenticate } = require('../lib/auth');
+import { ObjectId } from 'mongodb';
+import { getCollection } from '../lib/mongodb.js';
+import { authenticate } from '../lib/auth.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -17,7 +16,6 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        // Authenticate user
         const decoded = await authenticate(req);
         if (!decoded) {
             return res.status(401).json({ error: 'Authentication required' });
@@ -35,7 +33,6 @@ module.exports = async function handler(req, res) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Sort by savedAt descending (most recent first)
         const savedArticles = (user.savedArticles || [])
             .sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
 
@@ -46,4 +43,4 @@ module.exports = async function handler(req, res) {
         console.error('Get saved articles error:', error);
         res.status(500).json({ error: 'Failed to get saved articles' });
     }
-};
+}

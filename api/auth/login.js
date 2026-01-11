@@ -1,9 +1,8 @@
-const { getCollection } = require('../lib/mongodb');
-const { comparePassword, generateToken, setAuthCookie } = require('../lib/auth');
-const { validateLogin } = require('../lib/validate');
+import { getCollection } from '../lib/mongodb.js';
+import { comparePassword, generateToken, setAuthCookie } from '../lib/auth.js';
+import { validateLogin } from '../lib/validate.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -19,45 +18,40 @@ module.exports = async function handler(req, res) {
     try {
         const { email, password } = req.body;
 
-        // Validate input
         const validation = validateLogin({ email, password });
         if (!validation.isValid) {
-            return res.status(400).json({ error: validation.errors[0], errors: validation.errors });
+            return res.status(400).json({ error: validation.errors[0] });
         }
 
         const users = await getCollection('users');
-
-        // Find user by email
-        const user = await users.findOne({
-            email: email.toLowerCase()
-        });
+        const user = await users.findOne({ email: email.toLowerCase() });
 
         if (!user) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        // Check password
         const isValidPassword = await comparePassword(password, user.password);
         if (!isValidPassword) {
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        // Generate token
         const token = generateToken(user);
-
-        // Set cookie
         setAuthCookie(res, token);
-
-        // Return user (without password)
-        const { password: _, ...userWithoutPassword } = user;
 
         res.status(200).json({
             message: 'Login successful',
-            user: userWithoutPassword,
-            token
+            token,
+            user: {
+                _id: user._id.toString(),
+                username: user.username,
+                email: user.email,
+                displayName: user.displayName,
+                favoriteTeam: user.favoriteTeam,
+                profilePhoto: user.profilePhoto
+            }
         });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ error: 'Failed to login' });
+        res.status(500).json({ error: 'Login failed' });
     }
-};
+}

@@ -1,10 +1,9 @@
-const { ObjectId } = require('mongodb');
-const { getCollection } = require('../lib/mongodb');
-const { authenticate } = require('../lib/auth');
-const { sanitizeString } = require('../lib/validate');
+import { ObjectId } from 'mongodb';
+import { getCollection } from '../lib/mongodb.js';
+import { authenticate } from '../lib/auth.js';
+import { sanitizeString } from '../lib/validate.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -18,7 +17,6 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        // Authenticate user
         const decoded = await authenticate(req);
         if (!decoded) {
             return res.status(401).json({ error: 'Authentication required' });
@@ -33,12 +31,10 @@ module.exports = async function handler(req, res) {
         const users = await getCollection('users');
         const userId = new ObjectId(decoded.userId);
 
-        // Check if already saved
         const user = await users.findOne({ _id: userId });
         const isSaved = user.savedArticles?.some(article => article.url === url);
 
         if (isSaved) {
-            // Unsave article
             await users.updateOne(
                 { _id: userId },
                 {
@@ -52,7 +48,6 @@ module.exports = async function handler(req, res) {
                 saved: false
             });
         } else {
-            // Save article
             await users.updateOne(
                 { _id: userId },
                 {
@@ -76,4 +71,4 @@ module.exports = async function handler(req, res) {
         console.error('Save article error:', error);
         res.status(500).json({ error: 'Failed to save article' });
     }
-};
+}

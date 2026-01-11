@@ -1,10 +1,9 @@
-const { ObjectId } = require('mongodb');
-const { getCollection } = require('../lib/mongodb');
-const { authenticate } = require('../lib/auth');
-const { sanitizeString } = require('../lib/validate');
+import { ObjectId } from 'mongodb';
+import { getCollection } from '../lib/mongodb.js';
+import { authenticate } from '../lib/auth.js';
+import { sanitizeString } from '../lib/validate.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -13,7 +12,6 @@ module.exports = async function handler(req, res) {
         return res.status(200).end();
     }
 
-    // GET - Fetch comments for an article
     if (req.method === 'GET') {
         try {
             const { articleUrl, limit = 50 } = req.query;
@@ -30,7 +28,6 @@ module.exports = async function handler(req, res) {
                 .limit(parseInt(limit))
                 .toArray();
 
-            // Get user info for each comment
             const userIds = [...new Set(articleComments.map(c => c.userId.toString()))];
             const commentUsers = await users.find(
                 { _id: { $in: userIds.map(id => new ObjectId(id)) } },
@@ -64,10 +61,8 @@ module.exports = async function handler(req, res) {
         return;
     }
 
-    // POST - Create a new comment
     if (req.method === 'POST') {
         try {
-            // Authenticate user
             const decoded = await authenticate(req);
             if (!decoded) {
                 return res.status(401).json({ error: 'Authentication required' });
@@ -102,7 +97,6 @@ module.exports = async function handler(req, res) {
             const result = await comments.insertOne(newComment);
             newComment._id = result.insertedId;
 
-            // Get user info
             const users = await getCollection('users');
             const user = await users.findOne(
                 { _id: userId },
@@ -133,4 +127,4 @@ module.exports = async function handler(req, res) {
     }
 
     res.status(405).json({ error: 'Method not allowed' });
-};
+}

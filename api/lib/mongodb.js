@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 const options = {
@@ -15,26 +15,24 @@ if (!uri) {
 }
 
 if (process.env.NODE_ENV === 'development') {
-    // In development, use a global variable to preserve the client across hot reloads
     if (!global._mongoClientPromise) {
         client = new MongoClient(uri, options);
         global._mongoClientPromise = client.connect();
     }
     clientPromise = global._mongoClientPromise;
 } else {
-    // In production, create a new client for each connection
     client = new MongoClient(uri, options);
     clientPromise = client.connect();
 }
 
-async function getDatabase() {
+export async function getDatabase() {
     const client = await clientPromise;
     return client.db('phillysports');
 }
 
-async function getCollection(collectionName) {
+export async function getCollection(collectionName) {
     const db = await getDatabase();
     return db.collection(collectionName);
 }
 
-module.exports = { clientPromise, getDatabase, getCollection };
+export { clientPromise };

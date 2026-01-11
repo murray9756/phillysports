@@ -1,9 +1,8 @@
-const { ObjectId } = require('mongodb');
-const { getCollection } = require('../lib/mongodb');
-const { authenticate } = require('../lib/auth');
+import { ObjectId } from 'mongodb';
+import { getCollection } from '../lib/mongodb.js';
+import { authenticate } from '../lib/auth.js';
 
-module.exports = async function handler(req, res) {
-    // Set CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -17,32 +16,38 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        // Authenticate user
         const decoded = await authenticate(req);
         if (!decoded) {
-            return res.status(401).json({ error: 'Not authenticated', user: null });
+            return res.status(200).json({ user: null });
         }
 
         const users = await getCollection('users');
-
-        // Get fresh user data from database
         const user = await users.findOne(
             { _id: new ObjectId(decoded.userId) },
-            { projection: { password: 0 } } // Exclude password
+            { projection: { password: 0 } }
         );
 
         if (!user) {
-            return res.status(404).json({ error: 'User not found', user: null });
+            return res.status(200).json({ user: null });
         }
 
         res.status(200).json({
             user: {
-                ...user,
-                _id: user._id.toString()
+                _id: user._id.toString(),
+                username: user.username,
+                email: user.email,
+                displayName: user.displayName,
+                favoriteTeam: user.favoriteTeam,
+                profilePhoto: user.profilePhoto,
+                bio: user.bio,
+                following: user.following?.map(id => id.toString()) || [],
+                followers: user.followers?.map(id => id.toString()) || [],
+                savedArticles: user.savedArticles || [],
+                createdAt: user.createdAt
             }
         });
     } catch (error) {
-        console.error('Get current user error:', error);
-        res.status(500).json({ error: 'Failed to get user data' });
+        console.error('Auth check error:', error);
+        res.status(500).json({ error: 'Failed to check authentication' });
     }
-};
+}
