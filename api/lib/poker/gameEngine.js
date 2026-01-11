@@ -45,7 +45,7 @@ export async function startNewHand(tableId, blinds = { small: 10, big: 20, ante:
   // Build players array for hand
   const handPlayers = activePlayers.map((seat, idx) => ({
     playerId: seat.playerId,
-    odPosition: seat.position,
+    position: seat.position,
     holeCards: holeCards[idx],
     chipStackStart: seat.chipStack,
     chipStackCurrent: seat.chipStack,
