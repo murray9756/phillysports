@@ -44,7 +44,12 @@ export default async function handler(req, res) {
                 followers: user.followers?.map(id => id.toString()) || [],
                 savedArticles: user.savedArticles || [],
                 createdAt: user.createdAt,
-                isAdmin: user.isAdmin || false
+                isAdmin: user.isAdmin || false,
+                // Coin system fields
+                coinBalance: user.coinBalance || 0,
+                lifetimeCoins: user.lifetimeCoins || 0,
+                dailyLoginStreak: user.dailyLoginStreak || 0,
+                badges: user.badges || []
             }
         });
     } catch (error) {

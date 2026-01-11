@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
 import { sanitizeString } from '../lib/validate.js';
+import { addCoins, getDailyEarnings, COINS_PER_COMMENT, DAILY_COMMENT_COIN_LIMIT } from '../lib/coins.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -103,8 +104,27 @@ export default async function handler(req, res) {
                 { projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 } }
             );
 
+            // Award coins for commenting (if under daily limit)
+            let coinsEarned = 0;
+            try {
+                const dailyEarnings = await getDailyEarnings(decoded.userId, 'comment');
+                if (dailyEarnings.total < DAILY_COMMENT_COIN_LIMIT) {
+                    await addCoins(
+                        decoded.userId,
+                        COINS_PER_COMMENT,
+                        'comment',
+                        'Posted a comment',
+                        { commentId: newComment._id.toString(), articleUrl }
+                    );
+                    coinsEarned = COINS_PER_COMMENT;
+                }
+            } catch (coinError) {
+                console.error('Failed to award comment coins:', coinError);
+            }
+
             res.status(201).json({
                 message: 'Comment posted',
+                coinsEarned,
                 comment: {
                     ...newComment,
                     _id: newComment._id.toString(),

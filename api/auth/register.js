@@ -53,6 +53,13 @@ export default async function handler(req, res) {
             followers: [],
             savedArticles: [],
             notifications: [],
+            // Coin system fields
+            coinBalance: 0,
+            lifetimeCoins: 0,
+            lastDailyLogin: null,
+            dailyLoginStreak: 0,
+            badges: [],
+            predictionStats: { totalPredictions: 0, correctPredictions: 0 },
             createdAt: new Date(),
             updatedAt: new Date()
         };
