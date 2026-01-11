@@ -1,4 +1,6 @@
 // Vercel Serverless Function - Fetch Philly Sports News
+import { getCollection } from './lib/mongodb.js';
+
 export default async function handler(req, res) {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -211,6 +213,45 @@ export default async function handler(req, res) {
                 }
             });
         } catch (e) { console.error('On Pattison scrape error:', e); }
+
+        // Fetch original posts from MongoDB
+        try {
+            const posts = await getCollection('posts');
+            const publishedPosts = await posts.find({ status: 'published' })
+                .sort({ publishedAt: -1 })
+                .limit(10)
+                .toArray();
+
+            publishedPosts.forEach(post => {
+                const teamColors = {
+                    'Eagles': '#004C54',
+                    'Phillies': '#E81828',
+                    '76ers': '#006BB6',
+                    'Flyers': '#F74902',
+                    'Union': '#B49759'
+                };
+                const teamClasses = {
+                    'Eagles': 'tag-eagles',
+                    'Phillies': 'tag-phillies',
+                    '76ers': 'tag-sixers',
+                    'Flyers': 'tag-flyers',
+                    'Union': 'tag-union'
+                };
+
+                articles.push({
+                    team: post.team || 'Philly',
+                    sport: 'Original',
+                    teamColor: teamColors[post.team] || '#8b0000',
+                    tagClass: teamClasses[post.team] || 'tag-eagles',
+                    headline: post.title,
+                    description: post.excerpt || '',
+                    link: `/post.html?id=${post._id}`,
+                    image: post.image,
+                    published: post.publishedAt?.toISOString() || post.createdAt?.toISOString(),
+                    source: 'PhillySports.com'
+                });
+            });
+        } catch (e) { console.error('Posts fetch error:', e); }
 
         // Sort by published date (newest first)
         articles.sort((a, b) => new Date(b.published) - new Date(a.published));

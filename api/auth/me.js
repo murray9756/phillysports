@@ -43,7 +43,8 @@ export default async function handler(req, res) {
                 following: user.following?.map(id => id.toString()) || [],
                 followers: user.followers?.map(id => id.toString()) || [],
                 savedArticles: user.savedArticles || [],
-                createdAt: user.createdAt
+                createdAt: user.createdAt,
+                isAdmin: user.isAdmin || false
             }
         });
     } catch (error) {

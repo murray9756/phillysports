@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading... - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.8; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .post-header { margin-bottom: 2rem; }
+        .post-tag { display: inline-block; padding: 0.3rem 0.75rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-radius: 4px; background: var(--accent-color); color: #fff; margin-bottom: 1rem; }
+        .post-title { font-size: 2.25rem; font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+        .post-meta { color: var(--text-muted); font-size: 0.9rem; }
+        .post-meta span { margin-right: 1rem; }
+
+        .post-image { width: 100%; border-radius: 8px; margin-bottom: 2rem; }
+
+        .post-content { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 2rem; }
+        .post-content p { margin-bottom: 1.5rem; }
+        .post-content h2, .post-content h3 { margin: 2rem 0 1rem; }
+        .post-content ul, .post-content ol { margin: 1rem 0 1.5rem 1.5rem; }
+        .post-content li { margin-bottom: 0.5rem; }
+        .post-content a { color: var(--accent-color); }
+        .post-content img { max-width: 100%; border-radius: 6px; margin: 1rem 0; }
+        .post-content blockquote { border-left: 4px solid var(--accent-color); padding-left: 1rem; margin: 1.5rem 0; font-style: italic; color: var(--text-secondary); }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .error { text-align: center; padding: 3rem; }
+        .error h2 { margin-bottom: 1rem; }
+        .error a { color: var(--accent-color); }
+
+        .back-link { display: inline-block; margin-bottom: 1.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { color: var(--text-primary); }
+
+        @media (max-width: 768px) {
+            .post-title { font-size: 1.75rem; }
+            .post-content { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/" class="back-link">&larr; Back to home</a>
+
+        <div id="loading" class="loading">Loading post...</div>
+
+        <div id="error" class="error" style="display: none;">
+            <h2>Post not found</h2>
+            <p>This post may have been removed or doesn't exist.</p>
+            <p><a href="/">Return to homepage</a></p>
+        </div>
+
+        <article id="postContent" style="display: none;">
+            <div class="post-header">
+                <span class="post-tag" id="postTag"></span>
+                <h1 class="post-title" id="postTitle"></h1>
+                <div class="post-meta">
+                    <span id="postAuthor"></span>
+                    <span id="postDate"></span>
+                </div>
+            </div>
+            <img id="postImage" class="post-image" style="display: none;">
+            <div class="post-content" id="postBody"></div>
+        </article>
+    </main>
+
+    <script>
+        async function loadPost() {
+            const params = new URLSearchParams(window.location.search);
+            const postId = params.get('id');
+
+            if (!postId) {
+                showError();
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/posts/${postId}`);
+                const data = await res.json();
+
+                if (!res.ok || !data.post) {
+                    showError();
+                    return;
+                }
+
+                const post = data.post;
+
+                // Update page title
+                document.title = `${post.title} - PhillySports.com`;
+
+                // Fill in content
+                document.getElementById('postTag').textContent = post.team || 'PhillySports';
+                document.getElementById('postTitle').textContent = post.title;
+                document.getElementById('postAuthor').textContent = `By ${post.authorName || 'Staff'}`;
+                document.getElementById('postDate').textContent = formatDate(post.publishedAt || post.createdAt);
+                document.getElementById('postBody').innerHTML = post.content;
+
+                if (post.image) {
+                    const img = document.getElementById('postImage');
+                    img.src = post.image;
+                    img.style.display = 'block';
+                }
+
+                // Show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('postContent').style.display = 'block';
+
+            } catch (e) {
+                console.error('Load post error:', e);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>
