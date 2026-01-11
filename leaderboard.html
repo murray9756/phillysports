@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | PhillySports.com</title>
+    <meta name="description" content="See the top PhillySports.com members by coins and predictions!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #00796b; --dark-bg: #f0ebe3; --card-bg: #ffffff; --border-color: #e0dcd4; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #2c2c2c; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+        .page-hero { background: linear-gradient(135deg, #673ab7, #512da8); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
+        .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { font-size: 1rem; opacity: 0.9; }
+        .tabs { display: flex; justify-content: center; gap: 0.5rem; padding: 1rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .tab { padding: 0.5rem 1.25rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; border: 2px solid var(--border-color); background: transparent; }
+        .tab:hover { border-color: var(--accent-color); }
+        .tab.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .main-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+        .leaderboard-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .leaderboard-table th { background: #e8e3db; padding: 1rem; text-align: left; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .leaderboard-table td { padding: 1rem; border-bottom: 1px solid var(--border-color); }
+        .leaderboard-table tr:last-child td { border-bottom: none; }
+        .leaderboard-table tr:hover { background: rgba(0,0,0,0.02); }
+        .rank-cell { font-weight: 700; font-size: 1.25rem; text-align: center; width: 60px; }
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+        .user-cell { display: flex; align-items: center; gap: 0.5rem; }
+        .user-badges { display: flex; gap: 0.25rem; }
+        .stat-cell { text-align: center; }
+        .stat-highlight { font-weight: 700; color: var(--accent-color); }
+        .coins-cell { text-align: right; font-weight: 600; color: #ff9800; }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 1.75rem; }
+            .leaderboard-table { font-size: 0.85rem; }
+            .leaderboard-table th, .leaderboard-table td { padding: 0.75rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <h1>Leaderboard</h1>
+        <p>See how you stack up against other Philly sports fans!</p>
+    </section>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="coins">Top Earners</button>
+        <button class="tab" data-tab="predictions">Best Predictors</button>
+        <button class="tab" data-tab="streak">Login Streaks</button>
+    </div>
+
+    <main class="main-container">
+        <div id="content">
+            <div class="empty-state">Loading leaderboard...</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    document.getElementById('headerAuth').innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars">
+                            <span>&#129689;</span>
+                            <span>${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        window.location.href = '/';
+                    });
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+
+        function getRankEmoji(rank) {
+            if (rank === 1) return '&#129351;';
+            if (rank === 2) return '&#129352;';
+            if (rank === 3) return '&#129353;';
+            return rank;
+        }
+
+        async function loadCoinsLeaderboard() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="empty-state">Loading...</div>';
+
+            try {
+                const response = await fetch('/api/predictions/leaderboard?type=coins');
+                const data = await response.json();
+
+                if (!data.success || !data.leaderboard || data.leaderboard.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No leaderboard data yet. Start earning coins!</div>';
+                    return;
+                }
+
+                let html = `
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Rank</th>
+                                <th>User</th>
+                                <th style="text-align: center;">Streak</th>
+                                <th style="text-align: right;">Lifetime Coins</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.leaderboard.forEach(entry => {
+                    html += `
+                        <tr>
+                            <td class="rank-cell rank-${entry.rank}">${getRankEmoji(entry.rank)}</td>
+                            <td class="user-cell">
+                                <span>${entry.username}</span>
+                                <span class="user-badges">${(entry.badges || []).slice(0, 3).map(b => '').join('')}</span>
+                            </td>
+                            <td class="stat-cell">${entry.loginStreak > 0 ? entry.loginStreak + ' days' : '-'}</td>
+                            <td class="coins-cell">&#129689; ${entry.lifetimeCoins.toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Load leaderboard error:', error);
+                content.innerHTML = '<div class="empty-state">Failed to load leaderboard.</div>';
+            }
+        }
+
+        async function loadPredictionsLeaderboard() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="empty-state">Loading...</div>';
+
+            try {
+                const response = await fetch('/api/predictions/leaderboard?type=predictions');
+                const data = await response.json();
+
+                if (!data.success || !data.leaderboard || data.leaderboard.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No prediction data yet. Make some predictions!</div>';
+                    return;
+                }
+
+                let html = `
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Rank</th>
+                                <th>User</th>
+                                <th style="text-align: center;">Correct</th>
+                                <th style="text-align: center;">Total</th>
+                                <th style="text-align: center;">Accuracy</th>
+                                <th style="text-align: right;">Coins Won</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.leaderboard.forEach(entry => {
+                    html += `
+                        <tr>
+                            <td class="rank-cell rank-${entry.rank}">${getRankEmoji(entry.rank)}</td>
+                            <td class="user-cell">
+                                <span>${entry.username}</span>
+                            </td>
+                            <td class="stat-cell stat-highlight">${entry.correctPredictions}</td>
+                            <td class="stat-cell">${entry.totalPredictions}</td>
+                            <td class="stat-cell stat-highlight">${entry.accuracy}%</td>
+                            <td class="coins-cell">&#129689; ${entry.coinsWon}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Load leaderboard error:', error);
+                content.innerHTML = '<div class="empty-state">Failed to load leaderboard.</div>';
+            }
+        }
+
+        async function loadStreakLeaderboard() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="empty-state">Loading...</div>';
+
+            try {
+                const response = await fetch('/api/predictions/leaderboard?type=streak');
+                const data = await response.json();
+
+                if (!data.success || !data.leaderboard || data.leaderboard.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No streak data yet. Login daily to build your streak!</div>';
+                    return;
+                }
+
+                let html = `
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Rank</th>
+                                <th>User</th>
+                                <th style="text-align: right;">Login Streak</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.leaderboard.forEach(entry => {
+                    html += `
+                        <tr>
+                            <td class="rank-cell rank-${entry.rank}">${getRankEmoji(entry.rank)}</td>
+                            <td class="user-cell">
+                                <span>${entry.username}</span>
+                            </td>
+                            <td class="coins-cell" style="color: #e65100;">${entry.loginStreak} days</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Load leaderboard error:', error);
+                content.innerHTML = '<div class="empty-state">Failed to load leaderboard.</div>';
+            }
+        }
+
+        // Tab handling
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const tabName = tab.dataset.tab;
+                if (tabName === 'coins') {
+                    loadCoinsLeaderboard();
+                } else if (tabName === 'predictions') {
+                    loadPredictionsLeaderboard();
+                } else if (tabName === 'streak') {
+                    loadStreakLeaderboard();
+                }
+            });
+        });
+
+        // Initialize
+        checkAuth();
+        loadCoinsLeaderboard();
+    </script>
+</body>
+</html>

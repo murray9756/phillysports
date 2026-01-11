@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philly Sports Trivia | PhillySports.com</title>
+    <meta name="description" content="Test your Philly sports knowledge and earn Diehard Dollars!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #00796b; --dark-bg: #f0ebe3; --card-bg: #ffffff; --border-color: #e0dcd4; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #2c2c2c; --eagles-green: #004C54; --phillies-red: #E81828; --sixers-blue: #006BB6; --flyers-orange: #F74902; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+        .page-hero { background: linear-gradient(135deg, #9c27b0, #673ab7); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
+        .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { font-size: 1rem; opacity: 0.9; }
+        .reward-badge { background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-weight: 600; }
+        .team-filter { display: flex; justify-content: center; gap: 0.5rem; padding: 1rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .team-btn { padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; border: 2px solid var(--border-color); background: transparent; }
+        .team-btn:hover { transform: scale(1.05); }
+        .team-btn.active { color: white; border-color: transparent; }
+        .team-btn[data-team="all"].active { background: var(--accent-color); }
+        .team-btn[data-team="Eagles"].active { background: var(--eagles-green); }
+        .team-btn[data-team="Phillies"].active { background: var(--phillies-red); }
+        .team-btn[data-team="76ers"].active { background: var(--sixers-blue); }
+        .team-btn[data-team="Flyers"].active { background: var(--flyers-orange); }
+        .main-container { max-width: 700px; margin: 0 auto; padding: 1.5rem; }
+        .stats-bar { display: flex; justify-content: center; gap: 2rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .question-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .question-team { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 20px; margin-bottom: 1rem; color: white; }
+        .question-team.Eagles { background: var(--eagles-green); }
+        .question-team.Phillies { background: var(--phillies-red); }
+        .question-team.sixers, .question-team[data-team="76ers"] { background: var(--sixers-blue); }
+        .question-team.Flyers { background: var(--flyers-orange); }
+        .question-difficulty { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; text-transform: uppercase; }
+        .question-difficulty.easy { background: #e8f5e9; color: #2e7d32; }
+        .question-difficulty.medium { background: #fff3e0; color: #e65100; }
+        .question-difficulty.hard { background: #ffebee; color: #c62828; }
+        .question-text { font-size: 1.35rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.4; }
+        .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn { width: 100%; padding: 1rem 1.25rem; border: 2px solid var(--border-color); border-radius: 8px; background: transparent; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: left; }
+        .option-btn:hover:not(:disabled) { border-color: var(--accent-color); background: rgba(0,121,107,0.05); }
+        .option-btn:disabled { cursor: not-allowed; }
+        .option-btn.selected { border-color: var(--accent-color); background: rgba(0,121,107,0.1); }
+        .option-btn.correct { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; }
+        .option-btn.incorrect { border-color: #f44336; background: #ffebee; color: #c62828; }
+        .option-btn.correct-answer { border-color: #4caf50; background: #e8f5e9; }
+        .result-message { text-align: center; padding: 1.5rem; margin-top: 1rem; border-radius: 8px; }
+        .result-message.correct { background: #e8f5e9; color: #2e7d32; }
+        .result-message.incorrect { background: #ffebee; color: #c62828; }
+        .result-message h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .coins-earned { display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.2); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700; color: #ff9800; margin-top: 0.5rem; }
+        .next-btn { width: 100%; padding: 1rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 1rem; transition: all 0.2s; }
+        .next-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state h3 { margin-bottom: 0.5rem; color: var(--text-primary); }
+        .login-prompt { text-align: center; padding: 1rem; background: #fff3e0; border-radius: 8px; margin-bottom: 1rem; }
+        .login-prompt a { color: var(--accent-color); font-weight: 600; }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 9999; display: none; }
+        .toast.success { background: #4caf50; }
+        .toast.error { background: #f44336; }
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 1.75rem; }
+            .question-text { font-size: 1.1rem; }
+            .stats-bar { gap: 1rem; }
+            .stat-value { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <h1>Philly Sports Trivia</h1>
+        <p>Test your knowledge and earn Diehard Dollars!</p>
+        <div class="reward-badge">
+            <span>&#129689;</span>
+            <span>10 dollars per correct answer</span>
+        </div>
+    </section>
+
+    <div class="team-filter">
+        <button class="team-btn active" data-team="all">All Teams</button>
+        <button class="team-btn" data-team="Eagles">Eagles</button>
+        <button class="team-btn" data-team="Phillies">Phillies</button>
+        <button class="team-btn" data-team="76ers">76ers</button>
+        <button class="team-btn" data-team="Flyers">Flyers</button>
+    </div>
+
+    <main class="main-container">
+        <div id="loginPrompt" class="login-prompt" style="display: none;">
+            <a href="/login.html">Login</a> or <a href="/register.html">register</a> to earn Diehard Dollars for correct answers!
+        </div>
+
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-item">
+                <div class="stat-value" id="todayCorrect">0</div>
+                <div class="stat-label">Today</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalCorrect">0</div>
+                <div class="stat-label">All Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="accuracy">0%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+        </div>
+
+        <div id="questionContainer">
+            <div class="empty-state">Loading question...</div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let currentQuestion = null;
+        let selectedTeam = 'all';
+        let answered = false;
+        let stats = { totalCorrect: 0, totalAnswered: 0, accuracy: 0 };
+        let todayCorrect = 0;
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    document.getElementById('headerAuth').innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars" id="headerBalance">
+                            <span>&#129689;</span>
+                            <span>${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        window.location.href = '/';
+                    });
+                    document.getElementById('loginPrompt').style.display = 'none';
+                } else {
+                    document.getElementById('loginPrompt').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                document.getElementById('loginPrompt').style.display = 'block';
+            }
+        }
+
+        async function loadQuestion() {
+            answered = false;
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = '<div class="empty-state">Loading question...</div>';
+
+            try {
+                const teamParam = selectedTeam !== 'all' ? `?team=${selectedTeam}` : '';
+                const response = await fetch(`/api/trivia${teamParam}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load question');
+                }
+
+                if (!data.question) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>All Done!</h3>
+                            <p>${data.message}</p>
+                            <button class="next-btn" onclick="window.location.reload()" style="max-width: 300px; margin: 1rem auto;">Try Different Team</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                currentQuestion = data.question;
+                renderQuestion(data.question, data.remainingToday);
+            } catch (error) {
+                console.error('Load question error:', error);
+                container.innerHTML = `<div class="empty-state">Failed to load question. <button class="next-btn" onclick="loadQuestion()">Try Again</button></div>`;
+            }
+        }
+
+        function renderQuestion(question, remaining) {
+            const container = document.getElementById('questionContainer');
+            container.innerHTML = `
+                <div class="question-card">
+                    <div>
+                        <span class="question-team ${question.team}">${question.team}</span>
+                        <span class="question-difficulty ${question.difficulty}">${question.difficulty}</span>
+                    </div>
+                    <p class="question-text">${question.question}</p>
+                    <div class="options-list">
+                        ${question.options.map((option, index) => `
+                            <button class="option-btn" data-option="${option}" onclick="selectAnswer('${escapeHtml(option)}')">${option}</button>
+                        `).join('')}
+                    </div>
+                    <div id="resultArea"></div>
+                </div>
+                <p style="text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+                    ${remaining} questions remaining today
+                </p>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function selectAnswer(selectedOption) {
+            if (answered || !currentQuestion) return;
+            answered = true;
+
+            // Disable all buttons
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true;
+                if (btn.dataset.option === selectedOption) {
+                    btn.classList.add('selected');
+                }
+            });
+
+            if (!currentUser) {
+                // Show answer without earning coins
+                showAnswerResult(selectedOption, selectedOption === currentQuestion.options[0], currentQuestion.options[0], 0);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/trivia', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        questionId: currentQuestion._id,
+                        selectedAnswer: selectedOption
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to submit answer');
+                }
+
+                // Update stats
+                if (data.stats) {
+                    stats = data.stats;
+                    document.getElementById('totalCorrect').textContent = stats.totalCorrect;
+                    document.getElementById('accuracy').textContent = stats.accuracy + '%';
+                }
+
+                if (data.dailyCorrect !== undefined) {
+                    todayCorrect = data.dailyCorrect;
+                    document.getElementById('todayCorrect').textContent = todayCorrect;
+                }
+
+                // Update header balance
+                if (data.newBalance !== undefined) {
+                    const balanceEl = document.getElementById('headerBalance');
+                    if (balanceEl) {
+                        balanceEl.innerHTML = `<span>&#129689;</span><span>${data.newBalance}</span>`;
+                    }
+                }
+
+                showAnswerResult(selectedOption, data.correct, data.correctAnswer, data.coinsEarned);
+            } catch (error) {
+                console.error('Submit answer error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        function showAnswerResult(selected, isCorrect, correctAnswer, coinsEarned) {
+            // Highlight correct/incorrect
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                if (btn.dataset.option === correctAnswer) {
+                    btn.classList.add('correct-answer');
+                    if (btn.dataset.option === selected && isCorrect) {
+                        btn.classList.remove('correct-answer');
+                        btn.classList.add('correct');
+                    }
+                }
+                if (btn.dataset.option === selected && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const resultArea = document.getElementById('resultArea');
+            resultArea.innerHTML = `
+                <div class="result-message ${isCorrect ? 'correct' : 'incorrect'}">
+                    <h3>${isCorrect ? 'Correct!' : 'Wrong!'}</h3>
+                    ${!isCorrect ? `<p>The correct answer was: <strong>${correctAnswer}</strong></p>` : ''}
+                    ${coinsEarned > 0 ? `
+                        <div class="coins-earned">
+                            <span>&#129689;</span>
+                            <span>+${coinsEarned} Diehard Dollars</span>
+                        </div>
+                    ` : ''}
+                </div>
+                <button class="next-btn" onclick="loadQuestion()">Next Question</button>
+            `;
+
+            if (isCorrect && coinsEarned > 0) {
+                showToast(`+${coinsEarned} Diehard Dollars!`, 'success');
+            }
+        }
+
+        // Team filter
+        document.querySelectorAll('.team-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedTeam = btn.dataset.team;
+                loadQuestion();
+            });
+        });
+
+        // Initialize
+        checkAuth().then(loadQuestion);
+    </script>
+</body>
+</html>

@@ -95,6 +95,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="posts">Posts</button>
                 <button class="admin-tab" data-tab="new">New Post</button>
+                <button class="admin-tab" data-tab="coins">Coins</button>
             </div>
 
             <div id="messageArea"></div>
@@ -152,6 +153,40 @@
                         <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Coins Management -->
+            <div id="coinsTab" class="card hidden">
+                <h2>Award Diehard Dollars</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Award coins to users for contests, promotions, or special recognition.</p>
+                <form id="awardForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="targetUsername">Username</label>
+                            <input type="text" id="targetUsername" required placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="awardAmount">Amount</label>
+                            <input type="number" id="awardAmount" required min="1" max="100000" placeholder="100">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="awardNote">Note (optional)</label>
+                        <input type="text" id="awardNote" placeholder="e.g., Contest winner, Community recognition">
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success">Award Coins</button>
+                    </div>
+                </form>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+                <h2>Quick Links</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <a href="/shop.html" class="btn btn-secondary" style="text-align: center; text-decoration: none;">View Shop</a>
+                    <a href="/leaderboard.html" class="btn btn-secondary" style="text-align: center; text-decoration: none;">View Leaderboard</a>
+                    <a href="/predictions.html" class="btn btn-secondary" style="text-align: center; text-decoration: none;">View Predictions</a>
+                </div>
             </div>
         </div>
     </div>
@@ -220,11 +255,40 @@
                 const tabName = tab.dataset.tab;
                 document.getElementById('postsTab').classList.toggle('hidden', tabName !== 'posts');
                 document.getElementById('newTab').classList.toggle('hidden', tabName !== 'new');
+                document.getElementById('coinsTab').classList.toggle('hidden', tabName !== 'coins');
 
                 if (tabName === 'new') {
                     resetForm();
                 }
             });
+        });
+
+        // Award coins form
+        document.getElementById('awardForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const targetUsername = document.getElementById('targetUsername').value;
+            const amount = parseInt(document.getElementById('awardAmount').value);
+            const note = document.getElementById('awardNote').value;
+
+            try {
+                const res = await fetch('/api/admin/coins/award', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ targetUsername, amount, note })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(`Awarded ${amount} coins to ${targetUsername}! New balance: ${data.newBalance}`, 'success');
+                    document.getElementById('awardForm').reset();
+                } else {
+                    showMessage(data.error || 'Failed to award coins', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to award coins', 'error');
+            }
         });
 
         // Form submission

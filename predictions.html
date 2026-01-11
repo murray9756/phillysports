@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Predictions | PhillySports.com</title>
+    <meta name="description" content="Predict game outcomes and earn Diehard Dollars for correct predictions!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #00796b; --dark-bg: #f0ebe3; --card-bg: #ffffff; --border-color: #e0dcd4; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #2c2c2c; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+        .page-hero { background: linear-gradient(135deg, #4caf50, #2e7d32); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
+        .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { font-size: 1rem; opacity: 0.9; }
+        .reward-badge { background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; font-weight: 600; }
+        .tabs { display: flex; justify-content: center; gap: 0.5rem; padding: 1rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); }
+        .tab { padding: 0.5rem 1.25rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; border: 2px solid var(--border-color); background: transparent; }
+        .tab:hover { border-color: var(--accent-color); }
+        .tab.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .main-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+        .games-list { display: flex; flex-direction: column; gap: 1rem; }
+        .game-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .game-league { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; background: #e0e0e0; }
+        .game-league.NFL { background: #1a237e; color: white; }
+        .game-league.MLB { background: #b71c1c; color: white; }
+        .game-league.NBA { background: #e65100; color: white; }
+        .game-league.NHL { background: #01579b; color: white; }
+        .game-date { font-size: 0.85rem; color: var(--text-muted); }
+        .game-matchup { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+        .team { text-align: center; flex: 1; }
+        .team-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .team-type { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .vs { font-size: 1rem; font-weight: 700; color: var(--text-muted); }
+        .prediction-btns { display: flex; gap: 0.75rem; justify-content: center; }
+        .predict-btn { flex: 1; max-width: 200px; padding: 0.75rem 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: transparent; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+        .predict-btn:hover { border-color: var(--accent-color); background: rgba(0,121,107,0.05); }
+        .predict-btn.selected { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .predict-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .game-venue { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem; }
+        .predicted-badge { display: inline-block; background: #4caf50; color: white; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 4px; text-transform: uppercase; }
+        .my-predictions { margin-top: 1rem; }
+        .prediction-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 0.5rem; }
+        .prediction-game { font-weight: 600; }
+        .prediction-pick { font-size: 0.9rem; color: var(--text-secondary); }
+        .prediction-status { font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 4px; text-transform: uppercase; }
+        .prediction-status.pending { background: #fff3e0; color: #e65100; }
+        .prediction-status.won { background: #e8f5e9; color: #2e7d32; }
+        .prediction-status.lost { background: #ffebee; color: #c62828; }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 9999; display: none; }
+        .toast.success { background: #4caf50; }
+        .toast.error { background: #f44336; }
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 1.75rem; }
+            .game-matchup { flex-direction: column; gap: 0.5rem; }
+            .prediction-btns { flex-direction: column; }
+            .predict-btn { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <h1>Game Predictions</h1>
+        <p>Pick the winners and earn Diehard Dollars for correct predictions!</p>
+        <div class="reward-badge">
+            <span>&#129689;</span>
+            <span>25 coins per correct prediction</span>
+        </div>
+    </section>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="upcoming">Upcoming Games</button>
+        <button class="tab" data-tab="my-predictions">My Predictions</button>
+        <button class="tab" data-tab="leaderboard">Leaderboard</button>
+    </div>
+
+    <main class="main-container">
+        <div id="content" class="games-list">
+            <div class="empty-state">Loading games...</div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let userPredictions = [];
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    document.getElementById('headerAuth').innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars">
+                            <span>&#129689;</span>
+                            <span>${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        window.location.href = '/';
+                    });
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        async function loadUpcomingGames() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="empty-state">Loading games...</div>';
+
+            try {
+                // Also load user predictions to show which games they've already predicted
+                if (currentUser) {
+                    const predResp = await fetch('/api/predictions?type=user');
+                    const predData = await predResp.json();
+                    if (predData.success) {
+                        userPredictions = predData.predictions || [];
+                    }
+                }
+
+                const response = await fetch('/api/predictions?type=upcoming');
+                const data = await response.json();
+
+                if (!data.success || !data.games || data.games.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No upcoming games available for predictions.</div>';
+                    return;
+                }
+
+                const predictedGameIds = userPredictions.map(p => p.gameId.toString());
+
+                let html = '';
+                data.games.forEach(game => {
+                    const isPredicted = predictedGameIds.includes(game._id);
+                    const userPrediction = userPredictions.find(p => p.gameId.toString() === game._id);
+
+                    html += `
+                        <div class="game-card">
+                            <div class="game-header">
+                                <span class="game-league ${game.league}">${game.league}</span>
+                                <span class="game-date">${formatDate(game.gameDate)}</span>
+                            </div>
+                            <div class="game-matchup">
+                                <div class="team">
+                                    <div class="team-name">${game.awayTeam}</div>
+                                    <div class="team-type">Away</div>
+                                </div>
+                                <div class="vs">@</div>
+                                <div class="team">
+                                    <div class="team-name">${game.homeTeam}</div>
+                                    <div class="team-type">Home</div>
+                                </div>
+                            </div>
+                            ${isPredicted ? `
+                                <div style="text-align: center;">
+                                    <span class="predicted-badge">Predicted: ${userPrediction.predictedWinner}</span>
+                                </div>
+                            ` : `
+                                <div class="prediction-btns">
+                                    <button class="predict-btn" onclick="makePrediction('${game._id}', '${game.awayTeam}')" ${!currentUser ? 'disabled title="Login to predict"' : ''}>${game.awayTeam}</button>
+                                    <button class="predict-btn" onclick="makePrediction('${game._id}', '${game.homeTeam}')" ${!currentUser ? 'disabled title="Login to predict"' : ''}>${game.homeTeam}</button>
+                                </div>
+                            `}
+                            <div class="game-venue">${game.venue}</div>
+                        </div>
+                    `;
+                });
+
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Load games error:', error);
+                content.innerHTML = '<div class="empty-state">Failed to load games. Please try again.</div>';
+            }
+        }
+
+        async function loadMyPredictions() {
+            if (!currentUser) {
+                document.getElementById('content').innerHTML = '<div class="empty-state">Please <a href="/login.html">login</a> to view your predictions.</div>';
+                return;
+            }
+
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="empty-state">Loading your predictions...</div>';
+
+            try {
+                const response = await fetch('/api/predictions?type=user');
+                const data = await response.json();
+
+                if (!data.success || !data.predictions || data.predictions.length === 0) {
+                    content.innerHTML = '<div class="empty-state">You haven\'t made any predictions yet. Go to Upcoming Games to start predicting!</div>';
+                    return;
+                }
+
+                let html = '<div class="my-predictions">';
+                data.predictions.forEach(pred => {
+                    const game = pred.game;
+                    html += `
+                        <div class="prediction-item">
+                            <div>
+                                <div class="prediction-game">${game?.awayTeam || '?'} @ ${game?.homeTeam || '?'}</div>
+                                <div class="prediction-pick">Your pick: ${pred.predictedWinner}</div>
+                            </div>
+                            <div>
+                                <span class="prediction-status ${pred.status}">${pred.status}</span>
+                                ${pred.coinsWon > 0 ? `<div style="color: #4caf50; font-weight: 600; margin-top: 0.25rem;">+${pred.coinsWon} coins</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Load predictions error:', error);
+                content.innerHTML = '<div class="empty-state">Failed to load predictions. Please try again.</div>';
+            }
+        }
+
+        async function loadLeaderboard() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="empty-state">Loading leaderboard...</div>';
+
+            try {
+                const response = await fetch('/api/predictions/leaderboard?type=predictions');
+                const data = await response.json();
+
+                if (!data.success || !data.leaderboard || data.leaderboard.length === 0) {
+                    content.innerHTML = '<div class="empty-state">No leaderboard data yet. Make some predictions!</div>';
+                    return;
+                }
+
+                let html = `
+                    <table style="width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 8px; overflow: hidden;">
+                        <thead style="background: #e8e3db;">
+                            <tr>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.8rem;">Rank</th>
+                                <th style="padding: 0.75rem; text-align: left; font-size: 0.8rem;">User</th>
+                                <th style="padding: 0.75rem; text-align: center; font-size: 0.8rem;">Correct</th>
+                                <th style="padding: 0.75rem; text-align: center; font-size: 0.8rem;">Total</th>
+                                <th style="padding: 0.75rem; text-align: center; font-size: 0.8rem;">Accuracy</th>
+                                <th style="padding: 0.75rem; text-align: right; font-size: 0.8rem;">Coins Won</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.leaderboard.forEach(entry => {
+                    const rankEmoji = entry.rank === 1 ? '&#129351;' : entry.rank === 2 ? '&#129352;' : entry.rank === 3 ? '&#129353;' : entry.rank;
+                    html += `
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 0.75rem; font-weight: 700;">${rankEmoji}</td>
+                            <td style="padding: 0.75rem;">${entry.username} ${entry.badges.length > 0 ? entry.badges.slice(0, 3).map(b => '').join('') : ''}</td>
+                            <td style="padding: 0.75rem; text-align: center; color: #4caf50; font-weight: 600;">${entry.correctPredictions}</td>
+                            <td style="padding: 0.75rem; text-align: center;">${entry.totalPredictions}</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600;">${entry.accuracy}%</td>
+                            <td style="padding: 0.75rem; text-align: right; color: #ff9800; font-weight: 600;">&#129689; ${entry.coinsWon}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                content.innerHTML = html;
+            } catch (error) {
+                console.error('Load leaderboard error:', error);
+                content.innerHTML = '<div class="empty-state">Failed to load leaderboard. Please try again.</div>';
+            }
+        }
+
+        async function makePrediction(gameId, team) {
+            if (!currentUser) {
+                showToast('Please login to make predictions', 'error');
+                return;
+            }
+
+            if (!confirm(`Predict ${team} to win?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/predictions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gameId, predictedWinner: team })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Prediction failed');
+                }
+
+                showToast(`Prediction submitted: ${team} to win!`, 'success');
+                loadUpcomingGames();
+            } catch (error) {
+                console.error('Prediction error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Tab handling
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const tabName = tab.dataset.tab;
+                if (tabName === 'upcoming') {
+                    loadUpcomingGames();
+                } else if (tabName === 'my-predictions') {
+                    loadMyPredictions();
+                } else if (tabName === 'leaderboard') {
+                    loadLeaderboard();
+                }
+            });
+        });
+
+        // Initialize
+        checkAuth().then(loadUpcomingGames);
+    </script>
+</body>
+</html>

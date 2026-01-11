@@ -85,6 +85,7 @@
         .header-auth a:hover { background: rgba(255,255,255,0.1); }
         .header-auth .auth-btn { background: var(--team-color); padding: 0.5rem 1rem; }
         .header-auth .auth-btn:hover { opacity: 0.9; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
 
         .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
         .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
@@ -453,6 +454,7 @@
                 if (data.user) {
                     const headerAuth = document.getElementById('headerAuth');
                     headerAuth.innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars"><span class="coin-icon">&#129689;</span><span>${data.user.coinBalance || 0}</span></div>
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
