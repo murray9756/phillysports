@@ -108,6 +108,18 @@
         .widget-header span { font-size: 1rem; }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .widget-content { padding: 0.75rem; }
+        .trivia-promo-widget { padding: 0; overflow: hidden; }
+        .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; }
+        .trivia-promo-icon { font-size: 1.25rem; }
+        .trivia-promo-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .trivia-promo-body { padding: 1rem; text-align: center; }
+        .trivia-promo-tagline { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .trivia-promo-stats { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+        .trivia-stat { display: flex; flex-direction: column; align-items: center; padding: 0.4rem 0.6rem; background: var(--dark-bg); border-radius: 6px; min-width: 60px; }
+        .trivia-stat .stat-number { font-size: 0.9rem; font-weight: 800; color: #673ab7; }
+        .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
+        .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4); }
 
         .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
@@ -247,6 +259,21 @@
                     <a href="https://www.philadelphiaeagles.com" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Website</a>
                     <a href="https://www.philadelphiaeagles.com/tickets/" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Buy Tickets</a>
                     <a href="https://open.spotify.com/show/6kLubboUPSinfnMesa8xhj" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Bleeding Green Nation Podcast</a>
+                </div>
+            </div>
+
+            <div class="widget trivia-promo-widget">
+                <div class="trivia-promo-header">
+                    <span class="trivia-promo-icon">&#129504;</span>
+                    <span class="trivia-promo-title">Philly Trivia</span>
+                </div>
+                <div class="trivia-promo-body">
+                    <p class="trivia-promo-tagline">Test Your Eagles Knowledge!</p>
+                    <div class="trivia-promo-stats">
+                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
+                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
+                    </div>
+                    <a href="/trivia.html?team=Eagles" class="trivia-promo-btn">Play Now</a>
                 </div>
             </div>
         </aside>
