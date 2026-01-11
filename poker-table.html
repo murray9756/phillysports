@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Table | PhillySports.com</title>
+    <meta name="description" content="Play Texas Hold'em poker on PhillySports.com">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --poker-green: #1a5c3a;
+            --poker-felt: #35654d;
+            --poker-felt-dark: #2a503d;
+            --gold: #ffd700;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2c2c2c;
+            --border-color: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --red: #e63946;
+            --blue: #4a90d9;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header {
+            background: var(--card-bg);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .header-left a { display: flex; align-items: center; gap: 0.5rem; }
+        .header-left img { width: 32px; height: 32px; border-radius: 4px; }
+        .header-left span { font-weight: 600; }
+        .tournament-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+        }
+        .info-item { display: flex; flex-direction: column; align-items: center; }
+        .info-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; }
+        .info-value { font-weight: 700; color: var(--gold); }
+        .header-right { display: flex; align-items: center; gap: 1rem; }
+        .coin-display {
+            display: flex; align-items: center; gap: 0.35rem;
+            background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem;
+            border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700;
+        }
+        .btn-leave {
+            background: var(--red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Main Game Area */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Poker Table */
+        .table-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 1.6;
+            margin: 1rem auto;
+        }
+        .poker-table {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 70%;
+            background: linear-gradient(145deg, var(--poker-felt), var(--poker-felt-dark));
+            border-radius: 50%;
+            border: 12px solid #5a3d2b;
+            box-shadow:
+                inset 0 0 60px rgba(0,0,0,0.4),
+                0 10px 40px rgba(0,0,0,0.5);
+        }
+        .table-rail {
+            position: absolute;
+            top: -15px; left: -15px; right: -15px; bottom: -15px;
+            border-radius: 50%;
+            border: 8px solid #3d2817;
+            pointer-events: none;
+        }
+
+        /* Community Cards */
+        .community-cards {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        /* Pot Display */
+        .pot-display {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--gold);
+            z-index: 10;
+        }
+
+        /* Player Seats */
+        .seat {
+            position: absolute;
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+        }
+        /* Seat positions around oval table */
+        .seat-0 { top: 95%; left: 50%; }
+        .seat-1 { top: 85%; left: 20%; }
+        .seat-2 { top: 50%; left: 5%; }
+        .seat-3 { top: 15%; left: 20%; }
+        .seat-4 { top: 5%; left: 50%; }
+        .seat-5 { top: 15%; left: 80%; }
+        .seat-6 { top: 50%; left: 95%; }
+        .seat-7 { top: 85%; left: 80%; }
+        .seat-8 { top: 70%; left: 90%; }
+
+        .player-info {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 0.5rem;
+            min-width: 100px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+        }
+        .player-info.active-turn {
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        .player-info.folded { opacity: 0.5; }
+        .player-info.is-you { border-color: var(--blue); }
+        .player-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .player-chips {
+            font-size: 0.75rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .player-action {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+        .player-bet {
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+        /* Bet chip positions */
+        .seat-0 .player-bet { top: -30px; }
+        .seat-1 .player-bet { top: -20px; right: -20px; }
+        .seat-2 .player-bet { right: -40px; }
+        .seat-3 .player-bet { bottom: -20px; right: -20px; }
+        .seat-4 .player-bet { bottom: -30px; }
+        .seat-5 .player-bet { bottom: -20px; left: -20px; }
+        .seat-6 .player-bet { left: -40px; }
+        .seat-7 .player-bet { top: -20px; left: -20px; }
+
+        .player-cards {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Dealer Button */
+        .dealer-btn {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(145deg, #fff, #ddd);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 25;
+        }
+
+        /* Cards */
+        .card {
+            width: 45px;
+            height: 63px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .card.face-down {
+            background: linear-gradient(135deg, #c41e3a, #8b0000);
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 5px,
+                rgba(255,255,255,0.1) 5px,
+                rgba(255,255,255,0.1) 10px
+            );
+        }
+        .card.hearts, .card.diamonds { color: #c41e3a; }
+        .card.clubs, .card.spades { color: #1a1a1a; }
+        .card-rank { position: absolute; top: 3px; left: 5px; font-size: 0.75rem; }
+        .card-suit { font-size: 1.5rem; }
+        .card-rank-bottom { position: absolute; bottom: 3px; right: 5px; font-size: 0.75rem; transform: rotate(180deg); }
+
+        .community-cards .card {
+            width: 55px;
+            height: 77px;
+        }
+        .community-cards .card-suit { font-size: 1.8rem; }
+
+        /* Action Panel */
+        .action-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+        .action-panel.hidden { display: none; }
+        .action-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 100px;
+        }
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .action-btn.fold { background: var(--red); color: white; }
+        .action-btn.check { background: #6c757d; color: white; }
+        .action-btn.call { background: var(--blue); color: white; }
+        .action-btn.bet, .action-btn.raise { background: var(--poker-green); color: white; }
+        .action-btn.all-in { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a1a; }
+        .action-btn:hover:not(:disabled) { transform: translateY(-2px); }
+
+        .bet-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .bet-slider {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+        }
+        .bet-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold);
+            cursor: pointer;
+        }
+        .bet-amount {
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100px;
+            text-align: center;
+        }
+        .bet-presets {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .bet-preset {
+            padding: 0.4rem 0.75rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .bet-preset:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* Waiting/Status Messages */
+        .status-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 50;
+        }
+        .status-message h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .status-message p { color: var(--text-muted); }
+
+        /* Winner Overlay */
+        .winner-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .winner-overlay.show { display: flex; }
+        .winner-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+        }
+        .winner-content h2 { color: var(--gold); margin-bottom: 0.5rem; font-size: 1.5rem; }
+        .winner-hand { color: var(--text-secondary); margin-bottom: 1rem; }
+        .winner-amount { font-size: 2rem; font-weight: 800; color: var(--gold); margin-bottom: 1rem; }
+        .winner-btn {
+            background: var(--poker-green);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .table-container { aspect-ratio: 1.2; }
+            .poker-table { width: 90%; height: 60%; }
+            .seat { width: 90px; }
+            .player-info { min-width: 80px; padding: 0.4rem; }
+            .player-name { font-size: 0.75rem; }
+            .card { width: 35px; height: 49px; }
+            .community-cards .card { width: 42px; height: 59px; }
+            .tournament-info { gap: 0.75rem; font-size: 0.75rem; }
+            .action-btn { padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/">
+                <img src="/logo.png" alt="PhillySports">
+                <span>PhillySports</span>
+            </a>
+        </div>
+        <div class="tournament-info" id="tournamentInfo">
+            <div class="info-item">
+                <span class="info-label">Blinds</span>
+                <span class="info-value" id="blindsDisplay">10/20</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Level</span>
+                <span class="info-value" id="levelDisplay">1</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Players</span>
+                <span class="info-value" id="playersDisplay">0/0</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="coin-display">
+                <span>&#129689;</span>
+                <span id="userChips">0</span>
+            </div>
+            <a href="/poker.html" class="btn-leave">Leave Table</a>
+        </div>
+    </header>
+
+    <!-- Game Container -->
+    <div class="game-container">
+        <div class="table-container" id="tableContainer">
+            <!-- Poker Table -->
+            <div class="poker-table">
+                <div class="table-rail"></div>
+            </div>
+
+            <!-- Pot Display -->
+            <div class="pot-display" id="potDisplay">Pot: 0</div>
+
+            <!-- Community Cards -->
+            <div class="community-cards" id="communityCards"></div>
+
+            <!-- Player Seats (will be populated by JS) -->
+            <div id="seatsContainer"></div>
+
+            <!-- Dealer Button -->
+            <div class="dealer-btn" id="dealerBtn" style="display:none;">D</div>
+
+            <!-- Status Message -->
+            <div class="status-message" id="statusMessage" style="display:none;">
+                <h3>Waiting for players...</h3>
+                <p>The game will start when enough players join</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Panel -->
+    <div class="action-panel hidden" id="actionPanel">
+        <div class="bet-controls" id="betControls" style="display:none;">
+            <div class="bet-presets">
+                <button class="bet-preset" onclick="setBetPreset(0.5)">1/2 Pot</button>
+                <button class="bet-preset" onclick="setBetPreset(0.75)">3/4 Pot</button>
+                <button class="bet-preset" onclick="setBetPreset(1)">Pot</button>
+            </div>
+            <input type="range" class="bet-slider" id="betSlider" min="0" max="1000" value="0">
+            <input type="number" class="bet-amount" id="betAmount" value="0">
+        </div>
+        <div class="action-row" id="actionButtons">
+            <!-- Action buttons populated by JS -->
+        </div>
+    </div>
+
+    <!-- Winner Overlay -->
+    <div class="winner-overlay" id="winnerOverlay">
+        <div class="winner-content">
+            <h2 id="winnerName">Player Wins!</h2>
+            <p class="winner-hand" id="winnerHand">Full House, Kings full of Aces</p>
+            <div class="winner-amount" id="winnerAmount">+500</div>
+            <button class="winner-btn" onclick="closeWinnerOverlay()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let tableId = null;
+        let currentUser = null;
+        let gameState = null;
+        let pollInterval = null;
+        let myPosition = null;
+
+        // Card rendering
+        const SUITS = { h: { symbol: '♥', class: 'hearts' }, d: { symbol: '♦', class: 'diamonds' },
+                       c: { symbol: '♣', class: 'clubs' }, s: { symbol: '♠', class: 'spades' } };
+        const RANKS = { '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8',
+                       '9': '9', 'T': '10', 'J': 'J', 'Q': 'Q', 'K': 'K', 'A': 'A' };
+
+        function renderCard(cardStr, faceDown = false) {
+            if (!cardStr || faceDown) {
+                return '<div class="card face-down"></div>';
+            }
+            const rank = cardStr[0];
+            const suit = cardStr[1];
+            const suitInfo = SUITS[suit] || { symbol: '?', class: '' };
+            return `
+                <div class="card ${suitInfo.class}">
+                    <span class="card-rank">${RANKS[rank] || rank}</span>
+                    <span class="card-suit">${suitInfo.symbol}</span>
+                    <span class="card-rank-bottom">${RANKS[rank] || rank}</span>
+                </div>
+            `;
+        }
+
+        // Initialize
+        async function init() {
+            // Get table ID from URL
+            const params = new URLSearchParams(window.location.search);
+            tableId = params.get('table') || params.get('id');
+
+            if (!tableId) {
+                alert('No table specified');
+                window.location.href = '/poker.html';
+                return;
+            }
+
+            // Check auth
+            await checkAuth();
+
+            // Load initial state
+            await loadGameState();
+
+            // Start polling
+            pollInterval = setInterval(loadGameState, 2000);
+        }
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                } else {
+                    alert('Please login to play');
+                    window.location.href = '/login.html';
+                }
+            } catch (e) {
+                window.location.href = '/login.html';
+            }
+        }
+
+        async function loadGameState() {
+            try {
+                const response = await fetch(`/api/poker/tables/${tableId}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    showStatus('Error loading table', data.error);
+                    return;
+                }
+
+                gameState = data;
+                renderTable();
+                renderActionPanel(data.validActions, data.isYourTurn);
+
+            } catch (e) {
+                console.error('Error loading game state:', e);
+            }
+        }
+
+        function renderTable() {
+            const table = gameState.table;
+            const hand = table.currentHand;
+
+            // Update tournament info
+            if (table.tournament) {
+                const blinds = table.tournament.blindStructure?.[table.tournament.currentBlindLevel || 0];
+                if (blinds) {
+                    document.getElementById('blindsDisplay').textContent = `${blinds.smallBlind}/${blinds.bigBlind}`;
+                }
+                document.getElementById('levelDisplay').textContent = (table.tournament.currentBlindLevel || 0) + 1;
+                document.getElementById('playersDisplay').textContent = `${table.tournament.registeredCount}/${table.tournament.maxPlayers}`;
+            }
+
+            // Update user chips
+            if (table.userSeat) {
+                document.getElementById('userChips').textContent = table.userSeat.chipStack;
+                myPosition = table.userSeat.position;
+            }
+
+            // Render pot
+            const pot = hand?.pot || 0;
+            document.getElementById('potDisplay').textContent = `Pot: ${pot}`;
+
+            // Render community cards
+            const communityEl = document.getElementById('communityCards');
+            if (hand?.communityCards?.length > 0) {
+                communityEl.innerHTML = hand.communityCards.map(c => renderCard(c)).join('');
+            } else {
+                communityEl.innerHTML = '';
+            }
+
+            // Render seats
+            renderSeats(table.seats, hand);
+
+            // Render dealer button
+            renderDealerButton(table.dealerPosition);
+
+            // Check for winner
+            if (hand?.status === 'complete' && hand?.winners?.length > 0) {
+                showWinner(hand.winners[0]);
+            }
+
+            // Show/hide status message
+            if (!hand) {
+                showStatus('Waiting for hand to start...', 'The next hand will begin shortly');
+            } else {
+                hideStatus();
+            }
+        }
+
+        function renderSeats(seats, hand) {
+            const container = document.getElementById('seatsContainer');
+            container.innerHTML = '';
+
+            // Position mapping for visual layout
+            const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+            for (const pos of positions) {
+                const seat = seats.find(s => s.position === pos);
+                if (!seat) continue;
+
+                const handPlayer = hand?.players?.find(p => p.position === pos);
+                const isActive = hand && handPlayer && !handPlayer.isFolded;
+                const isCurrentTurn = hand && hand.actingPosition === pos;
+                const isMe = seat.username === currentUser?.username;
+
+                let classes = `seat seat-${pos}`;
+
+                const seatEl = document.createElement('div');
+                seatEl.className = classes;
+
+                if (seat.playerId) {
+                    let playerClasses = 'player-info';
+                    if (isCurrentTurn) playerClasses += ' active-turn';
+                    if (handPlayer?.isFolded) playerClasses += ' folded';
+                    if (isMe) playerClasses += ' is-you';
+
+                    // Player cards
+                    let cardsHtml = '';
+                    if (hand && isActive) {
+                        if (isMe && table?.userSeat?.cards) {
+                            cardsHtml = `<div class="player-cards">${table.userSeat.cards.map(c => renderCard(c)).join('')}</div>`;
+                        } else if (handPlayer?.holeCards) {
+                            cardsHtml = `<div class="player-cards">${handPlayer.holeCards.map(c => renderCard(c)).join('')}</div>`;
+                        } else if (!handPlayer?.isFolded) {
+                            cardsHtml = `<div class="player-cards">${renderCard(null, true)}${renderCard(null, true)}</div>`;
+                        }
+                    }
+
+                    // Current bet
+                    let betHtml = '';
+                    if (handPlayer?.currentRoundBet > 0) {
+                        betHtml = `<div class="player-bet">${handPlayer.currentRoundBet}</div>`;
+                    }
+
+                    // Action text
+                    let actionText = '';
+                    if (handPlayer?.isFolded) actionText = 'Folded';
+                    else if (handPlayer?.isAllIn) actionText = 'All-In';
+                    else if (seat.lastAction) actionText = seat.lastAction;
+
+                    seatEl.innerHTML = `
+                        <div class="${playerClasses}">
+                            <div class="player-name">${isMe ? '★ ' : ''}${seat.username}</div>
+                            <div class="player-chips">${seat.chipStack}</div>
+                            ${actionText ? `<div class="player-action">${actionText}</div>` : ''}
+                        </div>
+                        ${cardsHtml}
+                        ${betHtml}
+                    `;
+                } else {
+                    seatEl.innerHTML = `
+                        <div class="player-info" style="opacity:0.3;">
+                            <div class="player-name">Empty</div>
+                        </div>
+                    `;
+                }
+
+                container.appendChild(seatEl);
+            }
+        }
+
+        function renderDealerButton(dealerPos) {
+            const btn = document.getElementById('dealerBtn');
+            if (dealerPos === undefined || dealerPos === null) {
+                btn.style.display = 'none';
+                return;
+            }
+
+            btn.style.display = 'flex';
+
+            // Position dealer button near the dealer seat
+            const positions = {
+                0: { top: '88%', left: '45%' },
+                1: { top: '78%', left: '25%' },
+                2: { top: '48%', left: '12%' },
+                3: { top: '20%', left: '25%' },
+                4: { top: '12%', left: '45%' },
+                5: { top: '20%', left: '75%' },
+                6: { top: '48%', left: '88%' },
+                7: { top: '78%', left: '75%' },
+                8: { top: '65%', left: '85%' }
+            };
+
+            const pos = positions[dealerPos] || positions[0];
+            btn.style.top = pos.top;
+            btn.style.left = pos.left;
+        }
+
+        function renderActionPanel(validActions, isYourTurn) {
+            const panel = document.getElementById('actionPanel');
+            const buttonsEl = document.getElementById('actionButtons');
+            const betControls = document.getElementById('betControls');
+
+            if (!isYourTurn || !validActions || validActions.length === 0) {
+                panel.classList.add('hidden');
+                return;
+            }
+
+            panel.classList.remove('hidden');
+
+            const hand = gameState.table.currentHand;
+            const toCall = hand ? hand.currentBet - (hand.players.find(p => p.position === myPosition)?.currentRoundBet || 0) : 0;
+            const myChips = gameState.table.userSeat?.chipStack || 0;
+
+            let buttonsHtml = '';
+
+            if (validActions.includes('fold')) {
+                buttonsHtml += `<button class="action-btn fold" onclick="doAction('fold')">Fold</button>`;
+            }
+            if (validActions.includes('check')) {
+                buttonsHtml += `<button class="action-btn check" onclick="doAction('check')">Check</button>`;
+            }
+            if (validActions.includes('call')) {
+                buttonsHtml += `<button class="action-btn call" onclick="doAction('call')">Call ${toCall}</button>`;
+            }
+            if (validActions.includes('bet')) {
+                buttonsHtml += `<button class="action-btn bet" onclick="doAction('bet', getBetAmount())">Bet</button>`;
+                showBetControls(hand.minRaise, myChips, hand.pot);
+            } else if (validActions.includes('raise')) {
+                buttonsHtml += `<button class="action-btn raise" onclick="doAction('raise', getBetAmount())">Raise</button>`;
+                showBetControls(hand.currentBet + hand.minRaise, myChips, hand.pot);
+            } else {
+                betControls.style.display = 'none';
+            }
+            if (validActions.includes('all_in')) {
+                buttonsHtml += `<button class="action-btn all-in" onclick="doAction('all_in')">All-In (${myChips})</button>`;
+            }
+
+            buttonsEl.innerHTML = buttonsHtml;
+        }
+
+        function showBetControls(minBet, maxBet, pot) {
+            const controls = document.getElementById('betControls');
+            const slider = document.getElementById('betSlider');
+            const amount = document.getElementById('betAmount');
+
+            controls.style.display = 'flex';
+            slider.min = minBet;
+            slider.max = maxBet;
+            slider.value = minBet;
+            amount.value = minBet;
+
+            slider.oninput = () => { amount.value = slider.value; };
+            amount.oninput = () => { slider.value = amount.value; };
+        }
+
+        function setBetPreset(multiplier) {
+            const pot = gameState.table.currentHand?.pot || 0;
+            const amount = Math.floor(pot * multiplier);
+            const slider = document.getElementById('betSlider');
+            const amountInput = document.getElementById('betAmount');
+            const minBet = parseInt(slider.min);
+            const maxBet = parseInt(slider.max);
+            const finalAmount = Math.max(minBet, Math.min(maxBet, amount));
+            slider.value = finalAmount;
+            amountInput.value = finalAmount;
+        }
+
+        function getBetAmount() {
+            return parseInt(document.getElementById('betAmount').value) || 0;
+        }
+
+        async function doAction(action, amount = 0) {
+            try {
+                const response = await fetch(`/api/poker/tables/${tableId}/action`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action,
+                        amount,
+                        handId: gameState.table.currentHand?._id
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    alert(data.error || 'Action failed');
+                    return;
+                }
+
+                // Immediately reload state
+                await loadGameState();
+
+            } catch (e) {
+                console.error('Action error:', e);
+                alert('Action failed');
+            }
+        }
+
+        function showStatus(title, message) {
+            const el = document.getElementById('statusMessage');
+            el.querySelector('h3').textContent = title;
+            el.querySelector('p').textContent = message;
+            el.style.display = 'block';
+        }
+
+        function hideStatus() {
+            document.getElementById('statusMessage').style.display = 'none';
+        }
+
+        function showWinner(winner) {
+            const overlay = document.getElementById('winnerOverlay');
+            document.getElementById('winnerName').textContent = `Winner!`;
+            document.getElementById('winnerHand').textContent = winner.handDescription || '';
+            document.getElementById('winnerAmount').textContent = `+${winner.amount}`;
+            overlay.classList.add('show');
+        }
+
+        function closeWinnerOverlay() {
+            document.getElementById('winnerOverlay').classList.remove('show');
+        }
+
+        // Cleanup on page leave
+        window.addEventListener('beforeunload', () => {
+            if (pollInterval) clearInterval(pollInterval);
+        });
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
