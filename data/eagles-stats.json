@@ -95,6 +95,30 @@
     { "rank": 9, "player": "Dirk Johnson", "years": "2003-2006", "punts": 268, "yards": 11180, "average": 41.7 },
     { "rank": 10, "player": "Spike Jones", "years": "1975-1977", "punts": 255, "yards": 9650, "average": 37.8 }
   ],
-  "lastUpdated": "2025-01-10T00:00:00.000Z",
+  "currentSeason": {
+    "season": "2025",
+    "record": "11-6",
+    "standing": "1st in NFC East",
+    "passing": [
+      { "player": "Jalen Hurts", "g": 16, "yards": 3224, "td": 25, "int": 6 }
+    ],
+    "rushing": [
+      { "player": "Saquon Barkley", "g": 17, "att": 280, "yards": 1140, "td": 7 },
+      { "player": "Jalen Hurts", "g": 16, "att": 105, "yards": 421, "td": 8 }
+    ],
+    "receiving": [
+      { "player": "DeVonta Smith", "g": 17, "rec": 77, "yards": 1008, "td": 4 },
+      { "player": "A.J. Brown", "g": 16, "rec": 78, "yards": 1003, "td": 7 },
+      { "player": "Dallas Goedert", "g": 17, "rec": 60, "yards": 591, "td": 11 }
+    ],
+    "defense": [
+      { "player": "Zack Baun", "tackles": 123, "sacks": 3.5, "int": 2 },
+      { "player": "Cooper DeJean", "tackles": 93, "sacks": 0, "int": 2 },
+      { "player": "Reed Blankenship", "tackles": 83, "sacks": 0, "int": 1 },
+      { "player": "Jordan Davis", "tackles": 72, "sacks": 4.5, "int": 0 },
+      { "player": "Jalyx Hunt", "tackles": 52, "sacks": 6.5, "int": 3 }
+    ]
+  },
+  "lastUpdated": "2026-01-11T00:00:00.000Z",
   "source": "Pro-Football-Reference.com"
 }

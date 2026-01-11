@@ -43,6 +43,7 @@ export default async function handler(req, res) {
         returns: cachedStats.returns,
         kicking: cachedStats.kicking,
         punting: cachedStats.punting,
+        currentSeason: cachedStats.currentSeason,
         lastUpdated: cachedStats.lastUpdated,
         source: cachedStats.source,
         cached: true

@@ -131,6 +131,26 @@
     { "rank": 9, "player": "Zack Wheeler", "years": "2020-present", "value": 30.4 },
     { "rank": 10, "player": "Charlie Buffinton", "years": "1887-1889", "value": 27.2 }
   ],
-  "lastUpdated": "2025-01-11T00:00:00.000Z",
+  "currentSeason": {
+    "season": "2025",
+    "record": "96-66",
+    "standing": "1st in NL East",
+    "result": "Lost NLDS to Dodgers (3-1)",
+    "batters": [
+      { "player": "Trea Turner", "g": 141, "ab": 589, "h": 179, "hr": 15, "rbi": 69, "avg": ".304", "obp": ".355", "slg": ".457" },
+      { "player": "Kyle Schwarber", "g": 162, "ab": 604, "h": 145, "hr": 56, "rbi": 132, "avg": ".240", "obp": ".365", "slg": ".563" },
+      { "player": "Alec Bohm", "g": 120, "ab": 464, "h": 133, "hr": 11, "rbi": 59, "avg": ".287", "obp": ".331", "slg": ".409" },
+      { "player": "Bryce Harper", "g": 132, "ab": 501, "h": 131, "hr": 27, "rbi": 75, "avg": ".261", "obp": ".357", "slg": ".487" },
+      { "player": "J.T. Realmuto", "g": 134, "ab": 502, "h": 129, "hr": 12, "rbi": 52, "avg": ".257", "obp": ".315", "slg": ".384" },
+      { "player": "Bryson Stott", "g": 147, "ab": 499, "h": 128, "hr": 13, "rbi": 66, "avg": ".257", "obp": ".328", "slg": ".391" }
+    ],
+    "pitchers": [
+      { "player": "Cristopher Sanchez", "w": 13, "l": 5, "era": "2.50", "g": 32, "ip": "202.0", "so": 212, "whip": "1.064" },
+      { "player": "Jesus Luzardo", "w": 15, "l": 7, "era": "3.92", "g": 32, "ip": "183.2", "so": 216, "whip": "1.220" },
+      { "player": "Ranger Suarez", "w": 12, "l": 8, "era": "3.20", "g": 26, "ip": "157.1", "so": 151, "whip": "1.220" },
+      { "player": "Zack Wheeler", "w": 10, "l": 5, "era": "2.71", "g": 24, "ip": "149.2", "so": 195, "whip": "0.935" }
+    ]
+  },
+  "lastUpdated": "2026-01-11T00:00:00.000Z",
   "source": "Baseball-Reference.com"
 }

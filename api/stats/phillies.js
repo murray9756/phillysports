@@ -46,6 +46,7 @@ export default async function handler(req, res) {
         strikeouts: cachedStats.strikeouts,
         saves: cachedStats.saves,
         war: cachedStats.war,
+        currentSeason: cachedStats.currentSeason,
         lastUpdated: cachedStats.lastUpdated,
         source: cachedStats.source,
         cached: true

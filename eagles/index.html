@@ -320,7 +320,8 @@
                     <span class="stats-attribution">Data from <a href="https://www.pro-football-reference.com/teams/phi/" target="_blank">Pro-Football-Reference.com</a></span>
                 </div>
                 <div class="stats-tabs" id="statsTabs">
-                    <button class="stats-tab active" data-category="passing">Passing</button>
+                    <button class="stats-tab active" data-category="currentSeason">2025 Season</button>
+                    <button class="stats-tab" data-category="passing">Passing</button>
                     <button class="stats-tab" data-category="rushing">Rushing</button>
                     <button class="stats-tab" data-category="receiving">Receiving</button>
                     <button class="stats-tab" data-category="scoring">Scoring</button>
@@ -536,7 +537,7 @@
 
         // All-Time Leaders Stats
         let statsData = null;
-        let currentCategory = 'passing';
+        let currentCategory = 'currentSeason';
 
         const statsColumns = {
             passing: ['#', 'Player', 'Yards', 'TD', 'INT', 'Rating'],
@@ -578,6 +579,45 @@
 
         function renderStatsTable(category) {
             const container = document.getElementById('statsTableContainer');
+            if (category === 'currentSeason') {
+                if (!statsData || !statsData.currentSeason) {
+                    container.innerHTML = '<div class="stats-loading">No data available</div>';
+                    return;
+                }
+                const season = statsData.currentSeason;
+                let html = `<div style="background:#e8f5e9;padding:0.75rem 1rem;text-align:center;font-weight:600;border-bottom:1px solid var(--border-color);">
+                    ${season.record} | ${season.standing}</div>`;
+                // Passing
+                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Passing</div>';
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>Yards</th><th>TD</th><th>INT</th></tr></thead><tbody>';
+                season.passing.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td class="stat-highlight">${p.yards.toLocaleString()}</td><td>${p.td}</td><td>${p.int}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                // Rushing
+                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Rushing</div>';
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>Att</th><th>Yards</th><th>TD</th></tr></thead><tbody>';
+                season.rushing.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td>${p.att}</td><td class="stat-highlight">${p.yards.toLocaleString()}</td><td>${p.td}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                // Receiving
+                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Receiving</div>';
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>Rec</th><th>Yards</th><th>TD</th></tr></thead><tbody>';
+                season.receiving.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td>${p.rec}</td><td class="stat-highlight">${p.yards.toLocaleString()}</td><td>${p.td}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                // Defense
+                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Defense</div>';
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>Tackles</th><th>Sacks</th><th>INT</th></tr></thead><tbody>';
+                season.defense.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td class="stat-highlight">${p.tackles}</td><td>${p.sacks}</td><td>${p.int}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                return;
+            }
             if (!statsData || !statsData[category]) {
                 container.innerHTML = '<div class="stats-loading">No data available</div>';
                 return;

@@ -203,7 +203,8 @@
                     <span class="stats-attribution">Data from <a href="https://www.baseball-reference.com/teams/PHI/" target="_blank">Baseball-Reference.com</a></span>
                 </div>
                 <div class="stats-tabs" id="statsTabs">
-                    <button class="stats-tab active" data-category="homeRuns">Home Runs</button>
+                    <button class="stats-tab active" data-category="currentSeason">2025 Season</button>
+                    <button class="stats-tab" data-category="homeRuns">Home Runs</button>
                     <button class="stats-tab" data-category="hits">Hits</button>
                     <button class="stats-tab" data-category="rbis">RBIs</button>
                     <button class="stats-tab" data-category="battingAverage">Avg</button>
@@ -248,7 +249,7 @@
 
         // All-Time Leaders Stats
         let statsData = null;
-        let currentCategory = 'homeRuns';
+        let currentCategory = 'currentSeason';
 
         const statsColumns = {
             homeRuns: ['#', 'Player', 'HR'],
@@ -273,6 +274,28 @@
 
         function renderStatsTable(category) {
             const container = document.getElementById('statsTableContainer');
+            if (category === 'currentSeason') {
+                if (!statsData || !statsData.currentSeason) {
+                    container.innerHTML = '<div class="stats-loading">No data available</div>';
+                    return;
+                }
+                const season = statsData.currentSeason;
+                let html = `<div style="background:#fef0f0;padding:0.75rem 1rem;text-align:center;font-weight:600;border-bottom:1px solid var(--border-color);">
+                    ${season.record} | ${season.standing} | ${season.result}</div>`;
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>H</th><th>HR</th><th>RBI</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead><tbody>';
+                season.batters.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td>${p.h}</td><td class="stat-highlight">${p.hr}</td><td>${p.rbi}</td><td>${p.avg}</td><td>${p.obp}</td><td>${p.slg}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Pitching</div>';
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>W</th><th>L</th><th>ERA</th><th>G</th><th>IP</th><th>SO</th><th>WHIP</th></tr></thead><tbody>';
+                season.pitchers.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td class="stat-highlight">${p.w}</td><td>${p.l}</td><td>${p.era}</td><td>${p.g}</td><td>${p.ip}</td><td>${p.so}</td><td>${p.whip}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                return;
+            }
             if (!statsData || !statsData[category]) {
                 container.innerHTML = '<div class="stats-loading">No data available</div>';
                 return;
