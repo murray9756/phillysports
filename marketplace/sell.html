@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell an Item - PhillySports.com Marketplace</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success-color: #22c55e;
+            --error-color: #dc2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); padding: 2rem 1.5rem; border-bottom: 3px solid var(--accent-color); }
+        .page-hero-inner { max-width: 800px; margin: 0 auto; }
+        .page-hero h1 { color: #ffffff; font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { color: #aaaaaa; font-size: 0.95rem; }
+
+        /* Form Container */
+        .form-container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+        .form-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 2rem; margin-bottom: 1.5rem; }
+        .form-section { margin-bottom: 2rem; }
+        .form-section:last-child { margin-bottom: 0; }
+        .section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .form-group label .required { color: var(--error-color); }
+        .form-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; font-family: inherit; transition: border-color 0.2s; }
+        .form-input:focus { outline: none; border-color: var(--accent-color); }
+        .form-input.error { border-color: var(--error-color); }
+        textarea.form-input { min-height: 120px; resize: vertical; }
+        select.form-input { cursor: pointer; background: white; }
+        .form-hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.35rem; }
+        .char-count { float: right; font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Radio/Checkbox Groups */
+        .option-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .option-card { flex: 1; min-width: 140px; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .option-card:hover { border-color: var(--text-muted); }
+        .option-card.selected { border-color: var(--accent-color); background: #fff5f5; }
+        .option-card input { display: none; }
+        .option-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .option-card .label { font-weight: 600; font-size: 0.9rem; }
+        .option-card .desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        /* Price Inputs */
+        .price-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .price-group { flex: 1; min-width: 200px; }
+        .price-input-wrapper { position: relative; }
+        .price-input-wrapper .prefix { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 600; }
+        .price-input-wrapper .suffix { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 600; }
+        .price-input-wrapper input { padding-left: 2rem; }
+        .price-input-wrapper input.has-suffix { padding-right: 2.5rem; }
+
+        /* Checkbox */
+        .checkbox-group { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .checkbox-group input { width: 18px; height: 18px; cursor: pointer; }
+        .checkbox-group label { cursor: pointer; font-size: 0.9rem; }
+
+        /* Shipping Options */
+        .shipping-option { display: flex; gap: 1rem; align-items: center; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.5rem; }
+        .shipping-option input { width: 100px; }
+        .shipping-option select { width: 120px; }
+        .btn-add-shipping { background: none; border: none; color: var(--accent-color); font-weight: 600; cursor: pointer; padding: 0.5rem 0; font-size: 0.9rem; }
+        .btn-add-shipping:hover { text-decoration: underline; }
+
+        /* Image Upload */
+        .image-upload-area { border: 2px dashed var(--border-color); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .image-upload-area:hover { border-color: var(--text-muted); background: #fafafa; }
+        .image-upload-area .icon { font-size: 3rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .image-upload-area p { color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .image-upload-area .hint { font-size: 0.8rem; color: var(--text-muted); }
+        .uploaded-images { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+        .uploaded-image { position: relative; width: 100px; height: 100px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+        .uploaded-image img { width: 100%; height: 100%; object-fit: cover; }
+        .uploaded-image .remove { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 12px; }
+        .uploaded-image.primary::after { content: 'Primary'; position: absolute; bottom: 0; left: 0; right: 0; background: var(--accent-color); color: white; font-size: 0.65rem; text-align: center; padding: 2px; }
+
+        /* Buttons */
+        .form-actions { display: flex; gap: 1rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+        .btn { padding: 0.875rem 2rem; border-radius: 6px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { background: #6b0000; }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: var(--border-color); color: var(--text-secondary); }
+        .btn-secondary:hover { background: #d0cbc3; }
+
+        /* Messages */
+        .message { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .message.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* Login Required */
+        .login-required { text-align: center; padding: 3rem; }
+        .login-required h2 { margin-bottom: 0.5rem; }
+        .login-required p { color: var(--text-muted); margin-bottom: 1.5rem; }
+        .login-required .btn { display: inline-block; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-card { padding: 1.25rem; }
+            .option-group { flex-direction: column; }
+            .price-row { flex-direction: column; }
+            .form-actions { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <h1>Sell an Item</h1>
+            <p>List your Philly sports items for sale to fellow fans</p>
+        </div>
+    </section>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <!-- Login Required (shown if not logged in) -->
+        <div class="form-card login-required" id="loginRequired" style="display: none;">
+            <h2>Login Required</h2>
+            <p>You need to be logged in to sell items on the marketplace.</p>
+            <a href="/login.html?redirect=/marketplace/sell.html" class="btn btn-primary">Log In</a>
+        </div>
+
+        <!-- Create Listing Form -->
+        <form id="listingForm" style="display: none;">
+            <div id="formMessage" class="message" style="display: none;"></div>
+
+            <!-- Basic Info -->
+            <div class="form-card">
+                <div class="section-title">Basic Information</div>
+
+                <div class="form-group">
+                    <label>Title <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="title" maxlength="200" placeholder="e.g., Vintage Eagles Jersey - Randall Cunningham #12" required>
+                    <span class="char-count"><span id="titleCount">0</span>/200</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Category <span class="required">*</span></label>
+                    <select class="form-input" id="category" required>
+                        <option value="">Select a category...</option>
+                        <option value="jerseys">Jerseys</option>
+                        <option value="memorabilia">Memorabilia</option>
+                        <option value="tickets">Tickets</option>
+                        <option value="cards">Trading Cards</option>
+                        <option value="apparel">Apparel</option>
+                        <option value="accessories">Accessories</option>
+                        <option value="collectibles">Collectibles</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Team (optional)</label>
+                    <select class="form-input" id="team">
+                        <option value="">Any / All Teams</option>
+                        <option value="eagles">Eagles</option>
+                        <option value="phillies">Phillies</option>
+                        <option value="sixers">76ers</option>
+                        <option value="flyers">Flyers</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Condition <span class="required">*</span></label>
+                    <div class="option-group" id="conditionOptions">
+                        <label class="option-card" onclick="selectCondition('new')">
+                            <input type="radio" name="condition" value="new">
+                            <div class="label">New</div>
+                            <div class="desc">Never used</div>
+                        </label>
+                        <label class="option-card" onclick="selectCondition('like_new')">
+                            <input type="radio" name="condition" value="like_new">
+                            <div class="label">Like New</div>
+                            <div class="desc">Barely used</div>
+                        </label>
+                        <label class="option-card" onclick="selectCondition('good')">
+                            <input type="radio" name="condition" value="good">
+                            <div class="label">Good</div>
+                            <div class="desc">Minor wear</div>
+                        </label>
+                        <label class="option-card" onclick="selectCondition('fair')">
+                            <input type="radio" name="condition" value="fair">
+                            <div class="label">Fair</div>
+                            <div class="desc">Noticeable wear</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description <span class="required">*</span></label>
+                    <textarea class="form-input" id="description" maxlength="5000" placeholder="Describe your item in detail. Include size, color, any defects, history, etc." required></textarea>
+                    <span class="char-count"><span id="descCount">0</span>/5000</span>
+                    <div class="form-hint">Be specific about the item's condition and any notable features.</div>
+                </div>
+            </div>
+
+            <!-- Item Type -->
+            <div class="form-card">
+                <div class="section-title">Item Type</div>
+
+                <div class="form-group">
+                    <div class="option-group" id="productTypeOptions">
+                        <label class="option-card selected" onclick="selectProductType('physical')">
+                            <input type="radio" name="productType" value="physical" checked>
+                            <div class="icon">&#128230;</div>
+                            <div class="label">Physical Item</div>
+                            <div class="desc">Requires shipping</div>
+                        </label>
+                        <label class="option-card" onclick="selectProductType('digital')">
+                            <input type="radio" name="productType" value="digital">
+                            <div class="icon">&#128187;</div>
+                            <div class="label">Digital Item</div>
+                            <div class="desc">Delivered electronically</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing -->
+            <div class="form-card">
+                <div class="section-title">Pricing</div>
+
+                <div class="form-group">
+                    <label>Accepted Payment Methods <span class="required">*</span></label>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="acceptsUSD" checked>
+                            <span>Accept USD (real money)</span>
+                        </label>
+                        <label class="checkbox-group">
+                            <input type="checkbox" id="acceptsDiehardDollars">
+                            <span>Accept Diehard Dollars (5% commission vs 10%)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="price-row">
+                    <div class="price-group" id="usdPriceGroup">
+                        <label>USD Price <span class="required">*</span></label>
+                        <div class="price-input-wrapper">
+                            <span class="prefix">$</span>
+                            <input type="number" class="form-input" id="priceUSD" min="1" step="0.01" placeholder="24.99">
+                        </div>
+                    </div>
+                    <div class="price-group" id="ddPriceGroup" style="display: none;">
+                        <label>Diehard Dollars Price <span class="required">*</span></label>
+                        <div class="price-input-wrapper">
+                            <input type="number" class="form-input has-suffix" id="priceDiehardDollars" min="10" placeholder="500">
+                            <span class="suffix">DD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity Available</label>
+                    <input type="number" class="form-input" id="quantity" min="1" value="1" style="width: 120px;">
+                </div>
+            </div>
+
+            <!-- Shipping (Physical) -->
+            <div class="form-card" id="shippingSection">
+                <div class="section-title">Shipping</div>
+
+                <div class="form-group">
+                    <label>Ships From <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="shipsFrom" placeholder="Philadelphia, PA">
+                </div>
+
+                <div class="form-group">
+                    <label>Handling Time <span class="required">*</span></label>
+                    <select class="form-input" id="handlingTime" style="width: 200px;">
+                        <option value="1">1 business day</option>
+                        <option value="2">2 business days</option>
+                        <option value="3" selected>3 business days</option>
+                        <option value="5">5 business days</option>
+                        <option value="7">7 business days</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Shipping Options <span class="required">*</span></label>
+                    <div id="shippingOptions">
+                        <div class="shipping-option">
+                            <select class="form-input">
+                                <option value="standard">Standard</option>
+                                <option value="priority">Priority</option>
+                                <option value="express">Express</option>
+                            </select>
+                            <div class="price-input-wrapper" style="flex: 1;">
+                                <span class="prefix">$</span>
+                                <input type="number" class="form-input" value="5.99" min="0" step="0.01" placeholder="Price">
+                            </div>
+                            <input type="text" class="form-input" value="5-7 days" placeholder="Est. days" style="width: 100px;">
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-shipping" onclick="addShippingOption()">+ Add another option</button>
+                </div>
+            </div>
+
+            <!-- Digital Delivery -->
+            <div class="form-card" id="digitalSection" style="display: none;">
+                <div class="section-title">Digital Delivery</div>
+
+                <div class="form-group">
+                    <label>Delivery Method <span class="required">*</span></label>
+                    <select class="form-input" id="digitalDeliveryType">
+                        <option value="email">Email</option>
+                        <option value="download">Download Link</option>
+                        <option value="in-app">In-App Delivery</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Delivery Details <span class="required">*</span></label>
+                    <textarea class="form-input" id="digitalDeliveryDescription" placeholder="Describe how the buyer will receive the digital item..."></textarea>
+                </div>
+            </div>
+
+            <!-- Images -->
+            <div class="form-card">
+                <div class="section-title">Photos</div>
+
+                <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">
+                    <div class="icon">&#128247;</div>
+                    <p>Click to upload photos</p>
+                    <p class="hint">Up to 8 images. First image will be the main photo.</p>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" multiple style="display: none;" onchange="handleImageUpload(event)">
+                <div class="uploaded-images" id="uploadedImages"></div>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-card">
+                <div class="form-actions">
+                    <a href="/marketplace/" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Submit for Review</button>
+                </div>
+                <p class="form-hint" style="text-align: center; margin-top: 1rem;">
+                    All listings are reviewed by our team before going live. This typically takes 1-2 business days.
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let currentUser = null;
+        let uploadedImages = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            setupForm();
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/session`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        currentUser = data.user;
+                        document.getElementById('loginRequired').style.display = 'none';
+                        document.getElementById('listingForm').style.display = 'block';
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('Not authenticated');
+            }
+            document.getElementById('loginRequired').style.display = 'block';
+            document.getElementById('listingForm').style.display = 'none';
+        }
+
+        function setupForm() {
+            // Character counters
+            document.getElementById('title').addEventListener('input', (e) => {
+                document.getElementById('titleCount').textContent = e.target.value.length;
+            });
+            document.getElementById('description').addEventListener('input', (e) => {
+                document.getElementById('descCount').textContent = e.target.value.length;
+            });
+
+            // Payment method toggles
+            document.getElementById('acceptsUSD').addEventListener('change', updatePriceVisibility);
+            document.getElementById('acceptsDiehardDollars').addEventListener('change', updatePriceVisibility);
+
+            // Form submission
+            document.getElementById('listingForm').addEventListener('submit', handleSubmit);
+        }
+
+        function selectCondition(value) {
+            document.querySelectorAll('#conditionOptions .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selected = document.querySelector(`#conditionOptions input[value="${value}"]`);
+            if (selected) {
+                selected.checked = true;
+                selected.closest('.option-card').classList.add('selected');
+            }
+        }
+
+        function selectProductType(value) {
+            document.querySelectorAll('#productTypeOptions .option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            const selected = document.querySelector(`#productTypeOptions input[value="${value}"]`);
+            if (selected) {
+                selected.checked = true;
+                selected.closest('.option-card').classList.add('selected');
+            }
+
+            document.getElementById('shippingSection').style.display = value === 'physical' ? 'block' : 'none';
+            document.getElementById('digitalSection').style.display = value === 'digital' ? 'block' : 'none';
+        }
+
+        function updatePriceVisibility() {
+            const acceptsUSD = document.getElementById('acceptsUSD').checked;
+            const acceptsDD = document.getElementById('acceptsDiehardDollars').checked;
+
+            document.getElementById('usdPriceGroup').style.display = acceptsUSD ? 'block' : 'none';
+            document.getElementById('ddPriceGroup').style.display = acceptsDD ? 'block' : 'none';
+        }
+
+        function addShippingOption() {
+            const container = document.getElementById('shippingOptions');
+            const option = document.createElement('div');
+            option.className = 'shipping-option';
+            option.innerHTML = `
+                <select class="form-input">
+                    <option value="standard">Standard</option>
+                    <option value="priority">Priority</option>
+                    <option value="express">Express</option>
+                </select>
+                <div class="price-input-wrapper" style="flex: 1;">
+                    <span class="prefix">$</span>
+                    <input type="number" class="form-input" min="0" step="0.01" placeholder="Price">
+                </div>
+                <input type="text" class="form-input" placeholder="Est. days" style="width: 100px;">
+                <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--error-color); cursor: pointer; font-size: 1.2rem;">&times;</button>
+            `;
+            container.appendChild(option);
+        }
+
+        function handleImageUpload(event) {
+            const files = Array.from(event.target.files);
+            const remaining = 8 - uploadedImages.length;
+
+            files.slice(0, remaining).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    uploadedImages.push({
+                        url: e.target.result,
+                        isPrimary: uploadedImages.length === 0
+                    });
+                    renderUploadedImages();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            event.target.value = '';
+        }
+
+        function renderUploadedImages() {
+            const container = document.getElementById('uploadedImages');
+            container.innerHTML = uploadedImages.map((img, index) => `
+                <div class="uploaded-image ${img.isPrimary ? 'primary' : ''}">
+                    <img src="${img.url}" alt="Uploaded">
+                    <button type="button" class="remove" onclick="removeImage(${index})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            const wasPrimary = uploadedImages[index].isPrimary;
+            uploadedImages.splice(index, 1);
+            if (wasPrimary && uploadedImages.length > 0) {
+                uploadedImages[0].isPrimary = true;
+            }
+            renderUploadedImages();
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const messageDiv = document.getElementById('formMessage');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Validation
+            const acceptsUSD = document.getElementById('acceptsUSD').checked;
+            const acceptsDD = document.getElementById('acceptsDiehardDollars').checked;
+
+            if (!acceptsUSD && !acceptsDD) {
+                showMessage('Please select at least one payment method', 'error');
+                return;
+            }
+
+            const condition = document.querySelector('input[name="condition"]:checked')?.value;
+            if (!condition) {
+                showMessage('Please select a condition', 'error');
+                return;
+            }
+
+            const productType = document.querySelector('input[name="productType"]:checked')?.value;
+
+            // Build shipping info
+            let shippingInfo = null;
+            if (productType === 'physical') {
+                const shippingOptions = [];
+                document.querySelectorAll('#shippingOptions .shipping-option').forEach(opt => {
+                    const method = opt.querySelector('select').value;
+                    const price = parseFloat(opt.querySelectorAll('input')[0].value) || 0;
+                    const days = opt.querySelectorAll('input')[1].value || '5-7';
+                    shippingOptions.push({
+                        method,
+                        priceUSD: Math.round(price * 100),
+                        estimatedDays: days
+                    });
+                });
+
+                shippingInfo = {
+                    shipsFrom: document.getElementById('shipsFrom').value,
+                    handlingTime: parseInt(document.getElementById('handlingTime').value),
+                    shippingOptions
+                };
+            }
+
+            // Build digital delivery
+            let digitalDelivery = null;
+            if (productType === 'digital') {
+                digitalDelivery = {
+                    type: document.getElementById('digitalDeliveryType').value,
+                    description: document.getElementById('digitalDeliveryDescription').value
+                };
+            }
+
+            const listingData = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                category: document.getElementById('category').value,
+                team: document.getElementById('team').value || null,
+                condition,
+                productType,
+                acceptsUSD,
+                acceptsDiehardDollars: acceptsDD,
+                priceUSD: acceptsUSD ? Math.round(parseFloat(document.getElementById('priceUSD').value) * 100) : null,
+                priceDiehardDollars: acceptsDD ? parseInt(document.getElementById('priceDiehardDollars').value) : null,
+                quantity: parseInt(document.getElementById('quantity').value) || 1,
+                shippingInfo,
+                digitalDelivery,
+                images: uploadedImages
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            messageDiv.style.display = 'none';
+
+            try {
+                const res = await fetch(`${API_URL}/marketplace/listings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(listingData)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showMessage('Listing submitted successfully! It will be reviewed within 1-2 business days.', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/marketplace/my-listings.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.error || 'Failed to create listing', 'error');
+                }
+            } catch (error) {
+                console.error('Submit error:', error);
+                showMessage('Failed to create listing. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit for Review';
+            }
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('formMessage');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</body>
+</html>

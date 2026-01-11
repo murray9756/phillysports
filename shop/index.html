@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - PhillySports.com</title>
+    <meta name="description" content="Official PhillySports.com merchandise. Show your Philly pride with gear for Eagles, Phillies, 76ers, and Flyers fans.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); padding: 0.5rem 1rem; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        /* Navigation */
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: #ffffff; }
+        .team-tab.active { color: #ffffff; border-bottom-color: var(--phillies-red); }
+        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
+        .feature-tab { color: #ffd700 !important; }
+        .feature-tab.active { border-bottom-color: #ffd700 !important; }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); padding: 2rem 1.5rem; border-bottom: 3px solid var(--accent-color); }
+        .page-hero-inner { max-width: 1400px; margin: 0 auto; }
+        .page-hero h1 { color: #ffffff; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { color: #aaaaaa; font-size: 1rem; }
+
+        /* Main Layout */
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem; }
+
+        /* Sidebar Filters */
+        .shop-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .filter-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 1rem; }
+        .filter-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; color: var(--text-secondary); }
+        .filter-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .filter-option { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.25rem 0; }
+        .filter-option input { cursor: pointer; }
+        .filter-option label { cursor: pointer; font-size: 0.9rem; }
+        .filter-option.active label { font-weight: 600; }
+        .price-range { display: flex; gap: 0.5rem; align-items: center; }
+        .price-input { width: 80px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; }
+        .filter-btn { width: 100%; padding: 0.5rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+        .filter-btn:hover { opacity: 0.9; }
+
+        /* Product Grid */
+        .products-section { flex: 1; }
+        .products-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .products-count { font-size: 0.9rem; color: var(--text-muted); }
+        .sort-select { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; background: var(--card-bg); cursor: pointer; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+
+        /* Product Card */
+        .product-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .product-card:hover { border-color: var(--text-muted); box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .product-image { position: relative; width: 100%; padding-top: 100%; background: #f5f5f5; overflow: hidden; }
+        .product-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .product-image .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: #ccc; }
+        .sale-badge { position: absolute; top: 0.5rem; right: 0.5rem; background: var(--phillies-red); color: white; font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 3px; text-transform: uppercase; }
+        .team-badge { position: absolute; top: 0.5rem; left: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
+        .team-badge.eagles { background: var(--eagles-green); color: white; }
+        .team-badge.phillies { background: var(--phillies-red); color: white; }
+        .team-badge.sixers { background: var(--sixers-blue); color: white; }
+        .team-badge.flyers { background: var(--flyers-orange); color: white; }
+        .product-info { padding: 1rem; }
+        .product-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; line-height: 1.3; }
+        .product-category { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .product-prices { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .price-usd { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+        .price-dd { font-size: 0.85rem; color: #b8860b; font-weight: 600; }
+        .price-original { font-size: 0.9rem; color: var(--text-muted); text-decoration: line-through; }
+        .btn-add-cart { width: 100%; padding: 0.6rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+        .btn-add-cart:hover { background: #6b0000; }
+        .btn-add-cart:disabled { background: #ccc; cursor: not-allowed; }
+        .out-of-stock { color: var(--phillies-red); font-size: 0.85rem; font-weight: 600; text-align: center; padding: 0.6rem; }
+
+        /* Cart Sidebar */
+        .cart-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .cart-overlay.open { opacity: 1; visibility: visible; }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; max-width: 100%; height: 100%; background: var(--card-bg); z-index: 2001; transition: right 0.3s; display: flex; flex-direction: column; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .cart-header h2 { font-size: 1.2rem; font-weight: 700; }
+        .cart-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+        .cart-empty { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .cart-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .cart-item-image { width: 80px; height: 80px; background: #f5f5f5; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #ccc; }
+        .cart-item-details { flex: 1; }
+        .cart-item-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; }
+        .cart-item-variant { font-size: 0.8rem; color: var(--text-muted); }
+        .cart-item-price { font-weight: 600; margin-top: 0.25rem; }
+        .cart-item-qty { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+        .qty-btn { width: 28px; height: 28px; border: 1px solid var(--border-color); background: white; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        .qty-btn:hover { background: #f5f5f5; }
+        .qty-value { font-weight: 600; min-width: 30px; text-align: center; }
+        .cart-item-remove { color: var(--phillies-red); font-size: 0.8rem; cursor: pointer; margin-top: 0.5rem; }
+        .cart-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); background: #fafafa; }
+        .cart-totals { margin-bottom: 1rem; }
+        .cart-total-row { display: flex; justify-content: space-between; padding: 0.25rem 0; }
+        .cart-total-row.total { font-weight: 700; font-size: 1.1rem; border-top: 1px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem; }
+        .btn-checkout { width: 100%; padding: 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 1rem; cursor: pointer; }
+        .btn-checkout:hover { background: #6b0000; }
+        .btn-checkout:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Cart Button (floating) */
+        .cart-button { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: var(--accent-color); color: white; border: none; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); font-size: 1.5rem; display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .cart-button:hover { transform: scale(1.05); }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: var(--phillies-red); color: white; font-size: 0.75rem; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Loading & Messages */
+        .loading { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .message { padding: 1rem; border-radius: 4px; margin-bottom: 1rem; }
+        .message.success { background: #dcfce7; color: #166534; }
+        .message.error { background: #fee2e2; color: #991b1b; }
+
+        /* Checkout Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: none; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .modal-header h2 { font-size: 1.2rem; font-weight: 700; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .modal-body { padding: 1.5rem; }
+        .checkout-step { margin-bottom: 1.5rem; }
+        .checkout-step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-secondary); }
+        .address-select { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .payment-options { display: flex; flex-direction: column; gap: 0.75rem; }
+        .payment-option { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .payment-option:hover { border-color: var(--text-muted); }
+        .payment-option.selected { border-color: var(--accent-color); background: #fff5f5; }
+        .payment-option input { display: none; }
+        .payment-icon { font-size: 1.5rem; }
+        .payment-details { flex: 1; }
+        .payment-name { font-weight: 600; }
+        .payment-desc { font-size: 0.8rem; color: var(--text-muted); }
+        #card-element { padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; margin-top: 0.75rem; }
+        .btn-pay { width: 100%; padding: 0.875rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 1rem; }
+        .btn-pay:hover { background: #6b0000; }
+        .btn-pay:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .shop-sidebar { display: none; }
+            .cart-sidebar { width: 100%; right: -100%; }
+        }
+
+        @media (max-width: 600px) {
+            .page-hero h1 { font-size: 1.5rem; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .cart-button { bottom: 1rem; right: 1rem; width: 50px; height: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Log In</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
+                <div class="nav-divider"></div>
+                <a href="/shop/" class="team-tab feature-tab active">Shop</a>
+                <a href="/marketplace/" class="team-tab feature-tab">Marketplace</a>
+                <a href="/community.html" class="team-tab">Community</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <h1>PhillySports Shop</h1>
+            <p>Official merchandise for true Philadelphia fans</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Sidebar Filters -->
+        <aside class="shop-sidebar">
+            <div class="filter-card">
+                <h3 class="filter-title">Categories</h3>
+                <div class="filter-options" id="categoryFilters">
+                    <div class="filter-option active">
+                        <input type="radio" name="category" value="" id="cat-all" checked>
+                        <label for="cat-all">All Products</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="apparel" id="cat-apparel">
+                        <label for="cat-apparel">Apparel</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="accessories" id="cat-accessories">
+                        <label for="cat-accessories">Accessories</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="memorabilia" id="cat-memorabilia">
+                        <label for="cat-memorabilia">Memorabilia</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="digital" id="cat-digital">
+                        <label for="cat-digital">Digital</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Team</h3>
+                <div class="filter-options" id="teamFilters">
+                    <div class="filter-option">
+                        <input type="checkbox" value="eagles" id="team-eagles">
+                        <label for="team-eagles">Eagles</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="phillies" id="team-phillies">
+                        <label for="team-phillies">Phillies</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="sixers" id="team-sixers">
+                        <label for="team-sixers">76ers</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="flyers" id="team-flyers">
+                        <label for="team-flyers">Flyers</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Price Range</h3>
+                <div class="price-range">
+                    <input type="number" class="price-input" id="minPrice" placeholder="Min">
+                    <span>to</span>
+                    <input type="number" class="price-input" id="maxPrice" placeholder="Max">
+                </div>
+                <button class="filter-btn" onclick="applyFilters()">Apply</button>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Pay With</h3>
+                <div class="filter-options">
+                    <div class="filter-option">
+                        <input type="checkbox" value="usd" id="pay-usd" checked>
+                        <label for="pay-usd">USD</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="dd" id="pay-dd">
+                        <label for="pay-dd">Diehard Dollars</label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Products Grid -->
+        <section class="products-section">
+            <div class="products-header">
+                <span class="products-count" id="productsCount">Loading...</span>
+                <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+                    <option value="newest">Newest First</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="popular">Most Popular</option>
+                </select>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <div class="loading">Loading products...</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Button -->
+    <button class="cart-button" onclick="openCart()">
+        <span>&#128722;</span>
+        <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="cart-close" onclick="closeCart()">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">Your cart is empty</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-totals">
+                <div class="cart-total-row">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal">$0.00</span>
+                </div>
+                <div class="cart-total-row total">
+                    <span>Total</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+            </div>
+            <button class="btn-checkout" onclick="openCheckout()" id="btnCheckout" disabled>Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Checkout</h2>
+                <button class="modal-close" onclick="closeCheckout()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="checkout-step" id="addressStep">
+                    <h3>Shipping Address</h3>
+                    <select class="address-select" id="addressSelect">
+                        <option value="">Select an address...</option>
+                    </select>
+                    <a href="/profile.html#addresses" style="font-size: 0.85rem; color: var(--accent-color);">+ Add new address</a>
+                </div>
+
+                <div class="checkout-step">
+                    <h3>Payment Method</h3>
+                    <div class="payment-options">
+                        <label class="payment-option selected" onclick="selectPayment('stripe')">
+                            <input type="radio" name="payment" value="stripe" checked>
+                            <span class="payment-icon">&#128179;</span>
+                            <div class="payment-details">
+                                <div class="payment-name">Credit Card</div>
+                                <div class="payment-desc">Pay with Visa, Mastercard, etc.</div>
+                            </div>
+                        </label>
+                        <label class="payment-option" onclick="selectPayment('paypal')">
+                            <input type="radio" name="payment" value="paypal">
+                            <span class="payment-icon">&#127919;</span>
+                            <div class="payment-details">
+                                <div class="payment-name">PayPal</div>
+                                <div class="payment-desc">Pay with your PayPal account</div>
+                            </div>
+                        </label>
+                        <label class="payment-option" id="ddPaymentOption" onclick="selectPayment('diehard_dollars')" style="display: none;">
+                            <input type="radio" name="payment" value="diehard_dollars">
+                            <span class="payment-icon">&#128176;</span>
+                            <div class="payment-details">
+                                <div class="payment-name">Diehard Dollars</div>
+                                <div class="payment-desc">Balance: <span id="ddBalance">0</span> DD</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div id="card-element" style="display: block;"></div>
+                    <div id="paypal-buttons" style="display: none; margin-top: 1rem;"></div>
+                </div>
+
+                <button class="btn-pay" id="btnPay" onclick="processPayment()">Pay Now</button>
+                <div id="checkoutMessage" class="message" style="display: none; margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let products = [];
+        let cart = JSON.parse(localStorage.getItem('shop_cart') || '[]');
+        let currentUser = null;
+        let stripe = null;
+        let cardElement = null;
+        let selectedPayment = 'stripe';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadProducts();
+            updateCartUI();
+            initStripe();
+            setupFilters();
+        });
+
+        // Auth check
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/session`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        currentUser = data.user;
+                        updateHeaderAuth();
+                    }
+                }
+            } catch (e) {
+                console.log('Not authenticated');
+            }
+        }
+
+        function updateHeaderAuth() {
+            const authDiv = document.getElementById('headerAuth');
+            if (currentUser) {
+                authDiv.innerHTML = `
+                    <div class="coin-display">
+                        <span class="coin-icon">&#128176;</span>
+                        <span class="coin-balance">${(currentUser.coinBalance || 0).toLocaleString()}</span>
+                    </div>
+                    <a href="/profile.html">${currentUser.username}</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                `;
+                // Show DD payment option if user has balance
+                if (currentUser.coinBalance > 0) {
+                    document.getElementById('ddPaymentOption').style.display = 'flex';
+                    document.getElementById('ddBalance').textContent = currentUser.coinBalance.toLocaleString();
+                }
+            }
+        }
+
+        async function logout() {
+            await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
+            window.location.reload();
+        }
+
+        // Products
+        async function loadProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '<div class="loading">Loading products...</div>';
+
+            try {
+                const params = new URLSearchParams();
+                const category = document.querySelector('input[name="category"]:checked')?.value;
+                const sort = document.getElementById('sortSelect').value;
+                const minPrice = document.getElementById('minPrice').value;
+                const maxPrice = document.getElementById('maxPrice').value;
+
+                if (category) params.set('category', category);
+                if (sort) params.set('sort', sort);
+                if (minPrice) params.set('minPrice', parseInt(minPrice) * 100);
+                if (maxPrice) params.set('maxPrice', parseInt(maxPrice) * 100);
+
+                const res = await fetch(`${API_URL}/shop/products?${params}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    products = data.products;
+                    renderProducts();
+                    document.getElementById('productsCount').textContent = `${data.pagination.totalCount} products`;
+                } else {
+                    grid.innerHTML = '<div class="loading">Failed to load products</div>';
+                }
+            } catch (e) {
+                console.error('Load products error:', e);
+                grid.innerHTML = '<div class="loading">Failed to load products</div>';
+            }
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+
+            if (products.length === 0) {
+                grid.innerHTML = '<div class="loading">No products found</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => {
+                const primaryImage = product.images?.find(i => i.isPrimary) || product.images?.[0];
+                const hasDD = product.priceDiehardDollars != null;
+                const onSale = product.compareAtPrice && product.compareAtPrice > product.priceUSD;
+
+                return `
+                    <div class="product-card" onclick="viewProduct('${product._id}')">
+                        <div class="product-image">
+                            ${primaryImage ? `<img src="${primaryImage.url}" alt="${product.name}">` : '<span class="placeholder">&#128722;</span>'}
+                            ${onSale ? '<span class="sale-badge">Sale</span>' : ''}
+                            ${product.team ? `<span class="team-badge ${product.team}">${product.team}</span>` : ''}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-name">${escapeHtml(product.name)}</div>
+                            <div class="product-category">${product.category}</div>
+                            <div class="product-prices">
+                                <span class="price-usd">$${(product.priceUSD / 100).toFixed(2)}</span>
+                                ${onSale ? `<span class="price-original">$${(product.compareAtPrice / 100).toFixed(2)}</span>` : ''}
+                                ${hasDD ? `<span class="price-dd">${product.priceDiehardDollars} DD</span>` : ''}
+                            </div>
+                            ${product.inStock
+                                ? `<button class="btn-add-cart" onclick="event.stopPropagation(); addToCart('${product._id}')">Add to Cart</button>`
+                                : '<div class="out-of-stock">Out of Stock</div>'
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewProduct(id) {
+            // Could open a product detail modal
+            console.log('View product:', id);
+        }
+
+        // Cart
+        function addToCart(productId, variantId = null) {
+            const product = products.find(p => p._id === productId);
+            if (!product) return;
+
+            const existingIndex = cart.findIndex(item =>
+                item.productId === productId && item.variantId === variantId
+            );
+
+            if (existingIndex >= 0) {
+                cart[existingIndex].quantity++;
+            } else {
+                cart.push({
+                    productId,
+                    variantId,
+                    name: product.name,
+                    priceUSD: product.priceUSD,
+                    priceDiehardDollars: product.priceDiehardDollars,
+                    quantity: 1
+                });
+            }
+
+            saveCart();
+            updateCartUI();
+            openCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            saveCart();
+            updateCartUI();
+        }
+
+        function updateQuantity(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            saveCart();
+            updateCartUI();
+        }
+
+        function saveCart() {
+            localStorage.setItem('shop_cart', JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.priceUSD * item.quantity), 0);
+
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartSubtotal').textContent = `$${(subtotal / 100).toFixed(2)}`;
+            document.getElementById('cartTotal').textContent = `$${(subtotal / 100).toFixed(2)}`;
+            document.getElementById('btnCheckout').disabled = cart.length === 0;
+
+            const itemsDiv = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                itemsDiv.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+            } else {
+                itemsDiv.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <div class="cart-item-image">&#128722;</div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-name">${escapeHtml(item.name)}</div>
+                            <div class="cart-item-price">$${(item.priceUSD / 100).toFixed(2)}</div>
+                            <div class="cart-item-qty">
+                                <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                <span class="qty-value">${item.quantity}</span>
+                                <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                            <div class="cart-item-remove" onclick="removeFromCart(${index})">Remove</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openCart() {
+            document.getElementById('cartOverlay').classList.add('open');
+            document.getElementById('cartSidebar').classList.add('open');
+        }
+
+        function closeCart() {
+            document.getElementById('cartOverlay').classList.remove('open');
+            document.getElementById('cartSidebar').classList.remove('open');
+        }
+
+        // Filters
+        function setupFilters() {
+            document.querySelectorAll('input[name="category"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    document.querySelectorAll('#categoryFilters .filter-option').forEach(opt => opt.classList.remove('active'));
+                    input.closest('.filter-option').classList.add('active');
+                    applyFilters();
+                });
+            });
+        }
+
+        function applyFilters() {
+            loadProducts();
+        }
+
+        // Checkout
+        function initStripe() {
+            if (typeof Stripe !== 'undefined') {
+                stripe = Stripe('pk_test_your_stripe_publishable_key'); // Replace with real key
+                const elements = stripe.elements();
+                cardElement = elements.create('card');
+                cardElement.mount('#card-element');
+            }
+        }
+
+        async function openCheckout() {
+            if (!currentUser) {
+                alert('Please log in to checkout');
+                window.location.href = '/login.html?redirect=/shop/';
+                return;
+            }
+
+            closeCart();
+            document.getElementById('checkoutModal').classList.add('open');
+
+            // Load addresses
+            try {
+                const res = await fetch(`${API_URL}/addresses`);
+                const data = await res.json();
+                if (data.success) {
+                    const select = document.getElementById('addressSelect');
+                    select.innerHTML = '<option value="">Select an address...</option>' +
+                        data.addresses.map(addr =>
+                            `<option value="${addr._id}" ${addr.isDefault ? 'selected' : ''}>
+                                ${addr.label}: ${addr.addressLine1}, ${addr.city}, ${addr.state} ${addr.postalCode}
+                            </option>`
+                        ).join('');
+                }
+            } catch (e) {
+                console.error('Load addresses error:', e);
+            }
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('open');
+        }
+
+        function selectPayment(method) {
+            selectedPayment = method;
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector(`.payment-option input[value="${method}"]`).closest('.payment-option').classList.add('selected');
+
+            document.getElementById('card-element').style.display = method === 'stripe' ? 'block' : 'none';
+            document.getElementById('paypal-buttons').style.display = method === 'paypal' ? 'block' : 'none';
+
+            const btnPay = document.getElementById('btnPay');
+            if (method === 'paypal') {
+                btnPay.style.display = 'none';
+            } else {
+                btnPay.style.display = 'block';
+                btnPay.textContent = method === 'diehard_dollars' ? 'Pay with Diehard Dollars' : 'Pay Now';
+            }
+        }
+
+        async function processPayment() {
+            const addressId = document.getElementById('addressSelect').value;
+            const messageDiv = document.getElementById('checkoutMessage');
+            const btnPay = document.getElementById('btnPay');
+
+            // Check if physical items need address
+            const hasPhysical = cart.some(item => {
+                const product = products.find(p => p._id === item.productId);
+                return product?.productType === 'physical';
+            });
+
+            if (hasPhysical && !addressId) {
+                messageDiv.className = 'message error';
+                messageDiv.textContent = 'Please select a shipping address';
+                messageDiv.style.display = 'block';
+                return;
+            }
+
+            btnPay.disabled = true;
+            btnPay.textContent = 'Processing...';
+            messageDiv.style.display = 'none';
+
+            try {
+                const items = cart.map(item => ({
+                    productId: item.productId,
+                    variantId: item.variantId,
+                    quantity: item.quantity
+                }));
+
+                if (selectedPayment === 'stripe') {
+                    // Create Stripe checkout
+                    const res = await fetch(`${API_URL}/shop/checkout/stripe`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            items,
+                            shippingAddressId: addressId || undefined,
+                            shippingMethod: 'standard'
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (!data.success) {
+                        throw new Error(data.error);
+                    }
+
+                    // Confirm with Stripe
+                    const { error } = await stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: { card: cardElement }
+                    });
+
+                    if (error) {
+                        throw new Error(error.message);
+                    }
+
+                    // Success
+                    cart = [];
+                    saveCart();
+                    updateCartUI();
+                    closeCheckout();
+                    alert('Payment successful! Order #' + data.orderNumber);
+                    window.location.href = `/orders/?id=${data.orderId}`;
+
+                } else if (selectedPayment === 'diehard_dollars') {
+                    const res = await fetch(`${API_URL}/shop/checkout/diehard-dollars`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            items,
+                            shippingAddressId: addressId || undefined,
+                            shippingMethod: 'standard'
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (!data.success) {
+                        throw new Error(data.error);
+                    }
+
+                    cart = [];
+                    saveCart();
+                    updateCartUI();
+                    closeCheckout();
+                    alert('Payment successful! Order #' + data.orderNumber);
+                    window.location.href = `/orders/?id=${data.orderId}`;
+                }
+
+            } catch (error) {
+                messageDiv.className = 'message error';
+                messageDiv.textContent = error.message || 'Payment failed';
+                messageDiv.style.display = 'block';
+            } finally {
+                btnPay.disabled = false;
+                btnPay.textContent = selectedPayment === 'diehard_dollars' ? 'Pay with Diehard Dollars' : 'Pay Now';
+            }
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

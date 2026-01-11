@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace - PhillySports.com</title>
+    <meta name="description" content="Buy and sell Philly sports memorabilia, jerseys, tickets, and more from fellow fans.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success-color: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); padding: 0.5rem 1rem; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        /* Navigation */
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: #ffffff; }
+        .team-tab.active { color: #ffffff; border-bottom-color: #ffd700; }
+        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
+        .feature-tab { color: #ffd700 !important; }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); padding: 2rem 1.5rem; border-bottom: 3px solid var(--accent-color); }
+        .page-hero-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .page-hero h1 { color: #ffffff; font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { color: #aaaaaa; font-size: 1rem; }
+        .btn-sell { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--success-color); color: white; border-radius: 6px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; }
+        .btn-sell:hover { background: #16a34a; transform: translateY(-1px); }
+
+        /* Main Layout */
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 260px 1fr; gap: 1.5rem; }
+
+        /* Sidebar */
+        .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .filter-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 1rem; }
+        .filter-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.75rem; color: var(--text-secondary); }
+        .filter-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .filter-option { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.25rem 0; }
+        .filter-option input { cursor: pointer; }
+        .filter-option label { cursor: pointer; font-size: 0.9rem; }
+        .filter-option.active label { font-weight: 600; }
+        .search-input { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .filter-btn { width: 100%; padding: 0.5rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; }
+        .filter-btn:hover { opacity: 0.9; }
+
+        /* Listings Grid */
+        .listings-section { flex: 1; }
+        .listings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .listings-count { font-size: 0.9rem; color: var(--text-muted); }
+        .sort-select { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; background: var(--card-bg); cursor: pointer; }
+        .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+
+        /* Listing Card */
+        .listing-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .listing-card:hover { border-color: var(--text-muted); box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .listing-image { position: relative; width: 100%; padding-top: 75%; background: #f5f5f5; overflow: hidden; }
+        .listing-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .listing-image .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: #ccc; }
+        .listing-badges { position: absolute; top: 0.5rem; left: 0.5rem; right: 0.5rem; display: flex; justify-content: space-between; }
+        .condition-badge { padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; background: rgba(0,0,0,0.7); color: white; }
+        .team-badge { padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
+        .team-badge.eagles { background: var(--eagles-green); color: white; }
+        .team-badge.phillies { background: var(--phillies-red); color: white; }
+        .team-badge.sixers { background: var(--sixers-blue); color: white; }
+        .team-badge.flyers { background: var(--flyers-orange); color: white; }
+        .listing-info { padding: 1rem; }
+        .listing-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .listing-seller { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .listing-prices { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+        .price-usd { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+        .price-dd { font-size: 0.85rem; color: #b8860b; font-weight: 600; }
+        .listing-meta { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Loading */
+        .loading { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state h3 { margin-bottom: 0.5rem; color: var(--text-secondary); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .page-hero h1 { font-size: 1.5rem; }
+            .page-hero-inner { flex-direction: column; align-items: flex-start; }
+            .listings-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Log In</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
+                <div class="nav-divider"></div>
+                <a href="/shop/" class="team-tab feature-tab">Shop</a>
+                <a href="/marketplace/" class="team-tab feature-tab active">Marketplace</a>
+                <a href="/community.html" class="team-tab">Community</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <div>
+                <h1>Fan Marketplace</h1>
+                <p>Buy and sell Philly sports items from fellow fans</p>
+            </div>
+            <a href="/marketplace/sell.html" class="btn-sell">
+                <span>+</span> Sell an Item
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="filter-card">
+                <h3 class="filter-title">Search</h3>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search listings...">
+                <button class="filter-btn" onclick="applyFilters()">Search</button>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Category</h3>
+                <div class="filter-options" id="categoryFilters">
+                    <div class="filter-option active">
+                        <input type="radio" name="category" value="" id="cat-all" checked>
+                        <label for="cat-all">All Categories</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="jerseys" id="cat-jerseys">
+                        <label for="cat-jerseys">Jerseys</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="memorabilia" id="cat-memorabilia">
+                        <label for="cat-memorabilia">Memorabilia</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="tickets" id="cat-tickets">
+                        <label for="cat-tickets">Tickets</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="cards" id="cat-cards">
+                        <label for="cat-cards">Trading Cards</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="apparel" id="cat-apparel">
+                        <label for="cat-apparel">Apparel</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="category" value="other" id="cat-other">
+                        <label for="cat-other">Other</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Team</h3>
+                <div class="filter-options" id="teamFilters">
+                    <div class="filter-option">
+                        <input type="checkbox" value="eagles" id="team-eagles">
+                        <label for="team-eagles">Eagles</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="phillies" id="team-phillies">
+                        <label for="team-phillies">Phillies</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="sixers" id="team-sixers">
+                        <label for="team-sixers">76ers</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="flyers" id="team-flyers">
+                        <label for="team-flyers">Flyers</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Condition</h3>
+                <div class="filter-options" id="conditionFilters">
+                    <div class="filter-option">
+                        <input type="checkbox" value="new" id="cond-new">
+                        <label for="cond-new">New</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="like_new" id="cond-like-new">
+                        <label for="cond-like-new">Like New</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="good" id="cond-good">
+                        <label for="cond-good">Good</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" value="fair" id="cond-fair">
+                        <label for="cond-fair">Fair</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Payment</h3>
+                <div class="filter-options">
+                    <div class="filter-option">
+                        <input type="radio" name="currency" value="usd" id="pay-usd" checked>
+                        <label for="pay-usd">Accepts USD</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="currency" value="diehard_dollars" id="pay-dd">
+                        <label for="pay-dd">Accepts Diehard Dollars</label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Listings Grid -->
+        <section class="listings-section">
+            <div class="listings-header">
+                <span class="listings-count" id="listingsCount">Loading...</span>
+                <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+                    <option value="newest">Newest First</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="popular">Most Popular</option>
+                    <option value="ending">Ending Soon</option>
+                </select>
+            </div>
+            <div class="listings-grid" id="listingsGrid">
+                <div class="loading">Loading listings...</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const API_URL = '/api';
+        let listings = [];
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            await loadListings();
+            setupFilters();
+        });
+
+        async function checkAuth() {
+            try {
+                const res = await fetch(`${API_URL}/auth/session`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        currentUser = data.user;
+                        updateHeaderAuth();
+                    }
+                }
+            } catch (e) {
+                console.log('Not authenticated');
+            }
+        }
+
+        function updateHeaderAuth() {
+            const authDiv = document.getElementById('headerAuth');
+            if (currentUser) {
+                authDiv.innerHTML = `
+                    <div class="coin-display">
+                        <span>&#128176;</span>
+                        <span>${(currentUser.coinBalance || 0).toLocaleString()}</span>
+                    </div>
+                    <a href="/profile.html">${currentUser.username}</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                `;
+            }
+        }
+
+        async function logout() {
+            await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
+            window.location.reload();
+        }
+
+        async function loadListings() {
+            const grid = document.getElementById('listingsGrid');
+            grid.innerHTML = '<div class="loading">Loading listings...</div>';
+
+            try {
+                const params = new URLSearchParams();
+                const category = document.querySelector('input[name="category"]:checked')?.value;
+                const currency = document.querySelector('input[name="currency"]:checked')?.value;
+                const sort = document.getElementById('sortSelect').value;
+                const search = document.getElementById('searchInput').value;
+
+                if (category) params.set('category', category);
+                if (currency) params.set('currency', currency);
+                if (sort) params.set('sort', sort);
+                if (search) params.set('search', search);
+
+                // Get selected teams
+                const selectedTeams = Array.from(document.querySelectorAll('#teamFilters input:checked'))
+                    .map(i => i.value);
+                if (selectedTeams.length === 1) {
+                    params.set('team', selectedTeams[0]);
+                }
+
+                // Get selected conditions
+                const selectedConditions = Array.from(document.querySelectorAll('#conditionFilters input:checked'))
+                    .map(i => i.value);
+                if (selectedConditions.length === 1) {
+                    params.set('condition', selectedConditions[0]);
+                }
+
+                const res = await fetch(`${API_URL}/marketplace/listings?${params}`);
+                const data = await res.json();
+
+                if (data.success) {
+                    listings = data.listings;
+                    renderListings();
+                    document.getElementById('listingsCount').textContent = `${data.pagination.totalCount} listings`;
+                } else {
+                    grid.innerHTML = '<div class="empty-state"><h3>Failed to load listings</h3></div>';
+                }
+            } catch (e) {
+                console.error('Load listings error:', e);
+                grid.innerHTML = '<div class="empty-state"><h3>Failed to load listings</h3></div>';
+            }
+        }
+
+        function renderListings() {
+            const grid = document.getElementById('listingsGrid');
+
+            if (listings.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <h3>No listings found</h3>
+                        <p>Try adjusting your filters or check back later.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = listings.map(listing => {
+                const primaryImage = listing.images?.find(i => i.isPrimary) || listing.images?.[0];
+                const conditionLabels = {
+                    'new': 'New',
+                    'like_new': 'Like New',
+                    'good': 'Good',
+                    'fair': 'Fair',
+                    'poor': 'Poor'
+                };
+
+                return `
+                    <div class="listing-card" onclick="viewListing('${listing._id}')">
+                        <div class="listing-image">
+                            ${primaryImage ? `<img src="${primaryImage.url}" alt="${escapeHtml(listing.title)}">` : '<span class="placeholder">&#128247;</span>'}
+                            <div class="listing-badges">
+                                <span class="condition-badge">${conditionLabels[listing.condition] || listing.condition}</span>
+                                ${listing.team ? `<span class="team-badge ${listing.team}">${listing.team}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="listing-info">
+                            <div class="listing-title">${escapeHtml(listing.title)}</div>
+                            <div class="listing-seller">Sold by ${escapeHtml(listing.sellerUsername)}</div>
+                            <div class="listing-prices">
+                                ${listing.acceptsUSD ? `<span class="price-usd">$${(listing.priceUSD / 100).toFixed(2)}</span>` : ''}
+                                ${listing.acceptsDiehardDollars ? `<span class="price-dd">${listing.priceDiehardDollars.toLocaleString()} DD</span>` : ''}
+                            </div>
+                            <div class="listing-meta">
+                                <span>${listing.category}</span>
+                                <span>${listing.viewCount || 0} views</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewListing(id) {
+            window.location.href = `/marketplace/listing.html?id=${id}`;
+        }
+
+        function setupFilters() {
+            document.querySelectorAll('input[name="category"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    document.querySelectorAll('#categoryFilters .filter-option').forEach(opt => opt.classList.remove('active'));
+                    input.closest('.filter-option').classList.add('active');
+                    applyFilters();
+                });
+            });
+
+            document.querySelectorAll('input[name="currency"]').forEach(input => {
+                input.addEventListener('change', applyFilters);
+            });
+
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+        }
+
+        function applyFilters() {
+            loadListings();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
