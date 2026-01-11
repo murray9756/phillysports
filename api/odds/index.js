@@ -77,11 +77,7 @@ export default async function handler(req, res) {
                 games: getMockOddsData(sport),
                 lastUpdated: new Date().toISOString(),
                 cached: false,
-                demo: true,
-                debug: {
-                    keyPresent: !!process.env.ODDS_API_KEY,
-                    keyLength: process.env.ODDS_API_KEY ? process.env.ODDS_API_KEY.length : 0
-                }
+                demo: true
             });
         }
 
