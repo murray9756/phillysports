@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
+        .header-logo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+        .header-logo img { width: 120px; height: 120px; border-radius: 12px; }
+        .header-logo .tagline { font-size: 0.85rem; font-weight: 500; color: #ffd700; font-style: italic; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: #ffffff; }
+        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
+        .feature-tab { color: #ffd700 !important; }
+        .feature-tab:hover, .feature-tab.active { border-bottom-color: #ffd700 !important; }
+
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; display: grid; grid-template-columns: 320px 1fr; gap: 1rem; min-height: calc(100vh - 200px); }
+
+        .conversations-list { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .conversations-header { padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .conversations-header h2 { font-size: 1.1rem; font-weight: 700; }
+
+        .conversation-item { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s; }
+        .conversation-item:hover { background: var(--dark-bg); }
+        .conversation-item.active { background: var(--dark-bg); border-left: 3px solid var(--phillies-red); }
+        .conversation-item.unread { background: rgba(255, 215, 0, 0.05); }
+        .conv-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--eagles-green), var(--sixers-blue)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; flex-shrink: 0; overflow: hidden; }
+        .conv-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .conv-info { flex: 1; min-width: 0; }
+        .conv-name { font-weight: 600; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
+        .conv-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+        .conv-preview { font-size: 0.85rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .unread-badge { background: var(--phillies-red); color: white; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 10px; font-weight: 600; }
+
+        .chat-area { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .chat-header { padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem; }
+        .chat-header-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--sixers-blue), var(--flyers-orange)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; overflow: hidden; }
+        .chat-header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .chat-header-name { font-weight: 600; }
+        .chat-header-name a:hover { color: var(--phillies-red); }
+
+        .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; min-height: 400px; max-height: 500px; }
+        .message { max-width: 70%; padding: 0.75rem 1rem; border-radius: 12px; }
+        .message.own { background: var(--sixers-blue); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .message.other { background: var(--dark-bg); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .message-time { font-size: 0.7rem; opacity: 0.7; margin-top: 0.25rem; }
+
+        .chat-input { padding: 1rem; border-top: 1px solid var(--border-color); display: flex; gap: 0.75rem; }
+        .chat-input input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; font-family: inherit; }
+        .chat-input input:focus { outline: none; border-color: var(--sixers-blue); }
+        .send-btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; }
+        .send-btn:hover { opacity: 0.9; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); padding: 2rem; text-align: center; }
+        .empty-state h3 { margin-bottom: 0.5rem; color: var(--text-secondary); }
+
+        .login-prompt { grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--card-bg); border-radius: 8px; }
+        .login-prompt h2 { margin-bottom: 1rem; }
+        .login-btn { display: inline-block; padding: 0.75rem 2rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border-radius: 6px; font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; }
+            .chat-area { display: none; }
+            .chat-area.active { display: flex; }
+            .conversations-list.hidden { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span class="tagline">For the Diehard Fan</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <a href="/login.html">Sign In</a>
+                <a href="/register.html" class="auth-btn">Join Free</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/" class="team-tab">All Teams</a>
+                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
+                <div class="nav-divider"></div>
+                <a href="/community/" class="team-tab feature-tab active">Community</a>
+                <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
+                <a href="/poker.html" class="team-tab feature-tab">Poker</a>
+                <a href="/predictions.html" class="team-tab feature-tab">Predictions</a>
+                <a href="/raffles/" class="team-tab feature-tab">Raffles</a>
+                <a href="/shop/" class="team-tab feature-tab">Shop</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container" id="mainContainer">
+        <div class="login-prompt">
+            <h2>Please sign in to view your messages</h2>
+            <a href="/login.html" class="login-btn">Sign In</a>
+        </div>
+    </main>
+
+    <script>
+        let currentUser = null;
+        let conversations = [];
+        let activeConversation = null;
+        let messages = [];
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span class="coin-balance">${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    showMessagesUI();
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        function showMessagesUI() {
+            document.getElementById('mainContainer').innerHTML = `
+                <div class="conversations-list" id="conversationsList">
+                    <div class="conversations-header">
+                        <h2>Messages</h2>
+                    </div>
+                    <div id="conversationsContainer">
+                        <div class="empty-state">
+                            <p>Loading conversations...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-area" id="chatArea">
+                    <div class="empty-state">
+                        <h3>Select a conversation</h3>
+                        <p>Choose a conversation from the list to start chatting</p>
+                    </div>
+                </div>
+            `;
+            loadConversations();
+        }
+
+        async function loadConversations() {
+            try {
+                const response = await fetch('/api/messages/conversations', { credentials: 'include' });
+                const data = await response.json();
+
+                conversations = data.conversations || [];
+                renderConversations();
+            } catch (e) {
+                console.error('Failed to load conversations:', e);
+            }
+        }
+
+        function renderConversations() {
+            const container = document.getElementById('conversationsContainer');
+
+            if (conversations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No messages yet</h3>
+                        <p>Start a conversation from a user's profile</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = conversations.map(conv => `
+                <div class="conversation-item ${conv.id === activeConversation?.id ? 'active' : ''} ${conv.unreadCount > 0 ? 'unread' : ''}"
+                     onclick="selectConversation('${conv.id}')">
+                    <div class="conv-avatar">
+                        ${conv.otherUser?.profilePhoto
+                            ? `<img src="${conv.otherUser.profilePhoto}" alt="">`
+                            : (conv.otherUser?.username?.charAt(0) || '?').toUpperCase()}
+                    </div>
+                    <div class="conv-info">
+                        <div class="conv-name">
+                            <span>${escapeHtml(conv.otherUser?.displayName || conv.otherUser?.username || 'Unknown')}</span>
+                            <span class="conv-time">${formatTime(conv.lastMessageAt)}</span>
+                        </div>
+                        <div class="conv-preview">
+                            ${conv.unreadCount > 0 ? `<span class="unread-badge">${conv.unreadCount}</span> ` : ''}
+                            ${escapeHtml(conv.lastMessagePreview || 'No messages yet')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function selectConversation(convId) {
+            activeConversation = conversations.find(c => c.id === convId);
+            renderConversations();
+
+            const chatArea = document.getElementById('chatArea');
+            chatArea.innerHTML = `
+                <div class="chat-header">
+                    <div class="chat-header-avatar">
+                        ${activeConversation.otherUser?.profilePhoto
+                            ? `<img src="${activeConversation.otherUser.profilePhoto}" alt="">`
+                            : (activeConversation.otherUser?.username?.charAt(0) || '?').toUpperCase()}
+                    </div>
+                    <div class="chat-header-name">
+                        <a href="/profile.html?user=${activeConversation.otherUser?.username}">
+                            ${escapeHtml(activeConversation.otherUser?.displayName || activeConversation.otherUser?.username || 'Unknown')}
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="empty-state"><p>Loading messages...</p></div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            `;
+
+            // Load messages
+            try {
+                const response = await fetch(`/api/messages/conversations/${convId}`, { credentials: 'include' });
+                const data = await response.json();
+                messages = data.messages || [];
+                renderMessages();
+
+                // Mark as read
+                if (activeConversation.unreadCount > 0) {
+                    await fetch(`/api/messages/conversations/${convId}/read`, {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                    activeConversation.unreadCount = 0;
+                    renderConversations();
+                }
+            } catch (e) {
+                console.error('Failed to load messages:', e);
+            }
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('chatMessages');
+
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No messages yet. Start the conversation!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => `
+                <div class="message ${msg.isOwn ? 'own' : 'other'}">
+                    <div class="message-content">${escapeHtml(msg.content)}</div>
+                    <div class="message-time">${formatTime(msg.createdAt)}</div>
+                </div>
+            `).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+
+            if (!content || !activeConversation) return;
+
+            input.value = '';
+
+            try {
+                const response = await fetch(`/api/messages/conversations/${activeConversation.id}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ content })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    messages.push(data.message);
+                    renderMessages();
+
+                    // Update conversation preview
+                    activeConversation.lastMessagePreview = content.substring(0, 100);
+                    activeConversation.lastMessageAt = new Date().toISOString();
+                    renderConversations();
+                } else {
+                    alert(data.error || 'Failed to send message');
+                }
+            } catch (e) {
+                console.error('Send message error:', e);
+                alert('Failed to send message');
+            }
+        }
+
+        function formatTime(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'Now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd';
+
+            return date.toLocaleDateString();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>

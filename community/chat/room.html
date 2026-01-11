@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; height: 100vh; display: flex; flex-direction: column; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); flex-shrink: 0; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo img { width: 60px; height: 60px; border-radius: 8px; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        .chat-container { flex: 1; display: flex; flex-direction: column; max-width: 900px; width: 100%; margin: 0 auto; padding: 1rem; overflow: hidden; }
+
+        .chat-header { background: var(--card-bg); border-radius: 8px 8px 0 0; border: 1px solid var(--border-color); border-bottom: none; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .chat-header h1 { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .back-link { color: var(--text-muted); font-size: 0.9rem; }
+        .back-link:hover { color: var(--text-primary); }
+        .connection-status { font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 4px; }
+        .connection-status.connected { background: #dcfce7; color: #166534; }
+        .connection-status.disconnected { background: #fef2f2; color: #dc2626; }
+
+        .chat-messages { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-top: none; border-bottom: none; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.75rem; }
+
+        .message { display: flex; gap: 0.75rem; max-width: 85%; }
+        .message.own { flex-direction: row-reverse; align-self: flex-end; }
+        .message-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--eagles-green), var(--sixers-blue)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem; flex-shrink: 0; overflow: hidden; }
+        .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .message-content { background: var(--dark-bg); padding: 0.75rem 1rem; border-radius: 12px; }
+        .message.own .message-content { background: var(--sixers-blue); color: white; }
+        .message-sender { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.25rem; }
+        .message.own .message-sender { display: none; }
+        .message-text { word-wrap: break-word; }
+        .message-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .message.own .message-time { color: rgba(255,255,255,0.7); }
+
+        .system-message { text-align: center; font-size: 0.85rem; color: var(--text-muted); padding: 0.5rem; }
+
+        .chat-input-area { background: var(--card-bg); border-radius: 0 0 8px 8px; border: 1px solid var(--border-color); padding: 1rem; }
+        .chat-input-wrapper { display: flex; gap: 0.75rem; }
+        .chat-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; font-family: inherit; font-size: 0.95rem; }
+        .chat-input:focus { outline: none; border-color: var(--sixers-blue); }
+        .send-btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; }
+        .send-btn:hover { opacity: 0.9; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .login-prompt { text-align: center; padding: 1rem; background: #fef9c3; border-radius: 6px; }
+        .login-prompt a { color: var(--phillies-red); font-weight: 600; }
+
+        .typing-indicator { font-size: 0.85rem; color: var(--text-muted); padding: 0.5rem 0; }
+
+        @media (max-width: 768px) {
+            .chat-container { padding: 0.5rem; }
+            .message { max-width: 95%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+            </a>
+            <div class="header-auth" id="authSection">
+                <a href="/login.html">Sign In</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="chat-container">
+        <div class="chat-header" id="chatHeader">
+            <h1>Loading...</h1>
+            <a href="/community/chat.html" class="back-link">← Back to Chat</a>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="system-message">Loading messages...</div>
+        </div>
+        <div class="chat-input-area" id="chatInputArea">
+            <div class="login-prompt">
+                <a href="/login.html">Sign in</a> to join the conversation
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const teamEmojis = { eagles: '🦅', phillies: '⚾', sixers: '🏀', flyers: '🏒' };
+        const params = new URLSearchParams(window.location.search);
+        const roomId = params.get('id');
+
+        let currentUser = null;
+        let room = null;
+        let messages = [];
+        let pusher = null;
+        let channel = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span class="coin-balance">${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                    `;
+                    showChatInput();
+                }
+            } catch (e) {}
+        }
+
+        function showChatInput() {
+            document.getElementById('chatInputArea').innerHTML = `
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+                <div class="typing-indicator" id="typingIndicator" style="display: none;"></div>
+            `;
+        }
+
+        async function loadRoom() {
+            if (!roomId) {
+                document.getElementById('chatHeader').innerHTML = '<h1>Room not found</h1>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/chat/rooms/${roomId}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById('chatHeader').innerHTML = `<h1>${data.error || 'Room not found'}</h1>`;
+                    return;
+                }
+
+                room = data.room;
+                messages = data.messages || [];
+
+                document.title = `${room.name} - PhillySports.com`;
+
+                // Update header
+                const emoji = room.team ? teamEmojis[room.team] : '💬';
+                document.getElementById('chatHeader').innerHTML = `
+                    <div>
+                        <h1>${emoji} ${escapeHtml(room.name)}</h1>
+                        <span class="connection-status disconnected" id="connectionStatus">Connecting...</span>
+                    </div>
+                    <a href="/community/chat.html" class="back-link">← Back to Chat</a>
+                `;
+
+                renderMessages();
+                initPusher();
+            } catch (e) {
+                console.error('Failed to load room:', e);
+            }
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('chatMessages');
+
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="system-message">No messages yet. Start the conversation!</div>';
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => {
+                if (msg.type === 'system') {
+                    return `<div class="system-message">${escapeHtml(msg.content)}</div>`;
+                }
+
+                const isOwn = currentUser && msg.senderId === currentUser._id;
+                return `
+                    <div class="message ${isOwn ? 'own' : ''}">
+                        <div class="message-avatar">
+                            ${msg.sender?.profilePhoto
+                                ? `<img src="${msg.sender.profilePhoto}" alt="">`
+                                : (msg.sender?.username?.charAt(0) || '?').toUpperCase()}
+                        </div>
+                        <div class="message-content">
+                            <div class="message-sender">${escapeHtml(msg.sender?.displayName || msg.sender?.username || 'Unknown')}</div>
+                            <div class="message-text">${escapeHtml(msg.content)}</div>
+                            <div class="message-time">${formatTime(msg.createdAt)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function initPusher() {
+            // Try to initialize Pusher for real-time updates
+            try {
+                // Get Pusher key from environment (you'd need to expose this)
+                const pusherKey = window.PUSHER_KEY;
+                if (!pusherKey) {
+                    updateConnectionStatus('fallback');
+                    startPolling();
+                    return;
+                }
+
+                pusher = new Pusher(pusherKey, {
+                    cluster: 'us2',
+                    authEndpoint: '/api/pusher/auth'
+                });
+
+                const channelName = room.type === 'team'
+                    ? `presence-chat-${room.team}`
+                    : `private-group-${roomId}`;
+
+                channel = pusher.subscribe(channelName);
+
+                channel.bind('pusher:subscription_succeeded', () => {
+                    updateConnectionStatus('connected');
+                });
+
+                channel.bind('pusher:subscription_error', () => {
+                    updateConnectionStatus('fallback');
+                    startPolling();
+                });
+
+                channel.bind('message', (data) => {
+                    // Don't add if it's our own message (we already added it optimistically)
+                    if (currentUser && data.senderId === currentUser._id) return;
+
+                    messages.push(data);
+                    renderMessages();
+                });
+
+                channel.bind('typing', (data) => {
+                    if (currentUser && data.userId !== currentUser._id) {
+                        showTyping(data.username);
+                    }
+                });
+            } catch (e) {
+                console.error('Pusher init error:', e);
+                updateConnectionStatus('fallback');
+                startPolling();
+            }
+        }
+
+        let pollInterval = null;
+        function startPolling() {
+            // Fallback to polling if Pusher is unavailable
+            pollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/chat/rooms/${roomId}/messages?limit=50`, { credentials: 'include' });
+                    const data = await response.json();
+                    if (data.messages && data.messages.length > messages.length) {
+                        messages = data.messages;
+                        renderMessages();
+                    }
+                } catch (e) {}
+            }, 5000);
+        }
+
+        function updateConnectionStatus(status) {
+            const el = document.getElementById('connectionStatus');
+            if (!el) return;
+
+            switch (status) {
+                case 'connected':
+                    el.className = 'connection-status connected';
+                    el.textContent = 'Live';
+                    break;
+                case 'disconnected':
+                    el.className = 'connection-status disconnected';
+                    el.textContent = 'Disconnected';
+                    break;
+                case 'fallback':
+                    el.className = 'connection-status connected';
+                    el.textContent = 'Connected';
+                    break;
+            }
+        }
+
+        let typingTimeout = null;
+        function showTyping(username) {
+            const el = document.getElementById('typingIndicator');
+            if (!el) return;
+
+            el.textContent = `${username} is typing...`;
+            el.style.display = 'block';
+
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                el.style.display = 'none';
+            }, 3000);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            if (!currentUser) {
+                alert('Please sign in to send messages');
+                return;
+            }
+
+            const input = document.getElementById('messageInput');
+            const content = input.value.trim();
+
+            if (!content) return;
+
+            input.value = '';
+
+            // Optimistically add message
+            const tempMessage = {
+                id: 'temp-' + Date.now(),
+                senderId: currentUser._id,
+                sender: {
+                    username: currentUser.username,
+                    displayName: currentUser.displayName,
+                    profilePhoto: currentUser.profilePhoto
+                },
+                content,
+                createdAt: new Date().toISOString()
+            };
+            messages.push(tempMessage);
+            renderMessages();
+
+            try {
+                const response = await fetch(`/api/chat/rooms/${roomId}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ content })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to send message');
+                    // Remove optimistic message
+                    messages = messages.filter(m => m.id !== tempMessage.id);
+                    renderMessages();
+                }
+            } catch (e) {
+                console.error('Send error:', e);
+                messages = messages.filter(m => m.id !== tempMessage.id);
+                renderMessages();
+            }
+        }
+
+        function formatTime(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (pollInterval) clearInterval(pollInterval);
+            if (pusher) pusher.disconnect();
+        });
+
+        checkAuth().then(loadRoom);
+    </script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Post - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
+        .header-logo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+        .header-logo img { width: 120px; height: 120px; border-radius: 12px; }
+        .header-logo .tagline { font-size: 0.85rem; font-weight: 500; color: #ffd700; font-style: italic; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: #ffffff; }
+        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
+        .feature-tab { color: #ffd700 !important; }
+        .feature-tab:hover, .feature-tab.active { border-bottom-color: #ffd700 !important; }
+
+        .main-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .breadcrumb { margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-secondary); }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .post-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+        .post-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .post-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .pin-badge { background: #ffd700; color: #333; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 3px; text-transform: uppercase; }
+        .locked-badge { background: var(--text-muted); color: white; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 3px; }
+
+        .post-author-info { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--eagles-green), var(--sixers-blue)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.2rem; overflow: hidden; }
+        .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .author-details .author-name { font-weight: 600; color: var(--text-primary); }
+        .author-details .author-name:hover { color: var(--phillies-red); }
+        .author-details .post-date { font-size: 0.85rem; color: var(--text-muted); }
+
+        .post-content { padding: 1.5rem; }
+        .post-body { white-space: pre-wrap; word-wrap: break-word; }
+
+        .post-actions { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; gap: 1rem; align-items: center; }
+        .action-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+        .action-btn:hover { border-color: var(--text-muted); }
+        .action-btn.liked { background: #ffe4e6; border-color: var(--phillies-red); color: var(--phillies-red); }
+        .action-btn.liked:hover { background: #fecdd3; }
+
+        .replies-section { margin-top: 2rem; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .section-title { font-size: 1.1rem; font-weight: 700; }
+
+        .reply-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; padding: 1.25rem; }
+        .reply-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+        .reply-author { display: flex; align-items: center; gap: 0.75rem; }
+        .reply-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--sixers-blue), var(--flyers-orange)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.9rem; overflow: hidden; }
+        .reply-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .reply-author-name { font-weight: 600; font-size: 0.9rem; }
+        .reply-date { font-size: 0.8rem; color: var(--text-muted); }
+        .reply-content { margin-bottom: 0.75rem; white-space: pre-wrap; word-wrap: break-word; }
+        .reply-actions { display: flex; gap: 0.75rem; }
+        .reply-action { font-size: 0.85rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.25rem; }
+        .reply-action:hover { color: var(--text-primary); }
+        .reply-action.liked { color: var(--phillies-red); }
+
+        .reply-form { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 1.5rem; margin-top: 1.5rem; }
+        .reply-form h3 { font-size: 1rem; margin-bottom: 1rem; }
+        .reply-form textarea { width: 100%; min-height: 120px; padding: 1rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.95rem; resize: vertical; }
+        .reply-form textarea:focus { outline: none; border-color: var(--sixers-blue); }
+        .reply-form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
+        .submit-btn { padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .locked-notice { background: #f3f4f6; border-radius: 8px; padding: 1rem; text-align: center; color: var(--text-muted); margin-top: 1.5rem; }
+
+        .coin-reward { display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(255, 215, 0, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; color: #b8860b; margin-left: 0.5rem; }
+
+        @media (max-width: 768px) {
+            .post-title { font-size: 1.25rem; }
+            .post-author-info { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span class="tagline">For the Diehard Fan</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <a href="/login.html">Sign In</a>
+                <a href="/register.html" class="auth-btn">Join Free</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/" class="team-tab">All Teams</a>
+                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
+                <div class="nav-divider"></div>
+                <a href="/community/" class="team-tab feature-tab active">Community</a>
+                <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
+                <a href="/poker.html" class="team-tab feature-tab">Poker</a>
+                <a href="/predictions.html" class="team-tab feature-tab">Predictions</a>
+                <a href="/raffles/" class="team-tab feature-tab">Raffles</a>
+                <a href="/shop/" class="team-tab feature-tab">Shop</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="breadcrumb" id="breadcrumb">
+            <a href="/community/">Community</a> &gt; <a href="/community/forums.html">Forums</a> &gt; <span>Post</span>
+        </div>
+
+        <div id="postContainer">
+            <div class="post-card">
+                <div class="post-header">
+                    <h1 class="post-title">Loading...</h1>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const teamNames = { eagles: 'Eagles', phillies: 'Phillies', sixers: '76ers', flyers: 'Flyers' };
+        const params = new URLSearchParams(window.location.search);
+        const postId = params.get('id');
+        let currentUser = null;
+        let postData = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span class="coin-balance" id="coinBalance">${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadPost() {
+            if (!postId) {
+                document.getElementById('postContainer').innerHTML = '<p>Post not found.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/forums/posts/${postId}`);
+                if (!response.ok) throw new Error('Post not found');
+
+                const data = await response.json();
+                postData = data.post;
+
+                document.title = `${postData.title} - PhillySports.com`;
+                document.getElementById('breadcrumb').innerHTML = `
+                    <a href="/community/">Community</a> &gt;
+                    <a href="/community/forums.html">Forums</a> &gt;
+                    <a href="/community/forums/team.html?team=${postData.team}">${teamNames[postData.team]}</a> &gt;
+                    <span>${escapeHtml(postData.title.substring(0, 30))}${postData.title.length > 30 ? '...' : ''}</span>
+                `;
+
+                renderPost(data);
+            } catch (e) {
+                console.error('Failed to load post:', e);
+                document.getElementById('postContainer').innerHTML = '<p>Failed to load post. Please try again.</p>';
+            }
+        }
+
+        function renderPost(data) {
+            const post = data.post;
+            const replies = data.replies || [];
+            const isLiked = currentUser && post.likes.includes(currentUser._id);
+            const isOwner = currentUser && post.author.userId === currentUser._id;
+
+            document.getElementById('postContainer').innerHTML = `
+                <div class="post-card">
+                    <div class="post-header">
+                        <h1 class="post-title">
+                            ${escapeHtml(post.title)}
+                            ${post.isPinned ? '<span class="pin-badge">Pinned</span>' : ''}
+                            ${post.isLocked ? '<span class="locked-badge">Locked</span>' : ''}
+                        </h1>
+                        <div class="post-author-info">
+                            <div class="author-avatar">
+                                ${post.author.profilePhoto
+                                    ? `<img src="${post.author.profilePhoto}" alt="${post.author.username}">`
+                                    : post.author.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="author-details">
+                                <a href="/profile.html?user=${post.author.username}" class="author-name">
+                                    ${escapeHtml(post.author.displayName || post.author.username)}
+                                </a>
+                                <div class="post-date">${formatDate(post.createdAt)} · ${post.viewCount} views</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-body">${escapeHtml(post.content)}</div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('post', '${post.id}')" id="postLikeBtn">
+                            <span>${isLiked ? '❤️' : '🤍'}</span>
+                            <span id="postLikeCount">${post.likeCount}</span> likes
+                        </button>
+                        <span style="color: var(--text-muted); font-size: 0.9rem;">
+                            ${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="replies-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Replies</h2>
+                    </div>
+                    <div id="repliesList">
+                        ${replies.length === 0
+                            ? '<p style="color: var(--text-muted); padding: 1rem 0;">No replies yet. Be the first to respond!</p>'
+                            : replies.map(reply => renderReply(reply)).join('')}
+                    </div>
+
+                    ${post.isLocked
+                        ? '<div class="locked-notice">This post is locked. No new replies can be added.</div>'
+                        : currentUser
+                            ? `<div class="reply-form" id="replyForm">
+                                <h3>Write a Reply <span class="coin-reward">+5 🪙</span></h3>
+                                <textarea id="replyContent" placeholder="Share your thoughts..."></textarea>
+                                <div class="reply-form-actions">
+                                    <button class="submit-btn" onclick="submitReply()" id="submitReplyBtn">Post Reply</button>
+                                </div>
+                            </div>`
+                            : '<div class="locked-notice"><a href="/login.html" style="color: var(--phillies-red);">Sign in</a> to reply to this post.</div>'}
+                </div>
+            `;
+        }
+
+        function renderReply(reply) {
+            const isLiked = currentUser && reply.likes.includes(currentUser._id);
+            return `
+                <div class="reply-card" id="reply-${reply.id}">
+                    <div class="reply-header">
+                        <div class="reply-author">
+                            <div class="reply-avatar">
+                                ${reply.author.profilePhoto
+                                    ? `<img src="${reply.author.profilePhoto}" alt="${reply.author.username}">`
+                                    : reply.author.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <a href="/profile.html?user=${reply.author.username}" class="reply-author-name">
+                                    ${escapeHtml(reply.author.displayName || reply.author.username)}
+                                </a>
+                                <div class="reply-date">${formatDate(reply.createdAt)}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="reply-content">${escapeHtml(reply.content)}</div>
+                    <div class="reply-actions">
+                        <span class="reply-action ${isLiked ? 'liked' : ''}" onclick="toggleLike('reply', '${reply.id}')" id="replyLike-${reply.id}">
+                            ${isLiked ? '❤️' : '🤍'} <span id="replyLikeCount-${reply.id}">${reply.likeCount}</span>
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function toggleLike(type, id) {
+            if (!currentUser) {
+                alert('Please sign in to like posts');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const url = type === 'post'
+                    ? `/api/forums/posts/${id}/like`
+                    : `/api/forums/replies/${id}/like`;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (type === 'post') {
+                        const btn = document.getElementById('postLikeBtn');
+                        btn.className = `action-btn ${data.liked ? 'liked' : ''}`;
+                        btn.querySelector('span').textContent = data.liked ? '❤️' : '🤍';
+                        document.getElementById('postLikeCount').textContent = data.likeCount;
+                    } else {
+                        const action = document.getElementById(`replyLike-${id}`);
+                        action.className = `reply-action ${data.liked ? 'liked' : ''}`;
+                        action.innerHTML = `${data.liked ? '❤️' : '🤍'} <span id="replyLikeCount-${id}">${data.likeCount}</span>`;
+                    }
+
+                    if (data.coinsAwarded > 0) {
+                        const balance = document.getElementById('coinBalance');
+                        if (balance) balance.textContent = parseInt(balance.textContent) + data.coinsAwarded;
+                    }
+                } else {
+                    alert(data.error || 'Failed to like');
+                }
+            } catch (e) {
+                console.error('Like error:', e);
+            }
+        }
+
+        async function submitReply() {
+            const content = document.getElementById('replyContent').value.trim();
+            if (!content) {
+                alert('Please enter a reply');
+                return;
+            }
+
+            const btn = document.getElementById('submitReplyBtn');
+            btn.disabled = true;
+            btn.textContent = 'Posting...';
+
+            try {
+                const response = await fetch(`/api/forums/posts/${postId}/replies`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ content })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('replyContent').value = '';
+                    const list = document.getElementById('repliesList');
+                    if (list.querySelector('p')) list.innerHTML = '';
+                    list.innerHTML += renderReply(data.reply);
+
+                    if (data.coinsAwarded > 0) {
+                        const balance = document.getElementById('coinBalance');
+                        if (balance) balance.textContent = parseInt(balance.textContent) + data.coinsAwarded;
+                    }
+                } else {
+                    alert(data.error || 'Failed to post reply');
+                }
+            } catch (e) {
+                console.error('Reply error:', e);
+                alert('Failed to post reply');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Post Reply';
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + ' minutes ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + ' hours ago';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + ' days ago';
+
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        checkAuth().then(loadPost);
+    </script>
+</body>
+</html>

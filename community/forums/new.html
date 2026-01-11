@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Post - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
+        .header-logo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+        .header-logo img { width: 120px; height: 120px; border-radius: 12px; }
+        .header-logo .tagline { font-size: 0.85rem; font-weight: 500; color: #ffd700; font-style: italic; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: #ffffff; }
+        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
+        .feature-tab { color: #ffd700 !important; }
+        .feature-tab:hover, .feature-tab.active { border-bottom-color: #ffd700 !important; }
+
+        .main-container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .breadcrumb { margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+        .breadcrumb a { color: var(--text-secondary); }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .page-header { margin-bottom: 1.5rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .coin-reward { display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.2); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.9rem; color: #b8860b; }
+
+        .form-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 1.5rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .form-select, .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-select:focus, .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--sixers-blue);
+        }
+        .form-textarea { min-height: 250px; resize: vertical; }
+
+        .team-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .team-btn { padding: 0.75rem 1.25rem; border: 2px solid var(--border-color); border-radius: 6px; background: var(--card-bg); cursor: pointer; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        .team-btn:hover { border-color: var(--text-muted); }
+        .team-btn.active { border-color: var(--text-primary); background: var(--text-primary); color: white; }
+        .team-btn.eagles.active { border-color: var(--eagles-green); background: var(--eagles-green); }
+        .team-btn.phillies.active { border-color: var(--phillies-red); background: var(--phillies-red); }
+        .team-btn.sixers.active { border-color: var(--sixers-blue); background: var(--sixers-blue); }
+        .team-btn.flyers.active { border-color: var(--flyers-orange); background: var(--flyers-orange); }
+
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+        .cancel-btn { padding: 0.75rem 1.5rem; background: transparent; border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .cancel-btn:hover { background: var(--dark-bg); }
+        .submit-btn { padding: 0.75rem 2rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .error-message { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .login-prompt { text-align: center; padding: 3rem; }
+        .login-prompt h2 { margin-bottom: 1rem; }
+        .login-btn { display: inline-block; padding: 0.75rem 2rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border-radius: 6px; font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .team-buttons { flex-direction: column; }
+            .form-actions { flex-direction: column; gap: 1rem; }
+            .submit-btn, .cancel-btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span class="tagline">For the Diehard Fan</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <a href="/login.html">Sign In</a>
+                <a href="/register.html" class="auth-btn">Join Free</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/" class="team-tab">All Teams</a>
+                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
+                <div class="nav-divider"></div>
+                <a href="/community/" class="team-tab feature-tab active">Community</a>
+                <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
+                <a href="/poker.html" class="team-tab feature-tab">Poker</a>
+                <a href="/predictions.html" class="team-tab feature-tab">Predictions</a>
+                <a href="/raffles/" class="team-tab feature-tab">Raffles</a>
+                <a href="/shop/" class="team-tab feature-tab">Shop</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="breadcrumb">
+            <a href="/community/">Community</a> &gt; <a href="/community/forums.html">Forums</a> &gt; <span>New Post</span>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">Create New Post</h1>
+            <div class="coin-reward">🪙 Earn 10 Diehard Dollars for posting</div>
+        </div>
+
+        <div id="mainContent">
+            <div class="login-prompt">
+                <h2>Please sign in to create a post</h2>
+                <a href="/login.html" class="login-btn">Sign In</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const teamEmojis = { eagles: '🦅', phillies: '⚾', sixers: '🏀', flyers: '🏒' };
+        const teamNames = { eagles: 'Eagles', phillies: 'Phillies', sixers: '76ers', flyers: 'Flyers' };
+        const teams = ['eagles', 'phillies', 'sixers', 'flyers'];
+
+        const params = new URLSearchParams(window.location.search);
+        let selectedTeam = params.get('team') || '';
+        let selectedCategory = '';
+        let categories = {};
+        let currentUser = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span class="coin-balance">${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    showForm();
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/forums/categories');
+                const data = await response.json();
+                categories = data.categories || {};
+                updateCategorySelect();
+            } catch (e) {
+                console.error('Failed to load categories:', e);
+            }
+        }
+
+        function showForm() {
+            document.getElementById('mainContent').innerHTML = `
+                <div class="form-card">
+                    <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+                    <div class="form-group">
+                        <label class="form-label">Select Team</label>
+                        <div class="team-buttons" id="teamButtons">
+                            ${teams.map(team => `
+                                <button type="button" class="team-btn ${team} ${selectedTeam === team ? 'active' : ''}" data-team="${team}">
+                                    <span>${teamEmojis[team]}</span>
+                                    ${teamNames[team]}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="categorySelect">Category</label>
+                        <select class="form-select" id="categorySelect" ${!selectedTeam ? 'disabled' : ''}>
+                            <option value="">Select a team first</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="postTitle">Title</label>
+                        <input type="text" class="form-input" id="postTitle" placeholder="Enter a descriptive title" maxlength="200">
+                        <p class="form-hint">5-200 characters</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="postContent">Content</label>
+                        <textarea class="form-textarea" id="postContent" placeholder="Share your thoughts, analysis, or questions..."></textarea>
+                        <p class="form-hint">Minimum 20 characters</p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="history.back()">Cancel</button>
+                        <button type="button" class="submit-btn" id="submitBtn" onclick="submitPost()">Create Post</button>
+                    </div>
+                </div>
+            `;
+
+            // Setup team buttons
+            document.querySelectorAll('.team-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.team-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedTeam = btn.dataset.team;
+                    updateCategorySelect();
+                });
+            });
+
+            loadCategories();
+        }
+
+        function updateCategorySelect() {
+            const select = document.getElementById('categorySelect');
+            if (!selectedTeam) {
+                select.disabled = true;
+                select.innerHTML = '<option value="">Select a team first</option>';
+                return;
+            }
+
+            const teamCategories = categories[selectedTeam] || [];
+            select.disabled = false;
+            select.innerHTML = '<option value="">Select a category</option>' +
+                teamCategories.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+        }
+
+        async function submitPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const categoryId = document.getElementById('categorySelect').value;
+
+            // Validate
+            const errors = [];
+            if (!selectedTeam) errors.push('Please select a team');
+            if (!categoryId) errors.push('Please select a category');
+            if (title.length < 5) errors.push('Title must be at least 5 characters');
+            if (content.length < 20) errors.push('Content must be at least 20 characters');
+
+            if (errors.length > 0) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = errors.join('. ');
+                errorDiv.style.display = 'block';
+                window.scrollTo(0, 0);
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            try {
+                const response = await fetch('/api/forums/posts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ categoryId, title, content })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.href = `/community/forums/post.html?id=${data.post.id}`;
+                } else {
+                    const errorDiv = document.getElementById('errorMessage');
+                    errorDiv.textContent = data.error || 'Failed to create post';
+                    errorDiv.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Create Post';
+                }
+            } catch (e) {
+                console.error('Submit error:', e);
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = 'Failed to create post. Please try again.';
+                errorDiv.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Create Post';
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>

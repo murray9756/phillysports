@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
+        .header-logo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+        .header-logo img { width: 120px; height: 120px; border-radius: 12px; }
+        .header-logo .tagline { font-size: 0.85rem; font-weight: 500; color: #ffd700; font-style: italic; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+        .team-tab:hover { color: #ffffff; }
+        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
+        .feature-tab { color: #ffd700 !important; }
+        .feature-tab:hover, .feature-tab.active { border-bottom-color: #ffd700 !important; }
+
+        .main-container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .page-header { text-align: center; margin-bottom: 2rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--text-secondary); }
+
+        .section-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+
+        .chat-rooms-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+
+        .chat-room-card { background: var(--card-bg); border-radius: 8px; border: 2px solid var(--border-color); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; transition: all 0.2s; }
+        .chat-room-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .chat-room-card.eagles { border-color: var(--eagles-green); }
+        .chat-room-card.phillies { border-color: var(--phillies-red); }
+        .chat-room-card.sixers { border-color: var(--sixers-blue); }
+        .chat-room-card.flyers { border-color: var(--flyers-orange); }
+
+        .room-icon { font-size: 2.5rem; }
+        .room-info { flex: 1; }
+        .room-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem; }
+        .room-desc { font-size: 0.85rem; color: var(--text-muted); }
+        .room-meta { display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); }
+        .room-meta span { display: flex; align-items: center; gap: 0.25rem; }
+
+        .group-chats { margin-top: 2rem; }
+        .group-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .group-item { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+        .group-item:hover { border-color: var(--text-muted); }
+        .group-name { font-weight: 600; }
+        .group-members { font-size: 0.85rem; color: var(--text-muted); }
+
+        .create-group-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border-radius: 6px; font-weight: 600; transition: opacity 0.2s; margin-top: 1rem; }
+        .create-group-btn:hover { opacity: 0.9; }
+
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); background: var(--card-bg); border-radius: 8px; border: 1px dashed var(--border-color); }
+
+        @media (max-width: 768px) {
+            .chat-rooms-grid { grid-template-columns: 1fr; }
+            .chat-room-card { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span class="tagline">For the Diehard Fan</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <a href="/login.html">Sign In</a>
+                <a href="/register.html" class="auth-btn">Join Free</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/" class="team-tab">All Teams</a>
+                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
+                <div class="nav-divider"></div>
+                <a href="/community/" class="team-tab feature-tab active">Community</a>
+                <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
+                <a href="/poker.html" class="team-tab feature-tab">Poker</a>
+                <a href="/predictions.html" class="team-tab feature-tab">Predictions</a>
+                <a href="/raffles/" class="team-tab feature-tab">Raffles</a>
+                <a href="/shop/" class="team-tab feature-tab">Shop</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Live Chat</h1>
+            <p class="page-subtitle">Real-time chat with fellow Philly sports fans</p>
+        </div>
+
+        <h2 class="section-title">Team Chat Rooms</h2>
+        <div class="chat-rooms-grid" id="teamRooms">
+            <div class="empty-state">Loading chat rooms...</div>
+        </div>
+
+        <div class="group-chats" id="groupChatsSection" style="display: none;">
+            <h2 class="section-title">Your Group Chats</h2>
+            <div class="group-list" id="groupRooms"></div>
+            <a href="/community/chat/new-group.html" class="create-group-btn">+ Create Group Chat</a>
+        </div>
+    </main>
+
+    <script>
+        const teamEmojis = { eagles: '🦅', phillies: '⚾', sixers: '🏀', flyers: '🏒' };
+        const teamNames = { eagles: 'Eagles', phillies: 'Phillies', sixers: '76ers', flyers: 'Flyers' };
+        let currentUser = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span class="coin-balance">${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadChatRooms() {
+            try {
+                const response = await fetch('/api/chat/rooms', { credentials: 'include' });
+                const data = await response.json();
+
+                // Render team rooms
+                const teamContainer = document.getElementById('teamRooms');
+                if (data.teamRooms && data.teamRooms.length > 0) {
+                    teamContainer.innerHTML = data.teamRooms.map(room => `
+                        <a href="/community/chat/room.html?id=${room.id}" class="chat-room-card ${room.team}">
+                            <span class="room-icon">${teamEmojis[room.team]}</span>
+                            <div class="room-info">
+                                <div class="room-name">${room.name}</div>
+                                <div class="room-desc">${room.description}</div>
+                                <div class="room-meta">
+                                    <span>💬 ${room.memberCount || 0} chatting</span>
+                                    ${room.lastMessageAt ? `<span>Last activity: ${formatTime(room.lastMessageAt)}</span>` : ''}
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+                }
+
+                // Render group rooms if logged in
+                if (currentUser && data.groupRooms) {
+                    const groupSection = document.getElementById('groupChatsSection');
+                    const groupContainer = document.getElementById('groupRooms');
+
+                    groupSection.style.display = 'block';
+
+                    if (data.groupRooms.length > 0) {
+                        groupContainer.innerHTML = data.groupRooms.map(room => `
+                            <a href="/community/chat/room.html?id=${room.id}" class="group-item">
+                                <div>
+                                    <div class="group-name">${escapeHtml(room.name)}</div>
+                                    <div class="group-members">${room.memberCount} members</div>
+                                </div>
+                                ${room.isOwner ? '<span style="font-size: 0.75rem; color: var(--text-muted);">Owner</span>' : ''}
+                            </a>
+                        `).join('');
+                    } else {
+                        groupContainer.innerHTML = '<div class="empty-state">No group chats yet. Create one to chat with friends!</div>';
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load chat rooms:', e);
+                document.getElementById('teamRooms').innerHTML = '<div class="empty-state">Failed to load chat rooms</div>';
+            }
+        }
+
+        function formatTime(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+
+            return date.toLocaleDateString();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        checkAuth().then(loadChatRooms);
+    </script>
+</body>
+</html>
