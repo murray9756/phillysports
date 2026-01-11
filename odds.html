@@ -108,6 +108,52 @@
         .retry-btn { margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
         .retry-btn:hover { opacity: 0.9; }
 
+        /* Clickable Odds */
+        .odds-cell.clickable { cursor: pointer; border: 2px solid transparent; }
+        .odds-cell.clickable:hover { background: #e0e8f0; border-color: var(--accent-color); }
+        .odds-cell.selected { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .odds-cell.selected .odds-price, .odds-cell.selected .odds-label { color: rgba(255,255,255,0.8); }
+
+        /* Bet Slip */
+        .bet-slip { position: fixed; bottom: 20px; right: 20px; width: 340px; max-height: 80vh; background: var(--card-bg); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
+        .bet-slip.active { display: flex; }
+        .bet-slip-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--accent-color); color: white; }
+        .bet-slip-header h3 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .bet-slip-count { background: white; color: var(--accent-color); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+        .bet-slip-clear { background: transparent; border: none; color: white; cursor: pointer; font-size: 0.8rem; font-weight: 500; opacity: 0.8; }
+        .bet-slip-clear:hover { opacity: 1; }
+        .bet-slip-legs { flex: 1; overflow-y: auto; max-height: 300px; }
+        .bet-slip-leg { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); position: relative; }
+        .bet-slip-leg:last-child { border-bottom: none; }
+        .bet-leg-remove { position: absolute; top: 0.5rem; right: 0.5rem; width: 20px; height: 20px; border: none; background: #f0f0f0; border-radius: 50%; cursor: pointer; font-size: 0.7rem; color: var(--text-muted); }
+        .bet-leg-remove:hover { background: #e0e0e0; color: var(--text-primary); }
+        .bet-leg-matchup { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .bet-leg-selection { font-weight: 600; font-size: 0.9rem; }
+        .bet-leg-odds { font-weight: 700; color: var(--accent-color); }
+        .bet-slip-footer { padding: 1rem; border-top: 1px solid var(--border-color); background: #f8f7f5; }
+        .wager-input-group { margin-bottom: 0.75rem; }
+        .wager-input-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem; }
+        .wager-input { width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-weight: 600; }
+        .wager-input:focus { outline: none; border-color: var(--accent-color); }
+        .payout-display { display: flex; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.85rem; }
+        .payout-label { color: var(--text-muted); }
+        .payout-value { font-weight: 700; color: var(--positive-odds); }
+        .place-bet-btn { width: 100%; padding: 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .place-bet-btn:hover { background: #0d47a1; }
+        .place-bet-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .bet-slip-login { text-align: center; padding: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+        .bet-slip-login a { color: var(--accent-color); font-weight: 600; }
+        .bet-type-toggle { display: flex; margin-bottom: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+        .bet-type-btn { flex: 1; padding: 0.5rem; border: none; background: transparent; cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.2s; }
+        .bet-type-btn.active { background: var(--accent-color); color: white; }
+
+        /* Bet Slip Toggle Button (mobile) */
+        .bet-slip-toggle { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--accent-color); color: white; border: none; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.25rem; z-index: 1000; }
+        .bet-slip-toggle .count { position: absolute; top: -5px; right: -5px; background: #ff5722; width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+        /* View Bets Link */
+        .view-bets-link { display: block; text-align: center; padding: 0.5rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--accent-color); font-weight: 600; }
+
         /* Warning Banner */
         .warning-banner { background: #fff3e0; color: #e65100; padding: 0.75rem 1rem; text-align: center; font-size: 0.85rem; font-weight: 500; display: none; }
 
@@ -141,6 +187,8 @@
             .odds-value { font-size: 0.8rem; }
             .date-selector { gap: 0.5rem; }
             .date-display { min-width: 120px; }
+            .bet-slip { width: calc(100% - 40px); right: 20px; left: 20px; bottom: 80px; }
+            .bet-slip-toggle.has-bets { display: flex; }
         }
     </style>
 </head>
@@ -203,10 +251,44 @@
         <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved. Odds for informational purposes only.</p>
     </footer>
 
+    <!-- Bet Slip -->
+    <div class="bet-slip" id="betSlip">
+        <div class="bet-slip-header">
+            <h3>Bet Slip <span class="bet-slip-count" id="betSlipCount">0</span></h3>
+            <button class="bet-slip-clear" onclick="clearBetSlip()">Clear All</button>
+        </div>
+        <div class="bet-slip-legs" id="betSlipLegs"></div>
+        <div class="bet-slip-footer" id="betSlipFooter">
+            <div class="bet-type-toggle" id="betTypeToggle" style="display: none;">
+                <button class="bet-type-btn active" data-type="single">Single</button>
+                <button class="bet-type-btn" data-type="parlay">Parlay</button>
+            </div>
+            <div class="wager-input-group">
+                <label for="wagerInput">Wager Amount (DD)</label>
+                <input type="number" id="wagerInput" class="wager-input" placeholder="Enter wager" min="1" oninput="updatePotentialPayout()">
+            </div>
+            <div class="payout-display">
+                <span class="payout-label">Potential Payout:</span>
+                <span class="payout-value" id="potentialPayout">0 DD</span>
+            </div>
+            <button class="place-bet-btn" id="placeBetBtn" onclick="placeBet()" disabled>Place Bet</button>
+            <a href="/bets.html" class="view-bets-link">View My Bets</a>
+        </div>
+    </div>
+
+    <!-- Mobile Bet Slip Toggle -->
+    <button class="bet-slip-toggle" id="betSlipToggle" onclick="toggleBetSlip()">
+        <span>&#129689;</span>
+        <span class="count" id="betSlipToggleCount">0</span>
+    </button>
+
     <script>
         let selectedSport = 'all';
         let selectedDate = new Date().toISOString().split('T')[0];
         let currentUser = null;
+        let betSlip = [];
+        let gamesData = {};
+        let betType = 'single';
 
         // Auth check
         async function checkAuth() {
@@ -216,9 +298,9 @@
                 if (data.user) {
                     currentUser = data.user;
                     document.getElementById('headerAuth').innerHTML = `
-                        <div class="coin-display" title="Diehard Dollars">
+                        <div class="coin-display" title="Diehard Dollars" id="coinDisplay">
                             <span>&#129689;</span>
-                            <span>${data.user.coinBalance || 0}</span>
+                            <span id="coinBalance">${data.user.coinBalance || 0}</span>
                         </div>
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
@@ -370,9 +452,19 @@
             const spread = game.odds?.spread;
             const moneyline = game.odds?.moneyline;
             const total = game.odds?.total;
+            const gameId = game.id;
+            const clickable = currentUser ? 'clickable' : '';
+
+            // Store game data for bet placement
+            gamesData[gameId] = game;
+
+            // Check if selections are in bet slip
+            const isSelected = (type, side) => {
+                return betSlip.some(b => b.gameId === gameId && b.type === type && b.side === side);
+            };
 
             return `
-                <div class="odds-card" data-sport="${game.sport}">
+                <div class="odds-card" data-sport="${game.sport}" data-game-id="${gameId}">
                     <div class="odds-card-header">
                         <span class="sport-badge ${game.sport}">${game.sport}</span>
                         <span class="game-time">${formatGameTime(game.commenceTime)}</span>
@@ -385,18 +477,24 @@
                                 <span class="team-name">${game.awayTeam}</span>
                             </div>
                             <div class="odds-cells">
-                                <div class="odds-cell spread" title="Spread">
+                                <div class="odds-cell spread ${clickable} ${isSelected('spread', 'away') ? 'selected' : ''}"
+                                     title="Bet Away Spread"
+                                     onclick="addToBetSlip('${gameId}', 'spread', 'away', ${spread?.away?.point || 'null'}, ${spread?.away?.price || 'null'})">
                                     ${spread ? `
                                         <span class="odds-value">${formatPoint(spread.away?.point)}</span>
                                         <span class="odds-price">${formatOdds(spread.away?.price)}</span>
                                     ` : '<span class="odds-na">-</span>'}
                                 </div>
-                                <div class="odds-cell moneyline" title="Moneyline">
+                                <div class="odds-cell moneyline ${clickable} ${isSelected('moneyline', 'away') ? 'selected' : ''}"
+                                     title="Bet Away Moneyline"
+                                     onclick="addToBetSlip('${gameId}', 'moneyline', 'away', null, ${moneyline?.away || 'null'})">
                                     ${moneyline ? `
                                         <span class="odds-value ${moneyline.away > 0 ? 'positive' : ''}">${formatOdds(moneyline.away)}</span>
                                     ` : '<span class="odds-na">-</span>'}
                                 </div>
-                                <div class="odds-cell total" title="Total">
+                                <div class="odds-cell total ${clickable} ${isSelected('total', 'over') ? 'selected' : ''}"
+                                     title="Bet Over"
+                                     onclick="addToBetSlip('${gameId}', 'total', 'over', ${total?.over?.point || 'null'}, ${total?.over?.price || 'null'})">
                                     ${total ? `
                                         <span class="odds-label">O</span>
                                         <span class="odds-value">${total.over?.point || '-'}</span>
@@ -413,18 +511,24 @@
                                 <span class="home-indicator">HOME</span>
                             </div>
                             <div class="odds-cells">
-                                <div class="odds-cell spread" title="Spread">
+                                <div class="odds-cell spread ${clickable} ${isSelected('spread', 'home') ? 'selected' : ''}"
+                                     title="Bet Home Spread"
+                                     onclick="addToBetSlip('${gameId}', 'spread', 'home', ${spread?.home?.point || 'null'}, ${spread?.home?.price || 'null'})">
                                     ${spread ? `
                                         <span class="odds-value">${formatPoint(spread.home?.point)}</span>
                                         <span class="odds-price">${formatOdds(spread.home?.price)}</span>
                                     ` : '<span class="odds-na">-</span>'}
                                 </div>
-                                <div class="odds-cell moneyline" title="Moneyline">
+                                <div class="odds-cell moneyline ${clickable} ${isSelected('moneyline', 'home') ? 'selected' : ''}"
+                                     title="Bet Home Moneyline"
+                                     onclick="addToBetSlip('${gameId}', 'moneyline', 'home', null, ${moneyline?.home || 'null'})">
                                     ${moneyline ? `
                                         <span class="odds-value ${moneyline.home > 0 ? 'positive' : ''}">${formatOdds(moneyline.home)}</span>
                                     ` : '<span class="odds-na">-</span>'}
                                 </div>
-                                <div class="odds-cell total" title="Total">
+                                <div class="odds-cell total ${clickable} ${isSelected('total', 'under') ? 'selected' : ''}"
+                                     title="Bet Under"
+                                     onclick="addToBetSlip('${gameId}', 'total', 'under', ${total?.under?.point || 'null'}, ${total?.under?.price || 'null'})">
                                     ${total ? `
                                         <span class="odds-label">U</span>
                                         <span class="odds-value">${total.under?.point || '-'}</span>
@@ -503,6 +607,279 @@
                 }
             }
         }
+
+        // Bet Slip Functions
+        function addToBetSlip(gameId, type, side, point, odds) {
+            if (!currentUser) {
+                alert('Please login to place bets');
+                return;
+            }
+
+            if (odds === null) return; // No odds available
+
+            const game = gamesData[gameId];
+            if (!game) return;
+
+            // Check if already in slip
+            const existingIndex = betSlip.findIndex(b =>
+                b.gameId === gameId && b.type === type && b.side === side
+            );
+
+            if (existingIndex >= 0) {
+                // Remove if already selected
+                betSlip.splice(existingIndex, 1);
+            } else {
+                // Check parlay limit
+                if (betSlip.length >= 10) {
+                    alert('Maximum 10 legs allowed in a parlay');
+                    return;
+                }
+
+                // Add to slip
+                betSlip.push({
+                    gameId,
+                    type,
+                    side,
+                    point,
+                    odds,
+                    game
+                });
+            }
+
+            updateBetSlipUI();
+            loadOdds(); // Re-render to update selected states
+        }
+
+        function updateBetSlipUI() {
+            const slip = document.getElementById('betSlip');
+            const legsContainer = document.getElementById('betSlipLegs');
+            const countEl = document.getElementById('betSlipCount');
+            const toggleCount = document.getElementById('betSlipToggleCount');
+            const toggleBtn = document.getElementById('betSlipToggle');
+            const betTypeToggle = document.getElementById('betTypeToggle');
+
+            // Update counts
+            countEl.textContent = betSlip.length;
+            toggleCount.textContent = betSlip.length;
+
+            // Show/hide bet slip
+            if (betSlip.length > 0) {
+                slip.classList.add('active');
+                toggleBtn.classList.add('has-bets');
+            } else {
+                slip.classList.remove('active');
+                toggleBtn.classList.remove('has-bets');
+            }
+
+            // Show bet type toggle for multiple legs
+            if (betSlip.length > 1) {
+                betTypeToggle.style.display = 'flex';
+            } else {
+                betTypeToggle.style.display = 'none';
+                betType = 'single';
+            }
+
+            // Render legs
+            legsContainer.innerHTML = betSlip.map((bet, index) => {
+                const game = bet.game;
+                const teamName = bet.side === 'home' ? game.homeTeam :
+                    bet.side === 'away' ? game.awayTeam :
+                    bet.side === 'over' ? 'Over' : 'Under';
+
+                let selectionText = '';
+                if (bet.type === 'spread') {
+                    selectionText = `${teamName} ${formatPoint(bet.point)}`;
+                } else if (bet.type === 'moneyline') {
+                    selectionText = `${teamName} ML`;
+                } else if (bet.type === 'total') {
+                    selectionText = `${teamName} ${bet.point}`;
+                }
+
+                return `
+                    <div class="bet-slip-leg">
+                        <button class="bet-leg-remove" onclick="removeFromBetSlip(${index})">&times;</button>
+                        <div class="bet-leg-matchup">${game.awayTeam} @ ${game.homeTeam}</div>
+                        <div class="bet-leg-selection">
+                            ${selectionText}
+                            <span class="bet-leg-odds">${formatOdds(bet.odds)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updatePotentialPayout();
+        }
+
+        function removeFromBetSlip(index) {
+            betSlip.splice(index, 1);
+            updateBetSlipUI();
+            loadOdds();
+        }
+
+        function clearBetSlip() {
+            betSlip = [];
+            updateBetSlipUI();
+            loadOdds();
+        }
+
+        function toggleBetSlip() {
+            const slip = document.getElementById('betSlip');
+            slip.classList.toggle('active');
+        }
+
+        function americanToDecimal(odds) {
+            if (odds > 0) {
+                return (odds / 100) + 1;
+            } else {
+                return (100 / Math.abs(odds)) + 1;
+            }
+        }
+
+        function updatePotentialPayout() {
+            const wagerInput = document.getElementById('wagerInput');
+            const payoutEl = document.getElementById('potentialPayout');
+            const placeBetBtn = document.getElementById('placeBetBtn');
+
+            const wager = parseFloat(wagerInput.value) || 0;
+
+            if (wager <= 0 || betSlip.length === 0) {
+                payoutEl.textContent = '0 DD';
+                placeBetBtn.disabled = true;
+                return;
+            }
+
+            let payout = 0;
+
+            if (betSlip.length === 1 || betType === 'single') {
+                // Single bet (use first leg)
+                const bet = betSlip[0];
+                payout = Math.round(wager * americanToDecimal(bet.odds) * 100) / 100;
+            } else {
+                // Parlay - multiply decimal odds
+                const combinedDecimal = betSlip.reduce((acc, bet) => {
+                    return acc * americanToDecimal(bet.odds);
+                }, 1);
+                payout = Math.round(wager * combinedDecimal * 100) / 100;
+            }
+
+            payoutEl.textContent = payout.toLocaleString() + ' DD';
+            placeBetBtn.disabled = false;
+        }
+
+        async function placeBet() {
+            if (!currentUser) {
+                alert('Please login to place bets');
+                return;
+            }
+
+            if (betSlip.length === 0) {
+                alert('Add selections to your bet slip first');
+                return;
+            }
+
+            const wagerInput = document.getElementById('wagerInput');
+            const wager = parseFloat(wagerInput.value) || 0;
+
+            if (wager <= 0) {
+                alert('Please enter a wager amount');
+                return;
+            }
+
+            const placeBetBtn = document.getElementById('placeBetBtn');
+            placeBetBtn.disabled = true;
+            placeBetBtn.textContent = 'Placing Bet...';
+
+            try {
+                let betData;
+
+                if (betSlip.length === 1 || betType === 'single') {
+                    // Single bet
+                    const bet = betSlip[0];
+                    betData = {
+                        betType: 'single',
+                        gameId: bet.gameId,
+                        sport: bet.game.sport,
+                        sportKey: bet.game.sportKey,
+                        homeTeam: bet.game.homeTeam,
+                        awayTeam: bet.game.awayTeam,
+                        commenceTime: bet.game.commenceTime,
+                        selection: {
+                            type: bet.type,
+                            side: bet.side,
+                            point: bet.point,
+                            odds: bet.odds
+                        },
+                        oddsSource: bet.game.bookmaker,
+                        wagerAmount: wager
+                    };
+                } else {
+                    // Parlay
+                    betData = {
+                        betType: 'parlay',
+                        legs: betSlip.map(bet => ({
+                            gameId: bet.gameId,
+                            sport: bet.game.sport,
+                            sportKey: bet.game.sportKey,
+                            homeTeam: bet.game.homeTeam,
+                            awayTeam: bet.game.awayTeam,
+                            commenceTime: bet.game.commenceTime,
+                            selection: {
+                                type: bet.type,
+                                side: bet.side,
+                                point: bet.point,
+                                odds: bet.odds
+                            }
+                        })),
+                        oddsSource: betSlip[0].game.bookmaker,
+                        wagerAmount: wager
+                    };
+                }
+
+                const response = await fetch('/api/bets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(betData)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to place bet');
+                }
+
+                // Update balance display
+                const coinBalanceEl = document.getElementById('coinBalance');
+                if (coinBalanceEl) {
+                    coinBalanceEl.textContent = result.newBalance;
+                }
+                currentUser.coinBalance = result.newBalance;
+
+                // Clear bet slip
+                betSlip = [];
+                wagerInput.value = '';
+                updateBetSlipUI();
+                loadOdds();
+
+                alert(`Bet placed! Potential payout: ${result.potentialPayout} DD`);
+
+            } catch (error) {
+                console.error('Place bet error:', error);
+                alert(error.message || 'Failed to place bet');
+            } finally {
+                placeBetBtn.disabled = false;
+                placeBetBtn.textContent = 'Place Bet';
+            }
+        }
+
+        // Initialize bet type toggle
+        document.querySelectorAll('.bet-type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.bet-type-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                betType = btn.dataset.type;
+                updatePotentialPayout();
+            });
+        });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {

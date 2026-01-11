@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bets | PhillySports.com</title>
+    <meta name="description" content="View your betting history, track pending bets, and see your winnings on PhillySports.com">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #1565c0;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --won-color: #2e7d32;
+            --lost-color: #c62828;
+            --pending-color: #f57c00;
+            --push-color: #757575;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        /* Page Hero */
+        .page-hero { background: linear-gradient(135deg, #1565c0, #0d47a1); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
+        .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { font-size: 1rem; opacity: 0.9; }
+
+        /* Stats Bar */
+        .stats-bar { display: flex; justify-content: center; gap: 2rem; padding: 1.5rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+        .stat-value.positive { color: var(--won-color); }
+        .stat-value.negative { color: var(--lost-color); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+        /* Filter Tabs */
+        .filter-tabs { display: flex; justify-content: center; gap: 0.5rem; padding: 1rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .filter-tab { padding: 0.5rem 1.25rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; border: 2px solid var(--border-color); background: transparent; }
+        .filter-tab:hover { border-color: var(--accent-color); }
+        .filter-tab.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .filter-tab .count { display: inline-block; background: rgba(0,0,0,0.1); padding: 0.1rem 0.4rem; border-radius: 10px; font-size: 0.7rem; margin-left: 0.25rem; }
+        .filter-tab.active .count { background: rgba(255,255,255,0.2); }
+
+        /* Main Container */
+        .main-container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Bet Card */
+        .bet-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 1rem; }
+        .bet-card-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #f8f7f5; border-bottom: 1px solid var(--border-color); }
+        .bet-type-badge { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--accent-color); color: white; }
+        .bet-type-badge.parlay { background: #7b1fa2; }
+        .bet-status { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 12px; }
+        .bet-status.pending { background: #fff3e0; color: var(--pending-color); }
+        .bet-status.won { background: #e8f5e9; color: var(--won-color); }
+        .bet-status.lost { background: #ffebee; color: var(--lost-color); }
+        .bet-status.push { background: #f5f5f5; color: var(--push-color); }
+        .bet-status.partial { background: #e3f2fd; color: var(--accent-color); }
+
+        /* Bet Content */
+        .bet-content { padding: 1rem; }
+        .bet-matchup { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .sport-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; padding: 0.15rem 0.4rem; border-radius: 3px; color: white; }
+        .sport-badge.NFL { background: #013369; }
+        .sport-badge.NBA { background: #C9082A; }
+        .sport-badge.MLB { background: #002D72; }
+        .sport-badge.NHL { background: #000000; }
+        .sport-badge.NCAAF { background: #8B4513; }
+        .sport-badge.NCAAB { background: #FF6B00; }
+        .bet-selection { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .bet-odds { font-weight: 700; color: var(--accent-color); }
+        .bet-game-time { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Bet Footer */
+        .bet-footer { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #f8f7f5; border-top: 1px solid var(--border-color); }
+        .bet-wager { font-size: 0.85rem; }
+        .bet-wager-label { color: var(--text-muted); }
+        .bet-wager-value { font-weight: 700; }
+        .bet-payout { font-size: 0.85rem; text-align: right; }
+        .bet-payout-label { color: var(--text-muted); }
+        .bet-payout-value { font-weight: 700; }
+        .bet-payout-value.won { color: var(--won-color); }
+
+        /* Parlay Legs */
+        .parlay-legs { border-top: 1px solid var(--border-color); }
+        .parlay-leg { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); background: #fafaf8; }
+        .parlay-leg:last-child { border-bottom: none; }
+        .parlay-leg-info { flex: 1; }
+        .parlay-leg-matchup { font-size: 0.75rem; color: var(--text-muted); }
+        .parlay-leg-selection { font-weight: 600; font-size: 0.85rem; }
+        .parlay-leg-status { font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 3px; text-transform: uppercase; }
+        .parlay-leg-status.pending { background: #fff3e0; color: var(--pending-color); }
+        .parlay-leg-status.won { background: #e8f5e9; color: var(--won-color); }
+        .parlay-leg-status.lost { background: #ffebee; color: var(--lost-color); }
+        .parlay-leg-status.push { background: #f5f5f5; color: var(--push-color); }
+
+        /* States */
+        .loading-state, .empty-state, .login-required { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state h3, .login-required h3 { color: var(--text-primary); margin-bottom: 0.5rem; }
+        .place-bet-btn { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity 0.2s; }
+        .place-bet-btn:hover { opacity: 0.9; }
+
+        /* Footer */
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 1.75rem; }
+            .stats-bar { gap: 1rem; }
+            .stat-value { font-size: 1.25rem; }
+            .main-container { padding: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .filter-tabs { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+            .filter-tab { flex-shrink: 0; }
+            .bet-selection { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <h1>My Bets</h1>
+        <p>Track your betting history and winnings</p>
+    </section>
+
+    <div class="stats-bar" id="statsBar" style="display: none;">
+        <div class="stat-item">
+            <div class="stat-value" id="totalWagered">0</div>
+            <div class="stat-label">Total Wagered</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="totalWon">0</div>
+            <div class="stat-label">Total Won</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="netProfit">0</div>
+            <div class="stat-label">Net Profit</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="winRate">0%</div>
+            <div class="stat-label">Win Rate</div>
+        </div>
+    </div>
+
+    <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-status="all">All <span class="count" id="countAll">0</span></button>
+        <button class="filter-tab" data-status="pending">Pending <span class="count" id="countPending">0</span></button>
+        <button class="filter-tab" data-status="won">Won <span class="count" id="countWon">0</span></button>
+        <button class="filter-tab" data-status="lost">Lost <span class="count" id="countLost">0</span></button>
+    </div>
+
+    <main class="main-container">
+        <div id="betsContent">
+            <div class="loading-state">Loading bets...</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let selectedStatus = 'all';
+        let betsData = [];
+        let summaryData = {};
+
+        // Auth check
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    document.getElementById('headerAuth').innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars">
+                            <span>&#129689;</span>
+                            <span>${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        window.location.href = '/';
+                    });
+
+                    // Load bets
+                    loadBets();
+                } else {
+                    showLoginRequired();
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                showLoginRequired();
+            }
+        }
+
+        function showLoginRequired() {
+            document.getElementById('betsContent').innerHTML = `
+                <div class="login-required">
+                    <h3>Login Required</h3>
+                    <p>Please login to view your betting history</p>
+                    <a href="/login.html" class="place-bet-btn">Login</a>
+                </div>
+            `;
+        }
+
+        // Load bets
+        async function loadBets() {
+            const container = document.getElementById('betsContent');
+            container.innerHTML = '<div class="loading-state">Loading bets...</div>';
+
+            try {
+                const response = await fetch(`/api/bets?status=${selectedStatus}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load bets');
+                }
+
+                betsData = data.bets;
+                summaryData = data.summary;
+
+                // Update stats
+                updateStats();
+
+                // Update tab counts
+                updateTabCounts();
+
+                // Render bets
+                if (betsData.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>No Bets Found</h3>
+                            <p>${selectedStatus === 'all' ? 'You haven\'t placed any bets yet' : `No ${selectedStatus} bets`}</p>
+                            <a href="/odds.html" class="place-bet-btn">Place a Bet</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderBets();
+
+            } catch (error) {
+                console.error('Load bets error:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Error Loading Bets</h3>
+                        <p>${error.message}</p>
+                        <button class="place-bet-btn" onclick="loadBets()">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('statsBar').style.display = 'flex';
+
+            document.getElementById('totalWagered').textContent = summaryData.totalWagered?.toLocaleString() || '0';
+
+            const totalWon = (summaryData.totalWon || 0) + (summaryData.totalPartial || 0) + (summaryData.totalPush || 0);
+            document.getElementById('totalWon').textContent = totalWon.toLocaleString();
+
+            const netProfit = summaryData.netProfit || 0;
+            const netEl = document.getElementById('netProfit');
+            netEl.textContent = (netProfit >= 0 ? '+' : '') + netProfit.toLocaleString();
+            netEl.classList.toggle('positive', netProfit > 0);
+            netEl.classList.toggle('negative', netProfit < 0);
+
+            const winRate = Math.round((summaryData.winRate || 0) * 100);
+            document.getElementById('winRate').textContent = winRate + '%';
+        }
+
+        function updateTabCounts() {
+            document.getElementById('countAll').textContent = summaryData.totalBets || 0;
+            document.getElementById('countPending').textContent = summaryData.pendingCount || 0;
+            document.getElementById('countWon').textContent = summaryData.wonCount || 0;
+            document.getElementById('countLost').textContent = summaryData.lostCount || 0;
+        }
+
+        function renderBets() {
+            const container = document.getElementById('betsContent');
+            container.innerHTML = betsData.map(bet => {
+                if (bet.betType === 'parlay') {
+                    return renderParlayCard(bet);
+                }
+                return renderSingleBetCard(bet);
+            }).join('');
+        }
+
+        function renderSingleBetCard(bet) {
+            const selection = bet.selection;
+            const teamName = selection.side === 'home' ? bet.homeTeam :
+                selection.side === 'away' ? bet.awayTeam :
+                selection.side === 'over' ? 'Over' : 'Under';
+
+            let selectionText = '';
+            if (selection.type === 'spread') {
+                selectionText = `${teamName} ${formatPoint(selection.point)}`;
+            } else if (selection.type === 'moneyline') {
+                selectionText = `${teamName} ML`;
+            } else if (selection.type === 'total') {
+                selectionText = `${teamName} ${selection.point}`;
+            }
+
+            const payoutLabel = bet.status === 'pending' ? 'To Win' :
+                bet.status === 'won' ? 'Won' :
+                bet.status === 'push' ? 'Returned' : 'Payout';
+            const payoutValue = bet.status === 'pending' ? bet.potentialPayout : bet.actualPayout;
+
+            return `
+                <div class="bet-card">
+                    <div class="bet-card-header">
+                        <span class="bet-type-badge">Single</span>
+                        <span class="bet-status ${bet.status}">${formatStatus(bet.status)}</span>
+                    </div>
+                    <div class="bet-content">
+                        <div class="bet-matchup">
+                            <span class="sport-badge ${bet.sport}">${bet.sport}</span>
+                            ${bet.awayTeam} @ ${bet.homeTeam}
+                        </div>
+                        <div class="bet-selection">
+                            ${selectionText}
+                            <span class="bet-odds">${formatOdds(selection.odds)}</span>
+                        </div>
+                        <div class="bet-game-time">${formatGameTime(bet.commenceTime)}</div>
+                    </div>
+                    <div class="bet-footer">
+                        <div class="bet-wager">
+                            <span class="bet-wager-label">Wager: </span>
+                            <span class="bet-wager-value">${bet.wagerAmount.toLocaleString()} DD</span>
+                        </div>
+                        <div class="bet-payout">
+                            <span class="bet-payout-label">${payoutLabel}: </span>
+                            <span class="bet-payout-value ${bet.status === 'won' ? 'won' : ''}">${payoutValue.toLocaleString()} DD</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderParlayCard(bet) {
+            const legCount = bet.legs.length;
+            const payoutLabel = bet.status === 'pending' ? 'To Win' :
+                bet.status === 'won' ? 'Won' :
+                bet.status === 'partial' ? 'Partial' :
+                bet.status === 'push' ? 'Returned' : 'Payout';
+            const payoutValue = bet.status === 'pending' ? bet.potentialPayout : bet.actualPayout;
+
+            const legsHtml = bet.legs.map(leg => {
+                const teamName = leg.selection.side === 'home' ? leg.homeTeam :
+                    leg.selection.side === 'away' ? leg.awayTeam :
+                    leg.selection.side === 'over' ? 'Over' : 'Under';
+
+                let selectionText = '';
+                if (leg.selection.type === 'spread') {
+                    selectionText = `${teamName} ${formatPoint(leg.selection.point)}`;
+                } else if (leg.selection.type === 'moneyline') {
+                    selectionText = `${teamName} ML`;
+                } else if (leg.selection.type === 'total') {
+                    selectionText = `${teamName} ${leg.selection.point}`;
+                }
+
+                return `
+                    <div class="parlay-leg">
+                        <div class="parlay-leg-info">
+                            <div class="parlay-leg-matchup">${leg.awayTeam} @ ${leg.homeTeam}</div>
+                            <div class="parlay-leg-selection">${selectionText} <span class="bet-odds">${formatOdds(leg.selection.odds)}</span></div>
+                        </div>
+                        <span class="parlay-leg-status ${leg.status}">${formatStatus(leg.status)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="bet-card">
+                    <div class="bet-card-header">
+                        <span class="bet-type-badge parlay">${legCount}-Leg Parlay</span>
+                        <span class="bet-status ${bet.status}">${formatStatus(bet.status)}</span>
+                    </div>
+                    <div class="parlay-legs">
+                        ${legsHtml}
+                    </div>
+                    <div class="bet-footer">
+                        <div class="bet-wager">
+                            <span class="bet-wager-label">Wager: </span>
+                            <span class="bet-wager-value">${bet.wagerAmount.toLocaleString()} DD</span>
+                        </div>
+                        <div class="bet-payout">
+                            <span class="bet-payout-label">${payoutLabel}: </span>
+                            <span class="bet-payout-value ${bet.status === 'won' || bet.status === 'partial' ? 'won' : ''}">${payoutValue.toLocaleString()} DD</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helpers
+        function formatOdds(value) {
+            if (value === undefined || value === null) return '-';
+            if (value > 0) return '+' + value;
+            return value.toString();
+        }
+
+        function formatPoint(value) {
+            if (value === undefined || value === null) return '-';
+            if (value > 0) return '+' + value;
+            return value.toString();
+        }
+
+        function formatStatus(status) {
+            const labels = {
+                'pending': 'Pending',
+                'won': 'Won',
+                'lost': 'Lost',
+                'push': 'Push',
+                'partial': 'Partial',
+                'voided': 'Voided'
+            };
+            return labels[status] || status;
+        }
+
+        function formatGameTime(isoString) {
+            const date = new Date(isoString);
+            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Tab handling
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                selectedStatus = tab.dataset.status;
+                loadBets();
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
