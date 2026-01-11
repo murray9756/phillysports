@@ -1081,21 +1081,6 @@
                 </div>
             </div>
 
-            <!-- Twitter Feed -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#120143;</span>
-                    <h3 class="widget-title">Philly Sports Feed</h3>
-                </div>
-                <div class="widget-content" style="padding:0;">
-                    <a class="twitter-timeline"
-                       data-height="400"
-                       data-theme="dark"
-                       data-chrome="noheader nofooter noborders transparent"
-                       href="https://twitter.com/i/lists/200245853">Philly Sports Tweets</a>
-                </div>
-            </div>
-
             <!-- Quick Links -->
             <div class="widget">
                 <div class="widget-header">
@@ -1551,27 +1536,6 @@
         setInterval(loadScores, 5 * 60 * 1000);
         setInterval(loadSchedule, 5 * 60 * 1000);
         setInterval(loadNews, 5 * 60 * 1000);
-    </script>
-    <!-- Twitter Widget -->
-    <script>
-        window.twttr = (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0],
-                t = window.twttr || {};
-            if (d.getElementById(id)) return t;
-            js = d.createElement(s);
-            js.id = id;
-            js.src = "https://platform.twitter.com/widgets.js";
-            fjs.parentNode.insertBefore(js, fjs);
-            t._e = [];
-            t.ready = function(f) {
-                t._e.push(f);
-            };
-            return t;
-        }(document, "script", "twitter-wjs"));
-
-        twttr.ready(function(twttr) {
-            twttr.widgets.load();
-        });
     </script>
 </body>
 </html>
