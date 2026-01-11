@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhillySports.com - Philadelphia Sports News, Scores & More</title>
-    <meta name="description" content="Your Philadelphia sports portal. Eagles, Phillies, 76ers, Flyers, and Union news, scores, schedules, and trivia.">
+    <meta name="description" content="Your Philadelphia sports portal. Eagles, Phillies, 76ers, and Flyers news, scores, schedules, and trivia.">
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -956,7 +956,6 @@
                 <a href="/phillies" class="team-tab" data-team="phillies">Phillies</a>
                 <a href="/sixers" class="team-tab" data-team="sixers">76ers</a>
                 <a href="/flyers" class="team-tab" data-team="flyers">Flyers</a>
-                <a href="/union" class="team-tab" data-team="union">Union</a>
             </div>
         </nav>
     </header>
@@ -1104,11 +1103,8 @@
                     <a href="https://www.nba.com/sixers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
                         <span class="team-dot dot-sixers"></span> 76ers Official
                     </a>
-                    <a href="https://www.nhl.com/flyers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                    <a href="https://www.nhl.com/flyers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">
                         <span class="team-dot dot-flyers"></span> Flyers Official
-                    </a>
-                    <a href="https://www.philadelphiaunion.com" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">
-                        <span class="team-dot dot-union"></span> Union Official
                     </a>
                 </div>
             </div>
@@ -1194,13 +1190,7 @@
             { team: 'Flyers', color: '#F74902', question: 'What nickname were the 1970s Flyers known by?', options: ['The Orange Crush', 'The Broad Street Bullies', 'The Philly Fighters', 'The Ice Warriors'], correct: 1 },
             { team: 'Flyers', color: '#F74902', question: 'Who is the Flyers all-time leading scorer?', options: ['Eric Lindros', 'Bobby Clarke', 'Bill Barber', 'Claude Giroux'], correct: 1 },
             { team: 'Flyers', color: '#F74902', question: 'In what year were the Flyers founded?', options: ['1965', '1967', '1970', '1972'], correct: 1 },
-            { team: 'Flyers', color: '#F74902', question: 'Who was the Flyers goalie for both Stanley Cup wins?', options: ['Ron Hextall', 'Bernie Parent', 'Pelle Lindbergh', 'Brian Boucher'], correct: 1 },
-            // Union
-            { team: 'Union', color: '#B49759', question: 'In what year did the Philadelphia Union join MLS?', options: ['2008', '2010', '2012', '2015'], correct: 1 },
-            { team: 'Union', color: '#B49759', question: 'What is the name of the Union home stadium?', options: ['PPL Park', 'Talen Energy Stadium', 'Subaru Park', 'Union Field'], correct: 2 },
-            { team: 'Union', color: '#B49759', question: 'In what year did the Union win their first Supporters Shield?', options: ['2019', '2020', '2021', '2022'], correct: 1 },
-            { team: 'Union', color: '#B49759', question: 'Who is the Union all-time leading goal scorer?', options: ['Alejandro Bedoya', 'Sebastien Le Toux', 'C.J. Sapong', 'Kacper Przybylko'], correct: 1 },
-            { team: 'Union', color: '#B49759', question: 'What city is Subaru Park located in?', options: ['Philadelphia', 'Chester', 'Camden', 'Wilmington'], correct: 1 }
+            { team: 'Flyers', color: '#F74902', question: 'Who was the Flyers goalie for both Stanley Cup wins?', options: ['Ron Hextall', 'Bernie Parent', 'Pelle Lindbergh', 'Brian Boucher'], correct: 1 }
         ];
 
         let currentTrivia = null;
@@ -1282,8 +1272,7 @@
             'Eagles': 'dot-eagles',
             '76ers': 'dot-sixers',
             'Phillies': 'dot-phillies',
-            'Flyers': 'dot-flyers',
-            'Union': 'dot-union'
+            'Flyers': 'dot-flyers'
         };
 
         function formatGameDate(dateString) {
@@ -1393,8 +1382,7 @@
             'Eagles': '&#127944;',
             '76ers': '&#127936;',
             'Phillies': '&#9918;',
-            'Flyers': '&#127954;',
-            'Union': '&#9917;'
+            'Flyers': '&#127954;'
         };
 
         const sourceLogos = {
