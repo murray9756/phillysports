@@ -409,6 +409,89 @@
             cursor: pointer;
         }
 
+        /* Tournament Status Bar */
+        .tournament-status-bar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--poker-green), #2a7a4d);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.85rem;
+            z-index: 90;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .tournament-status-bar.hidden { display: none; }
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .status-label {
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+        .status-value {
+            color: white;
+            font-weight: 700;
+        }
+        .blind-timer {
+            background: rgba(0,0,0,0.3);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+        .blind-timer.warning { color: #ffcc00; }
+        .blind-timer.critical { color: #ff4444; animation: pulse 1s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Tournament Complete Overlay */
+        .tournament-complete-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 250;
+            align-items: center;
+            justify-content: center;
+        }
+        .tournament-complete-overlay.show { display: flex; }
+        .tournament-complete-content {
+            background: linear-gradient(135deg, var(--card-bg), #1a1a1a);
+            border: 2px solid var(--gold);
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            text-align: center;
+            max-width: 500px;
+        }
+        .tournament-complete-content h2 {
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .prize-list {
+            margin: 1.5rem 0;
+        }
+        .prize-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .prize-place { color: var(--text-secondary); }
+        .prize-amount { color: var(--gold); font-weight: 700; }
+        .prize-item.first-place { font-size: 1.2rem; }
+        .prize-item.first-place .prize-place { color: var(--gold); }
+
         /* Test Controls */
         .test-panel {
             position: fixed;
@@ -539,8 +622,42 @@
         </div>
     </header>
 
+    <!-- Tournament Status Bar -->
+    <div class="tournament-status-bar hidden" id="tournamentStatusBar">
+        <div class="status-item">
+            <span class="status-label">Next Level In</span>
+            <span class="status-value blind-timer" id="blindTimer">5:00</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Level</span>
+            <span class="status-value" id="blindLevel">1</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Blinds</span>
+            <span class="status-value" id="currentBlinds">10/20</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Ante</span>
+            <span class="status-value" id="currentAnte">0</span>
+        </div>
+        <div class="status-item">
+            <span class="status-label">Players Left</span>
+            <span class="status-value" id="playersLeft">0</span>
+        </div>
+    </div>
+
+    <!-- Tournament Complete Overlay -->
+    <div class="tournament-complete-overlay" id="tournamentCompleteOverlay">
+        <div class="tournament-complete-content">
+            <h2>Tournament Complete!</h2>
+            <p id="tournamentCompleteName" style="color: var(--text-secondary); margin-bottom: 1rem;"></p>
+            <div class="prize-list" id="prizeList"></div>
+            <button class="winner-btn" onclick="closeTournamentComplete()">Return to Lobby</button>
+        </div>
+    </div>
+
     <!-- Game Container -->
-    <div class="game-container">
+    <div class="game-container" style="margin-top: 40px;">
         <div class="table-container" id="tableContainer">
             <!-- Poker Table -->
             <div class="poker-table">
@@ -696,6 +813,9 @@
                 tableChannel.bind('community-cards', handleCommunityCards);
                 tableChannel.bind('hand-complete', handleHandComplete);
                 tableChannel.bind('pot-update', handlePotUpdate);
+                tableChannel.bind('blind-increase', handleBlindIncrease);
+                tableChannel.bind('player-eliminated', handlePlayerEliminated);
+                tableChannel.bind('tournament-complete', handleTournamentComplete);
 
                 // Subscribe to private channel for hole cards
                 if (currentUser) {
@@ -770,6 +890,158 @@
             }
         }
 
+        function handleBlindIncrease(data) {
+            console.log('Blind increase:', data);
+            // Update UI immediately
+            document.getElementById('blindLevel').textContent = data.level;
+            document.getElementById('currentBlinds').textContent = `${data.smallBlind}/${data.bigBlind}`;
+            document.getElementById('currentAnte').textContent = data.ante || 0;
+            document.getElementById('blindsDisplay').textContent = `${data.smallBlind}/${data.bigBlind}`;
+            document.getElementById('levelDisplay').textContent = data.level;
+
+            // Flash the status bar
+            const statusBar = document.getElementById('tournamentStatusBar');
+            statusBar.style.background = 'linear-gradient(90deg, #ff6600, #cc4400)';
+            setTimeout(() => {
+                statusBar.style.background = 'linear-gradient(90deg, var(--poker-green), #2a7a4d)';
+            }, 2000);
+
+            loadGameState(); // Refresh for new timer
+        }
+
+        function handlePlayerEliminated(data) {
+            console.log('Player eliminated:', data);
+            document.getElementById('playersLeft').textContent = data.remainingPlayers;
+
+            // Could show a notification here
+            loadGameState();
+        }
+
+        function handleTournamentComplete(data) {
+            console.log('Tournament complete:', data);
+            showTournamentComplete(data);
+        }
+
+        // Tournament status functions
+        let blindTimerInterval = null;
+        let nextBlindTime = null;
+
+        function updateTournamentStatus() {
+            if (!gameState || !gameState.table || !gameState.table.tournament) {
+                document.getElementById('tournamentStatusBar').classList.add('hidden');
+                return;
+            }
+
+            const tournament = gameState.table.tournament;
+            const statusBar = document.getElementById('tournamentStatusBar');
+            statusBar.classList.remove('hidden');
+
+            // Update blind level info
+            const currentBlinds = tournament.blindStructure?.[tournament.currentBlindLevel || 0];
+            if (currentBlinds) {
+                document.getElementById('blindLevel').textContent = (tournament.currentBlindLevel || 0) + 1;
+                document.getElementById('currentBlinds').textContent = `${currentBlinds.smallBlind}/${currentBlinds.bigBlind}`;
+                document.getElementById('currentAnte').textContent = currentBlinds.ante || 0;
+            }
+
+            // Update players left
+            document.getElementById('playersLeft').textContent = tournament.registeredCount || 0;
+
+            // Start blind timer if we have next blind time
+            if (tournament.nextBlindIncrease) {
+                nextBlindTime = new Date(tournament.nextBlindIncrease);
+                if (!blindTimerInterval) {
+                    blindTimerInterval = setInterval(updateBlindTimer, 1000);
+                }
+                updateBlindTimer();
+            }
+        }
+
+        function updateBlindTimer() {
+            if (!nextBlindTime) return;
+
+            const now = new Date();
+            const diff = Math.max(0, nextBlindTime - now);
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+
+            const timerEl = document.getElementById('blindTimer');
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            // Color coding
+            timerEl.classList.remove('warning', 'critical');
+            if (diff < 30000) {
+                timerEl.classList.add('critical');
+            } else if (diff < 60000) {
+                timerEl.classList.add('warning');
+            }
+
+            // Check blinds when timer hits zero
+            if (diff === 0) {
+                checkBlinds();
+            }
+        }
+
+        async function checkBlinds() {
+            if (!gameState || !gameState.table || !gameState.table.tournamentId) return;
+
+            try {
+                const response = await fetch('/api/poker/tournaments/check-blinds', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tournamentId: gameState.table.tournamentId })
+                });
+                const data = await response.json();
+
+                if (data.advanced) {
+                    // Blinds advanced, update UI
+                    document.getElementById('blindLevel').textContent = data.newLevel + 1;
+                    document.getElementById('currentBlinds').textContent =
+                        `${data.newBlinds.smallBlind}/${data.newBlinds.bigBlind}`;
+                    document.getElementById('currentAnte').textContent = data.newBlinds.ante || 0;
+                }
+
+                if (data.timeUntilNextLevel) {
+                    nextBlindTime = new Date(Date.now() + data.timeUntilNextLevel * 1000);
+                }
+            } catch (e) {
+                console.error('Check blinds error:', e);
+            }
+        }
+
+        function showTournamentComplete(data) {
+            const overlay = document.getElementById('tournamentCompleteOverlay');
+            document.getElementById('tournamentCompleteName').textContent = data.tournamentName || 'Tournament';
+
+            const prizeList = document.getElementById('prizeList');
+            prizeList.innerHTML = '';
+
+            if (data.winners) {
+                for (const winner of data.winners) {
+                    const isFirst = winner.place === 1;
+                    prizeList.innerHTML += `
+                        <div class="prize-item ${isFirst ? 'first-place' : ''}">
+                            <span class="prize-place">${getOrdinal(winner.place)} Place</span>
+                            <span class="prize-amount">${winner.prize} coins</span>
+                        </div>
+                    `;
+                }
+            }
+
+            overlay.classList.add('show');
+        }
+
+        function closeTournamentComplete() {
+            document.getElementById('tournamentCompleteOverlay').classList.remove('show');
+            window.location.href = '/poker.html';
+        }
+
+        function getOrdinal(n) {
+            const s = ['th', 'st', 'nd', 'rd'];
+            const v = n % 100;
+            return n + (s[(v - 20) % 10] || s[v] || s[0]);
+        }
+
         async function checkAuth() {
             try {
                 const response = await fetch('/api/auth/me');
@@ -798,6 +1070,7 @@
                 gameState = data;
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
+                updateTournamentStatus();
 
             } catch (e) {
                 console.error('Error loading game state:', e);
@@ -1085,6 +1358,7 @@
         window.addEventListener('beforeunload', () => {
             if (pollInterval) clearInterval(pollInterval);
             if (botLoopInterval) clearInterval(botLoopInterval);
+            if (blindTimerInterval) clearInterval(blindTimerInterval);
             if (pusher) {
                 pusher.disconnect();
             }

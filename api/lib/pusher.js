@@ -89,7 +89,9 @@ export const PUSHER_EVENTS = {
   NEW_HAND: 'new-hand',
   PLAYER_JOINED: 'player-joined',
   PLAYER_LEFT: 'player-left',
+  PLAYER_ELIMINATED: 'player-eliminated',
   BLIND_INCREASE: 'blind-increase',
+  TOURNAMENT_COMPLETE: 'tournament-complete',
 
   // Private events (per user)
   HOLE_CARDS: 'hole-cards',

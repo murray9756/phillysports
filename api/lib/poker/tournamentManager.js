@@ -6,6 +6,7 @@ import { getCollection } from '../mongodb.js';
 import { addCoins } from '../coins.js';
 import { startNewHand } from './gameEngine.js';
 import { TOURNAMENT_STATUS, GAME_STATUS, DEFAULTS } from './constants.js';
+import { broadcastTableUpdate, PUSHER_EVENTS } from '../pusher.js';
 
 /**
  * Start a tournament (create tables and seat players)
@@ -174,6 +175,14 @@ export async function eliminatePlayer(tournamentId, playerId) {
     }
   );
 
+  // Find the table and get player info before removing
+  const playerTable = await tables.findOne({
+    tournamentId: new ObjectId(tournamentId),
+    'seats.playerId': new ObjectId(playerId)
+  });
+  const playerSeat = playerTable?.seats.find(s => s.playerId?.toString() === playerId);
+  const playerUsername = playerSeat?.username;
+
   // Remove from table
   await tables.updateOne(
     {
@@ -189,6 +198,18 @@ export async function eliminatePlayer(tournamentId, playerId) {
       }
     }
   );
+
+  // Broadcast elimination to all tournament tables
+  if (tournament.tableIds) {
+    for (const tableId of tournament.tableIds) {
+      broadcastTableUpdate(tableId.toString(), PUSHER_EVENTS.PLAYER_ELIMINATED, {
+        playerId,
+        username: playerUsername,
+        position: remainingPlayers,
+        remainingPlayers: remainingPlayers - 1
+      });
+    }
+  }
 
   // Check if tournament is complete
   if (remainingPlayers <= tournament.prizeStructure.length) {
@@ -340,6 +361,18 @@ export async function distributePrizes(tournamentId) {
     { tournamentId: tournament._id },
     { $set: { status: GAME_STATUS.FINISHED } }
   );
+
+  // Broadcast tournament complete to all tables
+  if (tournament.tableIds) {
+    for (const tableId of tournament.tableIds) {
+      broadcastTableUpdate(tableId.toString(), PUSHER_EVENTS.TOURNAMENT_COMPLETE, {
+        tournamentId: tournament._id.toString(),
+        tournamentName: tournament.name,
+        winners: prizeWinners,
+        prizePool: tournament.prizePool
+      });
+    }
+  }
 
   return prizeWinners;
 }

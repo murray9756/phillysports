@@ -7,6 +7,7 @@ import { createDeck, shuffleDeck, dealHoleCards, dealFlop, dealTurn, dealRiver }
 import { evaluateHand, compareHands, findWinners } from './evaluator.js';
 import { HAND_STATUS, ACTIONS, DEFAULTS } from './constants.js';
 import { broadcastTableUpdate, sendPrivateCards, PUSHER_EVENTS } from '../pusher.js';
+import { eliminatePlayer, checkTournamentComplete } from './tournamentManager.js';
 
 /**
  * Initialize a new hand at a table
@@ -331,6 +332,22 @@ export async function processAction(handId, playerId, action, amount = 0) {
       pot: hand.pot,
       communityCards: hand.communityCards
     });
+
+    // Check for eliminated players (0 chips) in tournament play
+    if (hand.tournamentId) {
+      const eliminatedPlayers = hand.players.filter(p => p.chipStackCurrent <= 0);
+      for (const eliminated of eliminatedPlayers) {
+        try {
+          await eliminatePlayer(hand.tournamentId.toString(), eliminated.playerId.toString());
+          console.log(`Player ${eliminated.playerId} eliminated from tournament`);
+        } catch (e) {
+          console.error('Elimination error:', e);
+        }
+      }
+
+      // Check if tournament is complete
+      await checkTournamentComplete(hand.tournamentId.toString());
+    }
   }
 
   return {
