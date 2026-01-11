@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffle | PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); }
+        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
+        .header-logo img { width: 60px; height: 60px; border-radius: 12px; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; }
+        .header-auth .auth-btn { background: var(--accent-color); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+
+        .breadcrumb { margin-bottom: 1rem; }
+        .breadcrumb a { color: var(--accent-color); font-size: 0.9rem; }
+
+        .raffle-detail { display: grid; grid-template-columns: 1fr 350px; gap: 2rem; }
+        @media (max-width: 768px) { .raffle-detail { grid-template-columns: 1fr; } }
+
+        .raffle-image { width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--accent-color), #333); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 5rem; overflow: hidden; }
+        .raffle-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        .raffle-info { margin-top: 1.5rem; }
+        .raffle-team { display: inline-block; padding: 0.25rem 0.75rem; background: var(--accent-color); color: #fff; font-size: 0.75rem; font-weight: 600; border-radius: 4px; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .raffle-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .raffle-value { color: var(--text-muted); font-size: 1rem; margin-bottom: 1rem; }
+        .raffle-description { color: var(--text-secondary); margin-bottom: 1rem; white-space: pre-wrap; }
+
+        .purchase-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; position: sticky; top: 1.5rem; }
+        .purchase-card h3 { font-size: 1.1rem; margin-bottom: 1rem; text-align: center; }
+
+        .countdown-box { text-align: center; padding: 1rem; background: #fef3c7; border-radius: 8px; margin-bottom: 1rem; }
+        .countdown-box.urgent { background: #fee2e2; }
+        .countdown-label { font-size: 0.8rem; color: var(--text-muted); }
+        .countdown-time { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .stat-box { text-align: center; padding: 0.75rem; background: var(--dark-bg); border-radius: 6px; }
+        .stat-value { font-size: 1.25rem; font-weight: 700; }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); }
+
+        .quantity-selector { margin-bottom: 1rem; }
+        .quantity-selector label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .quantity-row { display: flex; align-items: center; gap: 0.5rem; }
+        .qty-btn { width: 40px; height: 40px; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 6px; font-size: 1.25rem; cursor: pointer; }
+        .qty-btn:hover { background: var(--dark-bg); }
+        .qty-input { flex: 1; height: 40px; border: 1px solid var(--border-color); border-radius: 6px; text-align: center; font-size: 1rem; font-weight: 600; }
+
+        .total-row { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--dark-bg); border-radius: 6px; margin-bottom: 1rem; }
+        .total-label { font-weight: 500; }
+        .total-value { font-size: 1.25rem; font-weight: 700; color: var(--accent-color); }
+
+        .btn { width: 100%; padding: 1rem; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        .btn-primary { background: var(--accent-color); color: #fff; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background: var(--border-color); color: var(--text-primary); margin-top: 0.5rem; }
+
+        .user-balance { text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+
+        .your-tickets { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+        .your-tickets h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .ticket-list { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+        .ticket-badge { display: inline-block; padding: 0.2rem 0.5rem; background: var(--dark-bg); border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .ticket-badge.winner { background: #fef3c7; color: #92400e; }
+
+        .winner-banner { text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 8px; margin-bottom: 1rem; }
+        .winner-banner h3 { font-size: 1.25rem; margin-bottom: 0.5rem; }
+        .winner-name { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+
+        .message { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; text-align: center; }
+        .message.success { background: #dcfce7; color: #166534; }
+        .message.error { background: #fee2e2; color: #991b1b; }
+
+        .login-prompt { text-align: center; padding: 1rem; background: var(--dark-bg); border-radius: 8px; }
+        .login-prompt a { color: var(--accent-color); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/raffles/">← Back to Raffles</a>
+        </div>
+
+        <div id="messageArea"></div>
+
+        <div id="raffleContent">
+            <p>Loading raffle...</p>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let raffle = null;
+        let userTickets = [];
+        let quantity = 1;
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const raffleId = urlParams.get('id');
+
+        async function loadRaffle() {
+            if (!raffleId) {
+                document.getElementById('raffleContent').innerHTML = '<p>Invalid raffle ID</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/raffles/${raffleId}`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    document.getElementById('raffleContent').innerHTML = `<p>${data.error || 'Raffle not found'}</p>`;
+                    return;
+                }
+
+                raffle = data.raffle;
+                userTickets = data.userTickets || [];
+                document.title = `${raffle.title} | PhillySports.com`;
+                renderRaffle();
+            } catch (e) {
+                document.getElementById('raffleContent').innerHTML = '<p>Failed to load raffle</p>';
+            }
+        }
+
+        function renderRaffle() {
+            const container = document.getElementById('raffleContent');
+            const img = raffle.images?.[0]?.url;
+            const isCompleted = raffle.status === 'completed';
+            const isCancelled = raffle.status === 'cancelled';
+            const isActive = raffle.status === 'active';
+
+            let purchaseSection = '';
+
+            if (isCompleted) {
+                purchaseSection = `
+                    <div class="winner-banner">
+                        <h3>🏆 Winner Announced!</h3>
+                        <div class="winner-name">${escapeHtml(raffle.winnerUsername || 'Unknown')}</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-value">${raffle.totalTicketsSold || 0}</div>
+                            <div class="stat-label">Total Tickets</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${raffle.ticketPrice} DD</div>
+                            <div class="stat-label">Per Ticket</div>
+                        </div>
+                    </div>
+                `;
+            } else if (isCancelled) {
+                purchaseSection = `
+                    <div class="message error">This raffle was cancelled. All tickets have been refunded.</div>
+                `;
+            } else if (isActive) {
+                const countdown = getCountdown(raffle.drawDate);
+                purchaseSection = `
+                    <div class="countdown-box ${countdown.urgent ? 'urgent' : ''}">
+                        <div class="countdown-label">Drawing in</div>
+                        <div class="countdown-time" id="countdownTime">${countdown.text}</div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <div class="stat-value">${raffle.totalTicketsSold || 0}</div>
+                            <div class="stat-label">Tickets Sold</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${raffle.ticketPrice} DD</div>
+                            <div class="stat-label">Per Ticket</div>
+                        </div>
+                    </div>
+                    ${currentUser ? `
+                        <div class="quantity-selector">
+                            <label>Number of Tickets</label>
+                            <div class="quantity-row">
+                                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                                <input type="number" class="qty-input" id="qtyInput" value="1" min="1" onchange="updateQty()">
+                                <button class="qty-btn" onclick="changeQty(1)">+</button>
+                            </div>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">Total Cost</span>
+                            <span class="total-value" id="totalCost">${raffle.ticketPrice} DD</span>
+                        </div>
+                        <button class="btn btn-primary" id="purchaseBtn" onclick="purchaseTickets()">
+                            Buy Tickets
+                        </button>
+                        <div class="user-balance">
+                            Your balance: <strong id="userBalance">${currentUser.coinBalance || 0}</strong> Diehard Dollars
+                        </div>
+                    ` : `
+                        <div class="login-prompt">
+                            <a href="/login.html">Login</a> or <a href="/register.html">Sign up</a> to purchase tickets
+                        </div>
+                    `}
+                `;
+            } else {
+                purchaseSection = `<div class="message">This raffle is not currently active.</div>`;
+            }
+
+            // Show user's tickets if they have any
+            let ticketsSection = '';
+            if (userTickets.length > 0) {
+                ticketsSection = `
+                    <div class="your-tickets">
+                        <h4>Your Tickets (${userTickets.length})</h4>
+                        <div class="ticket-list">
+                            ${userTickets.map(t => `
+                                <span class="ticket-badge ${t.isWinner ? 'winner' : ''}">#${t.ticketNumber}${t.isWinner ? ' 🏆' : ''}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="raffle-detail">
+                    <div class="raffle-main">
+                        <div class="raffle-image">
+                            ${img ? `<img src="${img}" alt="${escapeHtml(raffle.title)}">` : '🎁'}
+                        </div>
+                        <div class="raffle-info">
+                            ${raffle.team ? `<span class="raffle-team">${raffle.team}</span>` : ''}
+                            <h1 class="raffle-title">${escapeHtml(raffle.title)}</h1>
+                            ${raffle.estimatedValue ? `<p class="raffle-value">Estimated Value: $${raffle.estimatedValue.toLocaleString()}</p>` : ''}
+                            ${raffle.description ? `<p class="raffle-description">${escapeHtml(raffle.description)}</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="raffle-sidebar">
+                        <div class="purchase-card">
+                            <h3>Enter to Win</h3>
+                            ${purchaseSection}
+                            ${ticketsSection}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Update countdown every second if active
+            if (isActive) {
+                setInterval(() => {
+                    const el = document.getElementById('countdownTime');
+                    if (el) {
+                        const countdown = getCountdown(raffle.drawDate);
+                        el.textContent = countdown.text;
+                        el.parentElement.classList.toggle('urgent', countdown.urgent);
+                    }
+                }, 1000);
+            }
+        }
+
+        function getCountdown(drawDate) {
+            const now = new Date();
+            const draw = new Date(drawDate);
+            const diff = draw - now;
+
+            if (diff <= 0) return { text: 'Drawing soon!', urgent: true };
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((diff % (1000 * 60)) / 1000);
+            const days = Math.floor(hours / 24);
+
+            if (days > 0) {
+                return { text: `${days}d ${hours % 24}h ${mins}m`, urgent: false };
+            } else if (hours > 0) {
+                return { text: `${hours}h ${mins}m ${secs}s`, urgent: hours < 2 };
+            } else {
+                return { text: `${mins}m ${secs}s`, urgent: true };
+            }
+        }
+
+        function changeQty(delta) {
+            const input = document.getElementById('qtyInput');
+            let val = parseInt(input.value) || 1;
+            val = Math.max(1, val + delta);
+            if (raffle.maxTicketsPerUser) {
+                const remaining = raffle.maxTicketsPerUser - userTickets.length;
+                val = Math.min(val, remaining);
+            }
+            input.value = val;
+            quantity = val;
+            updateTotal();
+        }
+
+        function updateQty() {
+            const input = document.getElementById('qtyInput');
+            let val = parseInt(input.value) || 1;
+            val = Math.max(1, val);
+            if (raffle.maxTicketsPerUser) {
+                const remaining = raffle.maxTicketsPerUser - userTickets.length;
+                val = Math.min(val, remaining);
+            }
+            input.value = val;
+            quantity = val;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const total = quantity * raffle.ticketPrice;
+            document.getElementById('totalCost').textContent = `${total} DD`;
+            const btn = document.getElementById('purchaseBtn');
+            if (btn) {
+                btn.disabled = total > (currentUser?.coinBalance || 0);
+            }
+        }
+
+        async function purchaseTickets() {
+            const btn = document.getElementById('purchaseBtn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            try {
+                const res = await fetch(`/api/raffles/${raffleId}/purchase`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(data.message, 'success');
+                    currentUser.coinBalance = data.newBalance;
+                    document.getElementById('userBalance').textContent = data.newBalance;
+                    // Add new tickets
+                    userTickets = [...userTickets, ...data.tickets.map((t, i) => ({
+                        ticketNumber: t.ticketNumber,
+                        isWinner: false
+                    }))];
+                    raffle.totalTicketsSold = (raffle.totalTicketsSold || 0) + quantity;
+                    renderRaffle();
+                } else {
+                    showMessage(data.error || 'Failed to purchase tickets', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Buy Tickets';
+                }
+            } catch (e) {
+                showMessage('Failed to purchase tickets', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Buy Tickets';
+            }
+        }
+
+        function showMessage(text, type) {
+            const area = document.getElementById('messageArea');
+            area.innerHTML = `<div class="message ${type}">${escapeHtml(text)}</div>`;
+            setTimeout(() => area.innerHTML = '', 5000);
+        }
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/auth/me');
+                const data = await res.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    const h = document.getElementById('headerAuth');
+                    h.innerHTML = `
+                        <div class="coin-display" title="Diehard Dollars"><span>🪙</span><span>${data.user.coinBalance || 0}</span></div>
+                        <a href="/profile.html">${data.user.username}</a>
+                    `;
+                }
+            } catch (e) {}
+            loadRaffle();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text || '';
+            return div.innerHTML;
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>

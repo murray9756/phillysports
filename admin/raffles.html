@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Raffle Management - PhillySports Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+
+        .header { background: var(--header-bg); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { color: #fff; font-size: 1.25rem; }
+        .header-links { display: flex; gap: 1rem; }
+        .header-links a { color: #ccc; font-size: 0.875rem; text-decoration: none; }
+        .header-links a:hover { color: #fff; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+        .auth-required { text-align: center; padding: 3rem; }
+        .auth-required h2 { margin-bottom: 1rem; }
+        .auth-required a { color: var(--accent-color); }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .page-header h2 { font-size: 1.5rem; }
+
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; }
+        .card h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px;
+            font-family: inherit; font-size: 0.9rem;
+        }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
+        .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+        .btn-primary { background: var(--accent-color); color: #fff; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--border-color); color: var(--text-primary); }
+        .btn-danger { background: #dc2626; color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-warning { background: var(--warning); color: #fff; }
+        .btn-group { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+        .raffles-grid { display: grid; gap: 1rem; }
+        .raffle-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; padding: 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; align-items: center; }
+        .raffle-image { width: 80px; height: 60px; background: var(--border-color); border-radius: 4px; object-fit: cover; }
+        .raffle-info h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .raffle-meta { font-size: 0.8rem; color: var(--text-muted); }
+        .raffle-status { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-left: 0.5rem; }
+        .raffle-status.draft { background: #fef3c7; color: #92400e; }
+        .raffle-status.active { background: #dcfce7; color: #166534; }
+        .raffle-status.completed { background: #dbeafe; color: #1e40af; }
+        .raffle-status.cancelled { background: #fee2e2; color: #991b1b; }
+        .raffle-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+
+        .message { padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .message.success { background: #dcfce7; color: #166534; }
+        .message.error { background: #fee2e2; color: #991b1b; }
+
+        .hidden { display: none; }
+
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg); border-radius: 8px; padding: 1.5rem; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal h3 { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Raffle Management</h1>
+        <div class="header-links">
+            <a href="/admin.html">Admin Home</a>
+            <a href="/raffles/">View Raffles</a>
+            <a href="/">View Site</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="authRequired" class="auth-required hidden">
+            <h2>Admin Access Required</h2>
+            <p>Please <a href="/login.html">login</a> with an admin account.</p>
+        </div>
+
+        <div id="adminContent" class="hidden">
+            <div id="messageArea"></div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" id="statActive">0</div>
+                    <div class="stat-label">Active Raffles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statDraft">0</div>
+                    <div class="stat-label">Drafts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statCompleted">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statTickets">0</div>
+                    <div class="stat-label">Total Tickets Sold</div>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <h2>All Raffles</h2>
+                <button class="btn btn-primary" onclick="showCreateForm()">+ New Raffle</button>
+            </div>
+
+            <div id="rafflesList" class="raffles-grid">
+                <p>Loading raffles...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Modal -->
+    <div id="raffleModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modalTitle">New Raffle</h3>
+            <form id="raffleForm">
+                <input type="hidden" id="raffleId">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" required placeholder="e.g., Signed Jalen Hurts Jersey">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="Prize details..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="team">Team (optional)</label>
+                        <select id="team">
+                            <option value="">All Teams</option>
+                            <option value="eagles">Eagles</option>
+                            <option value="phillies">Phillies</option>
+                            <option value="sixers">76ers</option>
+                            <option value="flyers">Flyers</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="estimatedValue">Est. Value ($)</label>
+                        <input type="number" id="estimatedValue" min="0" step="0.01" placeholder="100.00">
+                    </div>
+                </div>
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="ticketPrice">Ticket Price (DD)</label>
+                        <input type="number" id="ticketPrice" min="1" value="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxTickets">Max Per User</label>
+                        <input type="number" id="maxTickets" min="0" placeholder="No limit">
+                    </div>
+                    <div class="form-group">
+                        <label for="drawDate">Draw Date *</label>
+                        <input type="datetime-local" id="drawDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl">Image URL</label>
+                    <input type="url" id="imageUrl" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label for="raffleStatus">Status</label>
+                    <select id="raffleStatus">
+                        <option value="draft">Draft</option>
+                        <option value="active">Active</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Save Raffle</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let raffles = [];
+
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/auth/me');
+                const data = await res.json();
+                if (data.user && data.user.isAdmin) {
+                    document.getElementById('adminContent').classList.remove('hidden');
+                    loadRaffles();
+                } else {
+                    document.getElementById('authRequired').classList.remove('hidden');
+                }
+            } catch (e) {
+                document.getElementById('authRequired').classList.remove('hidden');
+            }
+        }
+
+        async function loadRaffles() {
+            try {
+                const res = await fetch('/api/admin/raffles');
+                const data = await res.json();
+                raffles = data.raffles || [];
+                renderRaffles();
+                updateStats();
+            } catch (e) {
+                console.error('Load raffles error:', e);
+            }
+        }
+
+        function updateStats() {
+            const active = raffles.filter(r => r.status === 'active').length;
+            const draft = raffles.filter(r => r.status === 'draft').length;
+            const completed = raffles.filter(r => r.status === 'completed').length;
+            const tickets = raffles.reduce((sum, r) => sum + (r.totalTicketsSold || 0), 0);
+
+            document.getElementById('statActive').textContent = active;
+            document.getElementById('statDraft').textContent = draft;
+            document.getElementById('statCompleted').textContent = completed;
+            document.getElementById('statTickets').textContent = tickets.toLocaleString();
+        }
+
+        function renderRaffles() {
+            const container = document.getElementById('rafflesList');
+            if (raffles.length === 0) {
+                container.innerHTML = '<p>No raffles yet. Create your first raffle!</p>';
+                return;
+            }
+
+            container.innerHTML = raffles.map(r => {
+                const img = r.images?.[0]?.url || '';
+                const drawDate = new Date(r.drawDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+                return `
+                    <div class="raffle-item">
+                        ${img ? `<img src="${img}" class="raffle-image" alt="">` : '<div class="raffle-image"></div>'}
+                        <div class="raffle-info">
+                            <h4>${escapeHtml(r.title)} <span class="raffle-status ${r.status}">${r.status}</span></h4>
+                            <div class="raffle-meta">
+                                ${r.ticketPrice} DD/ticket &middot; ${r.totalTicketsSold || 0} sold &middot; Draw: ${drawDate}
+                                ${r.winnerUsername ? `&middot; Winner: ${r.winnerUsername}` : ''}
+                            </div>
+                        </div>
+                        <div class="raffle-actions">
+                            ${r.status === 'draft' ? `<button class="btn btn-sm btn-success" onclick="activateRaffle('${r._id}')">Activate</button>` : ''}
+                            ${r.status === 'active' ? `<button class="btn btn-sm btn-warning" onclick="drawRaffle('${r._id}')">Draw Now</button>` : ''}
+                            ${r.status !== 'completed' && r.status !== 'cancelled' ? `<button class="btn btn-sm btn-secondary" onclick="editRaffle('${r._id}')">Edit</button>` : ''}
+                            ${r.status === 'active' || r.status === 'draft' ? `<button class="btn btn-sm btn-danger" onclick="cancelRaffle('${r._id}')">Cancel</button>` : ''}
+                            ${r.totalTicketsSold === 0 && r.status === 'draft' ? `<button class="btn btn-sm btn-danger" onclick="deleteRaffle('${r._id}')">Delete</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showCreateForm() {
+            document.getElementById('modalTitle').textContent = 'New Raffle';
+            document.getElementById('raffleForm').reset();
+            document.getElementById('raffleId').value = '';
+            document.getElementById('ticketPrice').value = '10';
+            // Set default draw date to tomorrow 8 PM
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(20, 0, 0, 0);
+            document.getElementById('drawDate').value = tomorrow.toISOString().slice(0, 16);
+            document.getElementById('raffleModal').classList.remove('hidden');
+        }
+
+        function editRaffle(id) {
+            const raffle = raffles.find(r => r._id === id);
+            if (!raffle) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Raffle';
+            document.getElementById('raffleId').value = id;
+            document.getElementById('title').value = raffle.title;
+            document.getElementById('description').value = raffle.description || '';
+            document.getElementById('team').value = raffle.team || '';
+            document.getElementById('estimatedValue').value = raffle.estimatedValue || '';
+            document.getElementById('ticketPrice').value = raffle.ticketPrice || 10;
+            document.getElementById('maxTickets').value = raffle.maxTicketsPerUser || '';
+            document.getElementById('drawDate').value = new Date(raffle.drawDate).toISOString().slice(0, 16);
+            document.getElementById('imageUrl').value = raffle.images?.[0]?.url || '';
+            document.getElementById('raffleStatus').value = raffle.status;
+            document.getElementById('raffleModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('raffleModal').classList.add('hidden');
+        }
+
+        document.getElementById('raffleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('raffleId').value;
+            const imageUrl = document.getElementById('imageUrl').value;
+
+            const data = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                team: document.getElementById('team').value || null,
+                estimatedValue: parseFloat(document.getElementById('estimatedValue').value) || 0,
+                ticketPrice: parseInt(document.getElementById('ticketPrice').value) || 10,
+                maxTicketsPerUser: document.getElementById('maxTickets').value ? parseInt(document.getElementById('maxTickets').value) : null,
+                drawDate: document.getElementById('drawDate').value,
+                images: imageUrl ? [{ url: imageUrl, isPrimary: true }] : [],
+                status: document.getElementById('raffleStatus').value
+            };
+
+            try {
+                const url = id ? `/api/admin/raffles/${id}` : '/api/admin/raffles';
+                const method = id ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    showMessage(id ? 'Raffle updated!' : 'Raffle created!', 'success');
+                    closeModal();
+                    loadRaffles();
+                } else {
+                    showMessage(result.error || 'Failed to save raffle', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to save raffle', 'error');
+            }
+        });
+
+        async function activateRaffle(id) {
+            if (!confirm('Activate this raffle? Users will be able to purchase tickets.')) return;
+
+            try {
+                const res = await fetch(`/api/admin/raffles/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'active' })
+                });
+
+                if (res.ok) {
+                    showMessage('Raffle activated!', 'success');
+                    loadRaffles();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to activate', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to activate raffle', 'error');
+            }
+        }
+
+        async function drawRaffle(id) {
+            if (!confirm('Draw the winner now? This cannot be undone.')) return;
+
+            try {
+                const res = await fetch(`/api/admin/raffles/${id}/draw`, { method: 'POST' });
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.cancelled) {
+                        showMessage(data.message, 'warning');
+                    } else {
+                        showMessage(data.message, 'success');
+                    }
+                    loadRaffles();
+                } else {
+                    showMessage(data.error || 'Failed to draw winner', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to draw winner', 'error');
+            }
+        }
+
+        async function cancelRaffle(id) {
+            const raffle = raffles.find(r => r._id === id);
+            const msg = raffle?.totalTicketsSold > 0
+                ? `Cancel this raffle and refund ${raffle.totalTicketsSold} ticket(s)?`
+                : 'Cancel this raffle?';
+
+            if (!confirm(msg)) return;
+
+            try {
+                const res = await fetch(`/api/admin/raffles/${id}/cancel`, { method: 'POST' });
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(data.message, 'success');
+                    loadRaffles();
+                } else {
+                    showMessage(data.error || 'Failed to cancel', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to cancel raffle', 'error');
+            }
+        }
+
+        async function deleteRaffle(id) {
+            if (!confirm('Delete this raffle permanently?')) return;
+
+            try {
+                const res = await fetch(`/api/admin/raffles/${id}`, { method: 'DELETE' });
+
+                if (res.ok) {
+                    showMessage('Raffle deleted', 'success');
+                    loadRaffles();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to delete', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to delete raffle', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const area = document.getElementById('messageArea');
+            area.innerHTML = `<div class="message ${type}">${escapeHtml(text)}</div>`;
+            setTimeout(() => area.innerHTML = '', 5000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
