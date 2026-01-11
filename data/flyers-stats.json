@@ -1,0 +1,123 @@
+{
+  "goals": [
+    { "rank": 1, "player": "Bill Barber", "years": "1972-1984", "value": 420 },
+    { "rank": 2, "player": "Brian Propp", "years": "1979-1990", "value": 369 },
+    { "rank": 3, "player": "Tim Kerr", "years": "1980-1991", "value": 363 },
+    { "rank": 4, "player": "Bobby Clarke", "years": "1969-1984", "value": 358 },
+    { "rank": 5, "player": "John LeClair", "years": "1995-2004", "value": 333 },
+    { "rank": 6, "player": "Rick MacLeish", "years": "1970-1981", "value": 328 },
+    { "rank": 7, "player": "Reggie Leach", "years": "1974-1982", "value": 306 },
+    { "rank": 8, "player": "Claude Giroux", "years": "2008-2022", "value": 291 },
+    { "rank": 9, "player": "Eric Lindros", "years": "1992-2000", "value": 290 },
+    { "rank": 10, "player": "Simon Gagne", "years": "1999-2010", "value": 264 }
+  ],
+  "assists": [
+    { "rank": 1, "player": "Bobby Clarke", "years": "1969-1984", "value": 852 },
+    { "rank": 2, "player": "Claude Giroux", "years": "2008-2022", "value": 609 },
+    { "rank": 3, "player": "Brian Propp", "years": "1979-1990", "value": 480 },
+    { "rank": 4, "player": "Bill Barber", "years": "1972-1984", "value": 463 },
+    { "rank": 5, "player": "Jakub Voracek", "years": "2011-2021", "value": 427 },
+    { "rank": 6, "player": "Mark Recchi", "years": "1988-1999", "value": 395 },
+    { "rank": 7, "player": "Rick MacLeish", "years": "1970-1981", "value": 369 },
+    { "rank": 8, "player": "Eric Lindros", "years": "1992-2000", "value": 369 },
+    { "rank": 9, "player": "Rod Brind'Amour", "years": "1991-2000", "value": 366 },
+    { "rank": 10, "player": "Sean Couturier", "years": "2011-present", "value": 356 }
+  ],
+  "points": [
+    { "rank": 1, "player": "Bobby Clarke", "years": "1969-1984", "value": 1210 },
+    { "rank": 2, "player": "Claude Giroux", "years": "2008-2022", "value": 900 },
+    { "rank": 3, "player": "Bill Barber", "years": "1972-1984", "value": 883 },
+    { "rank": 4, "player": "Brian Propp", "years": "1979-1990", "value": 849 },
+    { "rank": 5, "player": "Rick MacLeish", "years": "1970-1981", "value": 697 },
+    { "rank": 6, "player": "Eric Lindros", "years": "1992-2000", "value": 659 },
+    { "rank": 7, "player": "Tim Kerr", "years": "1980-1991", "value": 650 },
+    { "rank": 8, "player": "John LeClair", "years": "1995-2004", "value": 643 },
+    { "rank": 9, "player": "Mark Recchi", "years": "1988-1999", "value": 627 },
+    { "rank": 10, "player": "Jakub Voracek", "years": "2011-2021", "value": 604 }
+  ],
+  "games": [
+    { "rank": 1, "player": "Bobby Clarke", "years": "1969-1984", "value": 1144 },
+    { "rank": 2, "player": "Claude Giroux", "years": "2008-2022", "value": 1000 },
+    { "rank": 3, "player": "Sean Couturier", "years": "2011-present", "value": 915 },
+    { "rank": 4, "player": "Bill Barber", "years": "1972-1984", "value": 903 },
+    { "rank": 5, "player": "Brian Propp", "years": "1979-1990", "value": 790 },
+    { "rank": 6, "player": "Chris Therien", "years": "1994-2006", "value": 753 },
+    { "rank": 7, "player": "Joe Watson", "years": "1967-1978", "value": 746 },
+    { "rank": 8, "player": "Bob Kelly", "years": "1970-1980", "value": 741 },
+    { "rank": 9, "player": "Rick MacLeish", "years": "1970-1981", "value": 741 },
+    { "rank": 10, "player": "Eric Desjardins", "years": "1995-2006", "value": 738 }
+  ],
+  "penaltyMinutes": [
+    { "rank": 1, "player": "Rick Tocchet", "years": "1984-1992", "value": 1815 },
+    { "rank": 2, "player": "Paul Holmgren", "years": "1975-1984", "value": 1600 },
+    { "rank": 3, "player": "Andre Dupont", "years": "1972-1980", "value": 1505 },
+    { "rank": 4, "player": "Bobby Clarke", "years": "1969-1984", "value": 1453 },
+    { "rank": 5, "player": "Dave Schultz", "years": "1971-1976", "value": 1386 },
+    { "rank": 6, "player": "Dave Brown", "years": "1982-1995", "value": 1382 },
+    { "rank": 7, "player": "Bob Kelly", "years": "1970-1980", "value": 1285 },
+    { "rank": 8, "player": "Gary Dornhoefer", "years": "1967-1978", "value": 1256 },
+    { "rank": 9, "player": "Craig Berube", "years": "1986-1998", "value": 1138 },
+    { "rank": 10, "player": "Glen Cochrane", "years": "1978-1984", "value": 1110 }
+  ],
+  "plusMinus": [
+    { "rank": 1, "player": "Bobby Clarke", "years": "1969-1984", "value": 507 },
+    { "rank": 2, "player": "Mark Howe", "years": "1982-1992", "value": 351 },
+    { "rank": 3, "player": "Bill Barber", "years": "1972-1984", "value": 312 },
+    { "rank": 4, "player": "Brian Propp", "years": "1979-1990", "value": 299 },
+    { "rank": 5, "player": "Jimmy Watson", "years": "1972-1982", "value": 295 },
+    { "rank": 6, "player": "Andre Dupont", "years": "1972-1980", "value": 270 },
+    { "rank": 7, "player": "Brad McCrimmon", "years": "1982-1987", "value": 225 },
+    { "rank": 8, "player": "Reggie Leach", "years": "1974-1982", "value": 214 },
+    { "rank": 9, "player": "John LeClair", "years": "1995-2004", "value": 197 },
+    { "rank": 10, "player": "Joe Watson", "years": "1967-1978", "value": 188 }
+  ],
+  "goalieWins": [
+    { "rank": 1, "player": "Ron Hextall", "years": "1986-1999", "value": 240 },
+    { "rank": 2, "player": "Bernie Parent", "years": "1967-1979", "value": 231 },
+    { "rank": 3, "player": "Steve Mason", "years": "2013-2017", "value": 104 },
+    { "rank": 4, "player": "Carter Hart", "years": "2018-2024", "value": 96 },
+    { "rank": 5, "player": "Wayne Stephenson", "years": "1975-1980", "value": 93 },
+    { "rank": 6, "player": "Roman Cechmanek", "years": "2000-2003", "value": 92 },
+    { "rank": 7, "player": "Bob Froese", "years": "1982-1986", "value": 92 },
+    { "rank": 8, "player": "Pelle Lindbergh", "years": "1981-1985", "value": 87 },
+    { "rank": 9, "player": "Pete Peeters", "years": "1978-1982", "value": 85 },
+    { "rank": 10, "player": "Doug Favell", "years": "1967-1973", "value": 77 }
+  ],
+  "shutouts": [
+    { "rank": 1, "player": "Bernie Parent", "years": "1967-1979", "value": 50 },
+    { "rank": 2, "player": "Roman Cechmanek", "years": "2000-2003", "value": 20 },
+    { "rank": 3, "player": "Ron Hextall", "years": "1986-1999", "value": 18 },
+    { "rank": 4, "player": "Doug Favell", "years": "1967-1973", "value": 16 },
+    { "rank": 5, "player": "Steve Mason", "years": "2013-2017", "value": 14 },
+    { "rank": 6, "player": "Bob Froese", "years": "1982-1986", "value": 12 },
+    { "rank": 7, "player": "Wayne Stephenson", "years": "1975-1980", "value": 10 },
+    { "rank": 8, "player": "John Vanbiesbrouck", "years": "1998-2000", "value": 9 },
+    { "rank": 9, "player": "Brian Boucher", "years": "1999-2009", "value": 8 },
+    { "rank": 10, "player": "Pelle Lindbergh", "years": "1981-1985", "value": 7 }
+  ],
+  "currentSeason": {
+    "season": "2025-26",
+    "record": "22-12-8",
+    "points": 52,
+    "goalsFor": 125,
+    "goalsAgainst": 117,
+    "skaters": [
+      { "player": "Trevor Zegras", "gp": 42, "g": 17, "a": 24, "pts": 41, "plusMinus": 3, "pim": 32 },
+      { "player": "Travis Konecny", "gp": 42, "g": 14, "a": 24, "pts": 38, "plusMinus": 14, "pim": 25 },
+      { "player": "Christian Dvorak", "gp": 41, "g": 9, "a": 18, "pts": 27, "plusMinus": 10, "pim": 12 },
+      { "player": "Owen Tippett", "gp": 42, "g": 13, "a": 12, "pts": 25, "plusMinus": 0, "pim": 20 },
+      { "player": "Noah Cates", "gp": 42, "g": 10, "a": 14, "pts": 24, "plusMinus": 16, "pim": 27 },
+      { "player": "Sean Couturier", "gp": 41, "g": 5, "a": 19, "pts": 24, "plusMinus": 1, "pim": 18 },
+      { "player": "Matvei Michkov", "gp": 41, "g": 9, "a": 14, "pts": 23, "plusMinus": -1, "pim": 38 },
+      { "player": "Bobby Brink", "gp": 41, "g": 11, "a": 9, "pts": 20, "plusMinus": -1, "pim": 20 },
+      { "player": "Travis Sanheim", "gp": 42, "g": 5, "a": 14, "pts": 19, "plusMinus": 7, "pim": 12 },
+      { "player": "Cam York", "gp": 35, "g": 3, "a": 15, "pts": 18, "plusMinus": 8, "pim": 12 }
+    ],
+    "goalies": [
+      { "player": "Daniel Vladar", "gp": 26, "w": 16, "l": 6, "gaa": 2.35, "svPct": ".910" },
+      { "player": "Samuel Ersson", "gp": 15, "w": 6, "l": 5, "gaa": 3.09, "svPct": ".868" }
+    ]
+  },
+  "lastUpdated": "2026-01-11T00:00:00.000Z",
+  "source": "Hockey-Reference.com"
+}
