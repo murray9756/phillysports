@@ -492,6 +492,83 @@
         .prize-item.first-place { font-size: 1.2rem; }
         .prize-item.first-place .prize-place { color: var(--gold); }
 
+        /* Connection Status */
+        .connection-status {
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .connection-status.connected {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        .connection-status.disconnected {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        .connection-status.reconnecting {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        .connection-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .connection-status.reconnecting .connection-dot {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Action Timer */
+        .action-timer {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+        }
+        .action-timer.warning { color: #ffc107; }
+        .action-timer.critical { color: #f44336; }
+
+        /* Notification Toast */
+        .notification-toast {
+            position: fixed;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .notification-toast.show { opacity: 1; }
+        .notification-toast.eliminated { border-color: var(--red); color: var(--red); }
+        .notification-toast.info { border-color: var(--blue); }
+
         /* Test Controls */
         .test-panel {
             position: fixed;
@@ -576,7 +653,7 @@
         .test-status.success { color: #4caf50; }
         .test-status.error { color: var(--red); }
 
-        /* Responsive */
+        /* Responsive - Tablet */
         @media (max-width: 768px) {
             .table-container { aspect-ratio: 1.2; }
             .poker-table { width: 90%; height: 60%; }
@@ -587,6 +664,80 @@
             .community-cards .card { width: 42px; height: 59px; }
             .tournament-info { gap: 0.75rem; font-size: 0.75rem; }
             .action-btn { padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 80px; }
+            .tournament-status-bar { gap: 1rem; padding: 0.4rem 0.5rem; font-size: 0.75rem; }
+            .test-panel { display: none; }
+            .connection-status { top: auto; bottom: 10px; left: 10px; }
+        }
+
+        /* Responsive - Mobile */
+        @media (max-width: 480px) {
+            .header { padding: 0.5rem; }
+            .header-left span { display: none; }
+            .header-left img { width: 28px; height: 28px; }
+            .tournament-info { display: none; }
+            .coin-display { font-size: 0.75rem; padding: 0.25rem 0.5rem; }
+            .btn-leave { padding: 0.4rem 0.75rem; font-size: 0.75rem; }
+
+            .table-container { aspect-ratio: 1; margin-top: 0; }
+            .poker-table { width: 95%; height: 55%; }
+            .seat { width: 70px; }
+            .player-info { min-width: 60px; padding: 0.3rem; }
+            .player-name { font-size: 0.65rem; max-width: 60px; }
+            .player-chips { font-size: 0.6rem; }
+            .player-action { font-size: 0.55rem; }
+            .card { width: 28px; height: 39px; font-size: 0.9rem; }
+            .card-rank { font-size: 0.6rem; }
+            .card-suit { font-size: 1rem; }
+            .community-cards .card { width: 36px; height: 50px; }
+            .community-cards { gap: 0.3rem; }
+            .pot-display { font-size: 0.9rem; padding: 0.4rem 0.75rem; top: 20%; }
+            .dealer-btn { width: 20px; height: 20px; font-size: 0.55rem; }
+            .player-bet { font-size: 0.6rem; padding: 0.2rem 0.4rem; }
+            .player-cards { gap: 0.15rem; margin-top: 0.3rem; }
+
+            /* Mobile seat positions - tighter layout */
+            .seat-0 { top: 92%; }
+            .seat-1 { top: 82%; left: 15%; }
+            .seat-2 { top: 50%; left: 3%; }
+            .seat-3 { top: 18%; left: 15%; }
+            .seat-4 { top: 8%; }
+            .seat-5 { top: 18%; left: 85%; }
+            .seat-6 { top: 50%; left: 97%; }
+            .seat-7 { top: 82%; left: 85%; }
+            .seat-8 { top: 68%; left: 92%; }
+
+            .tournament-status-bar {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding: 0.3rem;
+                font-size: 0.7rem;
+            }
+            .status-item { gap: 0.25rem; }
+            .blind-timer { font-size: 0.85rem; padding: 0.2rem 0.5rem; }
+
+            .action-panel { padding: 0.5rem; gap: 0.5rem; }
+            .action-btn { padding: 0.5rem 0.75rem; font-size: 0.8rem; min-width: 65px; }
+            .bet-controls { flex-wrap: wrap; gap: 0.5rem; }
+            .bet-slider { width: 150px; }
+            .bet-amount { width: 70px; font-size: 0.9rem; padding: 0.4rem; }
+            .bet-presets { gap: 0.25rem; }
+            .bet-preset { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+
+            .game-container { padding: 0.5rem; min-height: calc(100vh - 50px); margin-top: 35px !important; }
+            .winner-content { padding: 1.5rem; max-width: 90%; }
+            .winner-content h2 { font-size: 1.2rem; }
+            .winner-amount { font-size: 1.5rem; }
+
+            .notification-toast { top: 100px; font-size: 0.8rem; padding: 0.5rem 1rem; }
+        }
+
+        /* Landscape mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header { padding: 0.3rem 0.5rem; }
+            .tournament-status-bar { padding: 0.25rem; }
+            .game-container { padding: 0.25rem; margin-top: 25px !important; }
+            .table-container { aspect-ratio: 2; }
+            .action-panel { padding: 0.3rem; }
         }
     </style>
 </head>
@@ -645,6 +796,15 @@
             <span class="status-value" id="playersLeft">0</span>
         </div>
     </div>
+
+    <!-- Connection Status -->
+    <div class="connection-status connected" id="connectionStatus">
+        <span class="connection-dot"></span>
+        <span id="connectionText">Connected</span>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="notification-toast" id="notificationToast"></div>
 
     <!-- Tournament Complete Overlay -->
     <div class="tournament-complete-overlay" id="tournamentCompleteOverlay">
@@ -823,13 +983,69 @@
                     privateChannel.bind('hole-cards', handleHoleCards);
                 }
 
+                // Connection state handling
+                pusher.connection.bind('connected', () => {
+                    updateConnectionStatus('connected');
+                    usePusher = true;
+                });
+
+                pusher.connection.bind('disconnected', () => {
+                    updateConnectionStatus('disconnected');
+                });
+
+                pusher.connection.bind('connecting', () => {
+                    updateConnectionStatus('reconnecting');
+                });
+
+                pusher.connection.bind('unavailable', () => {
+                    updateConnectionStatus('disconnected');
+                    // Fall back to faster polling
+                    if (pollInterval) clearInterval(pollInterval);
+                    pollInterval = setInterval(loadGameState, 2000);
+                });
+
                 usePusher = true;
                 console.log('Pusher connected');
 
             } catch (e) {
                 console.error('Pusher initialization failed:', e);
                 usePusher = false;
+                updateConnectionStatus('disconnected');
             }
+        }
+
+        // Connection status management
+        function updateConnectionStatus(status) {
+            const statusEl = document.getElementById('connectionStatus');
+            const textEl = document.getElementById('connectionText');
+
+            statusEl.className = 'connection-status ' + status;
+
+            switch (status) {
+                case 'connected':
+                    textEl.textContent = 'Live';
+                    break;
+                case 'disconnected':
+                    textEl.textContent = 'Offline';
+                    showNotification('Connection lost. Reconnecting...', 'info');
+                    break;
+                case 'reconnecting':
+                    textEl.textContent = 'Reconnecting...';
+                    break;
+            }
+        }
+
+        // Notification toast
+        let notificationTimeout = null;
+        function showNotification(message, type = '') {
+            const toast = document.getElementById('notificationToast');
+            toast.textContent = message;
+            toast.className = 'notification-toast show' + (type ? ' ' + type : '');
+
+            if (notificationTimeout) clearTimeout(notificationTimeout);
+            notificationTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // Pusher event handlers
@@ -913,7 +1129,13 @@
             console.log('Player eliminated:', data);
             document.getElementById('playersLeft').textContent = data.remainingPlayers;
 
-            // Could show a notification here
+            // Show elimination notification
+            const isMe = currentUser && data.playerId === currentUser.userId;
+            if (isMe) {
+                showNotification(`You finished in ${getOrdinal(data.position)} place!`, 'eliminated');
+            } else {
+                showNotification(`${data.username || 'Player'} eliminated (${data.remainingPlayers} left)`, 'info');
+            }
             loadGameState();
         }
 

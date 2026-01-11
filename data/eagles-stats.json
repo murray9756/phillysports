@@ -1,0 +1,100 @@
+{
+  "passing": [
+    { "rank": 1, "player": "Donovan McNabb", "years": "1999-2009", "yards": 32873, "touchdowns": 216, "interceptions": 100, "rating": 86.5 },
+    { "rank": 2, "player": "Ron Jaworski", "years": "1977-1986", "yards": 26963, "touchdowns": 175, "interceptions": 151, "rating": 74.0 },
+    { "rank": 3, "player": "Randall Cunningham", "years": "1985-1995", "yards": 22877, "touchdowns": 150, "interceptions": 105, "rating": 78.7 },
+    { "rank": 4, "player": "Jalen Hurts", "years": "2020-2025", "yards": 17891, "touchdowns": 110, "interceptions": 45, "rating": 94.4 },
+    { "rank": 5, "player": "Carson Wentz", "years": "2016-2020", "yards": 16811, "touchdowns": 113, "interceptions": 50, "rating": 89.2 },
+    { "rank": 6, "player": "Norm Snead", "years": "1964-1970", "yards": 15672, "touchdowns": 111, "interceptions": 124, "rating": 67.7 },
+    { "rank": 7, "player": "Tommy Thompson", "years": "1941-1950", "yards": 10240, "touchdowns": 90, "interceptions": 100, "rating": 67.4 },
+    { "rank": 8, "player": "Michael Vick", "years": "2009-2013", "yards": 9984, "touchdowns": 57, "interceptions": 33, "rating": 87.7 },
+    { "rank": 9, "player": "Sonny Jurgensen", "years": "1957-1963", "yards": 9639, "touchdowns": 76, "interceptions": 73, "rating": 79.1 },
+    { "rank": 10, "player": "Nick Foles", "years": "2012-2018", "yards": 8703, "touchdowns": 58, "interceptions": 23, "rating": 93.2 }
+  ],
+  "rushing": [
+    { "rank": 1, "player": "LeSean McCoy", "years": "2009-2014", "attempts": 1461, "yards": 6792, "touchdowns": 44, "average": 4.6 },
+    { "rank": 2, "player": "Wilbert Montgomery", "years": "1977-1984", "attempts": 1465, "yards": 6538, "touchdowns": 45, "average": 4.5 },
+    { "rank": 3, "player": "Brian Westbrook", "years": "2002-2009", "attempts": 1308, "yards": 5995, "touchdowns": 37, "average": 4.6 },
+    { "rank": 4, "player": "Steve Van Buren", "years": "1944-1951", "attempts": 1320, "yards": 5860, "touchdowns": 69, "average": 4.4 },
+    { "rank": 5, "player": "Duce Staley", "years": "1997-2003", "attempts": 1200, "yards": 4807, "touchdowns": 22, "average": 4.0 },
+    { "rank": 6, "player": "Randall Cunningham", "years": "1985-1995", "attempts": 677, "yards": 4482, "touchdowns": 32, "average": 6.6 },
+    { "rank": 7, "player": "Ricky Watters", "years": "1995-1997", "attempts": 975, "yards": 3794, "touchdowns": 31, "average": 3.9 },
+    { "rank": 8, "player": "Miles Sanders", "years": "2019-2022", "attempts": 739, "yards": 3708, "touchdowns": 20, "average": 5.0 },
+    { "rank": 9, "player": "Timmy Brown", "years": "1960-1967", "attempts": 850, "yards": 3703, "touchdowns": 29, "average": 4.4 },
+    { "rank": 10, "player": "Tom Woodeshick", "years": "1963-1971", "attempts": 831, "yards": 3563, "touchdowns": 21, "average": 4.3 }
+  ],
+  "receiving": [
+    { "rank": 1, "player": "Harold Carmichael", "years": "1971-1983", "receptions": 589, "yards": 8978, "touchdowns": 79, "average": 15.2 },
+    { "rank": 2, "player": "Pete Retzlaff", "years": "1956-1966", "receptions": 452, "yards": 7412, "touchdowns": 47, "average": 16.4 },
+    { "rank": 3, "player": "DeSean Jackson", "years": "2008-2020", "receptions": 379, "yards": 6512, "touchdowns": 35, "average": 17.2 },
+    { "rank": 4, "player": "Mike Quick", "years": "1982-1990", "receptions": 363, "yards": 6464, "touchdowns": 61, "average": 17.8 },
+    { "rank": 5, "player": "Zach Ertz", "years": "2013-2021", "receptions": 579, "yards": 6267, "touchdowns": 38, "average": 10.8 },
+    { "rank": 6, "player": "Pete Pihos", "years": "1947-1955", "receptions": 373, "yards": 5619, "touchdowns": 61, "average": 15.1 },
+    { "rank": 7, "player": "Tommy McDonald", "years": "1957-1963", "receptions": 287, "yards": 5499, "touchdowns": 66, "average": 19.2 },
+    { "rank": 8, "player": "Bobby Walston", "years": "1951-1962", "receptions": 311, "yards": 5363, "touchdowns": 46, "average": 17.2 },
+    { "rank": 9, "player": "A.J. Brown", "years": "2022-2025", "receptions": 339, "yards": 5034, "touchdowns": 32, "average": 14.8 },
+    { "rank": 10, "player": "DeVonta Smith", "years": "2021-2025", "receptions": 385, "yards": 5019, "touchdowns": 31, "average": 13.0 }
+  ],
+  "scoring": [
+    { "rank": 1, "player": "David Akers", "years": "1999-2010", "points": 1323, "touchdowns": 0, "fieldGoals": 294, "extraPoints": 441 },
+    { "rank": 2, "player": "Jake Elliott", "years": "2017-2025", "points": 1007, "touchdowns": 0, "fieldGoals": 216, "extraPoints": 359 },
+    { "rank": 3, "player": "Bobby Walston", "years": "1951-1962", "points": 881, "touchdowns": 46, "fieldGoals": 80, "extraPoints": 365 },
+    { "rank": 4, "player": "Sam Baker", "years": "1964-1969", "points": 475, "touchdowns": 0, "fieldGoals": 90, "extraPoints": 205 },
+    { "rank": 5, "player": "Harold Carmichael", "years": "1971-1983", "points": 474, "touchdowns": 79, "fieldGoals": 0, "extraPoints": 0 },
+    { "rank": 6, "player": "Steve Van Buren", "years": "1944-1951", "points": 464, "touchdowns": 77, "fieldGoals": 0, "extraPoints": 0 },
+    { "rank": 7, "player": "Tony Franklin", "years": "1979-1983", "points": 412, "touchdowns": 0, "fieldGoals": 80, "extraPoints": 172 },
+    { "rank": 8, "player": "Brian Westbrook", "years": "2002-2009", "points": 410, "touchdowns": 68, "fieldGoals": 0, "extraPoints": 0 },
+    { "rank": 9, "player": "Tommy McDonald", "years": "1957-1963", "points": 402, "touchdowns": 67, "fieldGoals": 0, "extraPoints": 0 },
+    { "rank": 10, "player": "Paul McFadden", "years": "1984-1987", "points": 390, "touchdowns": 0, "fieldGoals": 91, "extraPoints": 117 }
+  ],
+  "defense": [
+    { "rank": 1, "player": "Reggie White", "years": "1985-1992", "sacks": 124.0, "interceptions": 2, "forcedFumbles": 0, "tackles": 125 },
+    { "rank": 2, "player": "Trent Cole", "years": "2005-2014", "sacks": 85.5, "interceptions": 1, "forcedFumbles": 19, "tackles": 436 },
+    { "rank": 3, "player": "Brandon Graham", "years": "2010-2025", "sacks": 79.5, "interceptions": 0, "forcedFumbles": 23, "tackles": 363 },
+    { "rank": 4, "player": "Clyde Simmons", "years": "1986-1993", "sacks": 76.0, "interceptions": 2, "forcedFumbles": 0, "tackles": 28 },
+    { "rank": 5, "player": "Greg Brown", "years": "1981-1986", "sacks": 57.5, "interceptions": 0, "forcedFumbles": 2, "tackles": 1 },
+    { "rank": 6, "player": "Carl Hairston", "years": "1976-1983", "sacks": 57.5, "interceptions": 1, "forcedFumbles": 0, "tackles": 24 },
+    { "rank": 7, "player": "Dennis Harrison", "years": "1978-1984", "sacks": 55.5, "interceptions": 1, "forcedFumbles": 0, "tackles": 16 },
+    { "rank": 8, "player": "Hugh Douglas", "years": "1998-2004", "sacks": 54.5, "interceptions": 1, "forcedFumbles": 8, "tackles": 186 },
+    { "rank": 9, "player": "William Thomas", "years": "1991-1999", "sacks": 33.0, "interceptions": 18, "forcedFumbles": 10, "tackles": 597 },
+    { "rank": 10, "player": "Jerome Brown", "years": "1987-1991", "sacks": 29.5, "interceptions": 3, "forcedFumbles": 0, "tackles": 64 }
+  ],
+  "returns": [
+    { "rank": 1, "player": "Brian Mitchell", "years": "2000-2002", "kickReturnYards": 3311, "puntReturnYards": 1369, "touchdowns": 4 },
+    { "rank": 2, "player": "Allen Rossum", "years": "1998-1999", "kickReturnYards": 2427, "puntReturnYards": 437, "touchdowns": 1 },
+    { "rank": 3, "player": "Billy Walik", "years": "1970-1972", "kickReturnYards": 1640, "puntReturnYards": 130, "touchdowns": 0 },
+    { "rank": 4, "player": "DeSean Jackson", "years": "2008-2020", "kickReturnYards": 29, "puntReturnYards": 1296, "touchdowns": 4 },
+    { "rank": 5, "player": "Duce Staley", "years": "1997-2003", "kickReturnYards": 1158, "puntReturnYards": 0, "touchdowns": 0 },
+    { "rank": 6, "player": "Vai Sikahema", "years": "1992-1993", "kickReturnYards": 1107, "puntReturnYards": 778, "touchdowns": 1 },
+    { "rank": 7, "player": "Herman Hunter", "years": "1985", "kickReturnYards": 1047, "puntReturnYards": 6, "touchdowns": 0 },
+    { "rank": 8, "player": "Bill Bradley", "years": "1969-1976", "kickReturnYards": 489, "puntReturnYards": 876, "touchdowns": 0 },
+    { "rank": 9, "player": "Evan Cooper", "years": "1984-1987", "kickReturnYards": 459, "puntReturnYards": 753, "touchdowns": 0 },
+    { "rank": 10, "player": "Mark Konecny", "years": "1988", "kickReturnYards": 276, "puntReturnYards": 233, "touchdowns": 0 }
+  ],
+  "kicking": [
+    { "rank": 1, "player": "David Akers", "years": "1999-2010", "fieldGoalsMade": 294, "fieldGoalsAttempted": 357, "percentage": 82.4, "points": 1323 },
+    { "rank": 2, "player": "Jake Elliott", "years": "2017-2025", "fieldGoalsMade": 216, "fieldGoalsAttempted": 258, "percentage": 83.7, "points": 916 },
+    { "rank": 3, "player": "Paul McFadden", "years": "1984-1987", "fieldGoalsMade": 91, "fieldGoalsAttempted": 124, "percentage": 73.4, "points": 400 },
+    { "rank": 4, "player": "Sam Baker", "years": "1964-1969", "fieldGoalsMade": 90, "fieldGoalsAttempted": 153, "percentage": 58.8, "points": 333 },
+    { "rank": 5, "player": "Roger Ruzek", "years": "1989-1993", "fieldGoalsMade": 81, "fieldGoalsAttempted": 108, "percentage": 75.0, "points": 296 },
+    { "rank": 6, "player": "Tony Franklin", "years": "1979-1983", "fieldGoalsMade": 80, "fieldGoalsAttempted": 128, "percentage": 62.5, "points": 286 },
+    { "rank": 7, "player": "Bobby Walston", "years": "1951-1962", "fieldGoalsMade": 80, "fieldGoalsAttempted": 157, "percentage": 51.0, "points": 365 },
+    { "rank": 8, "player": "Alex Henery", "years": "2011-2013", "fieldGoalsMade": 74, "fieldGoalsAttempted": 86, "percentage": 86.0, "points": 268 },
+    { "rank": 9, "player": "Tom Dempsey", "years": "1971-1974", "fieldGoalsMade": 66, "fieldGoalsAttempted": 108, "percentage": 61.1, "points": 252 },
+    { "rank": 10, "player": "Caleb Sturgis", "years": "2015-2017", "fieldGoalsMade": 56, "fieldGoalsAttempted": 66, "percentage": 84.8, "points": 201 }
+  ],
+  "punting": [
+    { "rank": 1, "player": "Donnie Jones", "years": "2013-2017", "punts": 374, "yards": 16971, "average": 45.4 },
+    { "rank": 2, "player": "Sean Landeta", "years": "1999-2005", "punts": 376, "yards": 16092, "average": 42.8 },
+    { "rank": 3, "player": "Adrian Burk", "years": "1951-1956", "punts": 393, "yards": 16122, "average": 41.0 },
+    { "rank": 4, "player": "Tom Hutton", "years": "1995-1998", "punts": 349, "yards": 14788, "average": 42.4 },
+    { "rank": 5, "player": "John Teltschik", "years": "1986-1989", "punts": 345, "yards": 13828, "average": 40.1 },
+    { "rank": 6, "player": "Jeff Feagles", "years": "1990-1993", "punts": 324, "yards": 13448, "average": 41.5 },
+    { "rank": 7, "player": "Max Runager", "years": "1979-1989", "punts": 332, "yards": 13252, "average": 39.9 },
+    { "rank": 8, "player": "Saverio Rocca", "years": "2007-2010", "punts": 299, "yards": 12817, "average": 42.9 },
+    { "rank": 9, "player": "Dirk Johnson", "years": "2003-2006", "punts": 268, "yards": 11180, "average": 41.7 },
+    { "rank": 10, "player": "Spike Jones", "years": "1975-1977", "punts": 255, "yards": 9650, "average": 37.8 }
+  ],
+  "lastUpdated": "2025-01-10T00:00:00.000Z",
+  "source": "Pro-Football-Reference.com"
+}

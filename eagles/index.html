@@ -165,6 +165,34 @@
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
 
+        /* All-Time Leaders Section */
+        .stats-section { grid-column: 1 / -1; margin-top: 1rem; }
+        .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .stats-header { padding: 1rem; background: linear-gradient(135deg, var(--team-color), #002428); color: #fff; display: flex; align-items: center; justify-content: space-between; }
+        .stats-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-attribution { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+        .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
+
+        .stats-tabs { display: flex; flex-wrap: wrap; background: #e8e3db; border-bottom: 1px solid var(--border-color); }
+        .stats-tab { padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .stats-tab:hover { color: var(--team-color); background: rgba(0,76,84,0.05); }
+        .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: #fff; }
+
+        .stats-table-container { overflow-x: auto; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .stats-table th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        .stats-table th:first-child { width: 40px; text-align: center; }
+        .stats-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .stats-table td:first-child { text-align: center; font-weight: 600; color: var(--text-muted); }
+        .stats-table tr:hover { background: rgba(0,76,84,0.03); }
+        .stats-table tr:last-child td { border-bottom: none; }
+        .stats-table .player-name { font-weight: 600; color: var(--text-primary); }
+        .stats-table .player-years { font-size: 0.7rem; color: var(--text-muted); }
+        .stats-table .stat-highlight { font-weight: 700; color: var(--team-color); }
+
+        .stats-footer { padding: 0.75rem 1rem; background: #f5f2ed; font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+        .stats-loading { padding: 2rem; text-align: center; color: var(--text-muted); }
+
         @media (max-width: 900px) {
             .main-container { grid-template-columns: 1fr; }
             .team-hero h1 { font-size: 1.8rem; }
@@ -172,6 +200,9 @@
         @media (max-width: 600px) {
             .article-item { flex-direction: column; }
             .article-thumb { width: 100%; height: 150px; }
+            .stats-tab { padding: 0.5rem 0.6rem; font-size: 0.7rem; }
+            .stats-table { font-size: 0.75rem; }
+            .stats-table th, .stats-table td { padding: 0.5rem; }
         }
     </style>
 </head>
@@ -194,6 +225,9 @@
                 <a href="/phillies" class="team-tab" data-team="phillies">Phillies</a>
                 <a href="/sixers" class="team-tab" data-team="sixers">76ers</a>
                 <a href="/flyers" class="team-tab" data-team="flyers">Flyers</a>
+                <span class="nav-divider"></span>
+                <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
+                <a href="/poker.html" class="team-tab feature-tab">Poker</a>
             </div>
         </nav>
     </header>
@@ -277,6 +311,33 @@
                 </div>
             </div>
         </aside>
+
+        <!-- All-Time Leaders Section -->
+        <section class="stats-section">
+            <div class="stats-container">
+                <div class="stats-header">
+                    <h2><span>&#127942;</span> All-Time Eagles Leaders</h2>
+                    <span class="stats-attribution">Data from <a href="https://www.pro-football-reference.com/teams/phi/" target="_blank">Pro-Football-Reference.com</a></span>
+                </div>
+                <div class="stats-tabs" id="statsTabs">
+                    <button class="stats-tab active" data-category="passing">Passing</button>
+                    <button class="stats-tab" data-category="rushing">Rushing</button>
+                    <button class="stats-tab" data-category="receiving">Receiving</button>
+                    <button class="stats-tab" data-category="scoring">Scoring</button>
+                    <button class="stats-tab" data-category="defense">Defense</button>
+                    <button class="stats-tab" data-category="returns">Returns</button>
+                    <button class="stats-tab" data-category="kicking">Kicking</button>
+                    <button class="stats-tab" data-category="punting">Punting</button>
+                </div>
+                <div class="stats-table-container" id="statsTableContainer">
+                    <div class="stats-loading">Loading stats...</div>
+                </div>
+                <div class="stats-footer">
+                    <span id="statsUpdated">Last updated: --</span>
+                    <span>Top 10 career leaders</span>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -472,6 +533,112 @@
         loadScores();
         loadSchedule();
         loadRoster();
+
+        // All-Time Leaders Stats
+        let statsData = null;
+        let currentCategory = 'passing';
+
+        const statsColumns = {
+            passing: ['Rank', 'Player', 'Years', 'Yards', 'TD', 'INT', 'Rating'],
+            rushing: ['Rank', 'Player', 'Years', 'Att', 'Yards', 'TD', 'Avg'],
+            receiving: ['Rank', 'Player', 'Years', 'Rec', 'Yards', 'TD', 'Avg'],
+            scoring: ['Rank', 'Player', 'Years', 'Pts', 'TD', 'FG', 'XP'],
+            defense: ['Rank', 'Player', 'Years', 'Sacks', 'INT', 'FF', 'Tkl'],
+            returns: ['Rank', 'Player', 'Years', 'KR Yds', 'PR Yds', 'TD'],
+            kicking: ['Rank', 'Player', 'Years', 'FGM', 'FGA', 'FG%', 'Pts'],
+            punting: ['Rank', 'Player', 'Years', 'Punts', 'Yards', 'Avg']
+        };
+
+        function formatNumber(num) {
+            return num ? num.toLocaleString() : '0';
+        }
+
+        function getStatValues(category, player) {
+            switch (category) {
+                case 'passing':
+                    return [formatNumber(player.yards), player.touchdowns, player.interceptions, player.rating?.toFixed(1)];
+                case 'rushing':
+                    return [formatNumber(player.attempts), formatNumber(player.yards), player.touchdowns, player.average?.toFixed(1)];
+                case 'receiving':
+                    return [formatNumber(player.receptions), formatNumber(player.yards), player.touchdowns, player.average?.toFixed(1)];
+                case 'scoring':
+                    return [formatNumber(player.points), player.touchdowns, player.fieldGoals, player.extraPoints];
+                case 'defense':
+                    return [player.sacks?.toFixed(1), player.interceptions, player.forcedFumbles, formatNumber(player.tackles)];
+                case 'returns':
+                    return [formatNumber(player.kickReturnYards), formatNumber(player.puntReturnYards), player.touchdowns];
+                case 'kicking':
+                    return [player.fieldGoalsMade, player.fieldGoalsAttempted, player.percentage?.toFixed(1) + '%', formatNumber(player.points)];
+                case 'punting':
+                    return [formatNumber(player.punts), formatNumber(player.yards), player.average?.toFixed(1)];
+                default:
+                    return [];
+            }
+        }
+
+        function renderStatsTable(category) {
+            const container = document.getElementById('statsTableContainer');
+            if (!statsData || !statsData[category]) {
+                container.innerHTML = '<div class="stats-loading">No data available</div>';
+                return;
+            }
+
+            const columns = statsColumns[category];
+            const players = statsData[category];
+
+            let html = '<table class="stats-table"><thead><tr>';
+            columns.forEach((col, i) => {
+                html += `<th>${col}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            players.forEach(player => {
+                const values = getStatValues(category, player);
+                html += '<tr>';
+                html += `<td>${player.rank}</td>`;
+                html += `<td><span class="player-name">${player.player}</span><br><span class="player-years">${player.years}</span></td>`;
+                values.forEach((val, i) => {
+                    const isHighlight = i === 0;
+                    html += `<td${isHighlight ? ' class="stat-highlight"' : ''}>${val}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function switchStatsTab(category) {
+            currentCategory = category;
+            document.querySelectorAll('.stats-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
+            renderStatsTable(category);
+        }
+
+        async function loadStats() {
+            const container = document.getElementById('statsTableContainer');
+            try {
+                const response = await fetch('/api/stats/eagles');
+                statsData = await response.json();
+
+                if (statsData.lastUpdated) {
+                    const date = new Date(statsData.lastUpdated);
+                    document.getElementById('statsUpdated').textContent = 'Last updated: ' + date.toLocaleDateString();
+                }
+
+                renderStatsTable(currentCategory);
+            } catch (e) {
+                container.innerHTML = '<div class="stats-loading">Unable to load stats</div>';
+            }
+        }
+
+        // Setup tab click handlers
+        document.querySelectorAll('.stats-tab').forEach(tab => {
+            tab.addEventListener('click', () => switchStatsTab(tab.dataset.category));
+        });
+
+        loadStats();
 
         // Auth check for header
         async function checkAuth() {

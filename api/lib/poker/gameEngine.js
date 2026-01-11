@@ -275,7 +275,8 @@ export async function processAction(handId, playerId, action, amount = 0) {
     hand.actingPosition = getNextActingPosition(hand);
   }
 
-  // Save hand
+  // Save hand with last action time
+  hand.lastActionAt = new Date();
   await hands.updateOne(
     { _id: new ObjectId(handId) },
     { $set: hand }
