@@ -408,6 +408,90 @@
             cursor: pointer;
         }
 
+        /* Test Controls */
+        .test-panel {
+            position: fixed;
+            top: 60px;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px 0 0 8px;
+            z-index: 150;
+            transition: transform 0.3s;
+        }
+        .test-panel.collapsed {
+            transform: translateX(calc(100% - 40px));
+        }
+        .test-panel-toggle {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 100%;
+            background: var(--poker-green);
+            border: none;
+            border-radius: 8px 0 0 8px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 0.5rem;
+        }
+        .test-panel-content {
+            margin-left: 40px;
+            padding: 1rem;
+            width: 220px;
+        }
+        .test-panel h4 {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .test-btn {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .test-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .test-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .test-btn.primary {
+            background: var(--poker-green);
+            border-color: var(--poker-green);
+        }
+        .test-btn.primary:hover {
+            background: #1d6b42;
+        }
+        .test-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: var(--dark-bg);
+            border-radius: 4px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+        .test-status.success { color: #4caf50; }
+        .test-status.error { color: var(--red); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .table-container { aspect-ratio: 1.2; }
@@ -479,6 +563,22 @@
                 <h3>Waiting for players...</h3>
                 <p>The game will start when enough players join</p>
             </div>
+        </div>
+    </div>
+
+    <!-- Test Controls Panel -->
+    <div class="test-panel collapsed" id="testPanel">
+        <button class="test-panel-toggle" onclick="toggleTestPanel()">Test</button>
+        <div class="test-panel-content">
+            <h4>Bot Testing</h4>
+            <button class="test-btn" onclick="triggerBotAction()">Run Bot Action</button>
+            <button class="test-btn" onclick="runBotLoop()">Auto-Play Bots</button>
+            <button class="test-btn" id="stopBotsBtn" style="display:none;" onclick="stopBotLoop()">Stop Auto-Play</button>
+            <hr style="border-color: var(--border-color); margin: 0.75rem 0;">
+            <h4>Hand Control</h4>
+            <button class="test-btn" onclick="startNewHand()">Start New Hand</button>
+            <button class="test-btn" onclick="reloadState()">Refresh State</button>
+            <div class="test-status" id="testStatus"></div>
         </div>
     </div>
 
@@ -872,7 +972,124 @@
         // Cleanup on page leave
         window.addEventListener('beforeunload', () => {
             if (pollInterval) clearInterval(pollInterval);
+            if (botLoopInterval) clearInterval(botLoopInterval);
         });
+
+        // ============ Test Controls ============
+        let botLoopInterval = null;
+
+        function toggleTestPanel() {
+            document.getElementById('testPanel').classList.toggle('collapsed');
+        }
+
+        function setTestStatus(message, type = '') {
+            const el = document.getElementById('testStatus');
+            el.textContent = message;
+            el.className = 'test-status' + (type ? ' ' + type : '');
+        }
+
+        async function triggerBotAction() {
+            setTestStatus('Running bot action...');
+            try {
+                const response = await fetch('/api/poker/test/bot-action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tableId })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.isBot === false) {
+                        setTestStatus(`Waiting for ${data.waitingFor}`);
+                    } else if (data.handComplete) {
+                        setTestStatus('Hand complete!', 'success');
+                    } else if (data.needsNewHand) {
+                        setTestStatus('No active hand. Start one!');
+                    } else {
+                        setTestStatus(`${data.bot}: ${data.action} ${data.amount || ''}`, 'success');
+                    }
+                } else {
+                    setTestStatus(data.error || 'Bot action failed', 'error');
+                }
+
+                await loadGameState();
+            } catch (e) {
+                setTestStatus('Error: ' + e.message, 'error');
+            }
+        }
+
+        function runBotLoop() {
+            if (botLoopInterval) return;
+
+            document.getElementById('stopBotsBtn').style.display = 'block';
+            setTestStatus('Auto-play running...');
+
+            botLoopInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/api/poker/test/bot-action', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ tableId })
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        if (data.isBot === false) {
+                            setTestStatus(`Your turn! (${data.waitingFor})`);
+                        } else if (data.handComplete) {
+                            setTestStatus('Hand complete! Starting new...', 'success');
+                            // Auto-start new hand after short delay
+                            setTimeout(startNewHand, 1500);
+                        } else if (data.needsNewHand) {
+                            setTestStatus('Starting new hand...');
+                            startNewHand();
+                        } else {
+                            setTestStatus(`${data.bot}: ${data.action}`, 'success');
+                        }
+                    }
+
+                    await loadGameState();
+                } catch (e) {
+                    console.error('Bot loop error:', e);
+                }
+            }, 1000);
+        }
+
+        function stopBotLoop() {
+            if (botLoopInterval) {
+                clearInterval(botLoopInterval);
+                botLoopInterval = null;
+            }
+            document.getElementById('stopBotsBtn').style.display = 'none';
+            setTestStatus('Auto-play stopped');
+        }
+
+        async function startNewHand() {
+            setTestStatus('Starting new hand...');
+            try {
+                const response = await fetch('/api/poker/tables/' + tableId + '/new-hand', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    setTestStatus('New hand started!', 'success');
+                } else {
+                    setTestStatus(data.error || 'Failed to start hand', 'error');
+                }
+
+                await loadGameState();
+            } catch (e) {
+                setTestStatus('Error: ' + e.message, 'error');
+            }
+        }
+
+        async function reloadState() {
+            setTestStatus('Refreshing...');
+            await loadGameState();
+            setTestStatus('State refreshed', 'success');
+        }
 
         // Initialize
         init();
