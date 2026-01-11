@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texas Hold'em Poker | PhillySports.com</title>
+    <meta name="description" content="Play Texas Hold'em poker tournaments with Diehard Dollars on PhillySports.com. Compete against other Philly sports fans!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --poker-green: #1a5c3a;
+            --poker-felt: #2d8659;
+            --gold: #ffd700;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2c2c2c;
+            --border-color: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #2c2c2c;
+            --accent: #e63946;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+        a { color: inherit; text-decoration: none; }
+
+        /* Header */
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--poker-green); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: var(--poker-green); padding: 0.5rem 1rem; }
+        .header-auth .auth-btn:hover { opacity: 0.9; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, var(--poker-green), #0d3320); padding: 2.5rem 1.5rem; text-align: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M30 30c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm20 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity: 0.5; }
+        .hero-content { position: relative; z-index: 1; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero h1 .cards { font-size: 2rem; margin-right: 0.5rem; }
+        .hero p { color: rgba(255,255,255,0.8); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,215,0,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin-top: 1rem; font-weight: 600; color: var(--gold); }
+
+        /* Main Container */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Section Headers */
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .section-title { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 0.5rem; }
+        .section-title span { font-size: 1.2rem; }
+
+        /* Tournament Grid */
+        .tournament-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+
+        /* Tournament Card */
+        .tournament-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+        .tournament-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .tournament-header { padding: 1rem; background: linear-gradient(135deg, var(--poker-green), #1a5c3a); display: flex; align-items: center; justify-content: space-between; }
+        .tournament-name { font-weight: 700; font-size: 1.1rem; }
+        .tournament-type { background: rgba(255,255,255,0.2); padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .tournament-body { padding: 1rem; }
+        .tournament-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+        .tournament-stat { text-align: center; padding: 0.5rem; background: var(--dark-bg); border-radius: 6px; }
+        .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--gold); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        .tournament-info { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary); }
+        .tournament-info-row { display: flex; justify-content: space-between; }
+        .tournament-actions { display: flex; gap: 0.5rem; }
+        .btn { flex: 1; padding: 0.75rem 1rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .btn-primary { background: linear-gradient(135deg, var(--poker-green), #2d8659); color: white; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(45, 134, 89, 0.4); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-secondary { background: var(--dark-bg); color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { border-color: var(--poker-green); color: var(--text-primary); }
+        .btn-danger { background: var(--accent); color: white; }
+        .btn-danger:hover { opacity: 0.9; }
+
+        /* Status Badges */
+        .status-badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .status-registration { background: rgba(45, 134, 89, 0.2); color: #2d8659; }
+        .status-running { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+        .status-completed { background: rgba(108, 117, 125, 0.2); color: #6c757d; }
+
+        /* Empty State */
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+
+        /* Login Prompt */
+        .login-prompt { background: var(--card-bg); border-radius: 12px; padding: 2rem; text-align: center; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .login-prompt h3 { margin-bottom: 0.5rem; }
+        .login-prompt p { color: var(--text-muted); margin-bottom: 1rem; }
+        .login-prompt .btn { display: inline-block; width: auto; padding: 0.75rem 2rem; }
+
+        /* Quick Rules */
+        .rules-section { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; border: 1px solid var(--border-color); }
+        .rules-section h3 { margin-bottom: 1rem; font-size: 1.1rem; }
+        .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .rule-item { display: flex; align-items: flex-start; gap: 0.75rem; }
+        .rule-icon { font-size: 1.5rem; }
+        .rule-text { font-size: 0.85rem; color: var(--text-secondary); }
+        .rule-text strong { display: block; color: var(--text-primary); margin-bottom: 0.25rem; }
+
+        /* Footer */
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; max-width: 400px; width: 90%; padding: 1.5rem; }
+        .modal h3 { margin-bottom: 1rem; }
+        .modal p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem; }
+        .modal-actions { display: flex; gap: 0.5rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .tournament-grid { grid-template-columns: 1fr; }
+            .tournament-stats { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1><span class="cards">&#127183;</span> Texas Hold'em</h1>
+            <p>Compete against fellow Philly sports fans in tournament poker. Use your Diehard Dollars to buy in and win big!</p>
+            <div class="hero-badge">
+                <span>&#129689;</span>
+                <span>Win Diehard Dollars!</span>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-container">
+        <!-- Login Prompt (shown when not logged in) -->
+        <div class="login-prompt" id="loginPrompt" style="display: none;">
+            <h3>&#128274; Login Required</h3>
+            <p>You need to be logged in to register for poker tournaments</p>
+            <a href="/login.html" class="btn btn-primary">Login to Play</a>
+        </div>
+
+        <!-- Available Tournaments -->
+        <div class="section-header">
+            <h2 class="section-title"><span>&#127183;</span> Available Tournaments</h2>
+        </div>
+        <div class="tournament-grid" id="tournamentGrid">
+            <div class="empty-state">
+                <div class="empty-state-icon">&#9203;</div>
+                <h3>Loading tournaments...</h3>
+            </div>
+        </div>
+
+        <!-- Quick Rules -->
+        <div class="rules-section">
+            <h3>&#128218; How It Works</h3>
+            <div class="rules-grid">
+                <div class="rule-item">
+                    <div class="rule-icon">&#129689;</div>
+                    <div class="rule-text">
+                        <strong>Buy In</strong>
+                        Pay the entry fee with your Diehard Dollars to join a tournament
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">&#127183;</div>
+                    <div class="rule-text">
+                        <strong>Play Poker</strong>
+                        Full Texas Hold'em rules with blinds that increase over time
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">&#127942;</div>
+                    <div class="rule-text">
+                        <strong>Win Prizes</strong>
+                        Top finishers split the prize pool (50% / 30% / 20%)
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">&#128176;</div>
+                    <div class="rule-text">
+                        <strong>Refunds</strong>
+                        Unregister anytime before the tournament starts for a full refund
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--poker-green);">Back to Home</a></p>
+    </footer>
+
+    <!-- Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h3 id="modalTitle">Confirm Action</h3>
+            <p id="modalMessage">Are you sure?</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="modalConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let tournaments = [];
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    updateHeader();
+                    document.getElementById('loginPrompt').style.display = 'none';
+                } else {
+                    document.getElementById('loginPrompt').style.display = 'block';
+                }
+            } catch (e) {
+                document.getElementById('loginPrompt').style.display = 'block';
+            }
+        }
+
+        function updateHeader() {
+            const headerAuth = document.getElementById('headerAuth');
+            headerAuth.innerHTML = `
+                <div class="coin-display" title="Diehard Dollars">
+                    <span>&#129689;</span>
+                    <span id="headerBalance">${currentUser.coinBalance || 0}</span>
+                </div>
+                <a href="/profile.html">${currentUser.username}</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            `;
+            document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await fetch('/api/auth/logout', { method: 'POST' });
+                localStorage.removeItem('auth_token');
+                window.location.reload();
+            });
+        }
+
+        // Load tournaments
+        async function loadTournaments() {
+            const grid = document.getElementById('tournamentGrid');
+            try {
+                const response = await fetch('/api/poker/tournaments');
+                const data = await response.json();
+
+                if (data.success && data.tournaments.length > 0) {
+                    tournaments = data.tournaments;
+                    grid.innerHTML = data.tournaments.map(t => renderTournament(t)).join('');
+                } else {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">&#127183;</div>
+                            <h3>No Tournaments Available</h3>
+                            <p>Check back soon for upcoming poker tournaments!</p>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">&#9888;</div>
+                        <h3>Unable to Load</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTournament(t) {
+            const statusClass = t.status === 'registration' ? 'status-registration' :
+                               t.status === 'running' ? 'status-running' : 'status-completed';
+            const statusText = t.status === 'registration' ? 'Registering' :
+                              t.status === 'running' ? 'In Progress' : 'Completed';
+
+            const spotsLeft = t.maxPlayers - t.registeredCount;
+            const isFull = spotsLeft === 0;
+            const canRegister = currentUser && t.status === 'registration' && !t.isRegistered && !isFull;
+            const canUnregister = currentUser && t.status === 'registration' && t.isRegistered;
+
+            let actionButtons = '';
+            if (t.status === 'registration') {
+                if (t.isRegistered) {
+                    actionButtons = `
+                        <button class="btn btn-danger" onclick="unregisterTournament('${t._id}', '${t.name}', ${t.buyIn})">Unregister</button>
+                    `;
+                } else if (isFull) {
+                    actionButtons = `<button class="btn btn-secondary" disabled>Full</button>`;
+                } else if (currentUser) {
+                    actionButtons = `
+                        <button class="btn btn-primary" onclick="registerTournament('${t._id}', '${t.name}', ${t.buyIn})">
+                            Register ${t.buyIn > 0 ? `(${t.buyIn} &#129689;)` : '(Free)'}
+                        </button>
+                    `;
+                } else {
+                    actionButtons = `<a href="/login.html" class="btn btn-primary">Login to Register</a>`;
+                }
+            } else if (t.status === 'running' && t.isRegistered) {
+                actionButtons = `<a href="/poker-table.html?tournament=${t._id}" class="btn btn-primary">Join Table</a>`;
+            }
+
+            return `
+                <div class="tournament-card">
+                    <div class="tournament-header">
+                        <div class="tournament-name">${t.name}</div>
+                        <div class="tournament-type">${t.type === 'sit_n_go' ? 'Sit & Go' : 'Scheduled'}</div>
+                    </div>
+                    <div class="tournament-body">
+                        <div class="tournament-stats">
+                            <div class="tournament-stat">
+                                <div class="stat-value">${t.buyIn > 0 ? t.buyIn : 'Free'}</div>
+                                <div class="stat-label">Buy-In</div>
+                            </div>
+                            <div class="tournament-stat">
+                                <div class="stat-value">${t.prizePool}</div>
+                                <div class="stat-label">Prize Pool</div>
+                            </div>
+                            <div class="tournament-stat">
+                                <div class="stat-value">${t.registeredCount}/${t.maxPlayers}</div>
+                                <div class="stat-label">Players</div>
+                            </div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-info-row">
+                                <span>Status</span>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="tournament-info-row">
+                                <span>Starting Chips</span>
+                                <span>${t.startingChips?.toLocaleString() || '1,500'}</span>
+                            </div>
+                            <div class="tournament-info-row">
+                                <span>Prizes</span>
+                                <span>50% / 30% / 20%</span>
+                            </div>
+                        </div>
+                        <div class="tournament-actions">
+                            ${actionButtons}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Register for tournament
+        function registerTournament(tournamentId, name, buyIn) {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            if (buyIn > (currentUser.coinBalance || 0)) {
+                alert(`Insufficient Diehard Dollars. You need ${buyIn} but only have ${currentUser.coinBalance || 0}.`);
+                return;
+            }
+
+            showModal(
+                'Confirm Registration',
+                `Register for "${name}" for ${buyIn > 0 ? buyIn + ' Diehard Dollars' : 'free'}?`,
+                async () => {
+                    try {
+                        const response = await fetch('/api/poker/tournaments/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ tournamentId })
+                        });
+                        const data = await response.json();
+
+                        if (data.success) {
+                            currentUser.coinBalance = data.newBalance;
+                            updateHeader();
+                            loadTournaments();
+                            alert(`Successfully registered for ${name}!`);
+                        } else {
+                            alert(data.error || 'Registration failed');
+                        }
+                    } catch (e) {
+                        alert('Registration failed. Please try again.');
+                    }
+                    closeModal();
+                }
+            );
+        }
+
+        // Unregister from tournament
+        function unregisterTournament(tournamentId, name, buyIn) {
+            showModal(
+                'Confirm Unregistration',
+                `Unregister from "${name}"? ${buyIn > 0 ? `You will be refunded ${buyIn} Diehard Dollars.` : ''}`,
+                async () => {
+                    try {
+                        const response = await fetch('/api/poker/tournaments/unregister', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ tournamentId })
+                        });
+                        const data = await response.json();
+
+                        if (data.success) {
+                            currentUser.coinBalance = data.newBalance;
+                            updateHeader();
+                            loadTournaments();
+                            alert(`Unregistered from ${name}. ${buyIn > 0 ? `Refunded ${buyIn} Diehard Dollars.` : ''}`);
+                        } else {
+                            alert(data.error || 'Unregistration failed');
+                        }
+                    } catch (e) {
+                        alert('Unregistration failed. Please try again.');
+                    }
+                    closeModal();
+                }
+            );
+        }
+
+        // Modal functions
+        function showModal(title, message, onConfirm) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('modalConfirmBtn').onclick = onConfirm;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        // Initialize
+        checkAuth().then(() => loadTournaments());
+    </script>
+</body>
+</html>
