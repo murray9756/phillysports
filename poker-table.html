@@ -739,6 +739,142 @@
             .table-container { aspect-ratio: 2; }
             .action-panel { padding: 0.3rem; }
         }
+
+        /* Table Chat */
+        .table-chat {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 320px;
+            max-height: 300px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-radius: 0 12px 0 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 99;
+            transition: transform 0.3s;
+        }
+        .table-chat.collapsed {
+            transform: translateY(calc(100% - 40px));
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: var(--poker-green);
+            border-radius: 0 12px 0 0;
+            cursor: pointer;
+        }
+        .chat-header h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .chat-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .chat-unread {
+            background: var(--red);
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+            max-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .chat-message {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.5rem;
+            background: var(--dark-bg);
+            border-radius: 6px;
+        }
+        .chat-message .chat-user {
+            font-weight: 700;
+            color: var(--gold);
+            margin-right: 0.35rem;
+        }
+        .chat-message .chat-text {
+            color: var(--text-secondary);
+        }
+        .chat-message.system {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            font-style: italic;
+            text-align: center;
+        }
+        .chat-message.system .chat-user { display: none; }
+        .chat-input-row {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .chat-input {
+            flex: 1;
+            background: var(--dark-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--poker-green);
+        }
+        .chat-send {
+            background: var(--poker-green);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .chat-send:hover {
+            background: #1d6b42;
+        }
+
+        @media (max-width: 768px) {
+            .table-chat {
+                width: 100%;
+                border-radius: 12px 12px 0 0;
+                border-right: none;
+            }
+            .chat-header {
+                border-radius: 12px 12px 0 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .table-chat {
+                max-height: 250px;
+            }
+            .chat-messages {
+                max-height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -883,6 +1019,26 @@
             <p class="winner-hand" id="winnerHand">Full House, Kings full of Aces</p>
             <div class="winner-amount" id="winnerAmount">+500</div>
             <button class="winner-btn" onclick="closeWinnerOverlay()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Table Chat -->
+    <div class="table-chat collapsed" id="tableChat">
+        <div class="chat-header" onclick="toggleChat()">
+            <h4>
+                <span>💬</span> Table Chat
+                <span class="chat-unread" id="chatUnread" style="display:none;">0</span>
+            </h4>
+            <button class="chat-toggle" id="chatToggleBtn">▲</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message system">
+                <span class="chat-text">Welcome to the table!</span>
+            </div>
+        </div>
+        <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." maxlength="200" onkeypress="handleChatKeypress(event)">
+            <button class="chat-send" onclick="sendChatMessage()">Send</button>
         </div>
     </div>
 
@@ -1613,6 +1769,7 @@
             if (pollInterval) clearInterval(pollInterval);
             if (botLoopInterval) clearInterval(botLoopInterval);
             if (blindTimerInterval) clearInterval(blindTimerInterval);
+            if (chatPollInterval) clearInterval(chatPollInterval);
             if (pusher) {
                 pusher.disconnect();
             }
@@ -1884,8 +2041,152 @@
             }
         }
 
+        // ============ Table Chat ============
+        let chatMessages = [];
+        let lastChatId = null;
+        let chatPollInterval = null;
+        let unreadCount = 0;
+        let chatExpanded = false;
+
+        function toggleChat() {
+            const chat = document.getElementById('tableChat');
+            const toggleBtn = document.getElementById('chatToggleBtn');
+            chatExpanded = !chatExpanded;
+
+            if (chatExpanded) {
+                chat.classList.remove('collapsed');
+                toggleBtn.textContent = '▼';
+                // Clear unread count when opened
+                unreadCount = 0;
+                updateUnreadBadge();
+                // Scroll to bottom
+                const messagesEl = document.getElementById('chatMessages');
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            } else {
+                chat.classList.add('collapsed');
+                toggleBtn.textContent = '▲';
+            }
+        }
+
+        function updateUnreadBadge() {
+            const badge = document.getElementById('chatUnread');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.style.display = 'inline';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+
+            if (!message || !tableId || !currentUser) return;
+
+            input.value = '';
+
+            try {
+                const response = await fetch(`/api/poker/tables/${tableId}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.message) {
+                    appendChatMessage(data.message);
+                }
+            } catch (e) {
+                console.error('Failed to send chat message:', e);
+            }
+        }
+
+        async function loadChatMessages() {
+            if (!tableId) return;
+
+            try {
+                const url = lastChatId
+                    ? `/api/poker/tables/${tableId}/chat?after=${lastChatId}`
+                    : `/api/poker/tables/${tableId}/chat`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success && data.messages) {
+                    for (const msg of data.messages) {
+                        appendChatMessage(msg);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load chat messages:', e);
+            }
+        }
+
+        function appendChatMessage(msg) {
+            // Check if message already displayed
+            if (document.querySelector(`[data-msg-id="${msg._id}"]`)) return;
+
+            const messagesEl = document.getElementById('chatMessages');
+            const isSystem = msg.type === 'system';
+            const isMe = msg.userId === currentUser?.userId;
+
+            const msgEl = document.createElement('div');
+            msgEl.className = 'chat-message' + (isSystem ? ' system' : '');
+            msgEl.setAttribute('data-msg-id', msg._id);
+
+            if (isSystem) {
+                msgEl.innerHTML = `<span class="chat-text">${escapeHtml(msg.message)}</span>`;
+            } else {
+                msgEl.innerHTML = `
+                    <span class="chat-user">${escapeHtml(msg.username)}:</span>
+                    <span class="chat-text">${escapeHtml(msg.message)}</span>
+                `;
+            }
+
+            messagesEl.appendChild(msgEl);
+            lastChatId = msg._id;
+
+            // Scroll to bottom if chat is open
+            if (chatExpanded) {
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            } else if (!isMe) {
+                // Increment unread if chat is closed and not own message
+                unreadCount++;
+                updateUnreadBadge();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function startChatPolling() {
+            // Initial load
+            loadChatMessages();
+            // Poll every 3 seconds for new messages
+            chatPollInterval = setInterval(loadChatMessages, 3000);
+        }
+
+        function stopChatPolling() {
+            if (chatPollInterval) {
+                clearInterval(chatPollInterval);
+                chatPollInterval = null;
+            }
+        }
+
         // Initialize
         init();
+        startChatPolling();
     </script>
 </body>
 </html>
