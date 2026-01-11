@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | PhillySports.com</title>
+    <meta name="description" content="View and manage your PhillySports.com profile. Follow other fans, save articles, and customize your experience.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-nav { display: flex; gap: 1rem; align-items: center; }
+        .header-nav a { color: #ffffff; font-size: 0.9rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
+        .header-nav a:hover { background: rgba(255,255,255,0.1); }
+
+        .main-container { flex: 1; max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+
+        .profile-header { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 2rem; margin-bottom: 1.5rem; }
+        .profile-top { display: flex; gap: 2rem; align-items: flex-start; }
+        .profile-photo-container { position: relative; }
+        .profile-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border-color); background: var(--dark-bg); }
+        .profile-photo-placeholder { width: 120px; height: 120px; border-radius: 50%; background: var(--dark-bg); border: 4px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--text-muted); }
+        .edit-photo-btn { position: absolute; bottom: 0; right: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--sixers-blue); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .edit-photo-btn:hover { opacity: 0.9; }
+        .profile-info { flex: 1; }
+        .profile-name { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.75rem; }
+        .profile-username { color: var(--text-muted); font-size: 1rem; margin-bottom: 0.75rem; }
+        .profile-bio { color: var(--text-secondary); margin-bottom: 1rem; }
+        .profile-stats { display: flex; gap: 2rem; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.25rem; font-weight: 700; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); }
+        .team-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .team-badge.eagles { background: rgba(0,76,84,0.1); color: var(--eagles-green); }
+        .team-badge.phillies { background: rgba(232,24,40,0.1); color: var(--phillies-red); }
+        .team-badge.sixers { background: rgba(0,107,182,0.1); color: var(--sixers-blue); }
+        .team-badge.flyers { background: rgba(247,73,2,0.1); color: var(--flyers-orange); }
+        .team-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .team-dot.eagles { background: var(--eagles-green); }
+        .team-dot.phillies { background: var(--phillies-red); }
+        .team-dot.sixers { background: var(--sixers-blue); }
+        .team-dot.flyers { background: var(--flyers-orange); }
+
+        .profile-actions { margin-top: 1.5rem; display: flex; gap: 1rem; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--dark-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: var(--border-color); }
+        .btn-follow { background: var(--sixers-blue); color: white; }
+        .btn-follow:hover { opacity: 0.9; }
+        .btn-follow.following { background: var(--dark-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        .tab { padding: 0.75rem 1.25rem; border: none; background: none; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.2s; font-family: inherit; }
+        .tab:hover { color: var(--text-primary); }
+        .tab.active { color: var(--text-primary); background: var(--card-bg); border: 1px solid var(--border-color); border-bottom: none; margin-bottom: -1px; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 1rem; }
+        .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; }
+
+        .saved-article { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .saved-article:last-child { border-bottom: none; }
+        .saved-article-title { font-weight: 500; color: var(--text-primary); }
+        .saved-article-title:hover { color: var(--sixers-blue); }
+        .saved-article-date { font-size: 0.8rem; color: var(--text-muted); }
+        .remove-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.25rem; padding: 0.25rem; }
+        .remove-btn:hover { color: var(--phillies-red); }
+
+        .user-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .user-item:last-child { border-bottom: none; }
+        .user-info { display: flex; align-items: center; gap: 1rem; }
+        .user-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: var(--dark-bg); }
+        .user-avatar-placeholder { width: 48px; height: 48px; border-radius: 50%; background: var(--dark-bg); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: var(--text-muted); }
+        .user-details { }
+        .user-name { font-weight: 600; }
+        .user-handle { font-size: 0.85rem; color: var(--text-muted); }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+
+        .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .empty-state-text { font-size: 1rem; }
+
+        .edit-form { display: none; }
+        .edit-form.active { display: block; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-primary); }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--card-bg); transition: border-color 0.2s, box-shadow 0.2s; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--sixers-blue); box-shadow: 0 0 0 3px rgba(0,107,182,0.1); }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-group .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+
+        .error-message { background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem; display: none; }
+        .error-message.show { display: block; }
+        .success-message { background: #dcfce7; border: 1px solid #bbf7d0; color: #16a34a; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem; display: none; }
+        .success-message.show { display: block; }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        .footer { padding: 1rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        @media (max-width: 640px) {
+            .profile-top { flex-direction: column; align-items: center; text-align: center; }
+            .profile-stats { justify-content: center; }
+            .profile-actions { justify-content: center; flex-wrap: wrap; }
+            .tabs { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <nav class="header-nav" id="headerNav">
+                <a href="/login.html">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="loading" id="loadingState">Loading profile...</div>
+
+        <div id="profileContent" style="display: none;">
+            <div class="profile-header">
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+
+                <div class="profile-top" id="profileView">
+                    <div class="profile-photo-container">
+                        <div class="profile-photo-placeholder" id="profilePhotoPlaceholder">?</div>
+                        <img src="" alt="Profile photo" class="profile-photo" id="profilePhoto" style="display: none;">
+                        <button class="edit-photo-btn" id="editPhotoBtn" style="display: none;" title="Change photo">+</button>
+                        <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="profile-name">
+                            <span id="displayName">Loading...</span>
+                            <span class="team-badge" id="teamBadge" style="display: none;">
+                                <span class="team-dot"></span>
+                                <span class="team-name"></span>
+                            </span>
+                        </h1>
+                        <p class="profile-username" id="username">@username</p>
+                        <p class="profile-bio" id="bio"></p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-value" id="followersCount">0</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="followingCount">0</div>
+                                <div class="stat-label">Following</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="savedCount">0</div>
+                                <div class="stat-label">Saved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions" id="profileActions">
+                    <button class="btn btn-primary" id="editProfileBtn" style="display: none;">Edit Profile</button>
+                    <a href="/settings.html" class="btn btn-secondary" id="settingsBtn" style="display: none;">Settings</a>
+                    <button class="btn btn-follow" id="followBtn" style="display: none;">Follow</button>
+                </div>
+
+                <div class="edit-form" id="editForm">
+                    <form id="profileEditForm">
+                        <div class="form-group">
+                            <label for="editDisplayName">Display Name</label>
+                            <input type="text" id="editDisplayName" name="displayName" placeholder="Your display name">
+                        </div>
+                        <div class="form-group">
+                            <label for="editBio">Bio</label>
+                            <textarea id="editBio" name="bio" placeholder="Tell us about yourself..."></textarea>
+                            <p class="hint">Max 500 characters</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTeam">Favorite Team</label>
+                            <select id="editTeam" name="favoriteTeam">
+                                <option value="">Select a team</option>
+                                <option value="eagles">Eagles</option>
+                                <option value="phillies">Phillies</option>
+                                <option value="sixers">76ers</option>
+                                <option value="flyers">Flyers</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tabs" id="profileTabs">
+                <button class="tab active" data-tab="saved">Saved Articles</button>
+                <button class="tab" data-tab="followers">Followers</button>
+                <button class="tab" data-tab="following">Following</button>
+            </div>
+
+            <div class="tab-content active" id="tab-saved">
+                <div class="card">
+                    <div id="savedArticles">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📰</div>
+                            <p class="empty-state-text">No saved articles yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-followers">
+                <div class="card">
+                    <div id="followersList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <p class="empty-state-text">No followers yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-following">
+                <div class="card">
+                    <div id="followingList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <p class="empty-state-text">Not following anyone yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let profileUser = null;
+        let isOwnProfile = false;
+
+        const teamNames = {
+            eagles: 'Eagles',
+            phillies: 'Phillies',
+            sixers: '76ers',
+            flyers: 'Flyers'
+        };
+
+        // Get user ID from URL
+        function getProfileId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || params.get('username');
+        }
+
+        // Check current user auth
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    updateHeaderNav();
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        function updateHeaderNav() {
+            const nav = document.getElementById('headerNav');
+            if (currentUser) {
+                nav.innerHTML = `
+                    <a href="/profile.html">Profile</a>
+                    <a href="#" id="logoutLink">Logout</a>
+                `;
+                document.getElementById('logoutLink').addEventListener('click', handleLogout);
+            }
+        }
+
+        async function handleLogout(e) {
+            e.preventDefault();
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                localStorage.removeItem('auth_token');
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Load profile
+        async function loadProfile() {
+            const profileId = getProfileId();
+
+            try {
+                let response;
+                if (profileId) {
+                    response = await fetch(`/api/users/${encodeURIComponent(profileId)}`);
+                } else if (currentUser) {
+                    response = await fetch(`/api/users/${currentUser._id}`);
+                    isOwnProfile = true;
+                } else {
+                    window.location.href = '/login.html';
+                    return;
+                }
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load profile');
+                }
+
+                profileUser = data.user;
+                isOwnProfile = currentUser && currentUser._id === profileUser._id;
+                renderProfile();
+
+            } catch (error) {
+                document.getElementById('loadingState').textContent = 'Profile not found';
+                console.error('Load profile error:', error);
+            }
+        }
+
+        function renderProfile() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('profileContent').style.display = 'block';
+
+            // Photo
+            if (profileUser.profilePhoto) {
+                document.getElementById('profilePhoto').src = profileUser.profilePhoto;
+                document.getElementById('profilePhoto').style.display = 'block';
+                document.getElementById('profilePhotoPlaceholder').style.display = 'none';
+            } else {
+                document.getElementById('profilePhotoPlaceholder').textContent =
+                    (profileUser.displayName || profileUser.username || '?')[0].toUpperCase();
+            }
+
+            // Name and username
+            document.getElementById('displayName').textContent = profileUser.displayName || profileUser.username;
+            document.getElementById('username').textContent = '@' + profileUser.username;
+            document.getElementById('bio').textContent = profileUser.bio || '';
+
+            // Team badge
+            if (profileUser.favoriteTeam) {
+                const badge = document.getElementById('teamBadge');
+                badge.style.display = 'inline-flex';
+                badge.className = 'team-badge ' + profileUser.favoriteTeam;
+                badge.querySelector('.team-dot').className = 'team-dot ' + profileUser.favoriteTeam;
+                badge.querySelector('.team-name').textContent = teamNames[profileUser.favoriteTeam];
+            }
+
+            // Stats
+            document.getElementById('followersCount').textContent = profileUser.followers?.length || 0;
+            document.getElementById('followingCount').textContent = profileUser.following?.length || 0;
+            document.getElementById('savedCount').textContent = profileUser.savedArticles?.length || 0;
+
+            // Actions
+            if (isOwnProfile) {
+                document.getElementById('editProfileBtn').style.display = 'block';
+                document.getElementById('settingsBtn').style.display = 'block';
+                document.getElementById('editPhotoBtn').style.display = 'flex';
+                loadSavedArticles();
+            } else if (currentUser) {
+                const followBtn = document.getElementById('followBtn');
+                followBtn.style.display = 'block';
+                const isFollowing = profileUser.followers?.includes(currentUser._id);
+                updateFollowButton(isFollowing);
+            }
+
+            // Update page title
+            document.title = `${profileUser.displayName || profileUser.username} | PhillySports.com`;
+        }
+
+        function updateFollowButton(isFollowing) {
+            const btn = document.getElementById('followBtn');
+            if (isFollowing) {
+                btn.textContent = 'Following';
+                btn.classList.add('following');
+            } else {
+                btn.textContent = 'Follow';
+                btn.classList.remove('following');
+            }
+        }
+
+        // Load saved articles
+        async function loadSavedArticles() {
+            if (!isOwnProfile) return;
+
+            try {
+                const response = await fetch('/api/articles/saved');
+                const data = await response.json();
+
+                if (data.articles && data.articles.length > 0) {
+                    const container = document.getElementById('savedArticles');
+                    container.innerHTML = data.articles.map(article => `
+                        <div class="saved-article">
+                            <div>
+                                <a href="${article.url}" class="saved-article-title">${article.title}</a>
+                                <p class="saved-article-date">Saved ${formatDate(article.savedAt)}</p>
+                            </div>
+                            <button class="remove-btn" data-url="${article.url}" title="Remove">&times;</button>
+                        </div>
+                    `).join('');
+
+                    // Add remove handlers
+                    container.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.addEventListener('click', () => unsaveArticle(btn.dataset.url));
+                    });
+                }
+            } catch (error) {
+                console.error('Load saved articles error:', error);
+            }
+        }
+
+        async function unsaveArticle(url) {
+            try {
+                await fetch('/api/articles/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                loadSavedArticles();
+            } catch (error) {
+                console.error('Unsave error:', error);
+            }
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+            if (days === 0) return 'today';
+            if (days === 1) return 'yesterday';
+            if (days < 7) return `${days} days ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Follow/unfollow
+        document.getElementById('followBtn').addEventListener('click', async () => {
+            if (!currentUser || !profileUser) return;
+
+            try {
+                const response = await fetch('/api/users/follow', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ targetUserId: profileUser._id })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    updateFollowButton(data.following);
+                    const count = parseInt(document.getElementById('followersCount').textContent);
+                    document.getElementById('followersCount').textContent = data.following ? count + 1 : count - 1;
+                }
+            } catch (error) {
+                console.error('Follow error:', error);
+            }
+        });
+
+        // Edit profile
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            document.getElementById('editForm').classList.add('active');
+            document.getElementById('profileView').style.display = 'none';
+            document.getElementById('profileActions').style.display = 'none';
+
+            // Populate form
+            document.getElementById('editDisplayName').value = profileUser.displayName || '';
+            document.getElementById('editBio').value = profileUser.bio || '';
+            document.getElementById('editTeam').value = profileUser.favoriteTeam || '';
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', () => {
+            document.getElementById('editForm').classList.remove('active');
+            document.getElementById('profileView').style.display = 'flex';
+            document.getElementById('profileActions').style.display = 'flex';
+        });
+
+        document.getElementById('profileEditForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            const displayName = document.getElementById('editDisplayName').value;
+            const bio = document.getElementById('editBio').value;
+            const favoriteTeam = document.getElementById('editTeam').value;
+
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ displayName, bio, favoriteTeam })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Update failed');
+                }
+
+                profileUser = { ...profileUser, displayName, bio, favoriteTeam };
+                renderProfile();
+
+                document.getElementById('editForm').classList.remove('active');
+                document.getElementById('profileView').style.display = 'flex';
+                document.getElementById('profileActions').style.display = 'flex';
+
+                successMessage.textContent = 'Profile updated!';
+                successMessage.classList.add('show');
+                setTimeout(() => successMessage.classList.remove('show'), 3000);
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.add('show');
+            }
+        });
+
+        // Photo upload
+        document.getElementById('editPhotoBtn').addEventListener('click', () => {
+            document.getElementById('photoInput').click();
+        });
+
+        document.getElementById('photoInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Image must be less than 2MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const base64 = event.target.result;
+
+                try {
+                    const response = await fetch('/api/profile/update', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ profilePhoto: base64 })
+                    });
+
+                    if (response.ok) {
+                        document.getElementById('profilePhoto').src = base64;
+                        document.getElementById('profilePhoto').style.display = 'block';
+                        document.getElementById('profilePhotoPlaceholder').style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Photo upload error:', error);
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+
+                if (tab.dataset.tab === 'followers') loadFollowers();
+                if (tab.dataset.tab === 'following') loadFollowing();
+            });
+        });
+
+        async function loadFollowers() {
+            if (!profileUser.followers?.length) return;
+
+            try {
+                const container = document.getElementById('followersList');
+                container.innerHTML = '<div class="loading">Loading...</div>';
+
+                const users = await Promise.all(
+                    profileUser.followers.slice(0, 20).map(id =>
+                        fetch(`/api/users/${id}`).then(r => r.json()).then(d => d.user).catch(() => null)
+                    )
+                );
+
+                const validUsers = users.filter(u => u);
+                if (validUsers.length > 0) {
+                    container.innerHTML = validUsers.map(user => renderUserItem(user)).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p class="empty-state-text">No followers yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Load followers error:', error);
+            }
+        }
+
+        async function loadFollowing() {
+            if (!profileUser.following?.length) return;
+
+            try {
+                const container = document.getElementById('followingList');
+                container.innerHTML = '<div class="loading">Loading...</div>';
+
+                const users = await Promise.all(
+                    profileUser.following.slice(0, 20).map(id =>
+                        fetch(`/api/users/${id}`).then(r => r.json()).then(d => d.user).catch(() => null)
+                    )
+                );
+
+                const validUsers = users.filter(u => u);
+                if (validUsers.length > 0) {
+                    container.innerHTML = validUsers.map(user => renderUserItem(user)).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p class="empty-state-text">Not following anyone yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Load following error:', error);
+            }
+        }
+
+        function renderUserItem(user) {
+            const photoHtml = user.profilePhoto
+                ? `<img src="${user.profilePhoto}" alt="${user.username}" class="user-avatar">`
+                : `<div class="user-avatar-placeholder">${(user.displayName || user.username)[0].toUpperCase()}</div>`;
+
+            return `
+                <div class="user-item">
+                    <a href="/profile.html?id=${user._id}" class="user-info">
+                        ${photoHtml}
+                        <div class="user-details">
+                            <div class="user-name">${user.displayName || user.username}</div>
+                            <div class="user-handle">@${user.username}</div>
+                        </div>
+                    </a>
+                </div>
+            `;
+        }
+
+        // Initialize
+        async function init() {
+            await checkAuth();
+            await loadProfile();
+        }
+
+        init();
+    </script>
+</body>
+</html>

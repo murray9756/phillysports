@@ -177,6 +177,35 @@
             opacity: 0.9;
         }
 
+        .header-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-auth a {
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .header-auth a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .header-auth .auth-btn {
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            padding: 0.5rem 1rem;
+        }
+
+        .header-auth .auth-btn:hover {
+            opacity: 0.9;
+            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+        }
+
         /* Team Navigation */
         .team-nav {
             background: var(--header-bg);
@@ -994,10 +1023,10 @@
                 <img src="logo.png" alt="PhillySports.com">
                 <span>PhillySports</span>
             </a>
-            <form class="header-signup" id="signupForm" action="https://embeds.beehiiv.com/51eefbfb-8a77-4569-baa2-40ca11d0a0c2" method="POST" target="_blank">
-                <input type="email" name="email" placeholder="Enter your email" required>
-                <button type="submit">Subscribe</button>
-            </form>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
             <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
         </div>
         <nav class="team-nav">
@@ -1582,6 +1611,30 @@
         setInterval(loadScores, 5 * 60 * 1000);
         setInterval(loadSchedule, 5 * 60 * 1000);
         setInterval(loadNews, 5 * 60 * 1000);
+
+        // Auth check for header
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    const headerAuth = document.getElementById('headerAuth');
+                    headerAuth.innerHTML = `
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        localStorage.removeItem('auth_token');
+                        window.location.reload();
+                    });
+                }
+            } catch (error) {
+                // Not logged in, keep default login/signup links
+            }
+        }
+        checkAuth();
     </script>
 </body>
 </html>

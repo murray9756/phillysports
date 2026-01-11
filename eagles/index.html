@@ -80,6 +80,11 @@
         .header-logo { display: flex; align-items: center; gap: 0.5rem; }
         .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
         .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        .header-auth .auth-btn { background: var(--team-color); padding: 0.5rem 1rem; }
+        .header-auth .auth-btn:hover { opacity: 0.9; }
 
         .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
         .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
@@ -164,6 +169,10 @@
                 <img src="/logo.png" alt="PhillySports.com">
                 <span>PhillySports</span>
             </a>
+            <div class="header-auth" id="headerAuth">
+                <a href="/login.html">Login</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
         </div>
         <nav class="team-nav">
             <div class="team-nav-inner">
@@ -435,6 +444,28 @@
         loadScores();
         loadSchedule();
         loadRoster();
+
+        // Auth check for header
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    const headerAuth = document.getElementById('headerAuth');
+                    headerAuth.innerHTML = `
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        localStorage.removeItem('auth_token');
+                        window.location.reload();
+                    });
+                }
+            } catch (error) {}
+        }
+        checkAuth();
     </script>
 </body>
 </html>

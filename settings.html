@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | PhillySports.com</title>
+    <meta name="description" content="Manage your PhillySports.com account settings, update your email, change password, and more.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
+        .header-nav { display: flex; gap: 1rem; align-items: center; }
+        .header-nav a { color: #ffffff; font-size: 0.9rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
+        .header-nav a:hover { background: rgba(255,255,255,0.1); }
+
+        .main-container { flex: 1; max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .page-header p { color: var(--text-secondary); }
+        .breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .breadcrumb a { color: var(--sixers-blue); }
+        .breadcrumb a:hover { text-decoration: underline; }
+
+        .settings-section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .settings-section-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .settings-section-title .icon { font-size: 1.25rem; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-primary); }
+        .form-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; font-family: inherit; background: var(--card-bg); transition: border-color 0.2s, box-shadow 0.2s; }
+        .form-group input:focus { outline: none; border-color: var(--sixers-blue); box-shadow: 0 0 0 3px rgba(0,107,182,0.1); }
+        .form-group input:disabled { background: var(--dark-bg); color: var(--text-muted); }
+        .form-group .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; }
+        .btn-primary:hover:not(:disabled) { opacity: 0.9; }
+        .btn-secondary { background: var(--dark-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover:not(:disabled) { background: var(--border-color); }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+
+        .form-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+
+        .error-message { background: #fee2e2; border: 1px solid #fecaca; color: #dc2626; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem; display: none; }
+        .error-message.show { display: block; }
+        .success-message { background: #dcfce7; border: 1px solid #bbf7d0; color: #16a34a; padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem; margin-bottom: 1rem; display: none; }
+        .success-message.show { display: block; }
+
+        .danger-zone { border-color: #fecaca; }
+        .danger-zone .settings-section-title { color: #dc2626; }
+        .danger-zone p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem; }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        .footer { padding: 1rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; padding: 2rem; max-width: 400px; width: 90%; }
+        .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+        .modal-body { margin-bottom: 1.5rem; color: var(--text-secondary); }
+        .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <nav class="header-nav" id="headerNav">
+                <a href="/profile.html">Profile</a>
+                <a href="#" id="logoutLink">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="loading" id="loadingState">Loading settings...</div>
+
+        <div id="settingsContent" style="display: none;">
+            <div class="page-header">
+                <p class="breadcrumb"><a href="/profile.html">Profile</a> / Settings</p>
+                <h1>Account Settings</h1>
+                <p>Manage your account preferences</p>
+            </div>
+
+            <!-- Account Info Section -->
+            <section class="settings-section">
+                <h2 class="settings-section-title">
+                    <span class="icon">👤</span>
+                    Account Information
+                </h2>
+                <div class="error-message" id="accountError"></div>
+                <div class="success-message" id="accountSuccess"></div>
+                <form id="accountForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" disabled>
+                        <p class="hint">Username cannot be changed</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="saveAccountBtn">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Password Section -->
+            <section class="settings-section">
+                <h2 class="settings-section-title">
+                    <span class="icon">🔒</span>
+                    Change Password
+                </h2>
+                <div class="error-message" id="passwordError"></div>
+                <div class="success-message" id="passwordSuccess"></div>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password">
+                        <p class="hint">Minimum 8 characters</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="changePasswordBtn">Change Password</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Notifications Section -->
+            <section class="settings-section">
+                <h2 class="settings-section-title">
+                    <span class="icon">🔔</span>
+                    Notifications
+                </h2>
+                <div class="success-message" id="notifSuccess"></div>
+                <form id="notificationsForm">
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                            <input type="checkbox" id="emailNotifs" name="emailNotifs" style="width: auto;">
+                            <span>Email notifications for new followers</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                            <input type="checkbox" id="commentNotifs" name="commentNotifs" style="width: auto;">
+                            <span>Email notifications for comment replies</span>
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-secondary">Save Preferences</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Danger Zone -->
+            <section class="settings-section danger-zone">
+                <h2 class="settings-section-title">
+                    <span class="icon">⚠️</span>
+                    Danger Zone
+                </h2>
+                <p>Once you delete your account, there is no going back. Please be certain.</p>
+                <button class="btn btn-danger" id="deleteAccountBtn">Delete Account</button>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <h3 class="modal-title">Delete Account</h3>
+            <div class="modal-body">
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="deleteConfirmPassword">Enter your password to confirm</label>
+                    <input type="password" id="deleteConfirmPassword" placeholder="Your password">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Check auth and redirect if not logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    loadSettings();
+                } else {
+                    window.location.href = '/login.html';
+                }
+            } catch (error) {
+                window.location.href = '/login.html';
+            }
+        }
+
+        async function handleLogout(e) {
+            e.preventDefault();
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                localStorage.removeItem('auth_token');
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+
+        function loadSettings() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('settingsContent').style.display = 'block';
+
+            document.getElementById('username').value = currentUser.username;
+            document.getElementById('email').value = currentUser.email || '';
+        }
+
+        // Account form
+        document.getElementById('accountForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const errorEl = document.getElementById('accountError');
+            const successEl = document.getElementById('accountSuccess');
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Update failed');
+                }
+
+                successEl.textContent = 'Account updated successfully!';
+                successEl.classList.add('show');
+                setTimeout(() => successEl.classList.remove('show'), 3000);
+
+            } catch (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.add('show');
+            }
+        });
+
+        // Password form
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const errorEl = document.getElementById('passwordError');
+            const successEl = document.getElementById('passwordSuccess');
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!currentPassword || !newPassword) {
+                errorEl.textContent = 'Please fill in all password fields';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (newPassword.length < 8) {
+                errorEl.textContent = 'New password must be at least 8 characters';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                errorEl.textContent = 'New passwords do not match';
+                errorEl.classList.add('show');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Password change failed');
+                }
+
+                successEl.textContent = 'Password changed successfully!';
+                successEl.classList.add('show');
+
+                // Clear form
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+
+                setTimeout(() => successEl.classList.remove('show'), 3000);
+
+            } catch (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.add('show');
+            }
+        });
+
+        // Notifications form
+        document.getElementById('notificationsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const successEl = document.getElementById('notifSuccess');
+            successEl.textContent = 'Preferences saved!';
+            successEl.classList.add('show');
+            setTimeout(() => successEl.classList.remove('show'), 3000);
+        });
+
+        // Delete account modal
+        document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+            document.getElementById('deleteModal').classList.add('show');
+        });
+
+        document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+            document.getElementById('deleteModal').classList.remove('show');
+            document.getElementById('deleteConfirmPassword').value = '';
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+            const password = document.getElementById('deleteConfirmPassword').value;
+
+            if (!password) {
+                alert('Please enter your password to confirm');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+
+                if (response.ok) {
+                    localStorage.removeItem('auth_token');
+                    window.location.href = '/?deleted=1';
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Failed to delete account');
+                }
+            } catch (error) {
+                alert('Failed to delete account');
+            }
+        });
+
+        // Close modal on overlay click
+        document.getElementById('deleteModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('deleteModal').classList.remove('show');
+            }
+        });
+
+        checkAuth();
+    </script>
+</body>
+</html>

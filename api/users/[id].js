@@ -1,0 +1,61 @@
+const { ObjectId } = require('mongodb');
+const { getCollection } = require('../lib/mongodb');
+
+module.exports = async function handler(req, res) {
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    if (req.method !== 'GET') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        const { id } = req.query;
+
+        if (!id) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        const users = await getCollection('users');
+
+        let user;
+
+        // Try to find by ObjectId first, then by username
+        if (ObjectId.isValid(id)) {
+            user = await users.findOne(
+                { _id: new ObjectId(id) },
+                { projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 } }
+            );
+        }
+
+        if (!user) {
+            // Try finding by username
+            user = await users.findOne(
+                { username: id.toLowerCase() },
+                { projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 } }
+            );
+        }
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({
+            user: {
+                ...user,
+                _id: user._id.toString(),
+                followersCount: user.followers?.length || 0,
+                followingCount: user.following?.length || 0
+            }
+        });
+    } catch (error) {
+        console.error('Get user error:', error);
+        res.status(500).json({ error: 'Failed to get user' });
+    }
+};
