@@ -137,14 +137,17 @@ export default async function handler(req, res) {
         const botPlayers = seatedPlayers.filter(s => s.isBot);
 
         // If only 1 human and no bots, add a bot so they can play
+        console.log('Bot check:', { humanPlayers: humanPlayers.length, botPlayers: botPlayers.length });
         if (humanPlayers.length === 1 && botPlayers.length === 0) {
+            console.log('Adding bot to table...');
             try {
                 const botResult = await addBotToCashTable(id);
-                console.log('Bot added:', botResult.bot?.odUsername);
+                console.log('Bot added successfully:', botResult.bot?.odUsername);
 
                 // Refresh table after bot joined
                 updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
                 seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+                console.log('After bot add - seated players:', seatedPlayers.length);
 
                 // Broadcast bot joined
                 broadcastTableUpdate(id, 'player-joined', {
@@ -157,7 +160,7 @@ export default async function handler(req, res) {
                     isBot: true
                 });
             } catch (e) {
-                console.error('Error adding bot:', e.message);
+                console.error('Error adding bot:', e.message, e.stack);
             }
         }
 
@@ -203,10 +206,14 @@ export default async function handler(req, res) {
             seatedPlayers = updatedTable.seats.filter(s => s.playerId);
         }
 
+        // Final refresh before hand start check
+        updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
+        seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+
         // Start a hand if 2+ players and no hand in progress
         let handStarted = false;
         let handError = null;
-        console.log('Checking hand start:', { seatedCount: seatedPlayers.length, currentHandId: updatedTable.currentHandId });
+        console.log('Final hand start check:', { seatedCount: seatedPlayers.length, currentHandId: updatedTable.currentHandId, seats: updatedTable.seats.map(s => ({ pos: s.position, id: s.playerId?.toString()?.slice(-6), name: s.username })) });
 
         if (seatedPlayers.length >= 2 && !updatedTable.currentHandId) {
             try {
@@ -258,7 +265,9 @@ export default async function handler(req, res) {
             maxSeats: updatedTable.maxSeats,
             debug: {
                 seatedPlayersDetail: seatedPlayers.map(s => ({ pos: s.position, name: s.username, chips: s.chipStack, isBot: s.isBot })),
-                currentHandId: updatedTable.currentHandId
+                currentHandId: updatedTable.currentHandId?.toString() || null,
+                tableStatus: updatedTable.status,
+                allSeats: updatedTable.seats.map(s => ({ pos: s.position, hasPlayer: !!s.playerId, name: s.username }))
             }
         });
 
