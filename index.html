@@ -1562,7 +1562,7 @@
         async function loadLeaderboard() {
             const container = document.getElementById('leaderboardContainer');
             try {
-                const response = await fetch('/api/predictions/leaderboard?type=coins&limit=5');
+                const response = await fetch('/api/predictions/leaderboard?limit=5');
                 const data = await response.json();
 
                 if (data.success && data.leaderboard && data.leaderboard.length > 0) {
@@ -1573,7 +1573,7 @@
                             <div class="leaderboard-item">
                                 <div class="leaderboard-rank${rankClass}">${rank}</div>
                                 <span class="leaderboard-username">${entry.username}</span>
-                                <span class="leaderboard-coins">&#129689; ${entry.lifetimeCoins >= 1000 ? (entry.lifetimeCoins / 1000).toFixed(1) + 'k' : entry.lifetimeCoins}</span>
+                                <span class="leaderboard-coins">&#129689; ${entry.coinBalance >= 1000 ? (entry.coinBalance / 1000).toFixed(1) + 'k' : entry.coinBalance}</span>
                             </div>
                         `;
                     }).join('');
