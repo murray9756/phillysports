@@ -484,6 +484,58 @@
             to { opacity: 1; transform: translateX(0); }
         }
 
+        /* Chip Animations */
+        .chip-animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        .animated-chip {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ff8800 100%);
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        .animated-chip::after {
+            content: '$';
+            font-size: 14px;
+            font-weight: 800;
+        }
+        .animated-chip.red {
+            background: linear-gradient(135deg, #e53935 0%, #c62828 50%, #b71c1c 100%);
+        }
+        .animated-chip.blue {
+            background: linear-gradient(135deg, #1e88e5 0%, #1565c0 50%, #0d47a1 100%);
+        }
+        .animated-chip.green {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 50%, #1b5e20 100%);
+        }
+        .chip-stack {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            gap: -20px;
+        }
+        .chip-stack .animated-chip {
+            margin-top: -15px;
+        }
+        .chip-stack .animated-chip:first-child {
+            margin-top: 0;
+        }
+
         /* Tournament Status Bar */
         .tournament-status-bar {
             position: fixed;
@@ -1081,6 +1133,9 @@
         </div>
     </div>
 
+    <!-- Chip Animation Container -->
+    <div class="chip-animation-container" id="chipAnimationContainer"></div>
+
     <!-- Test Controls Panel -->
     <div class="test-panel collapsed" id="testPanel">
         <button class="test-panel-toggle" onclick="toggleTestPanel()">Test</button>
@@ -1346,6 +1401,12 @@
                     const actionText = formatAction(data.action, data.amount);
                     const actionClass = data.action.replace('_', '-');
                     logAction(seat.username || 'Player', actionClass, actionText);
+
+                    // Animate chips for opponent betting actions
+                    if (['bet', 'raise', 'call', 'all_in', 'small_blind', 'big_blind'].includes(data.action)) {
+                        const betAmount = data.amount || 20;
+                        animateChipsToPot(data.position, betAmount, getChipCount(betAmount));
+                    }
                 }
             }
             renderTable();
@@ -1957,6 +2018,12 @@
                 const actionText = formatAction(action, data.amount || amount);
                 logAction(myName, action.replace('_', '-'), actionText);
 
+                // Animate chips for betting actions
+                if (['bet', 'raise', 'call', 'all_in'].includes(action)) {
+                    const betAmount = data.amount || amount || 20;
+                    animateChipsToPot(myPosition, betAmount, getChipCount(betAmount));
+                }
+
                 // Immediately reload state
                 await loadGameState();
 
@@ -2010,7 +2077,20 @@
             // Log the win
             logAction(winnerName, 'winner', `wins ${winner.amount} DD`);
 
-            overlay.classList.add('show');
+            // Find winner's seat position
+            const winnerSeatEl = gameState?.table?.seats?.findIndex(s =>
+                s.playerId === winner.playerId?.toString() ||
+                s.playerId?.toString() === winner.playerId?.toString()
+            );
+            const winnerPos = winnerSeatEl >= 0 ? gameState.table.seats[winnerSeatEl].position : 0;
+
+            // Animate chips to winner
+            animateChipsToWinner(winnerPos, getChipCount(winner.amount));
+
+            // Show overlay after chip animation starts
+            setTimeout(() => {
+                overlay.classList.add('show');
+            }, 400);
 
             // Auto-continue countdown
             let countdown = 3;
@@ -2061,6 +2141,131 @@
             entry.className = 'action-entry new-hand';
             entry.textContent = `--- Hand #${handNumber} ---`;
             logEntries.appendChild(entry);
+        }
+
+        // Chip Animation Functions
+        function getElementCenter(element) {
+            const rect = element.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2
+            };
+        }
+
+        function getPotPosition() {
+            const potDisplay = document.getElementById('potDisplay');
+            if (potDisplay) {
+                return getElementCenter(potDisplay);
+            }
+            // Fallback to center of table
+            return { x: window.innerWidth / 2, y: window.innerHeight / 2 - 50 };
+        }
+
+        function getSeatPosition(position) {
+            const seat = document.querySelector(`.seat-${position}`);
+            if (seat) {
+                return getElementCenter(seat);
+            }
+            return null;
+        }
+
+        function animateChipsToPot(fromPosition, amount, numChips = 3) {
+            const container = document.getElementById('chipAnimationContainer');
+            const from = getSeatPosition(fromPosition);
+            const to = getPotPosition();
+
+            if (!from) return;
+
+            const chipColors = ['', 'red', 'blue', 'green'];
+
+            for (let i = 0; i < numChips; i++) {
+                setTimeout(() => {
+                    const chip = document.createElement('div');
+                    chip.className = `animated-chip ${chipColors[i % chipColors.length]}`;
+
+                    // Start position with slight randomness
+                    const startX = from.x - 15 + (Math.random() * 20 - 10);
+                    const startY = from.y - 15 + (Math.random() * 20 - 10);
+
+                    chip.style.left = startX + 'px';
+                    chip.style.top = startY + 'px';
+                    chip.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    chip.style.opacity = '1';
+
+                    container.appendChild(chip);
+
+                    // Animate to pot after a brief moment
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            const endX = to.x - 15 + (Math.random() * 30 - 15);
+                            const endY = to.y - 15 + (Math.random() * 20 - 10);
+                            chip.style.left = endX + 'px';
+                            chip.style.top = endY + 'px';
+                        });
+                    });
+
+                    // Remove chip after animation
+                    setTimeout(() => {
+                        chip.remove();
+                    }, 600);
+                }, i * 80);
+            }
+        }
+
+        function animateChipsToWinner(winnerPosition, numChips = 5) {
+            const container = document.getElementById('chipAnimationContainer');
+            const from = getPotPosition();
+            const to = getSeatPosition(winnerPosition);
+
+            if (!to) return;
+
+            const chipColors = ['', 'red', 'blue', 'green', ''];
+
+            for (let i = 0; i < numChips; i++) {
+                setTimeout(() => {
+                    const chip = document.createElement('div');
+                    chip.className = `animated-chip ${chipColors[i % chipColors.length]}`;
+
+                    // Start at pot with slight spread
+                    const startX = from.x - 15 + (Math.random() * 40 - 20);
+                    const startY = from.y - 15 + (Math.random() * 20 - 10);
+
+                    chip.style.left = startX + 'px';
+                    chip.style.top = startY + 'px';
+                    chip.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    chip.style.opacity = '1';
+
+                    container.appendChild(chip);
+
+                    // Animate to winner
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            const endX = to.x - 15 + (Math.random() * 20 - 10);
+                            const endY = to.y - 15;
+                            chip.style.left = endX + 'px';
+                            chip.style.top = endY + 'px';
+                        });
+                    });
+
+                    // Fade out and remove
+                    setTimeout(() => {
+                        chip.style.opacity = '0';
+                        chip.style.transform = 'scale(0.5)';
+                    }, 500);
+
+                    setTimeout(() => {
+                        chip.remove();
+                    }, 700);
+                }, i * 100);
+            }
+        }
+
+        function getChipCount(amount) {
+            if (amount >= 500) return 5;
+            if (amount >= 200) return 4;
+            if (amount >= 100) return 3;
+            if (amount >= 50) return 2;
+            return 1;
         }
 
         // Cleanup on page leave
