@@ -1617,7 +1617,6 @@
             // For cash games, currentHand is at top level; for tournaments, it's inside table
             const hand = gameState.currentHand || table.currentHand;
 
-            try {
             // Update tournament info
             if (table.tournament) {
                 const blinds = table.tournament.blindStructure?.[table.tournament.currentBlindLevel || 0];
@@ -1681,9 +1680,6 @@
                 showStatus('Waiting for hand to start...', 'The next hand will begin shortly');
             } else {
                 hideStatus();
-            }
-            } catch (e) {
-                alert('RENDER ERROR: ' + e.message + '\n' + e.stack);
             }
         }
 
