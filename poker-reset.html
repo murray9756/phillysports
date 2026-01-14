@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poker Reset</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        button { padding: 15px 30px; font-size: 18px; margin: 10px; cursor: pointer; }
+        .reset-all { background: #c62828; color: white; border: none; border-radius: 8px; }
+        .reset-me { background: #1565c0; color: white; border: none; border-radius: 8px; }
+        .back { background: #666; color: white; border: none; border-radius: 8px; }
+        #result { margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Poker Table Reset</h1>
+    <p>Use these buttons to fix stuck poker tables:</p>
+
+    <button class="reset-me" onclick="resetMySeat()">Reset My Seat Only</button>
+    <button class="reset-all" onclick="resetAllTables()">Reset ALL Tables</button>
+    <button class="back" onclick="location.href='/poker.html'">Back to Poker</button>
+
+    <div id="result"></div>
+
+    <script>
+        const resultDiv = document.getElementById('result');
+
+        async function resetMySeat() {
+            resultDiv.textContent = 'Resetting your seat...';
+            try {
+                const response = await fetch('/api/poker/cash-games/reset-seat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                resultDiv.textContent = 'Result:\n' + JSON.stringify(data, null, 2);
+            } catch (e) {
+                resultDiv.textContent = 'Error: ' + e.message;
+            }
+        }
+
+        async function resetAllTables() {
+            resultDiv.textContent = 'Resetting all tables...';
+            try {
+                const response = await fetch('/api/poker/cash-games/reset-all', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+                resultDiv.textContent = 'Result:\n' + JSON.stringify(data, null, 2);
+            } catch (e) {
+                resultDiv.textContent = 'Error: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
