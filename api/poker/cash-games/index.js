@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 const CASH_TABLE_CONFIG = {
     blinds: { small: 10, big: 20 },
     buyIn: 1000,
-    maxSeats: 2
+    maxSeats: 6
 };
 
 export default async function handler(req, res) {
@@ -92,7 +92,7 @@ async function createCashTable(req, res) {
 
     const { name } = req.body;
 
-    const table = createEmptyTable(name || `Heads-Up #${Date.now()}`);
+    const table = createEmptyTable(name || `Ring Game #${Date.now()}`);
     const result = await cashTables.insertOne(table);
 
     return res.status(201).json({
@@ -102,6 +102,21 @@ async function createCashTable(req, res) {
 }
 
 function createEmptyTable(name) {
+    const seats = [];
+    for (let i = 0; i < CASH_TABLE_CONFIG.maxSeats; i++) {
+        seats.push({
+            position: i,
+            playerId: null,
+            username: null,
+            chipStack: 0,
+            isActive: false,
+            isSittingOut: false,
+            cards: [],
+            currentBet: 0,
+            joinedAt: null
+        });
+    }
+
     return {
         name,
         status: 'waiting', // waiting, playing, paused
@@ -111,10 +126,7 @@ function createEmptyTable(name) {
         dealerPosition: 0,
         currentHandId: null,
         handsPlayed: 0,
-        seats: [
-            { position: 0, playerId: null, username: null, chipStack: 0, isActive: false, isSittingOut: false, cards: [], currentBet: 0, joinedAt: null },
-            { position: 1, playerId: null, username: null, chipStack: 0, isActive: false, isSittingOut: false, cards: [], currentBet: 0, joinedAt: null }
-        ],
+        seats,
         createdAt: new Date(),
         updatedAt: new Date()
     };
@@ -124,11 +136,10 @@ async function seedTablesIfNeeded(cashTables) {
     const count = await cashTables.countDocuments();
 
     if (count < 3) {
-        const tablesToCreate = 3 - count;
         const existingNames = (await cashTables.find({}).toArray()).map(t => t.name);
 
-        for (let i = 1; i <= 3; i++) {
-            const name = `Heads-Up #${i}`;
+        const tableNames = ['The Linc', 'South Philly', 'Broad Street'];
+        for (const name of tableNames) {
             if (!existingNames.includes(name)) {
                 await cashTables.insertOne(createEmptyTable(name));
             }

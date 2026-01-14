@@ -1,8 +1,9 @@
 // Reset ALL cash tables - admin endpoint
-// POST: Clear all seats from all cash tables
+// POST: Delete all tables and recreate with current config (6-seat tables)
 
 import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
+import { CASH_TABLE_CONFIG } from './index.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,16 +27,29 @@ export default async function handler(req, res) {
         const cashTables = await getCollection('cash_tables');
         const hands = await getCollection('poker_hands');
 
-        // Get all cash tables
-        const tables = await cashTables.find({}).toArray();
+        // Mark all cash game hands as complete
+        await hands.updateMany(
+            { tableType: 'cash', status: { $ne: 'complete' } },
+            {
+                $set: {
+                    status: 'complete',
+                    endedAt: new Date(),
+                    notes: 'Table reset by admin'
+                }
+            }
+        );
 
-        let tablesReset = 0;
+        // Delete all existing cash tables
+        const deleteResult = await cashTables.deleteMany({});
 
-        for (const table of tables) {
-            // Create empty seats
-            const emptySeats = [];
-            for (let i = 0; i < (table.maxSeats || 2); i++) {
-                emptySeats.push({
+        // Create new 6-seat tables
+        const tableNames = ['The Linc', 'South Philly', 'Broad Street'];
+        const newTables = [];
+
+        for (const name of tableNames) {
+            const seats = [];
+            for (let i = 0; i < CASH_TABLE_CONFIG.maxSeats; i++) {
+                seats.push({
                     position: i,
                     playerId: null,
                     username: null,
@@ -48,41 +62,31 @@ export default async function handler(req, res) {
                 });
             }
 
-            // Reset the table
-            await cashTables.updateOne(
-                { _id: table._id },
-                {
-                    $set: {
-                        seats: emptySeats,
-                        currentHandId: null,
-                        status: 'waiting',
-                        dealerPosition: 0,
-                        updatedAt: new Date()
-                    }
-                }
-            );
+            const table = {
+                name,
+                status: 'waiting',
+                blinds: CASH_TABLE_CONFIG.blinds,
+                buyIn: CASH_TABLE_CONFIG.buyIn,
+                maxSeats: CASH_TABLE_CONFIG.maxSeats,
+                dealerPosition: 0,
+                currentHandId: null,
+                handsPlayed: 0,
+                seats,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
 
-            // Mark any hands as complete
-            if (table.currentHandId) {
-                await hands.updateOne(
-                    { _id: table.currentHandId },
-                    {
-                        $set: {
-                            status: 'complete',
-                            endedAt: new Date(),
-                            notes: 'Table reset by admin'
-                        }
-                    }
-                );
-            }
-
-            tablesReset++;
+            newTables.push(table);
         }
+
+        await cashTables.insertMany(newTables);
 
         return res.status(200).json({
             success: true,
-            message: `Reset ${tablesReset} tables`,
-            tablesReset
+            message: `Deleted ${deleteResult.deletedCount} old tables, created ${newTables.length} new ${CASH_TABLE_CONFIG.maxSeats}-seat tables`,
+            tablesDeleted: deleteResult.deletedCount,
+            tablesCreated: newTables.length,
+            maxSeats: CASH_TABLE_CONFIG.maxSeats
         });
 
     } catch (error) {

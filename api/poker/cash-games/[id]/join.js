@@ -8,7 +8,6 @@ import { ObjectId } from 'mongodb';
 import { startNewHand } from '../../../lib/poker/gameEngine.js';
 import { broadcastTableUpdate, PUSHER_EVENTS } from '../../../lib/pusher.js';
 import { CASH_TABLE_CONFIG } from '../index.js';
-import { addBotToCashTable } from '../../../lib/poker/botManager.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -121,14 +120,10 @@ export default async function handler(req, res) {
             username: seatUpdate.username,
             position: openSeatIndex,
             chipStack: buyIn,
-            playerCount: seatedPlayers.length
+            playerCount: seatedPlayers.length,
+            maxSeats: updatedTable.maxSeats
         });
 
-        // If only 1 player (human just joined), add a bot opponent
-        let botAdded = null;
-        let botError = null;
-
-        // Log current state
         console.log('Seats after human joined:', JSON.stringify(updatedTable.seats.map(s => ({
             pos: s.position,
             id: s.playerId?.toString(),
@@ -136,64 +131,27 @@ export default async function handler(req, res) {
         }))));
         console.log('Seated players count:', seatedPlayers.length);
 
-        if (seatedPlayers.length === 1) {
-            console.log('Only 1 player, attempting to add bot...');
-            try {
-                const botResult = await addBotToCashTable(id);
-                console.log('Bot result:', JSON.stringify(botResult));
-                botAdded = botResult.bot;
-
-                // Refresh table after bot joined
-                updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
-                seatedPlayers = updatedTable.seats.filter(s => s.playerId);
-                console.log('Seated players after bot:', seatedPlayers.length);
-
-                // Broadcast bot joined
-                broadcastTableUpdate(id, 'player-joined', {
-                    playerId: botAdded.odUserId.toString(),
-                    username: botAdded.odUsername,
-                    position: botAdded.odPosition,
-                    chipStack: botAdded.odChipStack,
-                    playerCount: seatedPlayers.length,
-                    isBot: true
-                });
-            } catch (e) {
-                console.error('Error adding bot opponent:', e.message, e.stack);
-                botError = e.message + ' | ' + (e.stack || '').split('\n')[1];
-            }
-        } else {
-            console.log('Not adding bot, seatedPlayers.length =', seatedPlayers.length);
-        }
-
-        // If 2 players are now seated, start a hand
+        // Start a hand if 2+ players and no hand in progress
         let handStarted = false;
-        let botActedFirst = false;
-        if (seatedPlayers.length === 2) {
+        if (seatedPlayers.length >= 2 && !updatedTable.currentHandId) {
             try {
                 await cashTables.updateOne(
                     { _id: new ObjectId(id) },
                     { $set: { status: 'playing' } }
                 );
 
-                // Start first hand - need to use poker_tables collection format
-                // For cash games, we'll create a temporary hand directly
                 const handResult = await startCashGameHand(id, updatedTable);
                 handStarted = true;
 
-                // If the bot is up first, trigger bot action immediately
-                // In heads-up, SB (dealer) acts first preflop - which could be the bot
+                // Check if first player to act is a bot
                 if (handResult && handResult.hand) {
                     const actingPosition = handResult.hand.actingPosition;
-                    const botSeat = updatedTable.seats.find(s => s.isBot && s.position === actingPosition);
-                    if (botSeat) {
-                        // Small delay for realism, then trigger bot action synchronously
+                    const actingSeat = updatedTable.seats.find(s => s.position === actingPosition);
+                    if (actingSeat?.isBot) {
                         await new Promise(resolve => setTimeout(resolve, 800));
                         try {
                             const { processBotTurnIfNeeded } = await import('../../../lib/poker/botManager.js');
-                            const botResult = await processBotTurnIfNeeded(id, 'cash');
-                            if (botResult) {
-                                botActedFirst = true;
-                            }
+                            await processBotTurnIfNeeded(id, 'cash');
                         } catch (e) {
                             console.error('Error processing bot turn:', e);
                         }
@@ -215,14 +173,9 @@ export default async function handler(req, res) {
                 chipStack: buyIn
             },
             handStarted,
-            botActedFirst,
             newBalance: updatedUser?.coinBalance || 0,
-            botOpponent: botAdded ? {
-                username: botAdded.odUsername,
-                position: botAdded.odPosition
-            } : null,
-            botError: botError || null,
-            seatedPlayers: seatedPlayers.length
+            seatedPlayers: seatedPlayers.length,
+            maxSeats: updatedTable.maxSeats
         });
 
     } catch (error) {
@@ -240,19 +193,48 @@ async function startCashGameHand(tableId, table) {
         throw new Error('Not enough players to start hand');
     }
 
+    // Sort active players by position for consistent ordering
+    activePlayers.sort((a, b) => a.position - b.position);
+    const activePositions = activePlayers.map(p => p.position);
+
+    // Helper to find next active position after a given position
+    const getNextActivePosition = (currentPos) => {
+        const maxSeats = table.maxSeats || 6;
+        for (let i = 1; i <= maxSeats; i++) {
+            const nextPos = (currentPos + i) % maxSeats;
+            if (activePositions.includes(nextPos)) {
+                return nextPos;
+            }
+        }
+        return currentPos;
+    };
+
     // Create deck
     const { createDeck, shuffleDeck, dealHoleCards } = await import('../../../lib/poker/deck.js');
     const deck = shuffleDeck(createDeck());
     const { hands: holeCards, remaining: deckAfterDeal } = dealHoleCards(deck, activePlayers.length);
 
-    // Determine positions (heads-up: dealer is also SB)
-    const dealerPosition = (table.dealerPosition + 1) % 2;
-    const sbPosition = dealerPosition; // In heads-up, dealer is SB
-    const bbPosition = (dealerPosition + 1) % 2;
+    // Rotate dealer to next active player
+    const dealerPosition = getNextActivePosition(table.dealerPosition);
+
+    // Determine blind positions based on player count
+    let sbPosition, bbPosition, actingPosition;
+
+    if (activePlayers.length === 2) {
+        // Heads-up: dealer posts SB, other player posts BB, dealer acts first preflop
+        sbPosition = dealerPosition;
+        bbPosition = getNextActivePosition(dealerPosition);
+        actingPosition = sbPosition;
+    } else {
+        // 3+ players: SB is left of dealer, BB is left of SB, UTG acts first preflop
+        sbPosition = getNextActivePosition(dealerPosition);
+        bbPosition = getNextActivePosition(sbPosition);
+        actingPosition = getNextActivePosition(bbPosition);
+    }
 
     const blinds = table.blinds;
 
-    // Build players array
+    // Build players array (deal cards in seat order)
     const handPlayers = activePlayers.map((seat, idx) => ({
         playerId: seat.playerId,
         position: seat.position,
@@ -301,9 +283,6 @@ async function startCashGameHand(tableId, table) {
         timestamp: new Date(),
         street: 'preflop'
     });
-
-    // In heads-up, SB (dealer) acts first preflop
-    const actingPosition = sbPosition;
 
     // Create hand document
     const hand = {

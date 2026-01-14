@@ -201,19 +201,48 @@ async function startNextHand(tableId) {
     const activePlayers = table.seats.filter(s => s.playerId && s.chipStack > 0);
     if (activePlayers.length < 2) return;
 
+    // Sort active players by position for consistent ordering
+    activePlayers.sort((a, b) => a.position - b.position);
+    const activePositions = activePlayers.map(p => p.position);
+
+    // Helper to find next active position after a given position
+    const getNextActivePosition = (currentPos) => {
+        const maxSeats = table.maxSeats || 6;
+        for (let i = 1; i <= maxSeats; i++) {
+            const nextPos = (currentPos + i) % maxSeats;
+            if (activePositions.includes(nextPos)) {
+                return nextPos;
+            }
+        }
+        return currentPos;
+    };
+
     // Import deck functions
     const { createDeck, shuffleDeck, dealHoleCards } = await import('../../../lib/poker/deck.js');
     const deck = shuffleDeck(createDeck());
     const { hands: holeCards, remaining: deckAfterDeal } = dealHoleCards(deck, activePlayers.length);
 
-    // Rotate dealer
-    const dealerPosition = (table.dealerPosition + 1) % 2;
-    const sbPosition = dealerPosition;
-    const bbPosition = (dealerPosition + 1) % 2;
+    // Rotate dealer to next active player
+    const dealerPosition = getNextActivePosition(table.dealerPosition);
+
+    // Determine blind positions based on player count
+    let sbPosition, bbPosition, actingPosition;
+
+    if (activePlayers.length === 2) {
+        // Heads-up: dealer posts SB, other player posts BB, dealer acts first preflop
+        sbPosition = dealerPosition;
+        bbPosition = getNextActivePosition(dealerPosition);
+        actingPosition = sbPosition; // Dealer/SB acts first in heads-up preflop
+    } else {
+        // 3+ players: SB is left of dealer, BB is left of SB, UTG acts first preflop
+        sbPosition = getNextActivePosition(dealerPosition);
+        bbPosition = getNextActivePosition(sbPosition);
+        actingPosition = getNextActivePosition(bbPosition); // UTG acts first
+    }
 
     const blinds = table.blinds;
 
-    // Build players array
+    // Build players array (deal cards in seat order)
     const handPlayers = activePlayers.map((seat, idx) => ({
         playerId: seat.playerId,
         position: seat.position,
@@ -260,8 +289,6 @@ async function startNextHand(tableId) {
         timestamp: new Date(),
         street: 'preflop'
     });
-
-    const actingPosition = sbPosition;
 
     const hand = {
         tableId: new ObjectId(tableId),
