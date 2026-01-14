@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const predictionsCollection = db.collection('predictions');
 
         if (type === 'predictions') {
-            // Leaderboard by prediction accuracy
+            // Leaderboard by prediction accuracy (exclude bots)
             const leaderboard = await predictionsCollection.aggregate([
                 { $match: { status: { $in: ['won', 'lost'] } } },
                 {
@@ -48,36 +48,40 @@ export default async function handler(req, res) {
                     }
                 },
                 { $sort: { accuracy: -1, correctPredictions: -1 } },
-                { $limit: limit }
+                { $limit: limit * 2 } // Fetch extra to account for filtered bots
             ]).toArray();
 
-            // Get usernames
+            // Get usernames (excluding bots)
             const userIds = leaderboard.map(l => l._id);
             const users = await usersCollection
-                .find({ _id: { $in: userIds } })
+                .find({ _id: { $in: userIds }, isBot: { $ne: true } })
                 .project({ username: 1, badges: 1 })
                 .toArray();
 
             const usersMap = {};
             users.forEach(u => { usersMap[u._id.toString()] = u; });
 
-            const enrichedLeaderboard = leaderboard.map((l, index) => ({
-                rank: index + 1,
-                username: usersMap[l._id.toString()]?.username || 'Unknown',
-                badges: usersMap[l._id.toString()]?.badges || [],
-                totalPredictions: l.totalPredictions,
-                correctPredictions: l.correctPredictions,
-                accuracy: Math.round(l.accuracy * 10) / 10,
-                coinsWon: l.coinsWon
-            }));
+            // Filter out bots (entries without matching non-bot user) and apply limit
+            const enrichedLeaderboard = leaderboard
+                .filter(l => usersMap[l._id.toString()])
+                .slice(0, limit)
+                .map((l, index) => ({
+                    rank: index + 1,
+                    username: usersMap[l._id.toString()]?.username || 'Unknown',
+                    badges: usersMap[l._id.toString()]?.badges || [],
+                    totalPredictions: l.totalPredictions,
+                    correctPredictions: l.correctPredictions,
+                    accuracy: Math.round(l.accuracy * 10) / 10,
+                    coinsWon: l.coinsWon
+                }));
 
             return res.status(200).json({ success: true, leaderboard: enrichedLeaderboard, type: 'predictions' });
         }
 
         if (type === 'coins') {
-            // Leaderboard by lifetime coins
+            // Leaderboard by lifetime coins (exclude bots)
             const leaderboard = await usersCollection
-                .find({ lifetimeCoins: { $gt: 0 } })
+                .find({ lifetimeCoins: { $gt: 0 }, isBot: { $ne: true } })
                 .project({ username: 1, lifetimeCoins: 1, coinBalance: 1, badges: 1, dailyLoginStreak: 1 })
                 .sort({ lifetimeCoins: -1 })
                 .limit(limit)
@@ -96,9 +100,9 @@ export default async function handler(req, res) {
         }
 
         if (type === 'streak') {
-            // Leaderboard by login streak
+            // Leaderboard by login streak (exclude bots)
             const leaderboard = await usersCollection
-                .find({ dailyLoginStreak: { $gt: 0 } })
+                .find({ dailyLoginStreak: { $gt: 0 }, isBot: { $ne: true } })
                 .project({ username: 1, dailyLoginStreak: 1, badges: 1 })
                 .sort({ dailyLoginStreak: -1 })
                 .limit(limit)
