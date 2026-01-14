@@ -25,20 +25,26 @@ export default async function handler(req, res) {
     try {
         const users = await getCollection('users');
 
-        const result = await users.findOneAndUpdate(
-            { username },
-            { $set: { coinBalance: parseInt(balance), updatedAt: new Date() } },
-            { returnDocument: 'after' }
-        );
+        // Find user by username or email
+        const user = await users.findOne({
+            $or: [{ username }, { email: username }]
+        });
 
-        if (!result) {
-            return res.status(404).json({ error: 'User not found' });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found', searchedFor: username });
         }
+
+        // Update balance
+        await users.updateOne(
+            { _id: user._id },
+            { $set: { coinBalance: parseInt(balance), updatedAt: new Date() } }
+        );
 
         return res.status(200).json({
             success: true,
-            username: result.username,
-            newBalance: result.coinBalance
+            username: user.username,
+            email: user.email,
+            newBalance: parseInt(balance)
         });
     } catch (error) {
         return res.status(500).json({ error: error.message });
