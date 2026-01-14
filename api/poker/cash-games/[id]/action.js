@@ -133,8 +133,8 @@ export default async function handler(req, res) {
             const playersWithChips = refreshedTable.seats.filter(s => s.playerId && s.chipStack > 0);
 
             if (playersWithChips.length >= 2) {
-                // Auto-start new hand after delay (wait for winner display)
-                await new Promise(resolve => setTimeout(resolve, 4500));
+                // Auto-start new hand after delay (wait for 5-second winner display)
+                await new Promise(resolve => setTimeout(resolve, 6000));
                 try {
                     await startNextHand(id);
                 } catch (e) {
@@ -456,8 +456,8 @@ async function processBotTurn(tableId, handId) {
         const playersWithChips = refreshedTable.seats.filter(s => s.playerId && s.chipStack > 0);
 
         if (playersWithChips.length >= 2) {
-            // Delay before next hand (wait for winner display)
-            await new Promise(resolve => setTimeout(resolve, 4500));
+            // Delay before next hand (wait for 5-second winner display)
+            await new Promise(resolve => setTimeout(resolve, 6000));
             try {
                 await startNextHand(tableId);
             } catch (e) {
