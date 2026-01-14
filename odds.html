@@ -22,9 +22,11 @@
             --positive-odds: #2e7d32;
             --negative-odds: #1a1a1a;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { height: -webkit-fill-available; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; min-height: -webkit-fill-available; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
+        button, a, input, select { touch-action: manipulation; }
 
         /* Header */
         .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
@@ -135,7 +137,7 @@
         .odds-cell.selected .odds-price, .odds-cell.selected .odds-label { color: rgba(255,255,255,0.8); }
 
         /* Bet Slip */
-        .bet-slip { position: fixed; bottom: 20px; right: 20px; width: 340px; max-height: 80vh; background: var(--card-bg); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
+        .bet-slip { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 340px; max-height: 80vh; background: var(--card-bg); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); z-index: 1001; display: none; flex-direction: column; overflow: hidden; }
         .bet-slip.active { display: flex; }
         .bet-slip-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--accent-color); color: white; }
         .bet-slip-header h3 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
@@ -168,7 +170,7 @@
         .bet-type-btn.active { background: var(--accent-color); color: white; }
 
         /* Bet Slip Toggle Button (mobile) */
-        .bet-slip-toggle { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--accent-color); color: white; border: none; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.25rem; z-index: 1000; }
+        .bet-slip-toggle { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); right: 20px; width: 56px; height: 56px; background: var(--accent-color); color: white; border: none; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.25rem; z-index: 1000; }
         .bet-slip-toggle .count { position: absolute; top: -5px; right: -5px; background: #ff5722; width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
 
         /* View Bets Link */
@@ -202,13 +204,18 @@
         @media (max-width: 480px) {
             .sport-tabs { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 0.5rem; }
             .sport-tabs::-webkit-scrollbar { display: none; }
-            .sport-tab { flex-shrink: 0; }
-            .odds-cell { min-width: 55px; padding: 0.4rem; }
+            .sport-tab { flex-shrink: 0; min-height: 44px; }
+            .odds-cell { min-width: 55px; padding: 0.4rem; min-height: 44px; }
             .odds-value { font-size: 0.8rem; }
             .date-selector { gap: 0.5rem; }
             .date-display { min-width: 120px; }
-            .bet-slip { width: calc(100% - 40px); right: 20px; left: 20px; bottom: 80px; }
+            .date-nav-btn { min-width: 44px; min-height: 44px; }
+            .bet-slip { width: calc(100% - 40px); right: 20px; left: 20px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
             .bet-slip-toggle.has-bets { display: flex; }
+            .wager-input { font-size: 16px; min-height: 44px; } /* Prevent iOS zoom */
+            .place-bet-btn { min-height: 48px; }
+            .bet-type-btn { min-height: 44px; }
+            .bet-leg-remove { min-width: 32px; min-height: 32px; }
         }
     </style>
 </head>
