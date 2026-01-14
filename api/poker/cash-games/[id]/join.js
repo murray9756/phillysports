@@ -307,8 +307,12 @@ async function startCashGameHand(tableId, table) {
     const deck = shuffleDeck(createDeck());
     const { hands: holeCards, remaining: deckAfterDeal } = dealHoleCards(deck, activePlayers.length);
 
-    // Rotate dealer to next active player
-    const dealerPosition = getNextActivePosition(table.dealerPosition);
+    // Use current dealer position (rotation happens at END of hand, not start)
+    // For first hand, use first active player position as dealer
+    const currentDealer = table.dealerPosition;
+    const dealerPosition = activePositions.includes(currentDealer)
+        ? currentDealer
+        : activePositions[0];
 
     // Determine blind positions based on player count
     let sbPosition, bbPosition, actingPosition;
