@@ -282,14 +282,14 @@
 
         /* Cards */
         .card {
-            width: 45px;
-            height: 63px;
+            width: 60px;
+            height: 84px;
             background: white;
-            border-radius: 4px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 700;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             position: relative;
@@ -306,15 +306,16 @@
         }
         .card.hearts, .card.diamonds { color: #c41e3a; }
         .card.clubs, .card.spades { color: #1a1a1a; }
-        .card-rank { position: absolute; top: 3px; left: 5px; font-size: 0.75rem; }
-        .card-suit { font-size: 1.5rem; }
-        .card-rank-bottom { position: absolute; bottom: 3px; right: 5px; font-size: 0.75rem; transform: rotate(180deg); }
+        .card-rank { position: absolute; top: 4px; left: 6px; font-size: 1rem; font-weight: 800; }
+        .card-suit { font-size: 2rem; }
+        .card-rank-bottom { position: absolute; bottom: 4px; right: 6px; font-size: 1rem; font-weight: 800; transform: rotate(180deg); }
 
         .community-cards .card {
-            width: 55px;
-            height: 77px;
+            width: 70px;
+            height: 98px;
         }
-        .community-cards .card-suit { font-size: 1.8rem; }
+        .community-cards .card-rank { font-size: 1.1rem; }
+        .community-cards .card-suit { font-size: 2.4rem; }
 
         /* Action Panel */
         .action-panel {
@@ -705,8 +706,10 @@
             .seat { width: 90px; }
             .player-info { min-width: 80px; padding: 0.4rem; }
             .player-name { font-size: 0.75rem; }
-            .card { width: 35px; height: 49px; }
-            .community-cards .card { width: 42px; height: 59px; }
+            .card { width: 48px; height: 67px; }
+            .card-rank { font-size: 0.85rem; }
+            .card-suit { font-size: 1.6rem; }
+            .community-cards .card { width: 56px; height: 78px; }
             .tournament-info { gap: 0.75rem; font-size: 0.75rem; }
             .action-btn { padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 80px; }
             .tournament-status-bar { gap: 1rem; padding: 0.4rem 0.5rem; font-size: 0.75rem; }
@@ -730,10 +733,10 @@
             .player-name { font-size: 0.65rem; max-width: 60px; }
             .player-chips { font-size: 0.6rem; }
             .player-action { font-size: 0.55rem; }
-            .card { width: 28px; height: 39px; font-size: 0.9rem; }
-            .card-rank { font-size: 0.6rem; }
-            .card-suit { font-size: 1rem; }
-            .community-cards .card { width: 36px; height: 50px; }
+            .card { width: 40px; height: 56px; font-size: 1rem; }
+            .card-rank { font-size: 0.75rem; }
+            .card-suit { font-size: 1.4rem; }
+            .community-cards .card { width: 48px; height: 67px; }
             .community-cards { gap: 0.3rem; }
             .pot-display { font-size: 0.9rem; padding: 0.4rem 0.75rem; top: 20%; }
             .dealer-btn { width: 20px; height: 20px; font-size: 0.55rem; }
