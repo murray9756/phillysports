@@ -1723,6 +1723,13 @@
                 const response = await fetch(apiPath);
                 const data = await response.json();
 
+                // Debug - show once on first load
+                if (!window._debugShown && isCashGame) {
+                    window._debugShown = true;
+                    const hand = data.currentHand;
+                    alert(`LOAD STATE DEBUG:\nHas currentHand: ${!!hand}\nHand status: ${hand?.status || 'none'}\nPot: ${hand?.pot || 0}\nActing: ${hand?.actingPosition}\nValid actions: ${JSON.stringify(data.validActions)}\nIs your turn: ${data.isYourTurn}`);
+                }
+
                 if (!data.success) {
                     showStatus('Error loading table', data.error);
                     return;
