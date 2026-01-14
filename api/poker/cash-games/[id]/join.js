@@ -205,8 +205,13 @@ export default async function handler(req, res) {
 
         // Start a hand if 2+ players and no hand in progress
         let handStarted = false;
+        let handError = null;
+        console.log('Checking hand start:', { seatedCount: seatedPlayers.length, currentHandId: updatedTable.currentHandId });
+
         if (seatedPlayers.length >= 2 && !updatedTable.currentHandId) {
             try {
+                console.log('Starting hand with players:', seatedPlayers.map(s => ({ pos: s.position, name: s.username, chips: s.chipStack })));
+
                 await cashTables.updateOne(
                     { _id: new ObjectId(id) },
                     { $set: { status: 'playing' } }
@@ -214,6 +219,7 @@ export default async function handler(req, res) {
 
                 const handResult = await startCashGameHand(id, updatedTable);
                 handStarted = true;
+                console.log('Hand started successfully:', handResult?.handId);
 
                 // Check if first player to act is a bot
                 if (handResult && handResult.hand) {
@@ -231,6 +237,7 @@ export default async function handler(req, res) {
                 }
             } catch (e) {
                 console.error('Error starting hand:', e);
+                handError = e.message;
             }
         }
 
@@ -245,9 +252,14 @@ export default async function handler(req, res) {
                 chipStack: buyIn
             },
             handStarted,
+            handError,
             newBalance: updatedUser?.coinBalance || 0,
             seatedPlayers: seatedPlayers.length,
-            maxSeats: updatedTable.maxSeats
+            maxSeats: updatedTable.maxSeats,
+            debug: {
+                seatedPlayersDetail: seatedPlayers.map(s => ({ pos: s.position, name: s.username, chips: s.chipStack, isBot: s.isBot })),
+                currentHandId: updatedTable.currentHandId
+            }
         });
 
     } catch (error) {
