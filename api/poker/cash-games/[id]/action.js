@@ -74,6 +74,22 @@ export default async function handler(req, res) {
         // Update cash table seat chip stacks
         const updatedHand = await hands.findOne({ _id: table.currentHandId });
 
+        // Find player's seat for broadcast
+        const playerSeat = table.seats.find(s => s.playerId?.toString() === user.userId);
+
+        // Broadcast player's action
+        broadcastTableUpdate(id, PUSHER_EVENTS.PLAYER_ACTION, {
+            playerId: user.userId,
+            username: playerSeat?.username || 'Player',
+            position: playerSeat?.position,
+            action,
+            amount: result.amount,
+            pot: updatedHand.pot,
+            currentBet: updatedHand.currentBet,
+            actingPosition: updatedHand.actingPosition,
+            status: updatedHand.status
+        });
+
         for (const player of updatedHand.players) {
             const seatIdx = table.seats.findIndex(s => s.playerId?.toString() === player.playerId.toString());
             if (seatIdx !== -1) {
@@ -92,6 +108,13 @@ export default async function handler(req, res) {
 
         // If hand is complete, check if we should start a new hand
         if (result.isHandComplete) {
+            // Broadcast hand complete with winner info
+            broadcastTableUpdate(id, PUSHER_EVENTS.HAND_COMPLETE, {
+                winners: updatedHand.winners || [],
+                pot: updatedHand.pot,
+                handId: updatedHand._id.toString()
+            });
+
             // Clear current hand from table
             await cashTables.updateOne(
                 { _id: new ObjectId(id) },
@@ -110,8 +133,8 @@ export default async function handler(req, res) {
             const playersWithChips = refreshedTable.seats.filter(s => s.playerId && s.chipStack > 0);
 
             if (playersWithChips.length >= 2) {
-                // Auto-start new hand after short delay
-                await new Promise(resolve => setTimeout(resolve, 2500));
+                // Auto-start new hand after delay (wait for winner display)
+                await new Promise(resolve => setTimeout(resolve, 4500));
                 try {
                     await startNextHand(id);
                 } catch (e) {
@@ -398,15 +421,25 @@ async function processBotTurn(tableId, handId) {
     broadcastTableUpdate(tableId, PUSHER_EVENTS.PLAYER_ACTION, {
         playerId: actingPlayer.playerId.toString(),
         username: actingUser.username,
+        position: actingPlayer.position,
         action,
         amount: result.amount,
         pot: updatedHand.pot,
         currentBet: updatedHand.currentBet,
+        actingPosition: updatedHand.actingPosition,
+        status: updatedHand.status,
         isBot: true
     });
 
     // If hand is complete, handle next hand
     if (result.isHandComplete) {
+        // Broadcast hand complete with winner info
+        broadcastTableUpdate(tableId, PUSHER_EVENTS.HAND_COMPLETE, {
+            winners: updatedHand.winners || [],
+            pot: updatedHand.pot,
+            handId: updatedHand._id.toString()
+        });
+
         await cashTables.updateOne(
             { _id: new ObjectId(tableId) },
             {
@@ -423,8 +456,8 @@ async function processBotTurn(tableId, handId) {
         const playersWithChips = refreshedTable.seats.filter(s => s.playerId && s.chipStack > 0);
 
         if (playersWithChips.length >= 2) {
-            // Delay before next hand, then start synchronously
-            await new Promise(resolve => setTimeout(resolve, 2500));
+            // Delay before next hand (wait for winner display)
+            await new Promise(resolve => setTimeout(resolve, 4500));
             try {
                 await startNextHand(tableId);
             } catch (e) {

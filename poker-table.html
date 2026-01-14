@@ -1929,7 +1929,18 @@
 
             const hand = gameState.currentHand || gameState.table?.currentHand;
             const toCall = hand ? hand.currentBet - (hand.players.find(p => p.position === myPosition)?.currentRoundBet || 0) : 0;
-            const myChips = gameState.table.userSeat?.chipStack || 0;
+
+            // Get chips from hand player data (most accurate during hand) or seat data
+            let myChips = 0;
+            if (hand) {
+                const handPlayer = hand.players.find(p => p.position === myPosition);
+                myChips = handPlayer?.chipStackCurrent || 0;
+            }
+            if (!myChips) {
+                // Fallback to userSeat or seat data
+                myChips = gameState.userSeat?.chipStack ||
+                          gameState.table?.seats?.find(s => s.position === myPosition)?.chipStack || 0;
+            }
 
             let buttonsHtml = '';
 
