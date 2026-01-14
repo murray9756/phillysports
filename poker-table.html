@@ -105,6 +105,37 @@
                 inset 0 0 60px rgba(0,0,0,0.4),
                 0 10px 40px rgba(0,0,0,0.5);
         }
+        .table-branding {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .table-branding img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+        }
+        .table-branding .tagline {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        @media (max-width: 600px) {
+            .table-branding img { width: 50px; height: 50px; }
+            .table-branding .tagline { font-size: 0.6rem; letter-spacing: 1px; }
+        }
         .table-rail {
             position: absolute;
             top: -15px; left: -15px; right: -15px; bottom: -15px;
@@ -958,6 +989,10 @@
             <!-- Poker Table -->
             <div class="poker-table">
                 <div class="table-rail"></div>
+                <div class="table-branding">
+                    <img src="/logo.png" alt="PhillySports.com">
+                    <div class="tagline">Where the Diehards Play Hard</div>
+                </div>
             </div>
 
             <!-- Pot Display -->
