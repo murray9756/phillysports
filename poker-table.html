@@ -1598,6 +1598,16 @@
                 }
 
                 gameState = data;
+
+                // Debug: check key values
+                const hand = data.currentHand;
+                const myPlayer = hand?.players?.find(p => p.playerId?.toString() === currentUser?._id);
+                alert('DEBUG:\n' +
+                    'Hand exists: ' + (hand ? 'YES' : 'NO') + '\n' +
+                    'My player in hand: ' + (myPlayer ? 'YES (pos ' + myPlayer.position + ')' : 'NO') + '\n' +
+                    'My holeCards: ' + JSON.stringify(myPlayer?.holeCards) + '\n' +
+                    'Seat cards: ' + JSON.stringify(data.table?.seats?.find(s => s.playerId === currentUser?._id)?.cards));
+
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
 
