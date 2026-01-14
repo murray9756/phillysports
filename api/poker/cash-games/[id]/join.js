@@ -127,11 +127,20 @@ export default async function handler(req, res) {
         // If only 1 player (human just joined), add a bot opponent
         let botAdded = null;
         let botError = null;
+
+        // Log current state
+        console.log('Seats after human joined:', JSON.stringify(updatedTable.seats.map(s => ({
+            pos: s.position,
+            id: s.playerId?.toString(),
+            name: s.username
+        }))));
+        console.log('Seated players count:', seatedPlayers.length);
+
         if (seatedPlayers.length === 1) {
+            console.log('Only 1 player, attempting to add bot...');
             try {
-                console.log('Adding bot to table:', id);
                 const botResult = await addBotToCashTable(id);
-                console.log('Bot added successfully:', botResult);
+                console.log('Bot result:', JSON.stringify(botResult));
                 botAdded = botResult.bot;
 
                 // Refresh table after bot joined
@@ -149,9 +158,11 @@ export default async function handler(req, res) {
                     isBot: true
                 });
             } catch (e) {
-                console.error('Error adding bot opponent:', e);
-                botError = e.message;
+                console.error('Error adding bot opponent:', e.message, e.stack);
+                botError = e.message + ' | ' + (e.stack || '').split('\n')[1];
             }
+        } else {
+            console.log('Not adding bot, seatedPlayers.length =', seatedPlayers.length);
         }
 
         // If 2 players are now seated, start a hand
