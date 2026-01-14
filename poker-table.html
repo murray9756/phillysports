@@ -1292,11 +1292,12 @@
         function handlePlayerAction(data) {
             console.log('Player action:', data);
             // Update pot and current bet immediately
-            if (gameState && gameState.table && gameState.table.currentHand) {
-                gameState.table.currentHand.pot = data.pot;
-                gameState.table.currentHand.currentBet = data.currentBet;
-                gameState.table.currentHand.actingPosition = data.actingPosition;
-                gameState.table.currentHand.status = data.status;
+            const hand = gameState?.currentHand || gameState?.table?.currentHand;
+            if (hand) {
+                hand.pot = data.pot;
+                hand.currentBet = data.currentBet;
+                hand.actingPosition = data.actingPosition;
+                hand.status = data.status;
 
                 // Update the player who acted
                 const seat = gameState.table.seats.find(s => s.position === data.position);
@@ -1310,9 +1311,10 @@
 
         function handleCommunityCards(data) {
             console.log('Community cards:', data);
-            if (gameState && gameState.table && gameState.table.currentHand) {
-                gameState.table.currentHand.communityCards = data.communityCards;
-                gameState.table.currentHand.status = data.status;
+            const hand = gameState?.currentHand || gameState?.table?.currentHand;
+            if (hand) {
+                hand.communityCards = data.communityCards;
+                hand.status = data.status;
             }
             renderTable();
         }
@@ -1326,8 +1328,9 @@
         }
 
         function handlePotUpdate(data) {
-            if (gameState && gameState.table && gameState.table.currentHand) {
-                gameState.table.currentHand.pot = data.pot;
+            const hand = gameState?.currentHand || gameState?.table?.currentHand;
+            if (hand) {
+                hand.pot = data.pot;
             }
             document.getElementById('potDisplay').textContent = `Pot: ${data.pot}`;
         }
@@ -1594,18 +1597,6 @@
                     return;
                 }
 
-                // Debug: show on-screen alert with key info
-                const seatedCount = data.table?.seats?.filter(s => s.playerId).length || 0;
-                const hasHand = data.currentHand ? 'YES' : 'NO';
-                const handStatus = data.currentHand?.status || 'none';
-                alert('TABLE STATE:\n' +
-                    'Has currentHand: ' + hasHand + '\n' +
-                    'Hand status: ' + handStatus + '\n' +
-                    'Table status: ' + (data.table?.status || 'unknown') + '\n' +
-                    'Seated players: ' + seatedCount + '\n' +
-                    'Your turn: ' + data.isYourTurn + '\n' +
-                    'Valid actions: ' + (data.validActions?.join(', ') || 'none'));
-
                 gameState = data;
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
@@ -1805,7 +1796,7 @@
 
             panel.classList.remove('hidden');
 
-            const hand = gameState.table.currentHand;
+            const hand = gameState.currentHand || gameState.table?.currentHand;
             const toCall = hand ? hand.currentBet - (hand.players.find(p => p.position === myPosition)?.currentRoundBet || 0) : 0;
             const myChips = gameState.table.userSeat?.chipStack || 0;
 
@@ -1852,7 +1843,7 @@
         }
 
         function setBetPreset(multiplier) {
-            const pot = gameState.table.currentHand?.pot || 0;
+            const pot = (gameState.currentHand || gameState.table?.currentHand)?.pot || 0;
             const amount = Math.floor(pot * multiplier);
             const slider = document.getElementById('betSlider');
             const amountInput = document.getElementById('betAmount');
