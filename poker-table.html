@@ -1598,16 +1598,6 @@
                 }
 
                 gameState = data;
-
-                // Debug: check key values
-                const hand = data.currentHand;
-                const myPlayer = hand?.players?.find(p => p.playerId?.toString() === currentUser?._id);
-                alert('DEBUG:\n' +
-                    'Hand exists: ' + (hand ? 'YES' : 'NO') + '\n' +
-                    'My player in hand: ' + (myPlayer ? 'YES (pos ' + myPlayer.position + ')' : 'NO') + '\n' +
-                    'My holeCards: ' + JSON.stringify(myPlayer?.holeCards) + '\n' +
-                    'Seat cards: ' + JSON.stringify(data.table?.seats?.find(s => s.playerId === currentUser?._id)?.cards));
-
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
 
@@ -1627,13 +1617,7 @@
             // For cash games, currentHand is at top level; for tournaments, it's inside table
             const hand = gameState.currentHand || table.currentHand;
 
-            // Debug render
-            alert('RENDER DEBUG:\n' +
-                'hand in renderTable: ' + (hand ? 'YES' : 'NO') + '\n' +
-                'seats count: ' + table.seats?.length + '\n' +
-                'seatsContainer exists: ' + !!document.getElementById('seatsContainer') + '\n' +
-                'actionPanel exists: ' + !!document.getElementById('actionPanel'));
-
+            try {
             // Update tournament info
             if (table.tournament) {
                 const blinds = table.tournament.blindStructure?.[table.tournament.currentBlindLevel || 0];
@@ -1697,6 +1681,9 @@
                 showStatus('Waiting for hand to start...', 'The next hand will begin shortly');
             } else {
                 hideStatus();
+            }
+            } catch (e) {
+                alert('RENDER ERROR: ' + e.message + '\n' + e.stack);
             }
         }
 
