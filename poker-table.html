@@ -1717,9 +1717,9 @@
                     // Player cards
                     let cardsHtml = '';
                     if (hand && isActive) {
-                        // Check for cards from Pusher (myHoleCards), API (table.userSeat.cards), or showdown (handPlayer.holeCards)
-                        if (isMe && (myHoleCards || table?.userSeat?.cards)) {
-                            const cards = myHoleCards || table.userSeat.cards;
+                        // Check for cards from Pusher (myHoleCards), seat.cards, or hand player's holeCards
+                        if (isMe && (myHoleCards || seat.cards?.length > 0)) {
+                            const cards = myHoleCards || seat.cards;
                             cardsHtml = `<div class="player-cards">${cards.map(c => renderCard(c)).join('')}</div>`;
                         } else if (handPlayer?.holeCards) {
                             cardsHtml = `<div class="player-cards">${handPlayer.holeCards.map(c => renderCard(c)).join('')}</div>`;
