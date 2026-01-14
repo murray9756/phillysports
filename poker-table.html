@@ -970,6 +970,7 @@
                 <span id="accountBalance">0</span>
             </div>
             <a href="#" class="btn-leave" onclick="leaveTable(); return false;">Leave Table</a>
+            <a href="#" class="btn-leave" style="background:#c62828;margin-left:0.5rem;" onclick="emergencyReset(); return false;">Emergency Reset</a>
         </div>
     </header>
 
@@ -1514,6 +1515,29 @@
                 }
             } catch (e) {
                 window.location.href = '/login.html';
+            }
+        }
+
+        async function emergencyReset() {
+            if (!confirm('EMERGENCY RESET: This will force-remove you from ALL cash tables and cash out your chips. Continue?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/poker/cash-games/reset-seat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Reset complete!\n\nTables cleared: ${data.tablesCleared}\nChips cashed out: ${data.totalCashOut}\nNew balance: ${data.newBalance} DD`);
+                    window.location.href = '/poker.html';
+                } else {
+                    alert('Reset failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Reset error: ' + e.message);
             }
         }
 
