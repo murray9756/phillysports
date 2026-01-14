@@ -83,6 +83,24 @@ export default async function handler(req, res) {
         // Determine if it's the user's turn
         const isYourTurn = validActions.length > 0;
 
+        // Check for stuck state (user seated alone with stale hand)
+        const seatedPlayers = table.seats.filter(s => s.playerId);
+        let isStuckState = false;
+        let stuckReason = null;
+
+        if (userSeat && seatedPlayers.length === 1) {
+            // Only one player at table
+            if (table.currentHandId) {
+                // Has a hand but no opponent - definitely stuck
+                isStuckState = true;
+                stuckReason = 'Opponent left during hand';
+            } else if (table.status === 'playing') {
+                // Table says playing but only one player and no hand
+                isStuckState = true;
+                stuckReason = 'Waiting for opponent';
+            }
+        }
+
         // Build response
         const response = {
             success: true,
@@ -116,8 +134,10 @@ export default async function handler(req, res) {
             userSeat,
             isSeated: !!userSeat,
             canJoin: !userSeat && table.seats.some(s => !s.playerId),
-            canLeave: !!userSeat && (!currentHand || currentHand.status === HAND_STATUS.COMPLETE),
-            canRebuy: userSeat && userSeat.chipStack === 0
+            canLeave: !!userSeat && (!currentHand || currentHand.status === HAND_STATUS.COMPLETE || isStuckState),
+            canRebuy: userSeat && userSeat.chipStack === 0,
+            isStuckState,
+            stuckReason
         };
 
         return res.status(200).json(response);

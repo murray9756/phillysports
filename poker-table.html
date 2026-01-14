@@ -1647,7 +1647,9 @@
             }
 
             // Show/hide status message
-            if (!hand) {
+            if (gameState.isStuckState) {
+                showStatus('Table Issue Detected', `${gameState.stuckReason}. Click "Leave Table" to cash out your chips.`);
+            } else if (!hand) {
                 showStatus('Waiting for hand to start...', 'The next hand will begin shortly');
             } else {
                 hideStatus();
