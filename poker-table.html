@@ -965,11 +965,11 @@
             </div>
         </div>
         <div class="header-right">
-            <div class="coin-display">
+            <div class="coin-display" title="Your Diehard Dollar Balance">
                 <span>&#129689;</span>
-                <span id="userChips">0</span>
+                <span id="accountBalance">0</span>
             </div>
-            <a href="/poker.html" class="btn-leave">Leave Table</a>
+            <a href="#" class="btn-leave" onclick="leaveTable(); return false;">Leave Table</a>
         </div>
     </header>
 
@@ -1503,12 +1503,56 @@
                 const data = await response.json();
                 if (data.user) {
                     currentUser = data.user;
+                    // Display account balance in header
+                    document.getElementById('accountBalance').textContent =
+                        currentUser.coinBalance >= 1000
+                            ? (currentUser.coinBalance / 1000).toFixed(1) + 'k'
+                            : currentUser.coinBalance;
                 } else {
                     alert('Please login to play');
                     window.location.href = '/login.html';
                 }
             } catch (e) {
                 window.location.href = '/login.html';
+            }
+        }
+
+        async function leaveTable() {
+            if (!confirm('Leave the table? Your remaining chips will be cashed out.')) {
+                return;
+            }
+
+            try {
+                const endpoint = isCashGame
+                    ? `/api/poker/cash-games/${tableId}/leave`
+                    : `/api/poker/tables/${tableId}/leave`;
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Cashed out ${data.cashOut || 0} chips. New balance: ${data.newBalance} DD`);
+                    window.location.href = '/poker.html';
+                } else {
+                    // If normal leave fails, offer force leave
+                    if (confirm(`${data.error}\n\nForce leave anyway? (You may lose your chips)`)) {
+                        const forceResponse = await fetch(endpoint + '?force=true', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        const forceData = await forceResponse.json();
+                        if (forceData.success) {
+                            window.location.href = '/poker.html';
+                        } else {
+                            alert(forceData.error || 'Failed to leave table');
+                        }
+                    }
+                }
+            } catch (e) {
+                alert('Error leaving table: ' + e.message);
             }
         }
 
@@ -1556,7 +1600,7 @@
                 document.getElementById('playersDisplay').textContent = `${table.tournament.registeredCount}/${table.tournament.maxPlayers}`;
             }
 
-            // Update user chips - for cash games, userSeat is at top level
+            // Find user's position at the table
             let userSeat = gameState.userSeat || table.userSeat;
 
             // Fallback: find user's seat in the table seats array if not found
@@ -1576,15 +1620,7 @@
             }
 
             if (userSeat) {
-                document.getElementById('userChips').textContent = userSeat.chipStack;
                 myPosition = userSeat.position;
-            } else if (gameState.isSeated) {
-                // User is seated but we couldn't find the seat - try to get from hand players
-                const handPlayer = hand?.players?.find(p => !table.seats.find(s => s.playerId === p.playerId && s.isBot));
-                if (handPlayer) {
-                    document.getElementById('userChips').textContent = handPlayer.chipStackCurrent;
-                    myPosition = handPlayer.position;
-                }
             }
 
             // Render pot

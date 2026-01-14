@@ -49,19 +49,67 @@ export default async function handler(req, res) {
         }
 
         const seat = table.seats[seatIndex];
+        const forceLeave = req.query.force === 'true';
 
         // Check if hand is in progress
-        if (table.currentHandId) {
+        if (table.currentHandId && !forceLeave) {
             const currentHand = await hands.findOne({ _id: table.currentHandId });
             if (currentHand && currentHand.status !== HAND_STATUS.COMPLETE) {
                 // Check if player is still active in the hand
                 const handPlayer = currentHand.players.find(p => p.playerId.toString() === user.userId);
                 if (handPlayer && !handPlayer.isFolded) {
-                    return res.status(400).json({
-                        error: 'Cannot leave during an active hand. Fold first or wait for hand to complete.'
-                    });
+                    // Check if the game is stuck (only 1 player at table, or bot is missing)
+                    const activePlayers = table.seats.filter(s => s.playerId);
+                    const otherPlayers = activePlayers.filter(s => s.playerId.toString() !== user.userId);
+
+                    if (otherPlayers.length === 0) {
+                        // Table has only one player - stuck state, clean up and allow leave
+                        console.log('Allowing leave - stuck state detected (no other players)');
+                        // Mark hand as complete since there's no opponent
+                        await hands.updateOne(
+                            { _id: table.currentHandId },
+                            {
+                                $set: {
+                                    status: HAND_STATUS.COMPLETE,
+                                    endedAt: new Date(),
+                                    notes: 'Opponent left - hand cancelled'
+                                }
+                            }
+                        );
+                        await cashTables.updateOne(
+                            { _id: new ObjectId(id) },
+                            { $set: { currentHandId: null } }
+                        );
+                    } else {
+                        return res.status(400).json({
+                            error: 'Cannot leave during an active hand. Fold first or wait for hand to complete.'
+                        });
+                    }
                 }
             }
+        }
+
+        // If force leaving during a hand, mark the hand as complete and forfeit
+        if (forceLeave && table.currentHandId) {
+            const currentHand = await hands.findOne({ _id: table.currentHandId });
+            if (currentHand && currentHand.status !== HAND_STATUS.COMPLETE) {
+                // Mark hand as complete with the player forfeiting
+                await hands.updateOne(
+                    { _id: table.currentHandId },
+                    {
+                        $set: {
+                            status: HAND_STATUS.COMPLETE,
+                            endedAt: new Date(),
+                            notes: 'Player force-left the table'
+                        }
+                    }
+                );
+            }
+            // Clear the current hand from the table
+            await cashTables.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: { currentHandId: null } }
+            );
         }
 
         // Cash out remaining chips
