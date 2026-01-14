@@ -67,6 +67,16 @@ export default async function handler(req, res) {
                     chipStack: seat.chipStack,
                     isActive: seat.isActive
                 };
+            } else {
+                // Log for debugging if user should be seated but isn't found
+                console.log('User seat lookup debug:', {
+                    userId: user.userId,
+                    seats: table.seats.map(s => ({
+                        position: s.position,
+                        playerId: s.playerId?.toString(),
+                        chipStack: s.chipStack
+                    }))
+                });
             }
         }
 

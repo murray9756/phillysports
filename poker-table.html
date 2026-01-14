@@ -1557,10 +1557,34 @@
             }
 
             // Update user chips - for cash games, userSeat is at top level
-            const userSeat = gameState.userSeat || table.userSeat;
+            let userSeat = gameState.userSeat || table.userSeat;
+
+            // Fallback: find user's seat in the table seats array if not found
+            if (!userSeat && currentUser && table.seats) {
+                const mySeat = table.seats.find(s =>
+                    s.playerId === currentUser._id ||
+                    s.username === currentUser.username ||
+                    s.username === currentUser.displayName
+                );
+                if (mySeat) {
+                    userSeat = {
+                        position: mySeat.position,
+                        chipStack: mySeat.chipStack,
+                        isActive: mySeat.isActive
+                    };
+                }
+            }
+
             if (userSeat) {
                 document.getElementById('userChips').textContent = userSeat.chipStack;
                 myPosition = userSeat.position;
+            } else if (gameState.isSeated) {
+                // User is seated but we couldn't find the seat - try to get from hand players
+                const handPlayer = hand?.players?.find(p => !table.seats.find(s => s.playerId === p.playerId && s.isBot));
+                if (handPlayer) {
+                    document.getElementById('userChips').textContent = handPlayer.chipStackCurrent;
+                    myPosition = handPlayer.position;
+                }
             }
 
             // Render pot
