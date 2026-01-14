@@ -134,7 +134,7 @@ export default async function handler(req, res) {
             userSeat,
             isSeated: !!userSeat,
             canJoin: !userSeat && table.seats.some(s => !s.playerId),
-            canLeave: !!userSeat && (!currentHand || currentHand.status === HAND_STATUS.COMPLETE || isStuckState),
+            canLeave: !!userSeat, // Always allow leaving - will fold if hand in progress
             canRebuy: userSeat && userSeat.chipStack === 0,
             isStuckState,
             stuckReason

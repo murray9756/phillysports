@@ -1053,8 +1053,7 @@
                 <span>&#129689;</span>
                 <span id="accountBalance">0</span>
             </div>
-            <a href="#" class="btn-leave" onclick="leaveTable(); return false;">Leave Table</a>
-            <a href="#" class="btn-leave" style="background:#c62828;margin-left:0.5rem;" onclick="emergencyReset(); return false;">Emergency Reset</a>
+            <a href="#" class="btn-leave" onclick="leaveTable(); return false;">Cash Out</a>
         </div>
     </header>
 
@@ -2454,17 +2453,7 @@
                 hideRebuyOption();
             }
 
-            // Update leave button state
-            const leaveBtn = document.querySelector('.btn-leave');
-            if (leaveBtn) {
-                if (gameState.canLeave) {
-                    leaveBtn.style.opacity = '1';
-                    leaveBtn.style.cursor = 'pointer';
-                } else {
-                    leaveBtn.style.opacity = '0.5';
-                    leaveBtn.style.cursor = 'not-allowed';
-                }
-            }
+            // Leave button is always enabled - backend handles fold if needed
         }
 
         function showRebuyOption() {
@@ -2491,13 +2480,13 @@
         }
 
         async function leaveCashTable() {
-            if (!gameState.canLeave) {
-                alert('Cannot leave during an active hand. Fold first or wait for the hand to complete.');
-                return;
-            }
-
             const chipStack = gameState.userSeat?.chipStack || 0;
-            if (!confirm(`Cash out and leave table? You will receive ${chipStack} Diehard Dollars.`)) {
+            const inHand = gameState.currentHand && gameState.currentHand.status !== 'complete';
+            const message = inHand
+                ? `Cash out and leave? You have ${chipStack} DD.\n\nNote: Leaving during a hand will forfeit the current pot.`
+                : `Cash out and leave? You will receive ${chipStack} Diehard Dollars.`;
+
+            if (!confirm(message)) {
                 return;
             }
 
