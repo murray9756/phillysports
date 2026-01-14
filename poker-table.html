@@ -1543,7 +1543,8 @@
 
         function renderTable() {
             const table = gameState.table;
-            const hand = table.currentHand;
+            // For cash games, currentHand is at top level; for tournaments, it's inside table
+            const hand = gameState.currentHand || table.currentHand;
 
             // Update tournament info
             if (table.tournament) {
@@ -1555,10 +1556,11 @@
                 document.getElementById('playersDisplay').textContent = `${table.tournament.registeredCount}/${table.tournament.maxPlayers}`;
             }
 
-            // Update user chips
-            if (table.userSeat) {
-                document.getElementById('userChips').textContent = table.userSeat.chipStack;
-                myPosition = table.userSeat.position;
+            // Update user chips - for cash games, userSeat is at top level
+            const userSeat = gameState.userSeat || table.userSeat;
+            if (userSeat) {
+                document.getElementById('userChips').textContent = userSeat.chipStack;
+                myPosition = userSeat.position;
             }
 
             // Render pot

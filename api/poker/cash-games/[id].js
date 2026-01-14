@@ -70,6 +70,9 @@ export default async function handler(req, res) {
             }
         }
 
+        // Determine if it's the user's turn
+        const isYourTurn = validActions.length > 0;
+
         // Build response
         const response = {
             success: true,
@@ -99,6 +102,7 @@ export default async function handler(req, res) {
             },
             currentHand,
             validActions,
+            isYourTurn,
             userSeat,
             isSeated: !!userSeat,
             canJoin: !userSeat && table.seats.some(s => !s.playerId),

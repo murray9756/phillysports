@@ -110,15 +110,13 @@ export default async function handler(req, res) {
             const playersWithChips = refreshedTable.seats.filter(s => s.playerId && s.chipStack > 0);
 
             if (playersWithChips.length >= 2) {
-                // Auto-start new hand after short delay (handled by frontend polling/pusher)
-                // Or start immediately:
-                setTimeout(async () => {
-                    try {
-                        await startNextHand(id);
-                    } catch (e) {
-                        console.error('Error starting next hand:', e);
-                    }
-                }, 3000); // 3 second delay between hands
+                // Auto-start new hand after short delay
+                await new Promise(resolve => setTimeout(resolve, 2500));
+                try {
+                    await startNextHand(id);
+                } catch (e) {
+                    console.error('Error starting next hand:', e);
+                }
             } else {
                 // One player is bust, update status
                 await cashTables.updateOne(
@@ -136,14 +134,13 @@ export default async function handler(req, res) {
                 if (nextPlayer) {
                     const nextUser = await users.findOne({ _id: nextPlayer.playerId });
                     if (nextUser && nextUser.isBot) {
-                        // Trigger bot action after a short delay
-                        setTimeout(async () => {
-                            try {
-                                await processBotTurn(id, table.currentHandId);
-                            } catch (e) {
-                                console.error('Error processing bot turn:', e);
-                            }
-                        }, 800 + Math.random() * 1200); // 0.8-2 second delay for realism
+                        // Trigger bot action synchronously with small delay for realism
+                        await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
+                        try {
+                            await processBotTurn(id, table.currentHandId);
+                        } catch (e) {
+                            console.error('Error processing bot turn:', e);
+                        }
                     }
                 }
             }
@@ -325,20 +322,19 @@ async function startNextHand(tableId) {
         sendPrivateCards(player.playerId.toString(), tableId, player.holeCards);
     }
 
-    // Check if first player to act is a bot
+    // Check if first player to act is a bot and trigger synchronously
     const users = await getCollection('users');
     const firstActingPlayer = handPlayers.find(p => p.position === actingPosition);
     if (firstActingPlayer) {
         const firstUser = await users.findOne({ _id: firstActingPlayer.playerId });
         if (firstUser && firstUser.isBot) {
-            // Trigger bot action after a short delay
-            setTimeout(async () => {
-                try {
-                    await processBotTurn(tableId, handId);
-                } catch (e) {
-                    console.error('Error processing bot turn after new hand:', e);
-                }
-            }, 1000 + Math.random() * 1000);
+            // Trigger bot action synchronously with small delay for realism
+            await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
+            try {
+                await processBotTurn(tableId, handId);
+            } catch (e) {
+                console.error('Error processing bot turn after new hand:', e);
+            }
         }
     }
 }
@@ -427,13 +423,13 @@ async function processBotTurn(tableId, handId) {
         const playersWithChips = refreshedTable.seats.filter(s => s.playerId && s.chipStack > 0);
 
         if (playersWithChips.length >= 2) {
-            setTimeout(async () => {
-                try {
-                    await startNextHand(tableId);
-                } catch (e) {
-                    console.error('Error starting next hand after bot action:', e);
-                }
-            }, 3000);
+            // Delay before next hand, then start synchronously
+            await new Promise(resolve => setTimeout(resolve, 2500));
+            try {
+                await startNextHand(tableId);
+            } catch (e) {
+                console.error('Error starting next hand after bot action:', e);
+            }
         } else {
             await cashTables.updateOne(
                 { _id: new ObjectId(tableId) },
@@ -448,13 +444,13 @@ async function processBotTurn(tableId, handId) {
             if (nextPlayer) {
                 const nextUser = await users.findOne({ _id: nextPlayer.playerId });
                 if (nextUser && nextUser.isBot) {
-                    setTimeout(async () => {
-                        try {
-                            await processBotTurn(tableId, handId);
-                        } catch (e) {
-                            console.error('Error processing next bot turn:', e);
-                        }
-                    }, 800 + Math.random() * 1200);
+                    // Chain bot turns synchronously with delay
+                    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 700));
+                    try {
+                        await processBotTurn(tableId, handId);
+                    } catch (e) {
+                        console.error('Error processing next bot turn:', e);
+                    }
                 }
             }
         }

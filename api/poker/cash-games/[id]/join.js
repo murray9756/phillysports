@@ -151,6 +151,7 @@ export default async function handler(req, res) {
 
         // If 2 players are now seated, start a hand
         let handStarted = false;
+        let botActedFirst = false;
         if (seatedPlayers.length === 2) {
             try {
                 await cashTables.updateOne(
@@ -160,8 +161,28 @@ export default async function handler(req, res) {
 
                 // Start first hand - need to use poker_tables collection format
                 // For cash games, we'll create a temporary hand directly
-                await startCashGameHand(id, updatedTable);
+                const handResult = await startCashGameHand(id, updatedTable);
                 handStarted = true;
+
+                // If the bot is up first, trigger bot action immediately
+                // In heads-up, SB (dealer) acts first preflop - which could be the bot
+                if (handResult && handResult.hand) {
+                    const actingPosition = handResult.hand.actingPosition;
+                    const botSeat = updatedTable.seats.find(s => s.isBot && s.position === actingPosition);
+                    if (botSeat) {
+                        // Small delay for realism, then trigger bot action synchronously
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                        try {
+                            const { processBotTurnIfNeeded } = await import('../../../lib/poker/botManager.js');
+                            const botResult = await processBotTurnIfNeeded(id, 'cash');
+                            if (botResult) {
+                                botActedFirst = true;
+                            }
+                        } catch (e) {
+                            console.error('Error processing bot turn:', e);
+                        }
+                    }
+                }
             } catch (e) {
                 console.error('Error starting hand:', e);
             }
@@ -178,6 +199,7 @@ export default async function handler(req, res) {
                 chipStack: buyIn
             },
             handStarted,
+            botActedFirst,
             newBalance: updatedUser?.coinBalance || 0,
             botOpponent: botAdded ? {
                 username: botAdded.odUsername,
