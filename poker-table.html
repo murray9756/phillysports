@@ -441,18 +441,47 @@
             text-align: center;
             max-width: 400px;
         }
-        .winner-content h2 { color: var(--gold); margin-bottom: 0.5rem; font-size: 1.5rem; }
-        .winner-hand { color: var(--text-secondary); margin-bottom: 1rem; }
-        .winner-amount { font-size: 2rem; font-weight: 800; color: var(--gold); margin-bottom: 1rem; }
-        .winner-btn {
-            background: var(--poker-green);
-            color: white;
-            padding: 0.75rem 2rem;
-            border: none;
+        .winner-content h2 { color: var(--gold); margin-bottom: 0.5rem; font-size: 1.8rem; }
+        .winner-hand { color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .winner-amount { font-size: 2.5rem; font-weight: 800; color: var(--gold); margin-bottom: 0.5rem; }
+        .winner-countdown { color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem; }
+
+        /* Action Log */
+        .action-log {
+            position: fixed;
+            bottom: 120px;
+            left: 20px;
+            width: 280px;
+            max-height: 150px;
+            background: rgba(0, 0, 0, 0.8);
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 10px;
+            z-index: 50;
+            overflow-y: auto;
+        }
+        .action-log-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .action-entry {
+            font-size: 0.85rem;
+            color: #ccc;
+            padding: 4px 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            animation: fadeIn 0.3s ease;
+        }
+        .action-entry.fold { color: #f44336; }
+        .action-entry.call { color: #4caf50; }
+        .action-entry.raise, .action-entry.bet { color: #ff9800; }
+        .action-entry.check { color: #9e9e9e; }
+        .action-entry.all-in { color: #e91e63; font-weight: bold; }
+        .action-entry.winner { color: var(--gold); font-weight: bold; }
+        .action-entry.new-hand { color: #2196f3; font-style: italic; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         /* Tournament Status Bar */
@@ -1084,13 +1113,18 @@
         </div>
     </div>
 
+    <!-- Action Log -->
+    <div class="action-log" id="actionLog">
+        <div class="action-log-entries" id="actionLogEntries"></div>
+    </div>
+
     <!-- Winner Overlay -->
     <div class="winner-overlay" id="winnerOverlay">
         <div class="winner-content">
             <h2 id="winnerName">Player Wins!</h2>
             <p class="winner-hand" id="winnerHand">Full House, Kings full of Aces</p>
             <div class="winner-amount" id="winnerAmount">+500</div>
-            <button class="winner-btn" onclick="closeWinnerOverlay()">Continue</button>
+            <p class="winner-countdown" id="winnerCountdown">Next hand in 3...</p>
         </div>
     </div>
 
@@ -1289,6 +1323,7 @@
         function handleNewHand(data) {
             console.log('New hand:', data);
             myHoleCards = null; // Reset hole cards
+            logNewHand(data.handNumber || '?');
             loadGameState(); // Refresh full state
         }
 
@@ -1306,10 +1341,29 @@
                 const seat = gameState.table.seats.find(s => s.position === data.position);
                 if (seat) {
                     seat.lastAction = data.action;
+
+                    // Log the action
+                    const actionText = formatAction(data.action, data.amount);
+                    const actionClass = data.action.replace('_', '-');
+                    logAction(seat.username || 'Player', actionClass, actionText);
                 }
             }
             renderTable();
             loadGameState(); // Get full updated state
+        }
+
+        function formatAction(action, amount) {
+            switch (action) {
+                case 'fold': return 'folds';
+                case 'check': return 'checks';
+                case 'call': return amount ? `calls ${amount}` : 'calls';
+                case 'bet': return `bets ${amount}`;
+                case 'raise': return `raises to ${amount}`;
+                case 'all_in': return `ALL-IN!`;
+                case 'small_blind': return `posts SB ${amount}`;
+                case 'big_blind': return `posts BB ${amount}`;
+                default: return action;
+            }
         }
 
         function handleCommunityCards(data) {
@@ -1319,6 +1373,20 @@
                 hand.communityCards = data.communityCards;
                 hand.status = data.status;
             }
+
+            // Log the street
+            const streetName = data.status === 'flop' ? '*** FLOP ***'
+                : data.status === 'turn' ? '*** TURN ***'
+                : data.status === 'river' ? '*** RIVER ***'
+                : '';
+            if (streetName) {
+                const logEntries = document.getElementById('actionLogEntries');
+                const entry = document.createElement('div');
+                entry.className = 'action-entry new-hand';
+                entry.textContent = streetName;
+                logEntries.appendChild(entry);
+            }
+
             renderTable();
         }
 
@@ -1884,6 +1952,11 @@
                     return;
                 }
 
+                // Log your action
+                const myName = currentUser?.username || 'You';
+                const actionText = formatAction(action, data.amount || amount);
+                logAction(myName, action.replace('_', '-'), actionText);
+
                 // Immediately reload state
                 await loadGameState();
 
@@ -1915,15 +1988,79 @@
         }
 
         function showWinner(winner) {
+            // Find winner's name from seats
+            const winnerSeat = gameState?.table?.seats?.find(s =>
+                s.playerId === winner.playerId?.toString() ||
+                s.playerId?.toString() === winner.playerId?.toString()
+            );
+            const winnerName = winnerSeat?.username || 'Player';
+            const isYou = winnerSeat?.username === currentUser?.username;
+
             const overlay = document.getElementById('winnerOverlay');
-            document.getElementById('winnerName').textContent = `Winner!`;
-            document.getElementById('winnerHand').textContent = winner.handDescription || '';
-            document.getElementById('winnerAmount').textContent = `+${winner.amount}`;
+            document.getElementById('winnerName').textContent = isYou ? '🎉 You Win!' : `${winnerName} Wins!`;
+
+            // Better hand description
+            const handDesc = winner.handDescription || 'opponent folded';
+            document.getElementById('winnerHand').textContent = handDesc === 'Last player standing'
+                ? 'Opponent folded'
+                : handDesc;
+
+            document.getElementById('winnerAmount').textContent = `+${winner.amount} DD`;
+
+            // Log the win
+            logAction(winnerName, 'winner', `wins ${winner.amount} DD`);
+
             overlay.classList.add('show');
+
+            // Auto-continue countdown
+            let countdown = 3;
+            const countdownEl = document.getElementById('winnerCountdown');
+            countdownEl.textContent = `Next hand in ${countdown}...`;
+
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    countdownEl.textContent = `Next hand in ${countdown}...`;
+                } else {
+                    clearInterval(countdownInterval);
+                    closeWinnerOverlay();
+                }
+            }, 1000);
         }
 
         function closeWinnerOverlay() {
             document.getElementById('winnerOverlay').classList.remove('show');
+            // Refresh game state for next hand
+            loadGameState();
+        }
+
+        // Action Log functions
+        function logAction(playerName, actionType, description) {
+            const logEntries = document.getElementById('actionLogEntries');
+            const entry = document.createElement('div');
+            entry.className = `action-entry ${actionType}`;
+            entry.textContent = `${playerName}: ${description}`;
+            logEntries.appendChild(entry);
+
+            // Keep only last 8 entries
+            while (logEntries.children.length > 8) {
+                logEntries.removeChild(logEntries.firstChild);
+            }
+
+            // Scroll to bottom
+            document.getElementById('actionLog').scrollTop = document.getElementById('actionLog').scrollHeight;
+        }
+
+        function clearActionLog() {
+            document.getElementById('actionLogEntries').innerHTML = '';
+        }
+
+        function logNewHand(handNumber) {
+            const logEntries = document.getElementById('actionLogEntries');
+            const entry = document.createElement('div');
+            entry.className = 'action-entry new-hand';
+            entry.textContent = `--- Hand #${handNumber} ---`;
+            logEntries.appendChild(entry);
         }
 
         // Cleanup on page leave
