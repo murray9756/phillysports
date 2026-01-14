@@ -622,6 +622,11 @@
                         const data = await response.json();
 
                         if (data.success) {
+                            // Debug: show what happened
+                            console.log('Join response:', data);
+                            if (data.botError) {
+                                alert('Warning: Bot error: ' + data.botError + '\nSeated players: ' + data.seatedPlayers);
+                            }
                             currentUser.coinBalance = data.newBalance;
                             updateHeader();
                             window.location.href = `/poker-table.html?cash=${tableId}`;
