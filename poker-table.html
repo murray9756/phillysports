@@ -1594,6 +1594,14 @@
                     return;
                 }
 
+                // Debug: log what the API returned
+                console.log('=== GAME STATE DEBUG ===');
+                console.log('currentHand:', data.currentHand);
+                console.log('table.status:', data.table?.status);
+                console.log('validActions:', data.validActions);
+                console.log('isYourTurn:', data.isYourTurn);
+                console.log('seats with players:', data.table?.seats?.filter(s => s.playerId).length);
+
                 gameState = data;
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
