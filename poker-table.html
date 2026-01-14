@@ -479,6 +479,7 @@
         .action-entry.all-in { color: #e91e63; font-weight: bold; }
         .action-entry.winner { color: var(--gold); font-weight: bold; }
         .action-entry.new-hand { color: #2196f3; font-style: italic; }
+        .action-entry.street { color: #00bcd4; font-weight: bold; text-transform: uppercase; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateX(-10px); }
             to { opacity: 1; transform: translateX(0); }
@@ -1282,8 +1283,8 @@
             // Initialize Pusher for real-time updates
             initPusher();
 
-            // Start polling as fallback (slower if Pusher is active)
-            pollInterval = setInterval(loadGameState, usePusher ? 10000 : 2000);
+            // Start polling as fallback (faster when Pusher not active)
+            pollInterval = setInterval(loadGameState, usePusher ? 10000 : 1000);
         }
 
         // Initialize Pusher connection
@@ -1726,6 +1727,12 @@
             }
         }
 
+        // Track shown actions to avoid duplicates
+        let lastShownActionIndex = -1;
+        let lastHandId = null;
+        let winnerShown = false;
+        let lastStreet = null;
+
         async function loadGameState() {
             try {
                 const apiPath = isCashGame
@@ -1741,6 +1748,63 @@
                 }
 
                 gameState = data;
+                const hand = data.currentHand;
+
+                // Reset tracking if new hand
+                if (hand && hand._id !== lastHandId) {
+                    lastHandId = hand._id;
+                    lastShownActionIndex = -1;
+                    winnerShown = false;
+                    lastStreet = 'preflop';
+                    clearActionLog();
+                    logNewHand(hand.handNumber || '?');
+                }
+
+                // Track street changes (flop, turn, river)
+                if (hand && hand.status && hand.status !== lastStreet) {
+                    const newStreet = hand.status;
+                    if (newStreet === 'flop' && lastStreet === 'preflop') {
+                        logAction('Dealer', 'street', 'deals the FLOP');
+                    } else if (newStreet === 'turn' && lastStreet === 'flop') {
+                        logAction('Dealer', 'street', 'deals the TURN');
+                    } else if (newStreet === 'river' && lastStreet === 'turn') {
+                        logAction('Dealer', 'street', 'deals the RIVER');
+                    } else if (newStreet === 'showdown') {
+                        logAction('Dealer', 'street', 'SHOWDOWN');
+                    }
+                    lastStreet = newStreet;
+                }
+
+                // Sync action log from hand actions
+                if (hand && hand.actions && hand.actions.length > 0) {
+                    for (let i = lastShownActionIndex + 1; i < hand.actions.length; i++) {
+                        const action = hand.actions[i];
+                        const playerSeat = data.table.seats.find(s =>
+                            s.playerId === action.playerId?.toString() ||
+                            s.playerId?.toString() === action.playerId?.toString()
+                        );
+                        const playerName = playerSeat?.username || 'Player';
+                        const actionText = formatAction(action.action, action.amount);
+                        const actionClass = action.action.replace('_', '-');
+                        logAction(playerName, actionClass, actionText);
+                        lastShownActionIndex = i;
+                    }
+                }
+
+                // Show winner if hand complete and not already shown
+                if (hand && hand.winners && hand.winners.length > 0 && !winnerShown) {
+                    winnerShown = true;
+                    showWinner(hand.winners[0]);
+                }
+
+                // Clear tracking if no hand
+                if (!hand) {
+                    lastHandId = null;
+                    lastShownActionIndex = -1;
+                    winnerShown = false;
+                    lastStreet = null;
+                }
+
                 renderTable();
                 renderActionPanel(data.validActions, data.isYourTurn);
 
@@ -1752,6 +1816,13 @@
 
             } catch (e) {
                 console.error('Error loading game state:', e);
+            }
+        }
+
+        function clearActionLog() {
+            const logEntries = document.getElementById('actionLogEntries');
+            if (logEntries) {
+                logEntries.innerHTML = '';
             }
         }
 
@@ -2107,8 +2178,11 @@
 
             document.getElementById('winnerAmount').textContent = `+${winner.amount} DD`;
 
-            // Log the win
-            logAction(winnerName, 'winner', `wins ${winner.amount} DD`);
+            // Log the win with hand description
+            const handDescLog = handDesc === 'Last player standing' || handDesc === 'opponent folded'
+                ? 'opponent folded'
+                : `with ${handDesc}`;
+            logAction(winnerName, 'winner', `wins ${winner.amount} DD ${handDescLog}`);
 
             // Find winner's seat position
             const winnerSeatEl = gameState?.table?.seats?.findIndex(s =>
