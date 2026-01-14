@@ -7,6 +7,7 @@ import { addCoins } from '../../../lib/coins.js';
 import { ObjectId } from 'mongodb';
 import { broadcastTableUpdate } from '../../../lib/pusher.js';
 import { HAND_STATUS } from '../../../lib/poker/constants.js';
+import { addBotToCashTable } from '../../../lib/poker/botManager.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -155,8 +156,10 @@ export default async function handler(req, res) {
         );
 
         // Check remaining players
-        const updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
-        const remainingPlayers = updatedTable.seats.filter(s => s.playerId);
+        let updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
+        let remainingPlayers = updatedTable.seats.filter(s => s.playerId);
+        const remainingHumans = remainingPlayers.filter(s => !s.isBot);
+        const remainingBots = remainingPlayers.filter(s => s.isBot);
 
         // Update table status
         if (remainingPlayers.length < 2) {
@@ -179,6 +182,61 @@ export default async function handler(req, res) {
             cashOut: cashOutAmount,
             playerCount: remainingPlayers.length
         });
+
+        // If 1 human remains with no bot, add a bot so they can keep playing
+        if (remainingHumans.length === 1 && remainingBots.length === 0) {
+            try {
+                const botResult = await addBotToCashTable(id);
+                console.log('Bot added after player left:', botResult.bot?.odUsername);
+
+                updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
+                remainingPlayers = updatedTable.seats.filter(s => s.playerId);
+
+                broadcastTableUpdate(id, 'player-joined', {
+                    playerId: botResult.bot.odUserId.toString(),
+                    username: botResult.bot.odUsername,
+                    position: botResult.bot.odPosition,
+                    chipStack: botResult.bot.odChipStack,
+                    playerCount: remainingPlayers.length,
+                    isBot: true
+                });
+            } catch (e) {
+                console.error('Error adding bot after player left:', e.message);
+            }
+        }
+
+        // If no humans remain, remove all bots
+        if (remainingHumans.length === 0 && remainingBots.length > 0) {
+            for (const botSeat of remainingBots) {
+                const botIdx = updatedTable.seats.findIndex(s => s.playerId?.toString() === botSeat.playerId?.toString());
+                if (botIdx !== -1) {
+                    await cashTables.updateOne(
+                        { _id: new ObjectId(id) },
+                        {
+                            $set: {
+                                [`seats.${botIdx}`]: {
+                                    position: botIdx,
+                                    playerId: null,
+                                    username: null,
+                                    chipStack: 0,
+                                    isActive: false,
+                                    isSittingOut: false,
+                                    cards: [],
+                                    currentBet: 0,
+                                    joinedAt: null
+                                }
+                            }
+                        }
+                    );
+                    broadcastTableUpdate(id, 'player-left', {
+                        playerId: botSeat.playerId?.toString(),
+                        username: botSeat.username,
+                        position: botIdx,
+                        isBot: true
+                    });
+                }
+            }
+        }
 
         // Get updated balance
         const updatedUser = await users.findOne({ _id: new ObjectId(user.userId) });

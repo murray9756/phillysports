@@ -8,6 +8,7 @@ import { ObjectId } from 'mongodb';
 import { startNewHand } from '../../../lib/poker/gameEngine.js';
 import { broadcastTableUpdate, PUSHER_EVENTS } from '../../../lib/pusher.js';
 import { CASH_TABLE_CONFIG } from '../index.js';
+import { addBotToCashTable } from '../../../lib/poker/botManager.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -130,6 +131,77 @@ export default async function handler(req, res) {
             name: s.username
         }))));
         console.log('Seated players count:', seatedPlayers.length);
+
+        // Count humans vs bots
+        const humanPlayers = seatedPlayers.filter(s => !s.isBot);
+        const botPlayers = seatedPlayers.filter(s => s.isBot);
+
+        // If only 1 human and no bots, add a bot so they can play
+        if (humanPlayers.length === 1 && botPlayers.length === 0) {
+            try {
+                const botResult = await addBotToCashTable(id);
+                console.log('Bot added:', botResult.bot?.odUsername);
+
+                // Refresh table after bot joined
+                updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
+                seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+
+                // Broadcast bot joined
+                broadcastTableUpdate(id, 'player-joined', {
+                    playerId: botResult.bot.odUserId.toString(),
+                    username: botResult.bot.odUsername,
+                    position: botResult.bot.odPosition,
+                    chipStack: botResult.bot.odChipStack,
+                    playerCount: seatedPlayers.length,
+                    maxSeats: updatedTable.maxSeats,
+                    isBot: true
+                });
+            } catch (e) {
+                console.error('Error adding bot:', e.message);
+            }
+        }
+
+        // If 2+ humans, remove all bots
+        if (humanPlayers.length >= 2 && botPlayers.length > 0) {
+            for (const botSeat of botPlayers) {
+                const botSeatIdx = updatedTable.seats.findIndex(s => s.playerId?.toString() === botSeat.playerId?.toString());
+                if (botSeatIdx !== -1) {
+                    // Clear the bot's seat
+                    await cashTables.updateOne(
+                        { _id: new ObjectId(id) },
+                        {
+                            $set: {
+                                [`seats.${botSeatIdx}`]: {
+                                    position: botSeatIdx,
+                                    playerId: null,
+                                    username: null,
+                                    chipStack: 0,
+                                    isActive: false,
+                                    isSittingOut: false,
+                                    cards: [],
+                                    currentBet: 0,
+                                    joinedAt: null
+                                }
+                            }
+                        }
+                    );
+
+                    // Broadcast bot left
+                    broadcastTableUpdate(id, 'player-left', {
+                        playerId: botSeat.playerId?.toString(),
+                        username: botSeat.username,
+                        position: botSeatIdx,
+                        isBot: true,
+                        reason: 'Humans joined'
+                    });
+                    console.log('Bot removed:', botSeat.username);
+                }
+            }
+
+            // Refresh table after bots removed
+            updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
+            seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+        }
 
         // Start a hand if 2+ players and no hand in progress
         let handStarted = false;
