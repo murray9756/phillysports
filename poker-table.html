@@ -1627,6 +1627,13 @@
             // For cash games, currentHand is at top level; for tournaments, it's inside table
             const hand = gameState.currentHand || table.currentHand;
 
+            // Debug render
+            alert('RENDER DEBUG:\n' +
+                'hand in renderTable: ' + (hand ? 'YES' : 'NO') + '\n' +
+                'seats count: ' + table.seats?.length + '\n' +
+                'seatsContainer exists: ' + !!document.getElementById('seatsContainer') + '\n' +
+                'actionPanel exists: ' + !!document.getElementById('actionPanel'));
+
             // Update tournament info
             if (table.tournament) {
                 const blinds = table.tournament.blindStructure?.[table.tournament.currentBlindLevel || 0];
