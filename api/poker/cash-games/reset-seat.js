@@ -68,24 +68,28 @@ export default async function handler(req, res) {
                 totalCashOut += chipStack;
             }
 
-            // Clear the seat
+            // Clear ALL seats (including bots) and reset table completely
+            const emptySeats = table.seats.map((s, idx) => ({
+                position: idx,
+                playerId: null,
+                username: null,
+                chipStack: 0,
+                isActive: false,
+                isSittingOut: false,
+                cards: [],
+                currentBet: 0,
+                joinedAt: null
+            }));
+
             await cashTables.updateOne(
                 { _id: table._id },
                 {
                     $set: {
-                        [`seats.${seatIndex}`]: {
-                            position: seatIndex,
-                            playerId: null,
-                            username: null,
-                            chipStack: 0,
-                            isActive: false,
-                            isSittingOut: false,
-                            cards: [],
-                            currentBet: 0,
-                            joinedAt: null
-                        },
+                        seats: emptySeats,
                         currentHandId: null,
                         status: 'waiting',
+                        dealerPosition: 0,
+                        handsPlayed: 0,
                         updatedAt: new Date()
                     }
                 }

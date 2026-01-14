@@ -126,14 +126,18 @@ export default async function handler(req, res) {
 
         // If only 1 player (human just joined), add a bot opponent
         let botAdded = null;
+        let botError = null;
         if (seatedPlayers.length === 1) {
             try {
+                console.log('Adding bot to table:', id);
                 const botResult = await addBotToCashTable(id);
+                console.log('Bot added successfully:', botResult);
                 botAdded = botResult.bot;
 
                 // Refresh table after bot joined
                 updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
                 seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+                console.log('Seated players after bot:', seatedPlayers.length);
 
                 // Broadcast bot joined
                 broadcastTableUpdate(id, 'player-joined', {
@@ -146,6 +150,7 @@ export default async function handler(req, res) {
                 });
             } catch (e) {
                 console.error('Error adding bot opponent:', e);
+                botError = e.message;
             }
         }
 
@@ -204,7 +209,9 @@ export default async function handler(req, res) {
             botOpponent: botAdded ? {
                 username: botAdded.odUsername,
                 position: botAdded.odPosition
-            } : null
+            } : null,
+            botError: botError || null,
+            seatedPlayers: seatedPlayers.length
         });
 
     } catch (error) {
