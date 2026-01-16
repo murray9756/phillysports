@@ -34,7 +34,20 @@
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"SportsTeam","name":"Philadelphia 76ers","sport":"Basketball","memberOf":{"@type":"SportsOrganization","name":"NBA"},"url":"https://phillysports.com/sixers/","logo":"https://phillysports.com/logo.png"}</script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --team-color: #006BB6; --dark-bg: #faf9f6; --card-bg: #ffffff; --card-bg-hover: #fafafa; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #444444; --text-muted: #777777; --header-bg: #faf9f6; --accent-color: #8b0000; --nav-text: #333333; }
+        :root { --team-color: #006BB6; --dark-bg: #faf9f6; --card-bg: #ffffff; --card-bg-hover: #fafafa; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #444444; --text-muted: #777777; --header-bg: #faf9f6; --accent-color: #8b0000; --nav-text: #333333; --widget-header-bg: #e8e3db; }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-bg-hover: #2a2a2a;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
         a { color: inherit; text-decoration: none; }
@@ -101,6 +114,28 @@
         .header-auth .auth-btn { background: var(--accent-color); color: #ffffff; padding: 0.5rem 1rem; }
         .header-auth .auth-btn:hover { opacity: 0.9; }
         .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
         .team-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
         .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
         .team-tab { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 600; color: var(--nav-text); border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -124,7 +159,7 @@
         .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
         .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
         .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
-        .widget-header { padding: 0.75rem 1rem; background: #e8e3db; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
+        .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
         .widget-header span { font-size: 1rem; }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .widget-content { padding: 0.75rem; }
@@ -186,10 +221,10 @@
         .stats-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
         .stats-attribution { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
         .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
-        .stats-tabs { display: flex; flex-wrap: wrap; background: #e8e3db; border-bottom: 1px solid var(--border-color); }
+        .stats-tabs { display: flex; flex-wrap: wrap; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); }
         .stats-tab { padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .stats-tab:hover { color: var(--team-color); background: rgba(0,107,182,0.05); }
-        .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: #fff; }
+        .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: var(--card-bg); }
         .stats-table-container { overflow-x: auto; }
         .stats-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
         .stats-table th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
@@ -218,7 +253,7 @@
                     <button type="submit">Go</button>
                 </form>
             </div>
-            <a href="/" class="header-logo"><img src="/logo.png" alt="PhillySports.com"><span class="tagline">Where the Diehards, Play Hard</span></a><div class="header-auth" id="headerAuth"><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
+            <a href="/" class="header-logo"><img src="/logo.png" alt="PhillySports.com"><span class="tagline">Where the Diehards, Play Hard</span></a><div class="header-auth" id="headerAuth"><button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
         <nav class="team-nav"><div class="team-nav-inner">
             <a href="/" class="team-tab">Home</a>
             <a href="/eagles" class="team-tab">Eagles</a>
@@ -319,6 +354,23 @@
     </main>
     <footer class="footer"><p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p></footer>
     <script>
+        // Dark Mode Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        });
+
         const TEAM = 'sixers';
         let currentSlide = 0;
         let carouselInterval = null;
@@ -400,7 +452,7 @@
         });
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/nba');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.pct.toFixed(3)}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">BOS</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">NYK</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">BKN</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">TOR</span></td><td class="record">--</td><td class="pct">---</td></tr>`;}}
         loadNews();loadScores();loadSchedule();loadRoster();loadStats();loadStandings();
-        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<div class="coin-display" title="Diehard Dollars"><span>&#129689;</span><span>${d.user.coinBalance||0}</span></div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
+        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars"><span>&#129689;</span><span>${d.user.coinBalance||0}</span></div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('themeToggle').addEventListener('click',toggleTheme);document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
     </script>
 </body>
 </html>

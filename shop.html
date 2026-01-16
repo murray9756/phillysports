@@ -10,7 +10,19 @@
     <link rel="icon" type="image/png" href="/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #faf9f6; --nav-text: #333333; }
+        :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #faf9f6; --nav-text: #333333; --widget-header-bg: #e8e3db; }
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-bg-hover: #2a2a2a;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
         a { color: inherit; text-decoration: none; }
@@ -78,6 +90,26 @@
             .page-hero h1 { font-size: 1.75rem; }
             .badge-grid { grid-template-columns: 1fr; }
         }
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
     </style>
 </head>
 <body>
@@ -95,6 +127,10 @@
                 <span>PhillySports.com</span>
             </a>
             <div class="header-auth" id="headerAuth">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
                 <a href="/login.html">Login</a>
                 <a href="/register.html">Register</a>
             </div>
@@ -143,6 +179,23 @@
     </footer>
 
     <script>
+        // Dark Mode Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        });
+
         let currentBalance = 0;
         let ownedBadges = [];
 
@@ -163,6 +216,10 @@
                     ownedBadges = data.user.badges || [];
                     document.getElementById('coinBalance').textContent = currentBalance.toLocaleString();
                     document.getElementById('headerAuth').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
                         <div class="coin-display" title="Diehard Dollars">
                             <span>&#129689;</span>
                             <span>${currentBalance}</span>
@@ -170,6 +227,7 @@
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
+                    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
                     document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
                         e.preventDefault();
                         await fetch('/api/auth/logout', { method: 'POST' });
