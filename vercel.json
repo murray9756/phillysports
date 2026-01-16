@@ -1,29 +1,23 @@
 {
   "buildCommand": "",
   "outputDirectory": ".",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "phillesports.com" }],
+      "destination": "https://www.phillysports.com/esports/:path*",
+      "permanent": false
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.phillesports.com" }],
+      "destination": "https://www.phillysports.com/esports/:path*",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/post", "destination": "/post.html" },
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "phillesports.com" }],
-      "destination": "/esports/"
-    },
-    {
-      "source": "/",
-      "has": [{ "type": "host", "value": "www.phillesports.com" }],
-      "destination": "/esports/"
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "phillesports.com" }],
-      "destination": "/esports/:path*"
-    },
-    {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.phillesports.com" }],
-      "destination": "/esports/:path*"
-    }
+    { "source": "/post", "destination": "/post.html" }
   ],
   "crons": [
     {
