@@ -115,12 +115,11 @@ export default async function handler(req, res) {
                 handId: updatedHand._id.toString()
             });
 
-            // Clear current hand from table
+            // Clear seat cards and bets (but keep currentHandId so frontend can see completed hand)
             await cashTables.updateOne(
                 { _id: new ObjectId(id) },
                 {
                     $set: {
-                        currentHandId: null,
                         'seats.$[].cards': [],
                         'seats.$[].currentBet': 0,
                         updatedAt: new Date()
@@ -467,11 +466,11 @@ async function processBotTurn(tableId, handId) {
             handId: updatedHand._id.toString()
         });
 
+        // Clear seat cards and bets (but keep currentHandId so frontend can see completed hand)
         await cashTables.updateOne(
             { _id: new ObjectId(tableId) },
             {
                 $set: {
-                    currentHandId: null,
                     'seats.$[].cards': [],
                     'seats.$[].currentBet': 0,
                     updatedAt: new Date()

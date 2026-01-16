@@ -121,12 +121,11 @@ export default async function handler(req, res) {
 
         // If hand is complete, handle next hand
         if (result.isHandComplete) {
-            // Clear current hand from table
+            // Clear seat cards and bets (but keep currentHandId so frontend can see completed hand)
             await cashTables.updateOne(
                 { _id: new ObjectId(id) },
                 {
                     $set: {
-                        currentHandId: null,
                         'seats.$[].cards': [],
                         'seats.$[].currentBet': 0,
                         updatedAt: new Date()
