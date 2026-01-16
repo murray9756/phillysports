@@ -74,15 +74,16 @@
             --sixers-blue: #006BB6;
             --flyers-orange: #F74902;
             --union-gold: #B49759;
-            --dark-bg: #f0ebe3;
+            --dark-bg: #faf9f6;
             --card-bg: #ffffff;
             --card-bg-hover: #fafafa;
-            --border-color: #e0dcd4;
+            --border-color: #e0e0e0;
             --text-primary: #1a1a1a;
-            --text-secondary: #555555;
-            --text-muted: #888888;
-            --header-bg: #2c2c2c;
+            --text-secondary: #444444;
+            --text-muted: #777777;
+            --header-bg: #faf9f6;
             --accent-color: #8b0000;
+            --nav-text: #333333;
         }
 
         * {
@@ -106,7 +107,7 @@
         /* Header */
         .header {
             background: var(--header-bg);
-            border-bottom: 3px solid var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -138,7 +139,7 @@
         .header-logo .tagline {
             font-size: 0.9rem;
             font-weight: 500;
-            color: #ffd700;
+            color: var(--text-secondary);
             font-style: italic;
             text-align: center;
         }
@@ -151,22 +152,22 @@
 
         .header-signup input {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #444;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            background: #3a3a3a;
-            color: #ffffff;
+            background: #ffffff;
+            color: var(--text-primary);
             font-size: 0.8rem;
             width: 180px;
             font-family: inherit;
         }
 
         .header-signup input::placeholder {
-            color: #999999;
+            color: var(--text-muted);
         }
 
         .header-signup button {
             padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            background: var(--accent-color);
             border: none;
             border-radius: 4px;
             color: white;
@@ -175,6 +176,8 @@
             cursor: pointer;
             font-family: inherit;
             transition: opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .header-signup button:hover {
@@ -192,38 +195,41 @@
         }
 
         .header-auth a {
-            color: #ffffff;
-            font-size: 0.85rem;
-            font-weight: 500;
+            color: var(--nav-text);
+            font-size: 0.8rem;
+            font-weight: 600;
             padding: 0.5rem 0.75rem;
             border-radius: 4px;
             transition: background 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .header-auth a:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.05);
         }
 
         .header-auth .auth-btn {
-            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            background: var(--accent-color);
+            color: #ffffff;
             padding: 0.5rem 1rem;
         }
 
         .header-auth .auth-btn:hover {
             opacity: 0.9;
-            background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange));
+            background: var(--accent-color);
         }
 
         .coin-display {
             display: flex;
             align-items: center;
             gap: 0.35rem;
-            background: rgba(255, 215, 0, 0.15);
+            background: rgba(139, 0, 0, 0.1);
             padding: 0.35rem 0.75rem;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.85rem;
-            color: #ffd700;
+            color: var(--accent-color);
             cursor: default;
         }
 
@@ -238,7 +244,7 @@
         /* Team Navigation */
         .team-nav {
             background: var(--header-bg);
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .team-nav-inner {
@@ -251,33 +257,35 @@
 
         .team-tab {
             padding: 0.75rem 1.25rem;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: #aaaaaa;
-            border-bottom: 3px solid transparent;
+            color: var(--nav-text);
+            border-bottom: 2px solid transparent;
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .team-tab:hover {
-            color: #ffffff;
+            color: var(--accent-color);
         }
 
         .team-tab.active {
-            color: #ffffff;
-            border-bottom-color: var(--phillies-red);
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
         }
 
-        .team-tab[data-team="eagles"]:hover, .team-tab[data-team="eagles"].active { border-bottom-color: var(--eagles-green); }
-        .team-tab[data-team="phillies"]:hover, .team-tab[data-team="phillies"].active { border-bottom-color: var(--phillies-red); }
-        .team-tab[data-team="sixers"]:hover, .team-tab[data-team="sixers"].active { border-bottom-color: var(--sixers-blue); }
-        .team-tab[data-team="flyers"]:hover, .team-tab[data-team="flyers"].active { border-bottom-color: var(--flyers-orange); }
-        .team-tab[data-team="union"]:hover, .team-tab[data-team="union"].active { border-bottom-color: var(--union-gold); }
+        .team-tab[data-team="eagles"]:hover, .team-tab[data-team="eagles"].active { border-bottom-color: var(--eagles-green); color: var(--eagles-green); }
+        .team-tab[data-team="phillies"]:hover, .team-tab[data-team="phillies"].active { border-bottom-color: var(--phillies-red); color: var(--phillies-red); }
+        .team-tab[data-team="sixers"]:hover, .team-tab[data-team="sixers"].active { border-bottom-color: var(--sixers-blue); color: var(--sixers-blue); }
+        .team-tab[data-team="flyers"]:hover, .team-tab[data-team="flyers"].active { border-bottom-color: var(--flyers-orange); color: var(--flyers-orange); }
+        .team-tab[data-team="union"]:hover, .team-tab[data-team="union"].active { border-bottom-color: var(--union-gold); color: var(--union-gold); }
 
-        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0 0.5rem; }
-        .feature-tab { color: #ffd700 !important; }
-        .feature-tab:hover { border-bottom-color: #ffd700 !important; }
+        .nav-divider { width: 1px; height: 16px; background: var(--border-color); margin: 0 0.5rem; align-self: center; }
+        .feature-tab { color: var(--nav-text) !important; }
+        .feature-tab:hover { color: var(--accent-color) !important; border-bottom-color: var(--accent-color) !important; }
 
         /* Main Layout - 3 Column */
         .main-container {
