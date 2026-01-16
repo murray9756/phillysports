@@ -854,6 +854,36 @@
             text-align: center;
         }
         .chat-message.system .chat-user { display: none; }
+        .chat-input-row {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            padding: 0.4rem 0.5rem;
+            color: #fff;
+            font-size: 0.75rem;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--poker-green);
+        }
+        .chat-send {
+            background: var(--poker-green);
+            border: none;
+            border-radius: 4px;
+            padding: 0.4rem 0.75rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .chat-send:hover { background: #1d6b42; }
 
         @media (max-width: 768px) {
             .table-chat {
@@ -1021,15 +1051,19 @@
         </div>
     </div>
 
-    <!-- Public Table Log -->
+    <!-- Table Chat -->
     <div class="table-chat" id="tableChat">
         <div class="chat-header">
-            <h4>Table Log</h4>
+            <h4>Table Chat</h4>
         </div>
         <div class="chat-messages" id="chatMessages">
             <div class="chat-message system">
                 <span class="chat-text">Welcome to the table!</span>
             </div>
+        </div>
+        <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chatInput" placeholder="Say something..." maxlength="100" onkeypress="if(event.key==='Enter')sendChat()">
+            <button class="chat-send" onclick="sendChat()">Send</button>
         </div>
     </div>
 
@@ -2340,21 +2374,50 @@
         }
 
         // ============ Table Chat ============
-        // Add message to the public table log
-        function addTableLog(message, type = 'system') {
+        // Add message to chat (with optional username for player messages)
+        function addChatMessage(message, username = null) {
             const messagesEl = document.getElementById('chatMessages');
             const msgEl = document.createElement('div');
-            msgEl.className = 'chat-message' + (type === 'system' ? ' system' : '');
-            msgEl.innerHTML = `<span class="chat-text">${escapeHtml(message)}</span>`;
+
+            if (username) {
+                msgEl.className = 'chat-message';
+                msgEl.innerHTML = `<span class="chat-user">${escapeHtml(username)}:</span><span class="chat-text">${escapeHtml(message)}</span>`;
+            } else {
+                msgEl.className = 'chat-message system';
+                msgEl.innerHTML = `<span class="chat-text">${escapeHtml(message)}</span>`;
+            }
+
             messagesEl.appendChild(msgEl);
 
-            // Keep only last 20 messages
-            while (messagesEl.children.length > 20) {
+            // Keep only last 30 messages
+            while (messagesEl.children.length > 30) {
                 messagesEl.removeChild(messagesEl.firstChild);
             }
 
             // Scroll to bottom
             messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        // Send chat message
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message || !currentUser) return;
+
+            input.value = '';
+
+            // Add to local chat immediately
+            const username = currentUser.displayName || currentUser.username;
+            addChatMessage(message, username);
+
+            // Send to server (for other players to see via polling)
+            if (tableId) {
+                fetch(`/api/poker/tables/${tableId}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                }).catch(e => console.log('Chat send error:', e));
+            }
         }
 
         function escapeHtml(text) {
