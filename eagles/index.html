@@ -570,7 +570,7 @@
                         const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
                         return `
                             <div class="carousel-slide">
-                                <a href="${article.link}" target="_blank" class="featured-article">
+                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="featured-article">
                                     <div class="featured-image" style="${imgStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
                                     <div class="featured-content">
                                         <span class="article-tag">${article.team || 'Eagles'}</span>
@@ -594,11 +594,11 @@
                         container.innerHTML = listArticles.map(article => {
                             const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
                             return `
-                                <a href="${article.link}" target="_blank" class="article-item">
+                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
                                     <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
                                     <div class="article-info">
                                         <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''}</div>
+                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
                                     </div>
                                 </a>
                             `;

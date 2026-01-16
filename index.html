@@ -1717,6 +1717,7 @@
                             : `background:${article.teamColor};`;
                         const sourceText = article.source ? ` · ${article.source}` : '';
                         const scoreClass = article.score > 0 ? 'positive' : article.score < 0 ? 'negative' : '';
+                        const articleUrl = `/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}`;
                         return `
                             <div class="carousel-slide">
                                 <div class="featured-article" style="position:relative;">
@@ -1725,7 +1726,7 @@
                                         <span class="vote-score ${scoreClass}" id="score-${article.id}">${article.score || 0}</span>
                                         <button class="vote-btn downvote" onclick="vote('${article.id}', -1, event)" data-article="${article.id}">&#9660;</button>
                                     </div>
-                                    <a href="${article.link}" target="_blank" style="display:block;">
+                                    <a href="${articleUrl}" style="display:block;">
                                         <div class="featured-image" style="${imageStyle}">
                                             ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
                                         </div>
@@ -1733,7 +1734,7 @@
                                             <span class="article-tag ${article.tagClass}">${article.team}</span>
                                             <h3 class="featured-title">${article.headline}</h3>
                                             <p class="featured-excerpt">${article.description || ''}</p>
-                                            <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
+                                            <div class="article-meta">${timeAgo(article.published)}${sourceText} · <span style="color:var(--accent-color);">&#128172; Discuss</span></div>
                                         </div>
                                     </a>
                                 </div>
@@ -1762,16 +1763,17 @@
                                 : `background:${article.teamColor};`;
                             const sourceText = article.source ? ` · ${article.source}` : '';
                             const scoreClass = article.score > 0 ? 'positive' : article.score < 0 ? 'negative' : '';
+                            const articleUrl = `/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}`;
                             return `
                                 <div class="article-item-wrapper">
-                                    <a href="${article.link}" target="_blank" class="article-link">
+                                    <a href="${articleUrl}" class="article-link">
                                         <div class="article-thumb" style="${thumbStyle}">
                                             ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
                                         </div>
                                         <div class="article-info">
                                             <span class="article-tag ${article.tagClass}">${article.team}</span>
                                             <h4 class="article-title">${article.headline}</h4>
-                                            <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
+                                            <div class="article-meta">${timeAgo(article.published)}${sourceText} · <span style="color:var(--accent-color);">&#128172; Discuss</span></div>
                                         </div>
                                     </a>
                                     <div class="vote-buttons">
