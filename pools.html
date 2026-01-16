@@ -13,6 +13,7 @@
     <title>Block Pools - PhillySports.com</title>
     <meta name="description" content="Play football squares and block pools for Philadelphia sports games. Win Diehard Dollars!">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -300,6 +301,12 @@
 
         checkAuth();
         loadPools();
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>

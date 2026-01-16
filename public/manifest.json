@@ -1,0 +1,19 @@
+{
+  "name": "PhillySports.com",
+  "short_name": "PhillySports",
+  "description": "Your home for Philadelphia sports news, fantasy, betting, and community",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f6",
+  "theme_color": "#8b0000",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "news", "entertainment"],
+  "orientation": "portrait-primary"
+}

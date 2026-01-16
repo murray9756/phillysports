@@ -13,6 +13,7 @@
     <title>Game Threads - PhillySports.com</title>
     <meta name="description" content="Live game discussion threads for Philadelphia Eagles, Phillies, 76ers, and Flyers games.">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -403,6 +404,12 @@
 
         // Refresh every 30 seconds
         setInterval(loadThreads, 30000);
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>

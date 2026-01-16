@@ -8,6 +8,7 @@
     <title>Diehard Dollars Shop | PhillySports.com</title>
     <meta name="description" content="Spend your Diehard Dollars on badges and exclusive items.">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #faf9f6; --nav-text: #333333; --widget-header-bg: #e8e3db; }
@@ -404,6 +405,12 @@
 
         // Initialize
         checkAuth().then(loadShop);
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>

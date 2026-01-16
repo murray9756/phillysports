@@ -8,6 +8,7 @@
     <title>Philly Sports Trivia | PhillySports.com</title>
     <meta name="description" content="Test your Philly sports knowledge and earn Diehard Dollars!">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #faf9f6; --nav-text: #333333; --eagles-green: #004C54; --phillies-red: #E81828; --sixers-blue: #006BB6; --flyers-orange: #F74902; --widget-header-bg: #e8e3db; }
@@ -544,6 +545,12 @@
 
         // Initialize
         checkAuth().then(loadQuestion);
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>

@@ -206,30 +206,114 @@
                 </form>
             </section>
 
-            <!-- Notifications Section -->
+            <!-- Push Notifications Section -->
             <section class="settings-section">
                 <h2 class="settings-section-title">
                     <span class="icon">🔔</span>
-                    Notifications
+                    Push Notifications
                 </h2>
-                <div class="success-message" id="notifSuccess"></div>
-                <form id="notificationsForm">
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
-                            <input type="checkbox" id="emailNotifs" name="emailNotifs" style="width: auto;">
-                            <span>Email notifications for new followers</span>
-                        </label>
+                <div class="error-message" id="pushError"></div>
+                <div class="success-message" id="pushSuccess"></div>
+
+                <div id="pushNotSupported" style="display: none; padding: 1rem; background: #fef3c7; border-radius: 8px; margin-bottom: 1rem;">
+                    <p style="color: #92400e;">Push notifications are not supported in this browser.</p>
+                </div>
+
+                <div id="pushControls">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--dark-bg); border-radius: 8px;">
+                            <div>
+                                <strong>Enable Push Notifications</strong>
+                                <p class="hint" style="margin-top: 0.25rem;" id="pushStatus">Loading...</p>
+                            </div>
+                            <button class="btn btn-primary" id="pushToggleBtn" style="padding: 0.5rem 1rem;">Enable</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
-                            <input type="checkbox" id="commentNotifs" name="commentNotifs" style="width: auto;">
-                            <span>Email notifications for comment replies</span>
-                        </label>
+
+                    <div id="pushPreferences" style="display: none;">
+                        <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-muted);">Game Alerts</h4>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_gameStart" style="width: auto;">
+                                <span>Game starts for Philly teams</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_scoreUpdate" style="width: auto;">
+                                <span>Score updates (touchdowns, goals, etc.)</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_finalScore" style="width: auto;">
+                                <span>Final scores</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_closeGame" style="width: auto;">
+                                <span>Close game alerts</span>
+                            </label>
+                        </div>
+
+                        <h4 style="font-size: 0.9rem; font-weight: 600; margin: 1.25rem 0 0.75rem; color: var(--text-muted);">Activity Alerts</h4>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_badgeUnlocked" style="width: auto;">
+                                <span>Badge unlocked</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_contestResult" style="width: auto;">
+                                <span>Fantasy/prediction contest results</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_betOutcome" style="width: auto;">
+                                <span>Bet outcomes</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_poolWinner" style="width: auto;">
+                                <span>Pool prize wins</span>
+                            </label>
+                        </div>
+
+                        <h4 style="font-size: 0.9rem; font-weight: 600; margin: 1.25rem 0 0.75rem; color: var(--text-muted);">Social Alerts</h4>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_newFollower" style="width: auto;">
+                                <span>New followers</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_mention" style="width: auto;">
+                                <span>Mentions in comments</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_reply" style="width: auto;">
+                                <span>Replies to your comments</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 400;">
+                                <input type="checkbox" id="pref_message" style="width: auto;">
+                                <span>New messages</span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="savePushPrefsBtn">Save Preferences</button>
+                        </div>
                     </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-secondary">Save Preferences</button>
-                    </div>
-                </form>
+                </div>
             </section>
 
             <!-- Danger Zone -->
@@ -470,7 +554,248 @@
             }
         });
 
+        // Push Notifications
+        let pushEnabled = false;
+        let swRegistration = null;
+        let vapidPublicKey = null;
+
+        async function initPushNotifications() {
+            // Check if push is supported
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                document.getElementById('pushNotSupported').style.display = 'block';
+                document.getElementById('pushControls').style.display = 'none';
+                return;
+            }
+
+            try {
+                // Get VAPID public key
+                const keyResponse = await fetch('/api/notifications/vapid-key');
+                const keyData = await keyResponse.json();
+
+                if (!keyData.configured) {
+                    document.getElementById('pushStatus').textContent = 'Push notifications not configured on server';
+                    document.getElementById('pushToggleBtn').disabled = true;
+                    return;
+                }
+
+                vapidPublicKey = keyData.publicKey;
+
+                // Register service worker
+                swRegistration = await navigator.serviceWorker.register('/public/sw.js');
+
+                // Check current subscription status
+                const subscription = await swRegistration.pushManager.getSubscription();
+
+                // Load preferences
+                const prefsResponse = await fetch('/api/notifications/preferences', { credentials: 'include' });
+                const prefsData = await prefsResponse.json();
+
+                if (subscription && prefsData.hasSubscriptions) {
+                    pushEnabled = true;
+                    updatePushUI(true, prefsData.preferences);
+                } else {
+                    updatePushUI(false);
+                }
+            } catch (error) {
+                console.error('Push init error:', error);
+                document.getElementById('pushStatus').textContent = 'Failed to initialize push notifications';
+            }
+        }
+
+        function updatePushUI(enabled, preferences = null) {
+            pushEnabled = enabled;
+            const btn = document.getElementById('pushToggleBtn');
+            const status = document.getElementById('pushStatus');
+            const prefsDiv = document.getElementById('pushPreferences');
+
+            if (enabled) {
+                btn.textContent = 'Disable';
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+                status.textContent = 'Push notifications are enabled';
+                prefsDiv.style.display = 'block';
+
+                // Load preference checkboxes
+                if (preferences) {
+                    document.getElementById('pref_gameStart').checked = preferences.gameAlerts?.gameStart ?? true;
+                    document.getElementById('pref_scoreUpdate').checked = preferences.gameAlerts?.scoreUpdate ?? true;
+                    document.getElementById('pref_finalScore').checked = preferences.gameAlerts?.finalScore ?? true;
+                    document.getElementById('pref_closeGame').checked = preferences.gameAlerts?.closeGame ?? true;
+                    document.getElementById('pref_badgeUnlocked').checked = preferences.activityAlerts?.badgeUnlocked ?? true;
+                    document.getElementById('pref_contestResult').checked = preferences.activityAlerts?.contestResult ?? true;
+                    document.getElementById('pref_betOutcome').checked = preferences.activityAlerts?.betOutcome ?? true;
+                    document.getElementById('pref_poolWinner').checked = preferences.activityAlerts?.poolWinner ?? true;
+                    document.getElementById('pref_newFollower').checked = preferences.socialAlerts?.newFollower ?? true;
+                    document.getElementById('pref_mention').checked = preferences.socialAlerts?.mention ?? true;
+                    document.getElementById('pref_reply').checked = preferences.socialAlerts?.reply ?? true;
+                    document.getElementById('pref_message').checked = preferences.socialAlerts?.message ?? true;
+                }
+            } else {
+                btn.textContent = 'Enable';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-primary');
+                status.textContent = 'Push notifications are disabled';
+                prefsDiv.style.display = 'none';
+            }
+        }
+
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        async function subscribeToPush() {
+            const errorEl = document.getElementById('pushError');
+            const successEl = document.getElementById('pushSuccess');
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+
+            try {
+                // Request permission
+                const permission = await Notification.requestPermission();
+
+                if (permission !== 'granted') {
+                    errorEl.textContent = 'Notification permission denied. Please enable in browser settings.';
+                    errorEl.classList.add('show');
+                    return;
+                }
+
+                // Subscribe to push
+                const subscription = await swRegistration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+                });
+
+                // Send subscription to server
+                const response = await fetch('/api/notifications/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ subscription: subscription.toJSON() })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save subscription');
+                }
+
+                // Load preferences
+                const prefsResponse = await fetch('/api/notifications/preferences', { credentials: 'include' });
+                const prefsData = await prefsResponse.json();
+
+                updatePushUI(true, prefsData.preferences);
+                successEl.textContent = 'Push notifications enabled!';
+                successEl.classList.add('show');
+                setTimeout(() => successEl.classList.remove('show'), 3000);
+
+            } catch (error) {
+                console.error('Subscribe error:', error);
+                errorEl.textContent = error.message || 'Failed to enable push notifications';
+                errorEl.classList.add('show');
+            }
+        }
+
+        async function unsubscribeFromPush() {
+            const errorEl = document.getElementById('pushError');
+            const successEl = document.getElementById('pushSuccess');
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+
+            try {
+                const subscription = await swRegistration.pushManager.getSubscription();
+
+                if (subscription) {
+                    await subscription.unsubscribe();
+                }
+
+                // Tell server to remove subscription
+                await fetch('/api/notifications/unsubscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ all: true })
+                });
+
+                updatePushUI(false);
+                successEl.textContent = 'Push notifications disabled';
+                successEl.classList.add('show');
+                setTimeout(() => successEl.classList.remove('show'), 3000);
+
+            } catch (error) {
+                console.error('Unsubscribe error:', error);
+                errorEl.textContent = 'Failed to disable push notifications';
+                errorEl.classList.add('show');
+            }
+        }
+
+        document.getElementById('pushToggleBtn').addEventListener('click', () => {
+            if (pushEnabled) {
+                unsubscribeFromPush();
+            } else {
+                subscribeToPush();
+            }
+        });
+
+        document.getElementById('savePushPrefsBtn').addEventListener('click', async () => {
+            const errorEl = document.getElementById('pushError');
+            const successEl = document.getElementById('pushSuccess');
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+
+            const preferences = {
+                pushEnabled: true,
+                gameAlerts: {
+                    gameStart: document.getElementById('pref_gameStart').checked,
+                    scoreUpdate: document.getElementById('pref_scoreUpdate').checked,
+                    finalScore: document.getElementById('pref_finalScore').checked,
+                    closeGame: document.getElementById('pref_closeGame').checked
+                },
+                activityAlerts: {
+                    badgeUnlocked: document.getElementById('pref_badgeUnlocked').checked,
+                    contestResult: document.getElementById('pref_contestResult').checked,
+                    betOutcome: document.getElementById('pref_betOutcome').checked,
+                    poolWinner: document.getElementById('pref_poolWinner').checked,
+                    ddEarned: false
+                },
+                socialAlerts: {
+                    newFollower: document.getElementById('pref_newFollower').checked,
+                    mention: document.getElementById('pref_mention').checked,
+                    reply: document.getElementById('pref_reply').checked,
+                    message: document.getElementById('pref_message').checked
+                }
+            };
+
+            try {
+                const response = await fetch('/api/notifications/preferences', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ preferences })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save preferences');
+                }
+
+                successEl.textContent = 'Notification preferences saved!';
+                successEl.classList.add('show');
+                setTimeout(() => successEl.classList.remove('show'), 3000);
+
+            } catch (error) {
+                errorEl.textContent = error.message || 'Failed to save preferences';
+                errorEl.classList.add('show');
+            }
+        });
+
         checkAuth();
+
+        // Initialize push notifications after auth check
+        setTimeout(initPushNotifications, 500);
     </script>
 </body>
 </html>

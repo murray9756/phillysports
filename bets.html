@@ -8,6 +8,7 @@
     <title>My Bets | PhillySports.com</title>
     <meta name="description" content="View your betting history, track pending bets, and see your winnings on PhillySports.com">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -634,6 +635,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             checkAuth();
         });
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>

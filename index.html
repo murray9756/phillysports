@@ -41,6 +41,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -1892,6 +1893,12 @@
             }
         }
         checkAuth();
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>

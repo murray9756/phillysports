@@ -8,6 +8,7 @@
     <title>Profile | PhillySports.com</title>
     <meta name="description" content="View and manage your PhillySports.com profile. Follow other fans, save articles, and customize your experience.">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -913,6 +914,12 @@
         }
 
         init();
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/public/sw.js').catch(err => console.log('SW registration failed:', err));
+        }
     </script>
 </body>
 </html>
