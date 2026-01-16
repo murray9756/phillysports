@@ -345,7 +345,7 @@
             margin: 0 auto;
             padding: 1.5rem;
             display: grid;
-            grid-template-columns: 250px 1fr 280px;
+            grid-template-columns: 200px 1fr 280px;
             gap: 1.25rem;
         }
 
@@ -1315,17 +1315,18 @@
 
         <!-- Right Sidebar -->
         <aside class="sidebar">
-            <!-- Newsletter Widget -->
-            <div class="widget newsletter-widget">
-                <div class="newsletter-content">
-                    <div class="newsletter-icon">&#128239;</div>
-                    <h3 class="newsletter-title">Get the Daily Rundown</h3>
-                    <p class="newsletter-desc">Philly sports news, hot takes, and trivia delivered to your inbox.</p>
-                    <form class="newsletter-form" action="https://embeds.beehiiv.com/51eefbfb-8a77-4569-baa2-40ca11d0a0c2" method="POST" target="_blank">
-                        <input type="email" name="email" placeholder="Enter your email" required>
-                        <button type="submit">Subscribe Free</button>
-                    </form>
-                    <p class="newsletter-note">Join 1,000+ Philly fans. Unsubscribe anytime.</p>
+            <!-- Twitter Feed Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#120143;</span>
+                    <h3 class="widget-title">Philly Sports Feed</h3>
+                </div>
+                <div class="widget-content" style="padding:0;">
+                    <a class="twitter-timeline"
+                       data-height="400"
+                       data-theme="light"
+                       data-chrome="noheader nofooter noborders"
+                       href="https://twitter.com/i/lists/2011982555629961644">Loading tweets...</a>
                 </div>
             </div>
 
@@ -1377,8 +1378,25 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Newsletter Widget -->
+            <div class="widget newsletter-widget">
+                <div class="newsletter-content">
+                    <div class="newsletter-icon">&#128239;</div>
+                    <h3 class="newsletter-title">Get the Daily Rundown</h3>
+                    <p class="newsletter-desc">Philly sports news, hot takes, and trivia delivered to your inbox.</p>
+                    <form class="newsletter-form" action="https://embeds.beehiiv.com/51eefbfb-8a77-4569-baa2-40ca11d0a0c2" method="POST" target="_blank">
+                        <input type="email" name="email" placeholder="Enter your email" required>
+                        <button type="submit">Subscribe Free</button>
+                    </form>
+                    <p class="newsletter-note">Join 1,000+ Philly fans. Unsubscribe anytime.</p>
+                </div>
+            </div>
         </aside>
     </main>
+
+    <!-- Twitter Widget Script -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
     <!-- Footer -->
     <footer class="footer">
