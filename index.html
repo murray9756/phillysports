@@ -1043,6 +1043,41 @@
             color: rgba(255,255,255,0.6);
         }
 
+        /* YouTube Links */
+        .youtube-search-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .yt-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            transition: opacity 0.2s;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .yt-link:last-child {
+            border-bottom: none;
+        }
+
+        .yt-link:hover {
+            opacity: 0.85;
+        }
+
+        .yt-link .yt-icon {
+            font-size: 0.7rem;
+        }
+
+        .yt-link.eagles { background: var(--eagles-green); }
+        .yt-link.phillies { background: var(--phillies-red); }
+        .yt-link.sixers { background: var(--sixers-blue); }
+        .yt-link.flyers { background: var(--flyers-orange); }
+
         /* Footer */
         .footer {
             margin-top: 2rem;
@@ -1315,6 +1350,34 @@
 
         <!-- Right Sidebar -->
         <aside class="sidebar">
+            <!-- YouTube Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#9654;</span>
+                    <h3 class="widget-title">Philly Sports Videos</h3>
+                </div>
+                <div class="widget-content" style="padding:0;">
+                    <div class="youtube-search-links">
+                        <a href="https://www.youtube.com/results?search_query=Philadelphia+Eagles+highlights+news&sp=CAI" target="_blank" class="yt-link eagles">
+                            <span class="yt-icon">&#9654;</span>
+                            <span>Eagles Videos</span>
+                        </a>
+                        <a href="https://www.youtube.com/results?search_query=Philadelphia+Phillies+highlights+news&sp=CAI" target="_blank" class="yt-link phillies">
+                            <span class="yt-icon">&#9654;</span>
+                            <span>Phillies Videos</span>
+                        </a>
+                        <a href="https://www.youtube.com/results?search_query=Philadelphia+76ers+Sixers+highlights+news&sp=CAI" target="_blank" class="yt-link sixers">
+                            <span class="yt-icon">&#9654;</span>
+                            <span>76ers Videos</span>
+                        </a>
+                        <a href="https://www.youtube.com/results?search_query=Philadelphia+Flyers+highlights+news&sp=CAI" target="_blank" class="yt-link flyers">
+                            <span class="yt-icon">&#9654;</span>
+                            <span>Flyers Videos</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Trivia Promo Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
