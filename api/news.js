@@ -174,6 +174,29 @@ export default async function handler(req, res) {
             });
         } catch (e) { console.error('Crossing Broad RSS error:', e); }
 
+        // Fetch PhillyVoice Sports RSS feed
+        try {
+            const pvRes = await fetch('https://www.phillyvoice.com/feed/section/sports/');
+            const pvXml = await pvRes.text();
+            const pvItems = parseRSS(pvXml);
+
+            pvItems.slice(0, 5).forEach(item => {
+                const teamInfo = detectTeamFromRSS(item);
+                articles.push({
+                    team: teamInfo.team,
+                    sport: 'PhillyVoice',
+                    teamColor: teamInfo.color,
+                    tagClass: teamInfo.tagClass,
+                    headline: item.title,
+                    description: item.description,
+                    link: item.link,
+                    image: item.image,
+                    published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                    source: 'PhillyVoice'
+                });
+            });
+        } catch (e) { console.error('PhillyVoice RSS error:', e); }
+
         // Fetch On Pattison articles (scrape homepage)
         try {
             const opRes = await fetch('https://onpattison.com/');
