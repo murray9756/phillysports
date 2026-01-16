@@ -3,6 +3,7 @@ import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
 import { sanitizeString } from '../lib/validate.js';
 import { addCoins, getDailyEarnings, COINS_PER_COMMENT, DAILY_COMMENT_COIN_LIMIT } from '../lib/coins.js';
+import { parseMentions, sendMentionNotifications } from '../lib/mentions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -51,7 +52,11 @@ export default async function handler(req, res) {
                 _id: comment._id.toString(),
                 userId: comment.userId.toString(),
                 user: userMap[comment.userId.toString()],
-                likesCount: comment.likes?.length || 0
+                likesCount: comment.likes?.length || 0,
+                upvotes: comment.upvotes || 0,
+                downvotes: comment.downvotes || 0,
+                score: comment.score || 0,
+                mentions: comment.mentions || []
             }));
 
             res.status(200).json({ comments: enrichedComments });
@@ -86,10 +91,18 @@ export default async function handler(req, res) {
             const comments = await getCollection('comments');
             const userId = new ObjectId(decoded.userId);
 
+            // Parse mentions from content
+            const sanitizedContent = sanitizeString(content, 1000);
+            const mentionedUsernames = parseMentions(sanitizedContent);
+
             const newComment = {
                 userId,
                 articleUrl,
-                content: sanitizeString(content, 1000),
+                content: sanitizedContent,
+                mentions: mentionedUsernames,
+                upvotes: 0,
+                downvotes: 0,
+                score: 0,
                 likes: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -122,6 +135,23 @@ export default async function handler(req, res) {
                 console.error('Failed to award comment coins:', coinError);
             }
 
+            // Send mention notifications
+            if (mentionedUsernames.length > 0) {
+                try {
+                    await sendMentionNotifications({
+                        mentionedUsernames,
+                        mentionerId: decoded.userId,
+                        mentionerUsername: user.username,
+                        contentType: 'comment',
+                        contentId: newComment._id.toString(),
+                        contentPreview: sanitizedContent,
+                        url: articleUrl
+                    });
+                } catch (mentionError) {
+                    console.error('Failed to send mention notifications:', mentionError);
+                }
+            }
+
             res.status(201).json({
                 message: 'Comment posted',
                 coinsEarned,
@@ -136,7 +166,11 @@ export default async function handler(req, res) {
                         profilePhoto: user.profilePhoto,
                         favoriteTeam: user.favoriteTeam
                     },
-                    likesCount: 0
+                    likesCount: 0,
+                    upvotes: 0,
+                    downvotes: 0,
+                    score: 0,
+                    mentions: mentionedUsernames
                 }
             });
         } catch (error) {

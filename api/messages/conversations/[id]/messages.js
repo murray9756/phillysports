@@ -4,8 +4,9 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
-import { hasBlockRelationship, validateMessageContent } from '../../../lib/community.js';
+import { hasBlockRelationship, validateMessageContent, getUserInfo } from '../../../lib/community.js';
 import { getPusher } from '../../../lib/pusher.js';
+import { parseMentions } from '../../../lib/mentions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -64,12 +65,15 @@ export default async function handler(req, res) {
         }
 
         const now = new Date();
+        const trimmedContent = content.trim();
+        const mentionedUsernames = parseMentions(trimmedContent);
 
         // Create message
         const newMessage = {
             conversationId: conversation._id,
             senderId: userIdObj,
-            content: content.trim(),
+            content: trimmedContent,
+            mentions: mentionedUsernames,
             readBy: [userIdObj],
             status: 'sent',
             createdAt: now
@@ -98,7 +102,8 @@ export default async function handler(req, res) {
                 await pusher.trigger(`private-dm-${id}`, 'dm-message', {
                     id: result.insertedId.toString(),
                     senderId: auth.userId,
-                    content: content.trim(),
+                    content: trimmedContent,
+                    mentions: mentionedUsernames,
                     createdAt: now
                 });
 
@@ -117,7 +122,8 @@ export default async function handler(req, res) {
             message: {
                 id: result.insertedId.toString(),
                 senderId: auth.userId,
-                content: content.trim(),
+                content: trimmedContent,
+                mentions: mentionedUsernames,
                 isOwn: true,
                 createdAt: now
             }

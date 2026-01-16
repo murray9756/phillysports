@@ -13,6 +13,7 @@ import {
     formatPost,
     awardPostCoins
 } from '../../lib/community.js';
+import { parseMentions, sendMentionNotifications, getContentUrl } from '../../lib/mentions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -171,6 +172,10 @@ async function handleCreatePost(req, res) {
 
         // Create post
         const now = new Date();
+        const sanitizedTitle = sanitizeContent(title).substring(0, 200);
+        const sanitizedContent = sanitizeContent(content).substring(0, 10000);
+        const mentionedUsernames = parseMentions(sanitizedContent);
+
         const newPost = {
             categoryId: new ObjectId(categoryId),
             team: category.team,
@@ -179,8 +184,9 @@ async function handleCreatePost(req, res) {
             authorDisplayName: authorInfo.displayName,
             authorProfilePhoto: authorInfo.profilePhoto,
             authorFavoriteTeam: authorInfo.favoriteTeam,
-            title: sanitizeContent(title).substring(0, 200),
-            content: sanitizeContent(content).substring(0, 10000),
+            title: sanitizedTitle,
+            content: sanitizedContent,
+            mentions: mentionedUsernames,
             isPinned: false,
             isLocked: false,
             viewCount: 0,
@@ -188,6 +194,9 @@ async function handleCreatePost(req, res) {
             lastReplyAt: now,
             likes: [],
             likeCount: 0,
+            upvotes: 0,
+            downvotes: 0,
+            score: 0,
             status: 'active',
             createdAt: now,
             updatedAt: now
@@ -197,6 +206,24 @@ async function handleCreatePost(req, res) {
 
         // Award coins for posting
         const reward = await awardPostCoins(auth.userId);
+
+        // Send mention notifications
+        if (mentionedUsernames.length > 0) {
+            try {
+                const postUrl = getContentUrl('forum_post', result.insertedId.toString());
+                await sendMentionNotifications({
+                    mentionedUsernames,
+                    mentionerId: auth.userId,
+                    mentionerUsername: authorInfo.username,
+                    contentType: 'forum_post',
+                    contentId: result.insertedId.toString(),
+                    contentPreview: sanitizedContent,
+                    url: postUrl
+                });
+            } catch (mentionError) {
+                console.error('Failed to send mention notifications:', mentionError);
+            }
+        }
 
         return res.status(201).json({
             message: 'Post created successfully',

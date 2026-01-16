@@ -3,6 +3,7 @@ import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
 import { getPusher } from '../../lib/pusher.js';
 import { ObjectId } from 'mongodb';
+import { parseMentions, sendMentionNotifications, getContentUrl } from '../../lib/mentions.js';
 
 export default async function handler(req, res) {
     // CORS headers
@@ -55,12 +56,20 @@ export default async function handler(req, res) {
         const userDoc = await usersCollection.findOne({ _id: new ObjectId(user.userId) });
         const username = userDoc?.username || user.username || 'Anonymous';
 
+        // Parse mentions
+        const trimmedContent = content.trim();
+        const mentionedUsernames = parseMentions(trimmedContent);
+
         // Create comment
         const comment = {
             threadId: new ObjectId(id),
             userId: new ObjectId(user.userId),
             username,
-            content: content.trim(),
+            content: trimmedContent,
+            mentions: mentionedUsernames,
+            upvotes: 0,
+            downvotes: 0,
+            score: 0,
             createdAt: new Date()
         };
 
@@ -85,10 +94,32 @@ export default async function handler(req, res) {
                     userId: user.userId,
                     username,
                     content: comment.content,
+                    mentions: mentionedUsernames,
+                    upvotes: 0,
+                    downvotes: 0,
+                    score: 0,
                     createdAt: comment.createdAt
                 });
             } catch (e) {
                 console.error('Pusher error:', e);
+            }
+        }
+
+        // Send mention notifications
+        if (mentionedUsernames.length > 0) {
+            try {
+                const threadUrl = getContentUrl('game_thread_comment', comment._id.toString(), { threadId: id });
+                await sendMentionNotifications({
+                    mentionedUsernames,
+                    mentionerId: user.userId,
+                    mentionerUsername: username,
+                    contentType: 'game_thread_comment',
+                    contentId: comment._id.toString(),
+                    contentPreview: trimmedContent,
+                    url: threadUrl
+                });
+            } catch (mentionError) {
+                console.error('Failed to send mention notifications:', mentionError);
             }
         }
 
@@ -98,6 +129,10 @@ export default async function handler(req, res) {
                 _id: comment._id,
                 username,
                 content: comment.content,
+                mentions: mentionedUsernames,
+                upvotes: 0,
+                downvotes: 0,
+                score: 0,
                 createdAt: comment.createdAt
             }
         });

@@ -11,6 +11,7 @@ import {
     formatReply,
     awardReplyCoins
 } from '../../../lib/community.js';
+import { parseMentions, sendMentionNotifications, getContentUrl } from '../../../lib/mentions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -73,6 +74,9 @@ export default async function handler(req, res) {
 
         // Create reply
         const now = new Date();
+        const sanitizedContent = sanitizeContent(content).substring(0, 5000);
+        const mentionedUsernames = parseMentions(sanitizedContent);
+
         const newReply = {
             postId: new ObjectId(postId),
             authorId: new ObjectId(auth.userId),
@@ -80,9 +84,13 @@ export default async function handler(req, res) {
             authorDisplayName: authorInfo.displayName,
             authorProfilePhoto: authorInfo.profilePhoto,
             authorFavoriteTeam: authorInfo.favoriteTeam,
-            content: sanitizeContent(content).substring(0, 5000),
+            content: sanitizedContent,
+            mentions: mentionedUsernames,
             likes: [],
             likeCount: 0,
+            upvotes: 0,
+            downvotes: 0,
+            score: 0,
             status: 'active',
             createdAt: now,
             updatedAt: now
@@ -104,6 +112,24 @@ export default async function handler(req, res) {
 
         // Award coins for replying
         const reward = await awardReplyCoins(auth.userId);
+
+        // Send mention notifications
+        if (mentionedUsernames.length > 0) {
+            try {
+                const replyUrl = getContentUrl('forum_reply', result.insertedId.toString(), { postId });
+                await sendMentionNotifications({
+                    mentionedUsernames,
+                    mentionerId: auth.userId,
+                    mentionerUsername: authorInfo.username,
+                    contentType: 'forum_reply',
+                    contentId: result.insertedId.toString(),
+                    contentPreview: sanitizedContent,
+                    url: replyUrl
+                });
+            } catch (mentionError) {
+                console.error('Failed to send mention notifications:', mentionError);
+            }
+        }
 
         return res.status(201).json({
             message: 'Reply posted successfully',

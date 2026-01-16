@@ -197,6 +197,90 @@
 
         .coin-reward { display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(255, 215, 0, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; color: #b8860b; margin-left: 0.5rem; }
 
+        /* Vote Controls */
+        .vote-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+            margin-right: 1rem;
+        }
+        .vote-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            padding: 0.15rem 0.35rem;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .vote-btn:hover { color: var(--text-primary); }
+        .vote-btn.upvote.active { color: #ff4500; }
+        .vote-btn.downvote.active { color: #7193ff; }
+        .vote-score {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .post-with-votes, .reply-with-votes {
+            display: flex;
+            align-items: flex-start;
+        }
+        .post-main-content, .reply-main-content { flex: 1; }
+
+        /* Mentions */
+        .mention {
+            color: var(--sixers-blue);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .mention:hover { text-decoration: underline; }
+
+        /* Mention Autocomplete */
+        .mention-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        .mention-dropdown.show { display: block; }
+        .mention-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+        }
+        .mention-item:hover, .mention-item.selected { background: var(--dark-bg); }
+        .mention-avatar-small {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .mention-name { font-size: 0.85rem; font-weight: 500; }
+        .mention-username { font-size: 0.75rem; color: var(--text-muted); }
+
+        .textarea-wrapper {
+            position: relative;
+        }
+
         @media (max-width: 768px) {
             .post-title { font-size: 1.25rem; }
             .post-author-info { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
@@ -293,6 +377,9 @@
         const postId = params.get('id');
         let currentUser = null;
         let postData = null;
+        let userVotes = {};
+        let mentionUsers = [];
+        let mentionIndex = -1;
 
         async function checkAuth() {
             try {
@@ -355,40 +442,51 @@
             const replies = data.replies || [];
             const isLiked = currentUser && post.likes.includes(currentUser._id);
             const isOwner = currentUser && post.author.userId === currentUser._id;
+            const postVote = userVotes[`post_${post.id}`] || 0;
+            const postScore = post.score || 0;
 
             document.getElementById('postContainer').innerHTML = `
                 <div class="post-card">
-                    <div class="post-header">
-                        <h1 class="post-title">
-                            ${escapeHtml(post.title)}
-                            ${post.isPinned ? '<span class="pin-badge">Pinned</span>' : ''}
-                            ${post.isLocked ? '<span class="locked-badge">Locked</span>' : ''}
-                        </h1>
-                        <div class="post-author-info">
-                            <div class="author-avatar">
-                                ${post.author.profilePhoto
-                                    ? `<img src="${post.author.profilePhoto}" alt="${post.author.username}">`
-                                    : post.author.username.charAt(0).toUpperCase()}
+                    <div class="post-with-votes">
+                        <div class="vote-controls">
+                            <button class="vote-btn upvote ${postVote === 1 ? 'active' : ''}" onclick="vote('forum_post', '${post.id}')">▲</button>
+                            <span class="vote-score" id="score-post-${post.id}">${postScore}</span>
+                            <button class="vote-btn downvote ${postVote === -1 ? 'active' : ''}" onclick="vote('forum_post', '${post.id}', -1)">▼</button>
+                        </div>
+                        <div class="post-main-content">
+                            <div class="post-header">
+                                <h1 class="post-title">
+                                    ${escapeHtml(post.title)}
+                                    ${post.isPinned ? '<span class="pin-badge">Pinned</span>' : ''}
+                                    ${post.isLocked ? '<span class="locked-badge">Locked</span>' : ''}
+                                </h1>
+                                <div class="post-author-info">
+                                    <div class="author-avatar">
+                                        ${post.author.profilePhoto
+                                            ? `<img src="${post.author.profilePhoto}" alt="${post.author.username}">`
+                                            : post.author.username.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div class="author-details">
+                                        <a href="/profile.html?user=${post.author.username}" class="author-name">
+                                            ${escapeHtml(post.author.displayName || post.author.username)}
+                                        </a>
+                                        <div class="post-date">${formatDate(post.createdAt)} · ${post.viewCount} views</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="author-details">
-                                <a href="/profile.html?user=${post.author.username}" class="author-name">
-                                    ${escapeHtml(post.author.displayName || post.author.username)}
-                                </a>
-                                <div class="post-date">${formatDate(post.createdAt)} · ${post.viewCount} views</div>
+                            <div class="post-content">
+                                <div class="post-body">${renderWithMentions(escapeHtml(post.content))}</div>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('post', '${post.id}')" id="postLikeBtn">
+                                    <span>${isLiked ? '❤️' : '🤍'}</span>
+                                    <span id="postLikeCount">${post.likeCount}</span> likes
+                                </button>
+                                <span style="color: var(--text-muted); font-size: 0.9rem;">
+                                    ${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}
+                                </span>
                             </div>
                         </div>
-                    </div>
-                    <div class="post-content">
-                        <div class="post-body">${escapeHtml(post.content)}</div>
-                    </div>
-                    <div class="post-actions">
-                        <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('post', '${post.id}')" id="postLikeBtn">
-                            <span>${isLiked ? '❤️' : '🤍'}</span>
-                            <span id="postLikeCount">${post.likeCount}</span> likes
-                        </button>
-                        <span style="color: var(--text-muted); font-size: 0.9rem;">
-                            ${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}
-                        </span>
                     </div>
                 </div>
 
@@ -407,7 +505,10 @@
                         : currentUser
                             ? `<div class="reply-form" id="replyForm">
                                 <h3>Write a Reply <span class="coin-reward">+5 🪙</span></h3>
-                                <textarea id="replyContent" placeholder="Share your thoughts..."></textarea>
+                                <div class="textarea-wrapper">
+                                    <div class="mention-dropdown" id="mentionDropdown"></div>
+                                    <textarea id="replyContent" placeholder="Share your thoughts... (use @username to mention)"></textarea>
+                                </div>
                                 <div class="reply-form-actions">
                                     <button class="submit-btn" onclick="submitReply()" id="submitReplyBtn">Post Reply</button>
                                 </div>
@@ -415,32 +516,62 @@
                             : '<div class="locked-notice"><a href="/login.html" style="color: var(--phillies-red);">Sign in</a> to reply to this post.</div>'}
                 </div>
             `;
+
+            // Setup mention autocomplete
+            if (currentUser) {
+                setupMentionAutocomplete();
+            }
+
+            // Load votes
+            if (currentUser) {
+                const contentIds = [post.id, ...replies.map(r => r.id)];
+                loadVotes('forum_post', [post.id]);
+                if (replies.length > 0) {
+                    loadVotes('forum_reply', replies.map(r => r.id));
+                }
+            }
+        }
+
+        function renderWithMentions(content) {
+            return content.replace(/@(\w+)/g, '<a href="/profile.html?user=$1" class="mention">@$1</a>');
         }
 
         function renderReply(reply) {
             const isLiked = currentUser && reply.likes.includes(currentUser._id);
+            const replyVote = userVotes[`reply_${reply.id}`] || 0;
+            const replyScore = reply.score || 0;
+
             return `
                 <div class="reply-card" id="reply-${reply.id}">
-                    <div class="reply-header">
-                        <div class="reply-author">
-                            <div class="reply-avatar">
-                                ${reply.author.profilePhoto
-                                    ? `<img src="${reply.author.profilePhoto}" alt="${reply.author.username}">`
-                                    : reply.author.username.charAt(0).toUpperCase()}
+                    <div class="reply-with-votes">
+                        <div class="vote-controls">
+                            <button class="vote-btn upvote ${replyVote === 1 ? 'active' : ''}" onclick="vote('forum_reply', '${reply.id}')">▲</button>
+                            <span class="vote-score" id="score-reply-${reply.id}">${replyScore}</span>
+                            <button class="vote-btn downvote ${replyVote === -1 ? 'active' : ''}" onclick="vote('forum_reply', '${reply.id}', -1)">▼</button>
+                        </div>
+                        <div class="reply-main-content">
+                            <div class="reply-header">
+                                <div class="reply-author">
+                                    <div class="reply-avatar">
+                                        ${reply.author.profilePhoto
+                                            ? `<img src="${reply.author.profilePhoto}" alt="${reply.author.username}">`
+                                            : reply.author.username.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <a href="/profile.html?user=${reply.author.username}" class="reply-author-name">
+                                            ${escapeHtml(reply.author.displayName || reply.author.username)}
+                                        </a>
+                                        <div class="reply-date">${formatDate(reply.createdAt)}</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <a href="/profile.html?user=${reply.author.username}" class="reply-author-name">
-                                    ${escapeHtml(reply.author.displayName || reply.author.username)}
-                                </a>
-                                <div class="reply-date">${formatDate(reply.createdAt)}</div>
+                            <div class="reply-content">${renderWithMentions(escapeHtml(reply.content))}</div>
+                            <div class="reply-actions">
+                                <span class="reply-action ${isLiked ? 'liked' : ''}" onclick="toggleLike('reply', '${reply.id}')" id="replyLike-${reply.id}">
+                                    ${isLiked ? '❤️' : '🤍'} <span id="replyLikeCount-${reply.id}">${reply.likeCount}</span>
+                                </span>
                             </div>
                         </div>
-                    </div>
-                    <div class="reply-content">${escapeHtml(reply.content)}</div>
-                    <div class="reply-actions">
-                        <span class="reply-action ${isLiked ? 'liked' : ''}" onclick="toggleLike('reply', '${reply.id}')" id="replyLike-${reply.id}">
-                            ${isLiked ? '❤️' : '🤍'} <span id="replyLikeCount-${reply.id}">${reply.likeCount}</span>
-                        </span>
                     </div>
                 </div>
             `;
@@ -549,6 +680,186 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        // Voting
+        async function vote(contentType, contentId, voteValue = 1) {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const voteKey = contentType === 'forum_post' ? `post_${contentId}` : `reply_${contentId}`;
+            const currentVote = userVotes[voteKey] || 0;
+            const newVote = currentVote === voteValue ? 0 : voteValue;
+
+            try {
+                const response = await fetch('/api/votes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        contentType,
+                        contentId,
+                        vote: newVote
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    userVotes[voteKey] = data.userVote;
+
+                    // Update score display
+                    const prefix = contentType === 'forum_post' ? 'post' : 'reply';
+                    const scoreEl = document.getElementById(`score-${prefix}-${contentId}`);
+                    if (scoreEl) scoreEl.textContent = data.score;
+
+                    // Update button states
+                    const cardEl = contentType === 'forum_post'
+                        ? document.querySelector('.post-with-votes')
+                        : document.getElementById(`reply-${contentId}`);
+                    if (cardEl) {
+                        const upBtn = cardEl.querySelector('.upvote');
+                        const downBtn = cardEl.querySelector('.downvote');
+                        upBtn.classList.toggle('active', data.userVote === 1);
+                        downBtn.classList.toggle('active', data.userVote === -1);
+                    }
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
+            }
+        }
+
+        async function loadVotes(contentType, contentIds) {
+            if (contentIds.length === 0) return;
+
+            try {
+                const response = await fetch(`/api/votes?contentType=${contentType}&contentIds=${contentIds.join(',')}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    const prefix = contentType === 'forum_post' ? 'post' : 'reply';
+                    Object.keys(data.votes).forEach(id => {
+                        userVotes[`${prefix}_${id}`] = data.votes[id].userVote;
+                    });
+                }
+            } catch (error) {
+                console.error('Load votes error:', error);
+            }
+        }
+
+        // Mention autocomplete
+        async function searchMentions(query) {
+            if (query.length < 1) {
+                hideMentionDropdown();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/mentions/search?q=${encodeURIComponent(query)}&limit=5`);
+                const data = await response.json();
+
+                if (data.success && data.users.length > 0) {
+                    mentionUsers = data.users;
+                    mentionIndex = -1;
+                    showMentionDropdown(data.users);
+                } else {
+                    hideMentionDropdown();
+                }
+            } catch (error) {
+                console.error('Search mentions error:', error);
+                hideMentionDropdown();
+            }
+        }
+
+        function showMentionDropdown(users) {
+            const dropdown = document.getElementById('mentionDropdown');
+            if (!dropdown) return;
+
+            dropdown.innerHTML = users.map((user, index) => `
+                <div class="mention-item ${index === mentionIndex ? 'selected' : ''}" onclick="selectMention('${user.username}')">
+                    <div class="mention-avatar-small">${(user.displayName || user.username)[0].toUpperCase()}</div>
+                    <div>
+                        <div class="mention-name">${user.displayName || user.username}</div>
+                        <div class="mention-username">@${user.username}</div>
+                    </div>
+                </div>
+            `).join('');
+            dropdown.classList.add('show');
+        }
+
+        function hideMentionDropdown() {
+            const dropdown = document.getElementById('mentionDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('show');
+                mentionUsers = [];
+                mentionIndex = -1;
+            }
+        }
+
+        function selectMention(username) {
+            const textarea = document.getElementById('replyContent');
+            if (!textarea) return;
+
+            const value = textarea.value;
+            const cursorPos = textarea.selectionStart;
+
+            // Find the @ symbol before cursor
+            let atIndex = value.lastIndexOf('@', cursorPos - 1);
+            if (atIndex !== -1) {
+                const before = value.substring(0, atIndex);
+                const after = value.substring(cursorPos);
+                textarea.value = before + '@' + username + ' ' + after;
+                const newPos = atIndex + username.length + 2;
+                textarea.setSelectionRange(newPos, newPos);
+            }
+
+            hideMentionDropdown();
+            textarea.focus();
+        }
+
+        function setupMentionAutocomplete() {
+            const textarea = document.getElementById('replyContent');
+            if (!textarea) return;
+
+            let debounceTimer;
+
+            textarea.addEventListener('input', (e) => {
+                const value = e.target.value;
+                const cursorPos = e.target.selectionStart;
+
+                // Find @ before cursor
+                const beforeCursor = value.substring(0, cursorPos);
+                const atMatch = beforeCursor.match(/@(\w*)$/);
+
+                if (atMatch) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => searchMentions(atMatch[1]), 200);
+                } else {
+                    hideMentionDropdown();
+                }
+            });
+
+            textarea.addEventListener('keydown', (e) => {
+                const dropdown = document.getElementById('mentionDropdown');
+                if (!dropdown || !dropdown.classList.contains('show')) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    mentionIndex = Math.min(mentionIndex + 1, mentionUsers.length - 1);
+                    showMentionDropdown(mentionUsers);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    mentionIndex = Math.max(mentionIndex - 1, 0);
+                    showMentionDropdown(mentionUsers);
+                } else if (e.key === 'Enter' && mentionIndex >= 0) {
+                    e.preventDefault();
+                    selectMention(mentionUsers[mentionIndex].username);
+                } else if (e.key === 'Escape') {
+                    hideMentionDropdown();
+                }
+            });
         }
 
         checkAuth().then(loadPost);

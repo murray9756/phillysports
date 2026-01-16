@@ -334,6 +334,85 @@
         .team-sixers .team-score { color: var(--sixers-blue); }
         .team-flyers .team-score { color: var(--flyers-orange); }
 
+        /* Vote Controls */
+        .vote-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+            margin-right: 0.5rem;
+        }
+        .vote-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 0.1rem 0.25rem;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .vote-btn:hover { color: var(--text-primary); }
+        .vote-btn.upvote.active { color: #ff4500; }
+        .vote-btn.downvote.active { color: #7193ff; }
+        .vote-score {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Mentions */
+        .mention {
+            color: var(--sixers-blue);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .mention:hover { text-decoration: underline; }
+
+        /* Mention Autocomplete */
+        .mention-dropdown {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        .mention-dropdown.show { display: block; }
+        .mention-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+        }
+        .mention-item:hover, .mention-item.selected { background: var(--dark-bg); }
+        .mention-avatar-small {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .mention-name { font-size: 0.85rem; font-weight: 500; }
+        .mention-username { font-size: 0.75rem; color: var(--text-muted); }
+
+        .chat-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
         @media (max-width: 600px) {
             .game-teams { gap: 1rem; }
             .team-emoji { font-size: 2rem; }
@@ -415,6 +494,9 @@
         let thread = null;
         let pusher = null;
         let channel = null;
+        let userVotes = {};
+        let mentionUsers = [];
+        let mentionIndex = -1;
 
         const teamEmojis = {
             eagles: '🦅',
@@ -536,7 +618,10 @@
                     </div>
                     ${currentUser ? `
                         <div class="chat-input-area">
-                            <input type="text" id="commentInput" placeholder="Say something..." maxlength="500">
+                            <div class="chat-input-wrapper">
+                                <div class="mention-dropdown" id="mentionDropdown"></div>
+                                <input type="text" id="commentInput" placeholder="Say something... (use @username to mention)" maxlength="500">
+                            </div>
                             <button onclick="postComment()" id="sendBtn">Send</button>
                         </div>
                     ` : `
@@ -553,30 +638,70 @@
             const chatMessages = document.getElementById('chatMessages');
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // Enter key to send
+            // Enter key to send (only when mention dropdown is not showing)
             const input = document.getElementById('commentInput');
             if (input) {
                 input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') postComment();
+                    const dropdown = document.getElementById('mentionDropdown');
+                    if (e.key === 'Enter' && (!dropdown || !dropdown.classList.contains('show') || mentionIndex < 0)) {
+                        postComment();
+                    }
                 });
+
+                // Setup mention autocomplete
+                setupMentionAutocomplete();
+            }
+
+            // Load user votes if logged in
+            if (currentUser && comments.length > 0) {
+                loadUserVotes(comments.map(c => c._id));
+            }
+        }
+
+        async function loadUserVotes(commentIds) {
+            try {
+                const response = await fetch(`/api/votes?contentType=game_thread_comment&contentIds=${commentIds.join(',')}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    Object.keys(data.votes).forEach(id => {
+                        userVotes[id] = data.votes[id].userVote;
+                    });
+                }
+            } catch (error) {
+                console.error('Load votes error:', error);
             }
         }
 
         function renderComment(comment) {
             const initial = (comment.username || 'A')[0].toUpperCase();
             const time = new Date(comment.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const score = comment.score || 0;
+            const commentId = comment._id;
+            const userVote = userVotes[commentId] || 0;
+
             return `
-                <div class="chat-message">
+                <div class="chat-message" data-comment-id="${commentId}">
+                    <div class="vote-controls">
+                        <button class="vote-btn upvote ${userVote === 1 ? 'active' : ''}" onclick="vote('${commentId}', 1)">▲</button>
+                        <span class="vote-score" id="score-${commentId}">${score}</span>
+                        <button class="vote-btn downvote ${userVote === -1 ? 'active' : ''}" onclick="vote('${commentId}', -1)">▼</button>
+                    </div>
                     <div class="message-avatar">${initial}</div>
                     <div class="message-content">
                         <div class="message-header">
-                            <span class="message-username">${comment.username}</span>
+                            <a href="/profile.html?username=${comment.username}" class="message-username">${comment.username}</a>
                             <span class="message-time">${time}</span>
                         </div>
-                        <div class="message-text">${escapeHtml(comment.content)}</div>
+                        <div class="message-text">${renderWithMentions(escapeHtml(comment.content))}</div>
                     </div>
                 </div>
             `;
+        }
+
+        function renderWithMentions(content) {
+            return content.replace(/@(\w+)/g, '<a href="/profile.html?username=$1" class="mention">@$1</a>');
         }
 
         function escapeHtml(text) {
@@ -625,6 +750,163 @@
             } catch (error) {
                 console.error('React error:', error);
             }
+        }
+
+        // Voting
+        async function vote(commentId, voteValue) {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const currentVote = userVotes[commentId] || 0;
+            const newVote = currentVote === voteValue ? 0 : voteValue;
+
+            try {
+                const response = await fetch('/api/votes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        contentType: 'game_thread_comment',
+                        contentId: commentId,
+                        vote: newVote
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    userVotes[commentId] = data.userVote;
+
+                    // Update score display
+                    const scoreEl = document.getElementById(`score-${commentId}`);
+                    if (scoreEl) scoreEl.textContent = data.score;
+
+                    // Update button states
+                    const messageEl = document.querySelector(`[data-comment-id="${commentId}"]`);
+                    if (messageEl) {
+                        const upBtn = messageEl.querySelector('.upvote');
+                        const downBtn = messageEl.querySelector('.downvote');
+                        upBtn.classList.toggle('active', data.userVote === 1);
+                        downBtn.classList.toggle('active', data.userVote === -1);
+                    }
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
+            }
+        }
+
+        // Mention autocomplete
+        async function searchMentions(query) {
+            if (query.length < 1) {
+                hideMentionDropdown();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/mentions/search?q=${encodeURIComponent(query)}&limit=5`);
+                const data = await response.json();
+
+                if (data.success && data.users.length > 0) {
+                    mentionUsers = data.users;
+                    mentionIndex = -1;
+                    showMentionDropdown(data.users);
+                } else {
+                    hideMentionDropdown();
+                }
+            } catch (error) {
+                console.error('Search mentions error:', error);
+                hideMentionDropdown();
+            }
+        }
+
+        function showMentionDropdown(users) {
+            const dropdown = document.getElementById('mentionDropdown');
+            if (!dropdown) return;
+
+            dropdown.innerHTML = users.map((user, index) => `
+                <div class="mention-item ${index === mentionIndex ? 'selected' : ''}" onclick="selectMention('${user.username}')">
+                    <div class="mention-avatar-small">${(user.displayName || user.username)[0].toUpperCase()}</div>
+                    <div>
+                        <div class="mention-name">${user.displayName || user.username}</div>
+                        <div class="mention-username">@${user.username}</div>
+                    </div>
+                </div>
+            `).join('');
+            dropdown.classList.add('show');
+        }
+
+        function hideMentionDropdown() {
+            const dropdown = document.getElementById('mentionDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('show');
+                mentionUsers = [];
+                mentionIndex = -1;
+            }
+        }
+
+        function selectMention(username) {
+            const input = document.getElementById('commentInput');
+            if (!input) return;
+
+            const value = input.value;
+            const cursorPos = input.selectionStart;
+
+            // Find the @ symbol before cursor
+            let atIndex = value.lastIndexOf('@', cursorPos - 1);
+            if (atIndex !== -1) {
+                const before = value.substring(0, atIndex);
+                const after = value.substring(cursorPos);
+                input.value = before + '@' + username + ' ' + after;
+                const newPos = atIndex + username.length + 2;
+                input.setSelectionRange(newPos, newPos);
+            }
+
+            hideMentionDropdown();
+            input.focus();
+        }
+
+        function setupMentionAutocomplete() {
+            const input = document.getElementById('commentInput');
+            if (!input) return;
+
+            let debounceTimer;
+
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                const cursorPos = e.target.selectionStart;
+
+                // Find @ before cursor
+                const beforeCursor = value.substring(0, cursorPos);
+                const atMatch = beforeCursor.match(/@(\w*)$/);
+
+                if (atMatch) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => searchMentions(atMatch[1]), 200);
+                } else {
+                    hideMentionDropdown();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const dropdown = document.getElementById('mentionDropdown');
+                if (!dropdown || !dropdown.classList.contains('show')) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    mentionIndex = Math.min(mentionIndex + 1, mentionUsers.length - 1);
+                    showMentionDropdown(mentionUsers);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    mentionIndex = Math.max(mentionIndex - 1, 0);
+                    showMentionDropdown(mentionUsers);
+                } else if (e.key === 'Enter' && mentionIndex >= 0) {
+                    e.preventDefault();
+                    selectMention(mentionUsers[mentionIndex].username);
+                } else if (e.key === 'Escape') {
+                    hideMentionDropdown();
+                }
+            });
         }
 
         function setupPusher(key, cluster, channelName) {

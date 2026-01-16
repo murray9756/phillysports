@@ -7,6 +7,7 @@ import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
 import { getUserInfo, validateMessageContent } from '../../../lib/community.js';
 import { getPusher } from '../../../lib/pusher.js';
+import { parseMentions, sendMentionNotifications } from '../../../lib/mentions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -133,12 +134,15 @@ async function handleSendMessage(req, res, roomId) {
         const chatMessages = await getCollection('chat_messages');
         const userIdObj = new ObjectId(auth.userId);
         const now = new Date();
+        const trimmedContent = content.trim();
+        const mentionedUsernames = parseMentions(trimmedContent);
 
         // Create message
         const newMessage = {
             roomId: room._id,
             senderId: userIdObj,
-            content: content.trim(),
+            content: trimmedContent,
+            mentions: mentionedUsernames,
             type: 'text',
             status: 'active',
             createdAt: now
@@ -173,11 +177,29 @@ async function handleSendMessage(req, res, roomId) {
                     id: result.insertedId.toString(),
                     senderId: auth.userId,
                     sender: senderInfo,
-                    content: content.trim(),
+                    content: trimmedContent,
+                    mentions: mentionedUsernames,
                     createdAt: now
                 });
             } catch (e) {
                 console.error('Pusher error:', e);
+            }
+        }
+
+        // Send mention notifications for group chats
+        if (mentionedUsernames.length > 0 && room.type === 'group') {
+            try {
+                await sendMentionNotifications({
+                    mentionedUsernames,
+                    mentionerId: auth.userId,
+                    mentionerUsername: senderInfo.username,
+                    contentType: 'chat_message',
+                    contentId: result.insertedId.toString(),
+                    contentPreview: trimmedContent,
+                    url: `/community/chat/group.html?id=${roomId}`
+                });
+            } catch (mentionError) {
+                console.error('Failed to send mention notifications:', mentionError);
             }
         }
 
@@ -186,7 +208,8 @@ async function handleSendMessage(req, res, roomId) {
                 id: result.insertedId.toString(),
                 senderId: auth.userId,
                 sender: senderInfo,
-                content: content.trim(),
+                content: trimmedContent,
+                mentions: mentionedUsernames,
                 type: 'text',
                 isOwn: true,
                 createdAt: now
