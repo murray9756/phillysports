@@ -622,9 +622,6 @@
                         const data = await response.json();
 
                         if (data.success) {
-                            // Debug: show join result
-                            alert(`JOIN DEBUG:\nHand Started: ${data.handStarted}\nHand Error: ${data.handError || 'none'}\nSeated: ${data.seatedPlayers}\nPlayers: ${JSON.stringify(data.debug?.seatedPlayersDetail)}\nHandId: ${data.debug?.currentHandId}`);
-
                             currentUser.coinBalance = data.newBalance;
                             updateHeader();
                             window.location.href = `/poker-table.html?cash=${tableId}`;

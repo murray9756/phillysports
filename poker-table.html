@@ -446,14 +446,14 @@
         .winner-amount { font-size: 2.5rem; font-weight: 800; color: var(--gold); margin-bottom: 0.5rem; }
         .winner-countdown { color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem; }
 
-        /* Action Log */
+        /* Action Log - Upper Left */
         .action-log {
             position: fixed;
-            bottom: 120px;
+            top: 70px;
             left: 20px;
-            width: 280px;
-            max-height: 150px;
-            background: rgba(0, 0, 0, 0.8);
+            width: 250px;
+            max-height: 180px;
+            background: rgba(0, 0, 0, 0.85);
             border-radius: 8px;
             padding: 10px;
             z-index: 50;
@@ -697,90 +697,6 @@
         .notification-toast.eliminated { border-color: var(--red); color: var(--red); }
         .notification-toast.info { border-color: var(--blue); }
 
-        /* Test Controls */
-        .test-panel {
-            position: fixed;
-            top: 60px;
-            right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px 0 0 8px;
-            z-index: 150;
-            transition: transform 0.3s;
-        }
-        .test-panel.collapsed {
-            transform: translateX(calc(100% - 40px));
-        }
-        .test-panel-toggle {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 40px;
-            height: 100%;
-            background: var(--poker-green);
-            border: none;
-            border-radius: 8px 0 0 8px;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            padding: 0.5rem;
-        }
-        .test-panel-content {
-            margin-left: 40px;
-            padding: 1rem;
-            width: 220px;
-        }
-        .test-panel h4 {
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-            color: var(--gold);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .test-btn {
-            display: block;
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: var(--dark-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .test-btn:hover {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        .test-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .test-btn.primary {
-            background: var(--poker-green);
-            border-color: var(--poker-green);
-        }
-        .test-btn.primary:hover {
-            background: #1d6b42;
-        }
-        .test-status {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            background: var(--dark-bg);
-            border-radius: 4px;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-        .test-status.success { color: #4caf50; }
-        .test-status.error { color: var(--red); }
-
         /* Responsive - Tablet */
         @media (max-width: 768px) {
             .table-container { aspect-ratio: 1.2; }
@@ -795,7 +711,6 @@
             .tournament-info { gap: 0.75rem; font-size: 0.75rem; }
             .action-btn { padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 80px; }
             .tournament-status-bar { gap: 1rem; padding: 0.4rem 0.5rem; font-size: 0.75rem; }
-            .test-panel { display: none; }
             .connection-status { top: auto; bottom: 10px; left: 10px; }
         }
 
@@ -880,73 +795,49 @@
             }
         }
 
-        /* Table Chat */
+        /* Public Chat Log - Upper Right */
         .table-chat {
             position: fixed;
-            bottom: env(safe-area-inset-bottom, 0px);
-            left: env(safe-area-inset-left, 0px);
-            width: 320px;
-            max-height: 300px;
-            background: var(--card-bg);
-            border-top: 1px solid var(--border-color);
-            border-right: 1px solid var(--border-color);
-            border-radius: 0 12px 0 0;
+            top: 70px;
+            right: 20px;
+            width: 280px;
+            max-height: 200px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            z-index: 99;
-            transition: transform 0.3s;
-        }
-        .table-chat.collapsed {
-            transform: translateY(calc(100% - 40px));
+            z-index: 50;
         }
         .chat-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.75rem;
             background: var(--poker-green);
-            border-radius: 0 12px 0 0;
-            cursor: pointer;
+            border-radius: 8px 8px 0 0;
         }
         .chat-header h4 {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: white;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        .chat-toggle {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0;
-            line-height: 1;
-        }
-        .chat-unread {
-            background: var(--red);
-            color: white;
-            font-size: 0.65rem;
-            padding: 0.15rem 0.4rem;
-            border-radius: 10px;
-            font-weight: 700;
-        }
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 0.5rem;
-            max-height: 200px;
+            max-height: 150px;
             display: flex;
             flex-direction: column;
             gap: 0.35rem;
         }
         .chat-message {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.5rem;
-            background: var(--dark-bg);
-            border-radius: 6px;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
         }
         .chat-message .chat-user {
             font-weight: 700;
@@ -954,7 +845,7 @@
             margin-right: 0.35rem;
         }
         .chat-message .chat-text {
-            color: var(--text-secondary);
+            color: #ccc;
         }
         .chat-message.system {
             background: rgba(76, 175, 80, 0.1);
@@ -963,66 +854,29 @@
             text-align: center;
         }
         .chat-message.system .chat-user { display: none; }
-        .chat-input-row {
-            display: flex;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-        .chat-input {
-            flex: 1;
-            background: var(--dark-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 0.5rem;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-        }
-        .chat-input:focus {
-            outline: none;
-            border-color: var(--poker-green);
-        }
-        .chat-send {
-            background: var(--poker-green);
-            border: none;
-            border-radius: 6px;
-            padding: 0.5rem 1rem;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .chat-send:hover {
-            background: #1d6b42;
-        }
 
         @media (max-width: 768px) {
             .table-chat {
-                width: 100%;
-                border-radius: 12px 12px 0 0;
-                border-right: none;
+                width: 220px;
+                max-height: 160px;
             }
-            .chat-header {
-                border-radius: 12px 12px 0 0;
+            .chat-messages {
+                max-height: 120px;
             }
         }
 
         @media (max-width: 480px) {
             .table-chat {
-                max-height: 250px;
-                bottom: env(safe-area-inset-bottom, 0px);
+                width: 180px;
+                max-height: 140px;
+                top: 60px;
+                right: 10px;
             }
             .chat-messages {
-                max-height: 150px;
+                max-height: 100px;
             }
-            .chat-input {
-                min-height: 44px;
-                font-size: 16px; /* Prevents iOS zoom on focus */
-            }
-            .chat-send {
-                min-height: 44px;
-                min-width: 60px;
-            }
+            .chat-header h4 { font-size: 0.7rem; }
+            .chat-message { font-size: 0.65rem; }
         }
     </style>
 </head>
@@ -1136,22 +990,6 @@
     <!-- Chip Animation Container -->
     <div class="chip-animation-container" id="chipAnimationContainer"></div>
 
-    <!-- Test Controls Panel -->
-    <div class="test-panel collapsed" id="testPanel">
-        <button class="test-panel-toggle" onclick="toggleTestPanel()">Test</button>
-        <div class="test-panel-content">
-            <h4>Bot Testing</h4>
-            <button class="test-btn" onclick="triggerBotAction()">Run Bot Action</button>
-            <button class="test-btn" onclick="runBotLoop()">Auto-Play Bots</button>
-            <button class="test-btn" id="stopBotsBtn" style="display:none;" onclick="stopBotLoop()">Stop Auto-Play</button>
-            <hr style="border-color: var(--border-color); margin: 0.75rem 0;">
-            <h4>Hand Control</h4>
-            <button class="test-btn" onclick="startNewHand()">Start New Hand</button>
-            <button class="test-btn" onclick="reloadState()">Refresh State</button>
-            <div class="test-status" id="testStatus"></div>
-        </div>
-    </div>
-
     <!-- Action Panel -->
     <div class="action-panel hidden" id="actionPanel">
         <div class="bet-controls" id="betControls" style="display:none;">
@@ -1183,23 +1021,15 @@
         </div>
     </div>
 
-    <!-- Table Chat -->
-    <div class="table-chat collapsed" id="tableChat">
-        <div class="chat-header" onclick="toggleChat()">
-            <h4>
-                <span>💬</span> Table Chat
-                <span class="chat-unread" id="chatUnread" style="display:none;">0</span>
-            </h4>
-            <button class="chat-toggle" id="chatToggleBtn">▲</button>
+    <!-- Public Table Log -->
+    <div class="table-chat" id="tableChat">
+        <div class="chat-header">
+            <h4>Table Log</h4>
         </div>
         <div class="chat-messages" id="chatMessages">
             <div class="chat-message system">
                 <span class="chat-text">Welcome to the table!</span>
             </div>
-        </div>
-        <div class="chat-input-row">
-            <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." maxlength="200" onkeypress="handleChatKeypress(event)">
-            <button class="chat-send" onclick="sendChatMessage()">Send</button>
         </div>
     </div>
 
@@ -2386,139 +2216,6 @@
             }
         });
 
-        // ============ Test Controls ============
-        let botLoopInterval = null;
-
-        function toggleTestPanel() {
-            document.getElementById('testPanel').classList.toggle('collapsed');
-        }
-
-        function setTestStatus(message, type = '') {
-            const el = document.getElementById('testStatus');
-            el.textContent = message;
-            el.className = 'test-status' + (type ? ' ' + type : '');
-        }
-
-        async function triggerBotAction() {
-            setTestStatus('Running bot action...');
-            try {
-                // Use cash game bot endpoint if in cash game mode
-                const endpoint = isCashGame
-                    ? `/api/poker/cash-games/${tableId}/bot-action`
-                    : '/api/poker/test/bot-action';
-
-                const body = isCashGame ? {} : { tableId };
-
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    if (data.isBot === false) {
-                        setTestStatus(`Waiting for ${data.waitingFor}`);
-                    } else if (data.handComplete) {
-                        setTestStatus('Hand complete!', 'success');
-                    } else if (data.needsNewHand) {
-                        setTestStatus('No active hand. Start one!');
-                    } else {
-                        setTestStatus(`${data.bot}: ${data.action} ${data.amount || ''}`, 'success');
-                    }
-                } else {
-                    setTestStatus(data.error || 'Bot action failed', 'error');
-                }
-
-                await loadGameState();
-            } catch (e) {
-                setTestStatus('Error: ' + e.message, 'error');
-            }
-        }
-
-        function runBotLoop() {
-            if (botLoopInterval) return;
-
-            document.getElementById('stopBotsBtn').style.display = 'block';
-            setTestStatus('Auto-play running...');
-
-            // Use cash game bot endpoint if in cash game mode
-            const endpoint = isCashGame
-                ? `/api/poker/cash-games/${tableId}/bot-action`
-                : '/api/poker/test/bot-action';
-            const body = isCashGame ? {} : { tableId };
-
-            botLoopInterval = setInterval(async () => {
-                try {
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(body)
-                    });
-                    const data = await response.json();
-
-                    if (data.success) {
-                        if (data.isBot === false) {
-                            setTestStatus(`Your turn! (${data.waitingFor})`);
-                        } else if (data.handComplete) {
-                            setTestStatus('Hand complete! Starting new...', 'success');
-                            // For cash games, new hand starts automatically
-                            if (!isCashGame) {
-                                setTimeout(startNewHand, 1500);
-                            }
-                        } else if (data.needsNewHand) {
-                            setTestStatus('Starting new hand...');
-                            if (!isCashGame) {
-                                startNewHand();
-                            }
-                        } else {
-                            setTestStatus(`${data.bot}: ${data.action}`, 'success');
-                        }
-                    }
-
-                    await loadGameState();
-                } catch (e) {
-                    console.error('Bot loop error:', e);
-                }
-            }, 1500); // Slightly slower for cash games
-        }
-
-        function stopBotLoop() {
-            if (botLoopInterval) {
-                clearInterval(botLoopInterval);
-                botLoopInterval = null;
-            }
-            document.getElementById('stopBotsBtn').style.display = 'none';
-            setTestStatus('Auto-play stopped');
-        }
-
-        async function startNewHand() {
-            setTestStatus('Starting new hand...');
-            try {
-                const response = await fetch('/api/poker/tables/' + tableId + '/new-hand', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    setTestStatus('New hand started!', 'success');
-                } else {
-                    setTestStatus(data.error || 'Failed to start hand', 'error');
-                }
-
-                await loadGameState();
-            } catch (e) {
-                setTestStatus('Error: ' + e.message, 'error');
-            }
-        }
-
-        async function reloadState() {
-            setTestStatus('Refreshing...');
-            await loadGameState();
-            setTestStatus('State refreshed', 'success');
-        }
-
         // Cash Game Functions
         function setupCashGameUI() {
             // Hide tournament-specific elements
@@ -2643,126 +2340,21 @@
         }
 
         // ============ Table Chat ============
-        let chatMessages = [];
-        let lastChatId = null;
-        let chatPollInterval = null;
-        let unreadCount = 0;
-        let chatExpanded = false;
-
-        function toggleChat() {
-            const chat = document.getElementById('tableChat');
-            const toggleBtn = document.getElementById('chatToggleBtn');
-            chatExpanded = !chatExpanded;
-
-            if (chatExpanded) {
-                chat.classList.remove('collapsed');
-                toggleBtn.textContent = '▼';
-                // Clear unread count when opened
-                unreadCount = 0;
-                updateUnreadBadge();
-                // Scroll to bottom
-                const messagesEl = document.getElementById('chatMessages');
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-            } else {
-                chat.classList.add('collapsed');
-                toggleBtn.textContent = '▲';
-            }
-        }
-
-        function updateUnreadBadge() {
-            const badge = document.getElementById('chatUnread');
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-                badge.style.display = 'inline';
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        function handleChatKeypress(event) {
-            if (event.key === 'Enter') {
-                sendChatMessage();
-            }
-        }
-
-        async function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-
-            if (!message || !tableId || !currentUser) return;
-
-            input.value = '';
-
-            try {
-                const response = await fetch(`/api/poker/tables/${tableId}/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message })
-                });
-
-                const data = await response.json();
-
-                if (data.success && data.message) {
-                    appendChatMessage(data.message);
-                }
-            } catch (e) {
-                console.error('Failed to send chat message:', e);
-            }
-        }
-
-        async function loadChatMessages() {
-            if (!tableId) return;
-
-            try {
-                const url = lastChatId
-                    ? `/api/poker/tables/${tableId}/chat?after=${lastChatId}`
-                    : `/api/poker/tables/${tableId}/chat`;
-
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data.success && data.messages) {
-                    for (const msg of data.messages) {
-                        appendChatMessage(msg);
-                    }
-                }
-            } catch (e) {
-                console.error('Failed to load chat messages:', e);
-            }
-        }
-
-        function appendChatMessage(msg) {
-            // Check if message already displayed
-            if (document.querySelector(`[data-msg-id="${msg._id}"]`)) return;
-
+        // Add message to the public table log
+        function addTableLog(message, type = 'system') {
             const messagesEl = document.getElementById('chatMessages');
-            const isSystem = msg.type === 'system';
-            const isMe = msg.userId === currentUser?.userId;
-
             const msgEl = document.createElement('div');
-            msgEl.className = 'chat-message' + (isSystem ? ' system' : '');
-            msgEl.setAttribute('data-msg-id', msg._id);
-
-            if (isSystem) {
-                msgEl.innerHTML = `<span class="chat-text">${escapeHtml(msg.message)}</span>`;
-            } else {
-                msgEl.innerHTML = `
-                    <span class="chat-user">${escapeHtml(msg.username)}:</span>
-                    <span class="chat-text">${escapeHtml(msg.message)}</span>
-                `;
-            }
-
+            msgEl.className = 'chat-message' + (type === 'system' ? ' system' : '');
+            msgEl.innerHTML = `<span class="chat-text">${escapeHtml(message)}</span>`;
             messagesEl.appendChild(msgEl);
-            lastChatId = msg._id;
 
-            // Scroll to bottom if chat is open
-            if (chatExpanded) {
-                messagesEl.scrollTop = messagesEl.scrollHeight;
-            } else if (!isMe) {
-                // Increment unread if chat is closed and not own message
-                unreadCount++;
-                updateUnreadBadge();
+            // Keep only last 20 messages
+            while (messagesEl.children.length > 20) {
+                messagesEl.removeChild(messagesEl.firstChild);
             }
+
+            // Scroll to bottom
+            messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
         function escapeHtml(text) {
@@ -2771,23 +2363,8 @@
             return div.innerHTML;
         }
 
-        function startChatPolling() {
-            // Initial load
-            loadChatMessages();
-            // Poll every 3 seconds for new messages
-            chatPollInterval = setInterval(loadChatMessages, 3000);
-        }
-
-        function stopChatPolling() {
-            if (chatPollInterval) {
-                clearInterval(chatPollInterval);
-                chatPollInterval = null;
-            }
-        }
-
         // Initialize
         init();
-        startChatPolling();
     </script>
 </body>
 </html>
