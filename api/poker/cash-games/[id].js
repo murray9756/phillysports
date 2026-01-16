@@ -43,13 +43,13 @@ export default async function handler(req, res) {
 
         if (table.currentHandId) {
             const hand = await hands.findOne({ _id: table.currentHandId });
-            if (hand && hand.status !== HAND_STATUS.COMPLETE) {
+            if (hand) {
                 currentHand = user
                     ? sanitizeHandForPlayer(hand, user.userId)
                     : sanitizeHandForPlayer(hand, 'spectator');
 
-                // Get valid actions if it's this user's turn
-                if (user) {
+                // Get valid actions if it's this user's turn and hand not complete
+                if (user && hand.status !== HAND_STATUS.COMPLETE) {
                     const player = hand.players.find(p => p.playerId.toString() === user.userId);
                     if (player && player.position === hand.actingPosition && !player.isFolded && !player.isAllIn) {
                         validActions = getValidActions(hand, player);
