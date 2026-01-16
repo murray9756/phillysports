@@ -1321,12 +1321,13 @@
                     <span>&#120143;</span>
                     <h3 class="widget-title">Philly Sports Feed</h3>
                 </div>
-                <div class="widget-content" style="padding:0;">
-                    <a class="twitter-timeline"
-                       data-height="400"
-                       data-theme="light"
-                       data-chrome="noheader nofooter noborders"
-                       href="https://twitter.com/i/lists/2011982555629961644">Loading tweets...</a>
+                <div class="widget-content" style="padding:0;overflow:hidden;">
+                    <iframe
+                        src="https://syndication.twitter.com/srv/timeline-list/list/2011982555629961644?dnt=true&frame=false&hideCard=false&hideScroll=false&hideHeader=true&hideBorder=true&hideFooter=true&theme=light&showReplies=false"
+                        style="width:100%;height:400px;border:none;"
+                        sandbox="allow-scripts allow-same-origin allow-popups"
+                        loading="lazy">
+                    </iframe>
                 </div>
             </div>
 
@@ -1394,9 +1395,6 @@
             </div>
         </aside>
     </main>
-
-    <!-- Twitter Widget Script -->
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
     <!-- Footer -->
     <footer class="footer">
