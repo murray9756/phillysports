@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
         try {
-            const { articleUrl, limit = 50 } = req.query;
+            const { articleUrl, limit = 50, sort = 'newest' } = req.query;
 
             if (!articleUrl) {
                 return res.status(400).json({ error: 'Article URL is required' });
@@ -25,12 +25,53 @@ export default async function handler(req, res) {
             const comments = await getCollection('comments');
             const users = await getCollection('users');
 
-            const articleComments = await comments.find({ articleUrl })
-                .sort({ createdAt: -1 })
+            // Determine sort order
+            let sortOrder = {};
+            switch (sort) {
+                case 'top':
+                    sortOrder = { score: -1, createdAt: -1 };
+                    break;
+                case 'controversial':
+                    sortOrder = { replyCount: -1, downvotes: -1, createdAt: -1 };
+                    break;
+                case 'newest':
+                default:
+                    sortOrder = { createdAt: -1 };
+            }
+
+            // Get top-level comments only (no parentId)
+            const topLevelComments = await comments.find({
+                articleUrl,
+                parentId: { $exists: false },
+                status: { $ne: 'deleted' }
+            })
+                .sort(sortOrder)
                 .limit(parseInt(limit))
                 .toArray();
 
-            const userIds = [...new Set(articleComments.map(c => c.userId.toString()))];
+            // Get all replies for these comments (up to depth 3)
+            const topLevelIds = topLevelComments.map(c => c._id);
+            const allReplies = await comments.find({
+                articleUrl,
+                parentId: { $in: topLevelIds },
+                status: { $ne: 'deleted' }
+            })
+                .sort({ createdAt: 1 })
+                .toArray();
+
+            // Get nested replies (depth 2 and 3)
+            const replyIds = allReplies.map(r => r._id);
+            const nestedReplies = await comments.find({
+                articleUrl,
+                parentId: { $in: replyIds },
+                status: { $ne: 'deleted' }
+            })
+                .sort({ createdAt: 1 })
+                .toArray();
+
+            // Combine all comments for user lookup
+            const allComments = [...topLevelComments, ...allReplies, ...nestedReplies];
+            const userIds = [...new Set(allComments.map(c => c.userId.toString()))];
             const commentUsers = await users.find(
                 { _id: { $in: userIds.map(id => new ObjectId(id)) } },
                 { projection: { password: 0, email: 0, notifications: 0, savedArticles: 0 } }
@@ -47,19 +88,58 @@ export default async function handler(req, res) {
                 };
             });
 
-            const enrichedComments = articleComments.map(comment => ({
-                ...comment,
+            // Helper to format a comment
+            const formatComment = (comment) => ({
                 _id: comment._id.toString(),
                 userId: comment.userId.toString(),
+                parentId: comment.parentId?.toString() || null,
+                articleUrl: comment.articleUrl,
+                content: comment.content,
                 user: userMap[comment.userId.toString()],
                 likesCount: comment.likes?.length || 0,
                 upvotes: comment.upvotes || 0,
                 downvotes: comment.downvotes || 0,
                 score: comment.score || 0,
-                mentions: comment.mentions || []
-            }));
+                replyCount: comment.replyCount || 0,
+                depth: comment.depth || 0,
+                mentions: comment.mentions || [],
+                createdAt: comment.createdAt,
+                updatedAt: comment.updatedAt
+            });
 
-            res.status(200).json({ comments: enrichedComments });
+            // Build nested structure
+            const nestedReplyMap = {};
+            nestedReplies.forEach(reply => {
+                const parentId = reply.parentId.toString();
+                if (!nestedReplyMap[parentId]) nestedReplyMap[parentId] = [];
+                nestedReplyMap[parentId].push(formatComment(reply));
+            });
+
+            const replyMap = {};
+            allReplies.forEach(reply => {
+                const parentId = reply.parentId.toString();
+                if (!replyMap[parentId]) replyMap[parentId] = [];
+                const formatted = formatComment(reply);
+                formatted.replies = nestedReplyMap[reply._id.toString()] || [];
+                replyMap[parentId].push(formatted);
+            });
+
+            const enrichedComments = topLevelComments.map(comment => {
+                const formatted = formatComment(comment);
+                formatted.replies = replyMap[comment._id.toString()] || [];
+                return formatted;
+            });
+
+            // Get total comment count for article
+            const totalCount = await comments.countDocuments({
+                articleUrl,
+                status: { $ne: 'deleted' }
+            });
+
+            res.status(200).json({
+                comments: enrichedComments,
+                totalCount
+            });
         } catch (error) {
             console.error('Get comments error:', error);
             res.status(500).json({ error: 'Failed to get comments' });
@@ -103,6 +183,9 @@ export default async function handler(req, res) {
                 upvotes: 0,
                 downvotes: 0,
                 score: 0,
+                replyCount: 0,
+                depth: 0,
+                status: 'active',
                 likes: [],
                 createdAt: new Date(),
                 updatedAt: new Date()
@@ -170,6 +253,9 @@ export default async function handler(req, res) {
                     upvotes: 0,
                     downvotes: 0,
                     score: 0,
+                    replyCount: 0,
+                    depth: 0,
+                    replies: [],
                     mentions: mentionedUsernames
                 }
             });

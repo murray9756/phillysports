@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article - PhillySports.com</title>
+    <meta name="description" content="Read and discuss Philadelphia sports news.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+            --widget-header-bg: #e8e3db;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-auth a:hover { background: rgba(0,0,0,0.05); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; line-height: 1; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .header-nav { display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.5rem 1.5rem; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; border-top: 1px solid var(--border-color); }
+        .header-nav a { color: var(--nav-text); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.75rem; border-radius: 4px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-nav a:hover { background: rgba(0,0,0,0.05); color: var(--accent-color); }
+        .nav-separator { color: var(--border-color); margin: 0 0.25rem; }
+
+        .main-container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
+
+        /* Article Card */
+        .article-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; overflow: hidden; }
+        .article-image { width: 100%; height: 300px; object-fit: cover; }
+        .article-content { padding: 1.5rem; }
+        .article-source { font-size: 0.75rem; color: var(--accent-color); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+        .article-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.3; }
+        .article-meta { display: flex; align-items: center; gap: 1rem; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+        .article-description { color: var(--text-secondary); margin-bottom: 1rem; }
+        .read-full-btn { display: inline-block; padding: 0.75rem 1.5rem; background: var(--accent-color); color: #fff; border-radius: 6px; font-weight: 600; transition: opacity 0.2s; }
+        .read-full-btn:hover { opacity: 0.9; }
+
+        /* Comments Section */
+        .comments-section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); }
+        .comments-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .comments-title { font-size: 1.1rem; font-weight: 700; }
+        .sort-tabs { display: flex; gap: 0.5rem; }
+        .sort-tab { padding: 0.4rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; cursor: pointer; background: var(--dark-bg); border: 1px solid var(--border-color); color: var(--text-secondary); transition: all 0.2s; }
+        .sort-tab:hover { border-color: var(--text-muted); }
+        .sort-tab.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+        /* Comment Form */
+        .comment-form { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .comment-form-wrapper { position: relative; }
+        .comment-form textarea { width: 100%; min-height: 80px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 0.9rem; resize: vertical; background: var(--dark-bg); color: var(--text-primary); }
+        .comment-form textarea:focus { outline: none; border-color: var(--sixers-blue); }
+        .comment-form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; }
+        .coin-reward { font-size: 0.8rem; color: var(--text-muted); }
+        .submit-btn { padding: 0.6rem 1.25rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Comment List */
+        .comments-list { padding: 1rem 1.5rem; }
+        .no-comments { text-align: center; padding: 2rem; color: var(--text-muted); }
+
+        /* Comment Card */
+        .comment-card { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+        .comment-card.reply { margin-left: 2.5rem; padding-left: 1rem; border-left: 2px solid var(--border-color); }
+        .comment-card.reply.depth-2 { margin-left: 4rem; }
+        .comment-card.reply.depth-3 { margin-left: 5.5rem; }
+
+        .vote-controls { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+        .vote-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 0.9rem; padding: 0.1rem 0.25rem; line-height: 1; transition: all 0.2s; }
+        .vote-btn:hover { color: var(--text-primary); }
+        .vote-btn.upvote.active { color: #ff4500; }
+        .vote-btn.downvote.active { color: #7193ff; }
+        .vote-score { font-weight: 600; font-size: 0.75rem; color: var(--text-secondary); }
+
+        .comment-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-color); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; overflow: hidden; }
+        .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .comment-main { flex: 1; min-width: 0; }
+        .comment-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap; }
+        .comment-author { font-weight: 600; font-size: 0.85rem; color: var(--text-primary); }
+        .comment-author:hover { color: var(--sixers-blue); }
+        .comment-time { font-size: 0.75rem; color: var(--text-muted); }
+        .comment-deleted { font-style: italic; color: var(--text-muted); }
+
+        .comment-text { font-size: 0.9rem; color: var(--text-secondary); word-break: break-word; margin-bottom: 0.5rem; }
+        .comment-actions { display: flex; gap: 1rem; align-items: center; }
+        .comment-action { font-size: 0.8rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 0.25rem; }
+        .comment-action:hover { color: var(--text-primary); }
+
+        /* Reply Form (inline) */
+        .reply-form { margin-top: 0.75rem; display: none; }
+        .reply-form.show { display: block; }
+        .reply-form textarea { width: 100%; min-height: 60px; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 0.85rem; resize: vertical; background: var(--dark-bg); color: var(--text-primary); }
+        .reply-form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
+        .reply-form .cancel-btn { padding: 0.4rem 0.75rem; background: transparent; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.8rem; cursor: pointer; color: var(--text-secondary); }
+        .reply-form .submit-btn { padding: 0.4rem 0.75rem; font-size: 0.8rem; }
+
+        /* Mentions */
+        .mention { color: var(--sixers-blue); font-weight: 500; cursor: pointer; }
+        .mention:hover { text-decoration: underline; }
+
+        /* Mention Autocomplete */
+        .mention-dropdown { position: absolute; bottom: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-height: 200px; overflow-y: auto; z-index: 100; display: none; }
+        .mention-dropdown.show { display: block; }
+        .mention-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; cursor: pointer; }
+        .mention-item:hover, .mention-item.selected { background: var(--dark-bg); }
+        .mention-avatar-small { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-color); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; font-weight: 600; }
+        .mention-name { font-size: 0.85rem; font-weight: 500; }
+        .mention-username { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* Loading */
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .error { text-align: center; padding: 3rem; color: #e74c3c; }
+
+        /* Login Prompt */
+        .login-prompt { padding: 1rem 1.5rem; text-align: center; color: var(--text-muted); border-bottom: 1px solid var(--border-color); }
+        .login-prompt a { color: var(--accent-color); font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .article-title { font-size: 1.4rem; }
+            .article-image { height: 200px; }
+            .comment-card.reply { margin-left: 1.5rem; }
+            .comment-card.reply.depth-2 { margin-left: 2.5rem; }
+            .comment-card.reply.depth-3 { margin-left: 3rem; }
+            .sort-tabs { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <span class="nav-separator">|</span>
+            <a href="/eagles/">Eagles</a>
+            <span class="nav-separator">|</span>
+            <a href="/phillies/">Phillies</a>
+            <span class="nav-separator">|</span>
+            <a href="/sixers/">Sixers</a>
+            <span class="nav-separator">|</span>
+            <a href="/flyers/">Flyers</a>
+            <span class="nav-separator">|</span>
+            <a href="/trivia.html">Trivia</a>
+            <span class="nav-separator">|</span>
+            <a href="/odds.html">Odds</a>
+            <span class="nav-separator">|</span>
+            <a href="/bets.html">Bets</a>
+            <span class="nav-separator">|</span>
+            <a href="/poker.html">Poker</a>
+            <span class="nav-separator">|</span>
+            <a href="/fantasy.html">Fantasy</a>
+            <span class="nav-separator">|</span>
+            <a href="/pools.html">Pools</a>
+            <span class="nav-separator">|</span>
+            <a href="/community/">Community</a>
+            <span class="nav-separator">|</span>
+            <a href="/badges.html">Badges</a>
+            <span class="nav-separator">|</span>
+            <a href="/shop.html">Shop</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div id="content">
+            <div class="loading">Loading article...</div>
+        </div>
+    </main>
+
+    <script>
+        // Dark Mode
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // State
+        let currentUser = null;
+        let articleUrl = null;
+        let articleData = null;
+        let comments = [];
+        let userVotes = {};
+        let currentSort = 'newest';
+        let mentionUsers = [];
+        let mentionIndex = -1;
+        let activeMentionInput = null;
+
+        // Get article URL from query param
+        const urlParams = new URLSearchParams(window.location.search);
+        articleUrl = urlParams.get('url');
+
+        // Check auth
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">
+                            <span>🪙</span>
+                            <span id="coinBalance">${currentUser.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${currentUser.displayName || currentUser.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        // Load article metadata (from URL or fallback)
+        async function loadArticle() {
+            if (!articleUrl) {
+                document.getElementById('content').innerHTML = '<div class="error">No article URL provided</div>';
+                return;
+            }
+
+            // Parse URL to get domain/source
+            let source = 'News';
+            try {
+                const url = new URL(articleUrl);
+                const hostname = url.hostname.replace('www.', '');
+                if (hostname.includes('espn')) source = 'ESPN';
+                else if (hostname.includes('crossingbroad')) source = 'Crossing Broad';
+                else if (hostname.includes('phillyvoice')) source = 'PhillyVoice';
+                else if (hostname.includes('nbcsports')) source = 'NBC Sports';
+                else source = hostname.split('.')[0].charAt(0).toUpperCase() + hostname.split('.')[0].slice(1);
+            } catch (e) {}
+
+            // Try to get article info from news API
+            articleData = {
+                url: articleUrl,
+                title: urlParams.get('title') || 'Article',
+                description: urlParams.get('desc') || '',
+                image: urlParams.get('image') || null,
+                source: source,
+                date: urlParams.get('date') || null
+            };
+
+            document.title = `${articleData.title} - PhillySports.com`;
+            await loadComments();
+            render();
+        }
+
+        async function loadComments() {
+            try {
+                const response = await fetch(`/api/comments?articleUrl=${encodeURIComponent(articleUrl)}&sort=${currentSort}`);
+                const data = await response.json();
+                comments = data.comments || [];
+
+                // Load user votes
+                if (currentUser && comments.length > 0) {
+                    await loadUserVotes();
+                }
+            } catch (error) {
+                console.error('Load comments error:', error);
+            }
+        }
+
+        async function loadUserVotes() {
+            const allCommentIds = [];
+            function collectIds(commentList) {
+                commentList.forEach(c => {
+                    allCommentIds.push(c._id);
+                    if (c.replies) collectIds(c.replies);
+                });
+            }
+            collectIds(comments);
+
+            if (allCommentIds.length === 0) return;
+
+            try {
+                const response = await fetch(`/api/votes?contentType=comment&contentIds=${allCommentIds.join(',')}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    Object.keys(data.votes).forEach(id => {
+                        userVotes[id] = data.votes[id].userVote;
+                    });
+                }
+            } catch (error) {
+                console.error('Load votes error:', error);
+            }
+        }
+
+        function render() {
+            const html = `
+                <div class="article-card">
+                    ${articleData.image ? `<img src="${articleData.image}" alt="${escapeHtml(articleData.title)}" class="article-image" onerror="this.style.display='none'">` : ''}
+                    <div class="article-content">
+                        <div class="article-source">${escapeHtml(articleData.source)}</div>
+                        <h1 class="article-title">${escapeHtml(articleData.title)}</h1>
+                        <div class="article-meta">
+                            ${articleData.date ? `<span>${formatDate(articleData.date)}</span>` : ''}
+                        </div>
+                        ${articleData.description ? `<p class="article-description">${escapeHtml(articleData.description)}</p>` : ''}
+                        <a href="${articleUrl}" target="_blank" rel="noopener" class="read-full-btn">Read Full Article →</a>
+                    </div>
+                </div>
+
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h2 class="comments-title">💬 Comments (${comments.length})</h2>
+                        <div class="sort-tabs">
+                            <button class="sort-tab ${currentSort === 'newest' ? 'active' : ''}" onclick="changeSort('newest')">Newest</button>
+                            <button class="sort-tab ${currentSort === 'top' ? 'active' : ''}" onclick="changeSort('top')">Top</button>
+                            <button class="sort-tab ${currentSort === 'controversial' ? 'active' : ''}" onclick="changeSort('controversial')">Controversial</button>
+                        </div>
+                    </div>
+
+                    ${currentUser ? `
+                        <div class="comment-form">
+                            <div class="comment-form-wrapper">
+                                <div class="mention-dropdown" id="mainMentionDropdown"></div>
+                                <textarea id="mainCommentInput" placeholder="Share your thoughts... (use @username to mention)"></textarea>
+                            </div>
+                            <div class="comment-form-actions">
+                                <span class="coin-reward">+2 🪙 for commenting</span>
+                                <button class="submit-btn" onclick="postComment()" id="mainSubmitBtn">Post Comment</button>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="login-prompt">
+                            <a href="/login.html">Log in</a> to join the discussion
+                        </div>
+                    `}
+
+                    <div class="comments-list">
+                        ${comments.length === 0
+                            ? '<div class="no-comments">No comments yet. Be the first to share your thoughts!</div>'
+                            : comments.map(c => renderComment(c)).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = html;
+
+            // Setup mention autocomplete for main input
+            if (currentUser) {
+                setupMentionAutocomplete(document.getElementById('mainCommentInput'), document.getElementById('mainMentionDropdown'));
+            }
+        }
+
+        function renderComment(comment, depth = 0) {
+            const isDeleted = comment.status === 'deleted' || comment.content === '[deleted]';
+            const userVote = userVotes[comment._id] || 0;
+            const depthClass = depth > 0 ? `reply depth-${Math.min(depth, 3)}` : '';
+            const canReply = currentUser && depth < 3;
+
+            return `
+                <div class="comment-card ${depthClass}" data-comment-id="${comment._id}">
+                    <div class="vote-controls">
+                        <button class="vote-btn upvote ${userVote === 1 ? 'active' : ''}" onclick="vote('${comment._id}', 1)">▲</button>
+                        <span class="vote-score" id="score-${comment._id}">${comment.score}</span>
+                        <button class="vote-btn downvote ${userVote === -1 ? 'active' : ''}" onclick="vote('${comment._id}', -1)">▼</button>
+                    </div>
+                    <div class="comment-avatar">
+                        ${comment.user?.profilePhoto
+                            ? `<img src="${comment.user.profilePhoto}" alt="${comment.user.username}">`
+                            : (comment.user?.username || 'A')[0].toUpperCase()}
+                    </div>
+                    <div class="comment-main">
+                        <div class="comment-header">
+                            ${isDeleted
+                                ? '<span class="comment-deleted">[deleted]</span>'
+                                : `<a href="/profile.html?username=${comment.user?.username}" class="comment-author">${escapeHtml(comment.user?.displayName || comment.user?.username || 'Anonymous')}</a>`}
+                            <span class="comment-time">${formatTimeAgo(comment.createdAt)}</span>
+                        </div>
+                        <div class="comment-text ${isDeleted ? 'comment-deleted' : ''}">${isDeleted ? '[deleted]' : renderWithMentions(escapeHtml(comment.content))}</div>
+                        ${!isDeleted ? `
+                            <div class="comment-actions">
+                                ${canReply ? `<span class="comment-action" onclick="toggleReplyForm('${comment._id}')">↩ Reply</span>` : ''}
+                                ${comment.replyCount > 0 ? `<span class="comment-action">${comment.replyCount} ${comment.replyCount === 1 ? 'reply' : 'replies'}</span>` : ''}
+                                ${currentUser && comment.userId === currentUser._id ? `<span class="comment-action" onclick="deleteComment('${comment._id}')">Delete</span>` : ''}
+                            </div>
+                            ${canReply ? `
+                                <div class="reply-form" id="reply-form-${comment._id}">
+                                    <div style="position: relative;">
+                                        <div class="mention-dropdown" id="mention-dropdown-${comment._id}"></div>
+                                        <textarea id="reply-input-${comment._id}" placeholder="Write a reply..."></textarea>
+                                    </div>
+                                    <div class="reply-form-actions">
+                                        <button class="cancel-btn" onclick="toggleReplyForm('${comment._id}')">Cancel</button>
+                                        <button class="submit-btn" onclick="postReply('${comment._id}')">Reply</button>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        ` : ''}
+                        ${comment.replies && comment.replies.length > 0
+                            ? comment.replies.map(r => renderComment(r, depth + 1)).join('')
+                            : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderWithMentions(content) {
+            return content.replace(/@(\w+)/g, '<a href="/profile.html?username=$1" class="mention">@$1</a>');
+        }
+
+        function toggleReplyForm(commentId) {
+            const form = document.getElementById(`reply-form-${commentId}`);
+            const wasShown = form.classList.contains('show');
+
+            // Hide all reply forms
+            document.querySelectorAll('.reply-form').forEach(f => f.classList.remove('show'));
+
+            if (!wasShown) {
+                form.classList.add('show');
+                const input = document.getElementById(`reply-input-${commentId}`);
+                const dropdown = document.getElementById(`mention-dropdown-${commentId}`);
+                setupMentionAutocomplete(input, dropdown);
+                input.focus();
+            }
+        }
+
+        async function postComment() {
+            const input = document.getElementById('mainCommentInput');
+            const content = input.value.trim();
+            if (!content) return;
+
+            const btn = document.getElementById('mainSubmitBtn');
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ articleUrl, content })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    input.value = '';
+                    comments.unshift(data.comment);
+                    render();
+
+                    if (data.coinsEarned > 0) {
+                        const balance = document.getElementById('coinBalance');
+                        if (balance) balance.textContent = parseInt(balance.textContent) + data.coinsEarned;
+                    }
+                } else {
+                    alert(data.error || 'Failed to post comment');
+                }
+            } catch (error) {
+                console.error('Post comment error:', error);
+                alert('Failed to post comment');
+            }
+
+            btn.disabled = false;
+        }
+
+        async function postReply(parentId) {
+            const input = document.getElementById(`reply-input-${parentId}`);
+            const content = input.value.trim();
+            if (!content) return;
+
+            try {
+                const response = await fetch(`/api/comments/${parentId}/replies`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ content })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    // Reload comments to get updated structure
+                    await loadComments();
+                    render();
+
+                    if (data.coinsEarned > 0) {
+                        const balance = document.getElementById('coinBalance');
+                        if (balance) balance.textContent = parseInt(balance.textContent) + data.coinsEarned;
+                    }
+                } else {
+                    alert(data.error || 'Failed to post reply');
+                }
+            } catch (error) {
+                console.error('Post reply error:', error);
+                alert('Failed to post reply');
+            }
+        }
+
+        async function vote(commentId, voteValue) {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const currentVote = userVotes[commentId] || 0;
+            const newVote = currentVote === voteValue ? 0 : voteValue;
+
+            try {
+                const response = await fetch(`/api/comments/${commentId}/vote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ vote: newVote })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    userVotes[commentId] = data.userVote;
+
+                    // Update UI
+                    const scoreEl = document.getElementById(`score-${commentId}`);
+                    if (scoreEl) scoreEl.textContent = data.score;
+
+                    const card = document.querySelector(`[data-comment-id="${commentId}"]`);
+                    if (card) {
+                        const upBtn = card.querySelector('.upvote');
+                        const downBtn = card.querySelector('.downvote');
+                        upBtn.classList.toggle('active', data.userVote === 1);
+                        downBtn.classList.toggle('active', data.userVote === -1);
+                    }
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
+            }
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm('Are you sure you want to delete this comment?')) return;
+
+            try {
+                const response = await fetch(`/api/comments/${commentId}/delete`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    await loadComments();
+                    render();
+                } else {
+                    alert(data.error || 'Failed to delete comment');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Failed to delete comment');
+            }
+        }
+
+        async function changeSort(sort) {
+            currentSort = sort;
+            await loadComments();
+            render();
+        }
+
+        // Mention autocomplete
+        function setupMentionAutocomplete(input, dropdown) {
+            if (!input || !dropdown) return;
+
+            let debounceTimer;
+
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                const cursorPos = e.target.selectionStart;
+                const beforeCursor = value.substring(0, cursorPos);
+                const atMatch = beforeCursor.match(/@(\w*)$/);
+
+                activeMentionInput = input;
+
+                if (atMatch) {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => searchMentions(atMatch[1], dropdown), 200);
+                } else {
+                    hideMentionDropdown(dropdown);
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (!dropdown.classList.contains('show')) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    mentionIndex = Math.min(mentionIndex + 1, mentionUsers.length - 1);
+                    showMentionDropdown(mentionUsers, dropdown);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    mentionIndex = Math.max(mentionIndex - 1, 0);
+                    showMentionDropdown(mentionUsers, dropdown);
+                } else if (e.key === 'Enter' && mentionIndex >= 0) {
+                    e.preventDefault();
+                    selectMention(mentionUsers[mentionIndex].username, input, dropdown);
+                } else if (e.key === 'Escape') {
+                    hideMentionDropdown(dropdown);
+                }
+            });
+        }
+
+        async function searchMentions(query, dropdown) {
+            if (query.length < 1) {
+                hideMentionDropdown(dropdown);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/mentions/search?q=${encodeURIComponent(query)}&limit=5`);
+                const data = await response.json();
+
+                if (data.success && data.users.length > 0) {
+                    mentionUsers = data.users;
+                    mentionIndex = -1;
+                    showMentionDropdown(data.users, dropdown);
+                } else {
+                    hideMentionDropdown(dropdown);
+                }
+            } catch (error) {
+                hideMentionDropdown(dropdown);
+            }
+        }
+
+        function showMentionDropdown(users, dropdown) {
+            dropdown.innerHTML = users.map((user, index) => `
+                <div class="mention-item ${index === mentionIndex ? 'selected' : ''}" onclick="selectMention('${user.username}', activeMentionInput, this.parentElement)">
+                    <div class="mention-avatar-small">${(user.displayName || user.username)[0].toUpperCase()}</div>
+                    <div>
+                        <div class="mention-name">${user.displayName || user.username}</div>
+                        <div class="mention-username">@${user.username}</div>
+                    </div>
+                </div>
+            `).join('');
+            dropdown.classList.add('show');
+        }
+
+        function hideMentionDropdown(dropdown) {
+            if (dropdown) {
+                dropdown.classList.remove('show');
+                mentionUsers = [];
+                mentionIndex = -1;
+            }
+        }
+
+        function selectMention(username, input, dropdown) {
+            if (!input) return;
+
+            const value = input.value;
+            const cursorPos = input.selectionStart;
+            let atIndex = value.lastIndexOf('@', cursorPos - 1);
+
+            if (atIndex !== -1) {
+                const before = value.substring(0, atIndex);
+                const after = value.substring(cursorPos);
+                input.value = before + '@' + username + ' ' + after;
+                const newPos = atIndex + username.length + 2;
+                input.setSelectionRange(newPos, newPos);
+            }
+
+            hideMentionDropdown(dropdown);
+            input.focus();
+        }
+
+        function formatTimeAgo(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Init
+        checkAuth().then(loadArticle);
+    </script>
+</body>
+</html>
