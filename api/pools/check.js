@@ -1,0 +1,252 @@
+// Block Pools Cron - Fill empty squares, update scores, pay winners
+import { getCollection } from '../lib/mongodb.js';
+import { fetchScoreboard } from '../lib/espn.js';
+
+// Period markers for each sport
+const PERIOD_MARKERS = {
+    NFL: ['Q1', 'Q2', 'Q3', 'Q4', 'Final'],
+    NBA: ['Q1', 'Q2', 'Q3', 'Q4', 'Final'],
+    NHL: ['P1', 'P2', 'P3', 'Final'],
+    MLB: ['3rd', '6th', '9th', 'Final']
+};
+
+// Payout keys for each sport
+const PAYOUT_KEYS = {
+    NFL: { 'Q1': 'q1', 'Q2': 'q2', 'Q3': 'q3', 'Q4': 'q4', 'Final': 'final' },
+    NBA: { 'Q1': 'q1', 'Q2': 'q2', 'Q3': 'q3', 'Q4': 'q4', 'Final': 'final' },
+    NHL: { 'P1': 'p1', 'P2': 'p2', 'P3': 'p3', 'Final': 'final' },
+    MLB: { '3rd': 'i3', '6th': 'i6', '9th': 'i9', 'Final': 'final' }
+};
+
+function shuffleArray(arr) {
+    const shuffled = [...arr];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    if (req.method !== 'GET' && req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        const poolsCollection = await getCollection('block_pools');
+        const usersCollection = await getCollection('users');
+
+        const results = {
+            poolsProcessed: 0,
+            squaresFilled: 0,
+            winnersAwarded: 0,
+            errors: []
+        };
+
+        const now = new Date();
+
+        // Get all non-completed pools
+        const pools = await poolsCollection.find({
+            status: { $in: ['open', 'locked', 'live'] }
+        }).toArray();
+
+        for (const pool of pools) {
+            try {
+                const updates = {};
+                const gameTime = new Date(pool.gameTime);
+
+                // 1. Fill empty squares with House bot at game start
+                if (pool.status === 'open' && now >= gameTime) {
+                    const existingSquares = new Set(
+                        (pool.squares || []).map(s => `${s.row}-${s.col}`)
+                    );
+
+                    const newSquares = [];
+                    for (let row = 0; row < 10; row++) {
+                        for (let col = 0; col < 10; col++) {
+                            if (!existingSquares.has(`${row}-${col}`)) {
+                                newSquares.push({
+                                    row,
+                                    col,
+                                    userId: null,
+                                    username: 'House',
+                                    isHouse: true,
+                                    purchasedAt: now
+                                });
+                                results.squaresFilled++;
+                            }
+                        }
+                    }
+
+                    if (newSquares.length > 0) {
+                        await poolsCollection.updateOne(
+                            { _id: pool._id },
+                            {
+                                $push: { squares: { $each: newSquares } },
+                                $inc: { squaresSold: newSquares.length }
+                            }
+                        );
+                    }
+
+                    updates.status = 'locked';
+                }
+
+                // 2. Assign numbers if not assigned and game starting
+                if (!pool.numbersAssigned && (pool.status === 'locked' || now >= gameTime)) {
+                    updates.rowNumbers = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                    updates.colNumbers = shuffleArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                    updates.numbersAssigned = true;
+                }
+
+                // 3. Fetch live scores
+                if (pool.gameId && pool.numbersAssigned) {
+                    const games = await fetchScoreboard(pool.sport);
+                    const game = games.find(g => g.espnId === pool.gameId);
+
+                    if (game) {
+                        updates.currentScore = {
+                            home: game.homeScore || 0,
+                            away: game.awayScore || 0
+                        };
+
+                        if (game.isInProgress && pool.status !== 'live') {
+                            updates.status = 'live';
+                        }
+
+                        // Get current pool state with any updates
+                        const currentPool = {
+                            ...pool,
+                            ...updates,
+                            rowNumbers: updates.rowNumbers || pool.rowNumbers,
+                            colNumbers: updates.colNumbers || pool.colNumbers
+                        };
+
+                        // 4. Check for period endings and award prizes
+                        const periodPayouts = PAYOUT_KEYS[pool.sport] || {};
+                        const existingWinners = new Set(
+                            (pool.winners || []).map(w => w.period)
+                        );
+
+                        // Determine current period from status
+                        const statusDesc = game.statusDescription || '';
+                        let completedPeriods = [];
+
+                        if (pool.sport === 'NFL' || pool.sport === 'NBA') {
+                            if (statusDesc.includes('End') || statusDesc.includes('Half')) {
+                                if (statusDesc.includes('1st') || statusDesc.includes('Q1')) completedPeriods.push('Q1');
+                                if (statusDesc.includes('Half') || statusDesc.includes('2nd') || statusDesc.includes('Q2')) completedPeriods.push('Q2');
+                                if (statusDesc.includes('3rd') || statusDesc.includes('Q3')) completedPeriods.push('Q3');
+                            }
+                            if (game.isFinal) completedPeriods = ['Q1', 'Q2', 'Q3', 'Q4', 'Final'];
+                        } else if (pool.sport === 'NHL') {
+                            if (statusDesc.includes('End')) {
+                                if (statusDesc.includes('1st')) completedPeriods.push('P1');
+                                if (statusDesc.includes('2nd')) completedPeriods.push('P2');
+                            }
+                            if (game.isFinal) completedPeriods = ['P1', 'P2', 'P3', 'Final'];
+                        } else if (pool.sport === 'MLB') {
+                            // MLB - check inning
+                            const inningMatch = statusDesc.match(/(\d+)/);
+                            const inning = inningMatch ? parseInt(inningMatch[1]) : 0;
+                            if (inning >= 3 && statusDesc.includes('End')) completedPeriods.push('3rd');
+                            if (inning >= 6 && statusDesc.includes('End')) completedPeriods.push('6th');
+                            if (game.isFinal) completedPeriods = ['3rd', '6th', '9th', 'Final'];
+                        }
+
+                        // Award winners for completed periods
+                        const newWinners = [];
+                        for (const period of completedPeriods) {
+                            if (existingWinners.has(period)) continue;
+
+                            const payoutKey = periodPayouts[period];
+                            const payoutPercent = currentPool.payouts?.[payoutKey] || 0;
+                            const payoutAmount = Math.floor((currentPool.prizePool || 0) * (payoutPercent / 100));
+
+                            // Find winning square
+                            const homeDigit = game.homeScore % 10;
+                            const awayDigit = game.awayScore % 10;
+
+                            // Find row/col index for these digits
+                            const rowIndex = currentPool.rowNumbers?.indexOf(homeDigit);
+                            const colIndex = currentPool.colNumbers?.indexOf(awayDigit);
+
+                            if (rowIndex !== undefined && rowIndex >= 0 && colIndex !== undefined && colIndex >= 0) {
+                                const winningSquare = (currentPool.squares || []).find(
+                                    s => s.row === rowIndex && s.col === colIndex
+                                );
+
+                                if (winningSquare) {
+                                    const winner = {
+                                        period,
+                                        homeScore: game.homeScore,
+                                        awayScore: game.awayScore,
+                                        winningRow: rowIndex,
+                                        winningCol: colIndex,
+                                        winningDigits: { home: homeDigit, away: awayDigit },
+                                        userId: winningSquare.userId,
+                                        username: winningSquare.username,
+                                        isHouse: winningSquare.isHouse || false,
+                                        payout: payoutAmount,
+                                        paidAt: now
+                                    };
+
+                                    newWinners.push(winner);
+
+                                    // Pay winner if not House
+                                    if (winningSquare.userId && !winningSquare.isHouse) {
+                                        await usersCollection.updateOne(
+                                            { _id: winningSquare.userId },
+                                            { $inc: { coinBalance: payoutAmount } }
+                                        );
+                                        results.winnersAwarded++;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (newWinners.length > 0) {
+                            await poolsCollection.updateOne(
+                                { _id: pool._id },
+                                { $push: { winners: { $each: newWinners } } }
+                            );
+                        }
+
+                        // Mark as completed if game is final
+                        if (game.isFinal) {
+                            updates.status = 'completed';
+                        }
+                    }
+                }
+
+                // Apply updates
+                if (Object.keys(updates).length > 0) {
+                    updates.updatedAt = now;
+                    await poolsCollection.updateOne(
+                        { _id: pool._id },
+                        { $set: updates }
+                    );
+                }
+
+                results.poolsProcessed++;
+            } catch (error) {
+                console.error(`Error processing pool ${pool._id}:`, error);
+                results.errors.push({
+                    poolId: pool._id.toString(),
+                    error: error.message
+                });
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            ...results,
+            checkedAt: now
+        });
+    } catch (error) {
+        console.error('Pools check error:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}

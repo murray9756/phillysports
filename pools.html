@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Pools - PhillySports.com</title>
+    <meta name="description" content="Play football squares and block pools for Philadelphia sports games. Win Diehard Dollars!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; text-transform: uppercase; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .header-nav { display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.5rem 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--border-color); }
+        .header-nav a { color: var(--nav-text); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.75rem; border-radius: 4px; text-transform: uppercase; }
+        .header-nav a.active { color: var(--accent-color); }
+        .nav-separator { color: var(--border-color); margin: 0 0.25rem; }
+
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; }
+
+        .filter-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .filter-tab { padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .filter-tab:hover, .filter-tab.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+        .sport-filter { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .sport-btn { padding: 0.5rem 1rem; background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+        .sport-btn.active { border-color: var(--accent-color); background: rgba(139,0,0,0.1); }
+
+        .pools-grid { display: grid; gap: 1rem; }
+
+        .pool-card { display: grid; grid-template-columns: auto 1fr auto auto; gap: 1rem; align-items: center; padding: 1rem 1.25rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); transition: all 0.2s; cursor: pointer; }
+        .pool-card:hover { border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+        .pool-sport { font-size: 2rem; }
+        .pool-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .pool-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted); }
+
+        .pool-progress { min-width: 120px; }
+        .progress-bar { height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; margin-bottom: 0.25rem; }
+        .progress-fill { height: 100%; background: var(--accent-color); transition: width 0.3s; }
+        .progress-text { font-size: 0.75rem; color: var(--text-muted); text-align: center; }
+
+        .pool-details { text-align: center; min-width: 80px; }
+        .prize-pool { font-size: 1.25rem; font-weight: 800; color: var(--accent-color); }
+        .square-price { font-size: 0.75rem; color: var(--text-muted); }
+
+        .status-badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .status-open { background: #e8f5e9; color: #388e3c; }
+        .status-locked { background: #fff3e0; color: #f57c00; }
+        .status-live { background: #ffebee; color: #d32f2f; }
+        .status-completed { background: #e3f2fd; color: #1976d2; }
+
+        [data-theme="dark"] .status-open { background: rgba(56,142,60,0.2); }
+        [data-theme="dark"] .status-locked { background: rgba(245,124,0,0.2); }
+        [data-theme="dark"] .status-live { background: rgba(211,47,47,0.2); }
+        [data-theme="dark"] .status-completed { background: rgba(25,118,210,0.2); }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        .create-btn { padding: 0.6rem 1.25rem; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+        .create-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(139,0,0,0.3); }
+
+        @media (max-width: 768px) {
+            .pool-card { grid-template-columns: 1fr; text-align: center; }
+            .pool-meta { justify-content: center; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <span class="nav-separator">|</span>
+            <a href="/fantasy.html">Fantasy</a>
+            <span class="nav-separator">|</span>
+            <a href="/pools.html" class="active">Pools</a>
+            <span class="nav-separator">|</span>
+            <a href="/game-threads.html">Live</a>
+            <span class="nav-separator">|</span>
+            <a href="/shop.html">Shop</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Block Pools</h1>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-status="">All</button>
+                    <button class="filter-tab" data-status="open">Open</button>
+                    <button class="filter-tab" data-status="live">Live</button>
+                    <button class="filter-tab" data-status="completed">Completed</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sport-filter">
+            <button class="sport-btn active" data-sport="">All Sports</button>
+            <button class="sport-btn" data-sport="NFL">NFL</button>
+            <button class="sport-btn" data-sport="MLB">MLB</button>
+            <button class="sport-btn" data-sport="NBA">NBA</button>
+            <button class="sport-btn" data-sport="NHL">NHL</button>
+        </div>
+
+        <div class="pools-grid" id="poolsGrid">
+            <div class="empty-state">Loading pools...</div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        const sportEmojis = { NFL: '🏈', MLB: '⚾', NBA: '🏀', NHL: '🏒' };
+
+        let currentStatus = '';
+        let currentSport = '';
+        let currentUser = null;
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentStatus = tab.dataset.status;
+                loadPools();
+            });
+        });
+
+        document.querySelectorAll('.sport-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sport-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentSport = btn.dataset.sport;
+                loadPools();
+            });
+        });
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display"><span>🪙</span><span>${data.user.coinBalance || 0}</span></div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadPools() {
+            const container = document.getElementById('poolsGrid');
+
+            try {
+                let url = '/api/pools?limit=20';
+                if (currentStatus) url += `&status=${currentStatus}`;
+                if (currentSport) url += `&sport=${currentSport}`;
+
+                const response = await fetch(url, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!data.success || !data.pools || data.pools.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>No pools found</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Pools are auto-created for Philly team games!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.pools.map(pool => {
+                    const emoji = sportEmojis[pool.sport] || '🏆';
+                    const gameDate = new Date(pool.gameTime);
+                    const dateStr = gameDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    const timeStr = gameDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                    const fillPercent = (pool.squaresSold / 100) * 100;
+
+                    return `
+                        <div class="pool-card" onclick="window.location.href='/pool.html?id=${pool._id}'">
+                            <span class="pool-sport">${emoji}</span>
+                            <div class="pool-info">
+                                <h3>${pool.title}</h3>
+                                <div class="pool-meta">
+                                    <span>${dateStr} @ ${timeStr}</span>
+                                    <span class="status-badge status-${pool.status}">${pool.status}</span>
+                                    ${pool.userSquares > 0 ? `<span style="color: var(--accent-color);">You: ${pool.userSquares} squares</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="pool-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${fillPercent}%"></div>
+                                </div>
+                                <div class="progress-text">${pool.squaresSold}/100 squares</div>
+                            </div>
+                            <div class="pool-details">
+                                <div class="prize-pool">${pool.prizePool} DD</div>
+                                <div class="square-price">${pool.squarePrice} DD/square</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Load pools error:', error);
+                container.innerHTML = '<div class="empty-state">Failed to load pools</div>';
+            }
+        }
+
+        checkAuth();
+        loadPools();
+    </script>
+</body>
+</html>

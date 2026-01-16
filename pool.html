@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Pool - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+            --success-color: #2e7d32;
+            --warning-color: #ed6c02;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; text-transform: uppercase; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        .theme-toggle .theme-icon-dark { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .header-nav { display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.5rem 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--border-color); }
+        .header-nav a { color: var(--nav-text); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.75rem; text-transform: uppercase; }
+        .header-nav a.active { color: var(--accent-color); }
+        .nav-separator { color: var(--border-color); margin: 0 0.25rem; }
+
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+
+        .pool-header { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .pool-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .pool-meta { display: flex; gap: 2rem; flex-wrap: wrap; color: var(--text-muted); font-size: 0.9rem; }
+
+        .score-display { display: flex; align-items: center; justify-content: center; gap: 2rem; margin: 1.5rem 0; }
+        .team-score { text-align: center; }
+        .team-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .score-value { font-size: 2.5rem; font-weight: 800; }
+        .score-divider { font-size: 1.5rem; color: var(--text-muted); }
+
+        .grid-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; overflow-x: auto; }
+        .grid-title { font-weight: 700; margin-bottom: 1rem; text-align: center; }
+
+        .squares-grid { display: inline-block; }
+        .grid-row { display: flex; }
+        .grid-cell { width: 50px; height: 50px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.15s; position: relative; }
+        .grid-cell:hover:not(.taken):not(.header-cell) { background: rgba(139,0,0,0.1); }
+        .grid-cell.header-cell { background: var(--header-bg); font-weight: 700; cursor: default; }
+        .grid-cell.corner { background: var(--dark-bg); }
+        .grid-cell.taken { background: var(--border-color); cursor: default; }
+        .grid-cell.mine { background: rgba(46,125,50,0.2); border-color: var(--success-color); }
+        .grid-cell.house { background: rgba(128,128,128,0.2); }
+        .grid-cell.winner { background: rgba(255,215,0,0.3); border-color: gold; }
+        .grid-cell.selected { background: rgba(139,0,0,0.3); border-color: var(--accent-color); }
+        .grid-cell .tooltip { display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--text-primary); color: var(--dark-bg); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; white-space: nowrap; z-index: 10; }
+        .grid-cell:hover .tooltip { display: block; }
+
+        .team-label { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-weight: 700; font-size: 0.8rem; padding: 0.5rem; }
+        .away-label { text-align: center; font-weight: 700; font-size: 0.8rem; margin-bottom: 0.5rem; }
+
+        .purchase-panel { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-top: 1.5rem; }
+        .panel-title { font-weight: 700; margin-bottom: 1rem; }
+        .selected-count { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .total-cost { color: var(--accent-color); font-weight: 700; margin-bottom: 1rem; }
+        .buy-btn { width: 100%; padding: 0.75rem; background: var(--accent-color); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        .buy-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+        .winners-panel { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-top: 1.5rem; }
+        .winner-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); }
+        .winner-row:last-child { border-bottom: none; }
+        .winner-period { font-weight: 600; }
+        .winner-payout { color: var(--accent-color); font-weight: 700; }
+
+        .message { padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        .message.success { background: rgba(46,125,50,0.1); color: var(--success-color); }
+        .message.error { background: rgba(211,47,47,0.1); color: #d32f2f; }
+
+        @media (max-width: 600px) {
+            .grid-cell { width: 35px; height: 35px; font-size: 0.6rem; }
+            .score-display { gap: 1rem; }
+            .score-value { font-size: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <span class="nav-separator">|</span>
+            <a href="/pools.html" class="active">Pools</a>
+            <span class="nav-separator">|</span>
+            <a href="/fantasy.html">Fantasy</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div id="messageArea"></div>
+
+        <div class="pool-header" id="poolHeader">
+            <div class="pool-title" id="poolTitle">Loading...</div>
+            <div class="pool-meta" id="poolMeta"></div>
+            <div class="score-display" id="scoreDisplay" style="display: none;">
+                <div class="team-score">
+                    <div class="team-name" id="homeTeamName">Home</div>
+                    <div class="score-value" id="homeScore">0</div>
+                </div>
+                <div class="score-divider">-</div>
+                <div class="team-score">
+                    <div class="team-name" id="awayTeamName">Away</div>
+                    <div class="score-value" id="awayScore">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="away-label" id="awayLabel">Away Team</div>
+            <div style="display: flex;">
+                <div class="team-label" id="homeLabel">Home Team</div>
+                <div class="squares-grid" id="squaresGrid"></div>
+            </div>
+        </div>
+
+        <div class="purchase-panel" id="purchasePanel" style="display: none;">
+            <div class="panel-title">Purchase Squares</div>
+            <div class="selected-count"><span id="selectedCount">0</span> squares selected</div>
+            <div class="total-cost">Total: <span id="totalCost">0</span> DD</div>
+            <button class="buy-btn" id="buyBtn" disabled>Buy Squares</button>
+        </div>
+
+        <div class="winners-panel" id="winnersPanel" style="display: none;">
+            <div class="panel-title">Winners</div>
+            <div id="winnersList"></div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        const poolId = new URLSearchParams(window.location.search).get('id');
+        let pool = null;
+        let grid = [];
+        let currentUser = null;
+        let selectedSquares = [];
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display"><span>🪙</span><span>${data.user.coinBalance || 0}</span></div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                }
+            } catch (e) {}
+        }
+
+        async function loadPool() {
+            if (!poolId) {
+                showMessage('No pool ID provided', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/pools/${poolId}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!data.success) {
+                    showMessage(data.error || 'Pool not found', 'error');
+                    return;
+                }
+
+                pool = data.pool;
+                grid = data.grid;
+
+                document.getElementById('poolTitle').textContent = pool.title;
+
+                const gameDate = new Date(pool.gameTime);
+                document.getElementById('poolMeta').innerHTML = `
+                    <span>${gameDate.toLocaleDateString()} @ ${gameDate.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'})}</span>
+                    <span>${pool.squarePrice} DD/square</span>
+                    <span>${100 - pool.squaresSold} available</span>
+                    <span style="text-transform: uppercase; font-weight: 600;">${pool.status}</span>
+                `;
+
+                // Show score if game started
+                if (pool.status === 'live' || pool.status === 'completed') {
+                    document.getElementById('scoreDisplay').style.display = 'flex';
+                    document.getElementById('homeTeamName').textContent = pool.homeTeam;
+                    document.getElementById('awayTeamName').textContent = pool.awayTeam;
+                    document.getElementById('homeScore').textContent = pool.currentScore?.home || 0;
+                    document.getElementById('awayScore').textContent = pool.currentScore?.away || 0;
+                }
+
+                document.getElementById('homeLabel').textContent = pool.homeTeam;
+                document.getElementById('awayLabel').textContent = pool.awayTeam;
+
+                renderGrid();
+
+                // Show purchase panel if pool is open
+                if (pool.status === 'open' && currentUser && data.canBuyMore) {
+                    document.getElementById('purchasePanel').style.display = 'block';
+                }
+
+                // Show winners
+                if (pool.winners && pool.winners.length > 0) {
+                    document.getElementById('winnersPanel').style.display = 'block';
+                    document.getElementById('winnersList').innerHTML = pool.winners.map(w => `
+                        <div class="winner-row">
+                            <span class="winner-period">${w.period} (${w.homeScore}-${w.awayScore})</span>
+                            <span>${w.username}</span>
+                            <span class="winner-payout">${w.payout} DD</span>
+                        </div>
+                    `).join('');
+                }
+
+            } catch (error) {
+                console.error('Load pool error:', error);
+                showMessage('Failed to load pool', 'error');
+            }
+        }
+
+        function renderGrid() {
+            const container = document.getElementById('squaresGrid');
+            container.innerHTML = '';
+
+            // Get winning positions
+            const winningPositions = new Set();
+            (pool.winners || []).forEach(w => {
+                winningPositions.add(`${w.winningRow}-${w.winningCol}`);
+            });
+
+            // Header row with column numbers
+            let headerRow = '<div class="grid-row"><div class="grid-cell corner"></div>';
+            for (let col = 0; col < 10; col++) {
+                const num = pool.numbersAssigned ? pool.colNumbers[col] : '?';
+                headerRow += `<div class="grid-cell header-cell">${num}</div>`;
+            }
+            headerRow += '</div>';
+            container.innerHTML += headerRow;
+
+            // Grid rows
+            for (let row = 0; row < 10; row++) {
+                let rowHtml = '<div class="grid-row">';
+                const rowNum = pool.numbersAssigned ? pool.rowNumbers[row] : '?';
+                rowHtml += `<div class="grid-cell header-cell">${rowNum}</div>`;
+
+                for (let col = 0; col < 10; col++) {
+                    const cell = grid[row][col];
+                    let classes = ['grid-cell'];
+                    let content = '';
+                    let tooltip = '';
+
+                    if (cell.owned) {
+                        classes.push('taken');
+                        if (cell.isHouse) {
+                            classes.push('house');
+                            content = 'H';
+                            tooltip = 'House';
+                        } else {
+                            content = cell.username.substring(0, 2).toUpperCase();
+                            tooltip = cell.username;
+                            if (currentUser && cell.userId === currentUser._id) {
+                                classes.push('mine');
+                            }
+                        }
+                    }
+
+                    if (winningPositions.has(`${row}-${col}`)) {
+                        classes.push('winner');
+                    }
+
+                    if (selectedSquares.some(s => s.row === row && s.col === col)) {
+                        classes.push('selected');
+                    }
+
+                    rowHtml += `<div class="${classes.join(' ')}" data-row="${row}" data-col="${col}">
+                        ${content}
+                        ${tooltip ? `<span class="tooltip">${tooltip}</span>` : ''}
+                    </div>`;
+                }
+                rowHtml += '</div>';
+                container.innerHTML += rowHtml;
+            }
+
+            // Add click handlers
+            container.querySelectorAll('.grid-cell:not(.header-cell):not(.corner):not(.taken)').forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    toggleSquare(row, col, cell);
+                });
+            });
+        }
+
+        function toggleSquare(row, col, cell) {
+            if (pool.status !== 'open' || !currentUser) return;
+
+            const index = selectedSquares.findIndex(s => s.row === row && s.col === col);
+            if (index >= 0) {
+                selectedSquares.splice(index, 1);
+                cell.classList.remove('selected');
+            } else {
+                selectedSquares.push({ row, col });
+                cell.classList.add('selected');
+            }
+
+            updatePurchasePanel();
+        }
+
+        function updatePurchasePanel() {
+            document.getElementById('selectedCount').textContent = selectedSquares.length;
+            document.getElementById('totalCost').textContent = selectedSquares.length * pool.squarePrice;
+            document.getElementById('buyBtn').disabled = selectedSquares.length === 0;
+        }
+
+        document.getElementById('buyBtn').addEventListener('click', async () => {
+            if (selectedSquares.length === 0 || !currentUser) return;
+
+            try {
+                const response = await fetch(`/api/pools/${poolId}/buy`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ squares: selectedSquares })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    selectedSquares = [];
+                    loadPool();
+                    checkAuth(); // Refresh balance
+                } else {
+                    showMessage(data.error || 'Purchase failed', 'error');
+                }
+            } catch (error) {
+                console.error('Buy error:', error);
+                showMessage('Purchase failed', 'error');
+            }
+        });
+
+        function showMessage(text, type) {
+            const area = document.getElementById('messageArea');
+            area.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => area.innerHTML = '', 5000);
+        }
+
+        checkAuth().then(() => loadPool());
+
+        // Refresh every 30 seconds during live games
+        setInterval(() => {
+            if (pool && pool.status === 'live') {
+                loadPool();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
