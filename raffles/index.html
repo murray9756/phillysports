@@ -152,39 +152,66 @@
             color: var(--accent-color);
         }
 
-        /* Newspaper-style Navigation */
-        .header-nav {
+        /* Main Navigation with Dropdowns */
+        .main-nav {
             background: var(--header-bg);
-            border-bottom: 2px solid var(--text-primary);
-            padding: 0.5rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
         }
-        .header-nav-inner {
+        .nav-inner {
+            display: flex;
             max-width: 1400px;
             margin: 0 auto;
-            display: flex;
-            justify-content: center;
+            padding: 0 1.5rem;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0;
         }
-        .header-nav a {
-            color: var(--nav-text);
+        .nav-item {
+            padding: 0.75rem 1rem;
             font-size: 0.75rem;
             font-weight: 600;
+            color: var(--nav-text);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 0.5rem 0.75rem;
-            border-right: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: color 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
         }
-        .header-nav a:last-child {
-            border-right: none;
+        .nav-item:hover { color: var(--accent-color); }
+        .nav-dropdown { position: relative; }
+        .dropdown-trigger { display: flex; align-items: center; gap: 0.25rem; }
+        .dropdown-arrow { font-size: 0.5rem; transition: transform 0.2s; }
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--header-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 1000;
         }
-        .header-nav a:hover {
-            color: var(--accent-color);
+        .nav-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown:hover .dropdown-arrow { transform: rotate(180deg); }
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--nav-text);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
         }
-        .header-nav a.active {
-            color: var(--accent-color);
-        }
+        .dropdown-menu a:hover { background: rgba(0,0,0,0.05); color: var(--accent-color); }
+        [data-theme="dark"] .dropdown-menu a:hover { background: rgba(255,255,255,0.05); }
+        .dropdown-menu a[href*="/eagles"]:hover { color: var(--eagles-green); }
+        .dropdown-menu a[href*="/phillies"]:hover { color: var(--phillies-red); }
+        .dropdown-menu a[href*="/sixers"]:hover { color: var(--sixers-blue); }
+        .dropdown-menu a[href*="/flyers"]:hover { color: var(--flyers-orange); }
 
         .hero { background: linear-gradient(135deg, var(--accent-color), #000); padding: 2.5rem 1.5rem; text-align: center; color: #fff; }
         .hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
@@ -272,23 +299,51 @@
         </div>
     </header>
 
-    <nav class="header-nav">
-        <div class="header-nav-inner">
-            <a href="/">Home</a>
-            <a href="/eagles/">Eagles</a>
-            <a href="/phillies/">Phillies</a>
-            <a href="/sixers/">Sixers</a>
-            <a href="/flyers/">Flyers</a>
-            <a href="/esports" class="team-tab" data-team="esports">eSports</a>
-            <a href="/trivia/">Trivia</a>
-            <a href="/odds/">Odds</a>
-            <a href="/bets/">Bets</a>
-            <a href="/poker/">Poker</a>
-            <a href="/fantasy.html">Fantasy</a>
-            <a href="/pools.html">Pools</a>
-            <a href="/community/">Community</a>
-            <a href="/badges.html">Badges</a>
-            <a href="/shop/">Shop</a>
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-item">Home</a>
+            <div class="nav-dropdown">
+                <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <a href="/eagles/">Eagles</a>
+                    <a href="/phillies/">Phillies</a>
+                    <a href="/sixers/">76ers</a>
+                    <a href="/flyers/">Flyers</a>
+                </div>
+            </div>
+            <div class="nav-dropdown">
+                <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <a href="/fantasy.html">Fantasy</a>
+                    <a href="/pools.html">Pools</a>
+                    <a href="/poker.html">Poker</a>
+                    <a href="/trivia.html">Trivia</a>
+                </div>
+            </div>
+            <div class="nav-dropdown">
+                <span class="nav-item dropdown-trigger">Betting <span class="dropdown-arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <a href="/odds.html">Odds</a>
+                    <a href="/bets.html">Bets</a>
+                </div>
+            </div>
+            <div class="nav-dropdown">
+                <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <a href="/community/">Forums</a>
+                    <a href="/badges.html">Badges</a>
+                </div>
+            </div>
+            <div class="nav-dropdown">
+                <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
+                <div class="dropdown-menu">
+                    <a href="/shop/">Shop</a>
+                    <a href="/marketplace/">Marketplace</a>
+                    <a href="/raffles/">Raffles</a>
+                </div>
+            </div>
+            <a href="/esports/" class="nav-item">eSports</a>
+            <a href="/game-threads.html" class="nav-item">Live</a>
         </div>
     </nav>
 

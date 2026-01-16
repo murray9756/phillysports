@@ -136,12 +136,101 @@
         [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
         [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
 
-        .team-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
-        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
-        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 600; color: var(--nav-text); border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px; }
-        .team-tab:hover { color: var(--accent-color); }
-        .team-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); }
-        .nav-divider { width: 1px; height: 16px; background: var(--border-color); margin: 0 0.5rem; align-self: center; }
+        /* Main Navigation with Dropdowns */
+        .main-nav {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-inner {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--nav-text);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: color 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--header-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--nav-text);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--accent-color);
+        }
+
+        [data-theme="dark"] .dropdown-menu a:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .dropdown-menu a[href="/eagles"]:hover { color: var(--eagles-green); }
+        .dropdown-menu a[href="/phillies"]:hover { color: var(--phillies-red); }
+        .dropdown-menu a[href="/sixers"]:hover { color: var(--sixers-blue); }
+        .dropdown-menu a[href="/flyers"]:hover { color: var(--flyers-orange); }
         .team-hero { background: linear-gradient(135deg, var(--team-color), #000); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
         .team-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 1rem; }
@@ -255,26 +344,59 @@
                 </form>
             </div>
             <a href="/" class="header-logo"><img src="/logo.png" alt="PhillySports.com"><span class="tagline">Where the Diehards, Play Hard</span></a><div class="header-auth" id="headerAuth"><button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
-        <nav class="team-nav"><div class="team-nav-inner">
-            <a href="/" class="team-tab">Home</a>
-            <a href="/eagles" class="team-tab">Eagles</a>
-            <a href="/phillies" class="team-tab">Phillies</a>
-            <a href="/sixers" class="team-tab">76ers</a>
-            <a href="/flyers" class="team-tab active">Flyers</a>
-            <a href="/esports" class="team-tab" data-team="esports">eSports</a>
-            <span class="nav-divider"></span>
-            <a href="/community/" class="team-tab">Community</a>
-            <a href="/trivia.html" class="team-tab">Trivia</a>
-            <a href="/poker.html" class="team-tab">Poker</a>
-            <a href="/fantasy.html" class="team-tab">Fantasy</a>
-            <a href="/pools.html" class="team-tab">Pools</a>
-            <a href="/odds.html" class="team-tab">Odds</a>
-            <a href="/bets.html" class="team-tab">Bets</a>
-            <a href="/badges.html" class="team-tab">Badges</a>
-            <a href="/shop/" class="team-tab">Shop</a>
-            <a href="/marketplace/" class="team-tab">Marketplace</a>
-            <a href="/raffles/" class="team-tab">Raffles</a>
-        </div></nav>
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="/" class="nav-item">Home</a>
+
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/eagles">Eagles</a>
+                        <a href="/phillies">Phillies</a>
+                        <a href="/sixers">76ers</a>
+                        <a href="/flyers">Flyers</a>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/fantasy.html">Fantasy</a>
+                        <a href="/pools.html">Pools</a>
+                        <a href="/poker.html">Poker</a>
+                        <a href="/trivia.html">Trivia</a>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Betting <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/odds.html">Odds</a>
+                        <a href="/bets.html">Bets</a>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/community/">Forums</a>
+                        <a href="/badges.html">Badges</a>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/shop/">Shop</a>
+                        <a href="/marketplace/">Marketplace</a>
+                        <a href="/raffles/">Raffles</a>
+                    </div>
+                </div>
+
+                <a href="/esports" class="nav-item">eSports</a>
+                <a href="/game-threads.html" class="nav-item">Live</a>
+            </div>
+        </nav>
     </header>
     <div class="team-hero"><h1>Philadelphia Flyers</h1><p>News, Scores & Schedule</p></div>
     <main class="main-container">
