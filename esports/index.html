@@ -642,6 +642,24 @@
                 </div>
             </div>
 
+            <!-- Twitter/X Feed Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128038;</span>
+                    <h3 class="widget-title">@phlsports</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <a class="twitter-timeline"
+                       data-height="350"
+                       data-theme="dark"
+                       data-chrome="noheader nofooter noborders"
+                       href="https://twitter.com/phlsports">
+                       Loading tweets...
+                    </a>
+                </div>
+            </div>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-icon">&#129504;</span>
@@ -674,6 +692,18 @@
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+            // Update Twitter widget theme
+            updateTwitterTheme(newTheme);
+        }
+
+        function updateTwitterTheme(theme) {
+            const twitterTimeline = document.querySelector('.twitter-timeline');
+            if (twitterTimeline) {
+                twitterTimeline.setAttribute('data-theme', theme);
+                if (window.twttr && window.twttr.widgets) {
+                    window.twttr.widgets.load();
+                }
+            }
         }
         initTheme();
         document.addEventListener('DOMContentLoaded', () => {
