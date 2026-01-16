@@ -869,6 +869,26 @@
             color: var(--text-muted);
         }
 
+        .schedule-tickets {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .ticket-link {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.35rem;
+            background: var(--dark-bg);
+            border-radius: 3px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .ticket-link:hover {
+            background: var(--accent-color);
+            color: #fff;
+        }
+
         .schedule-team-dot {
             width: 6px;
             height: 6px;
@@ -1492,6 +1512,7 @@
                         const dotClass = teamDotClass[game.team] || '';
                         const matchup = game.isHome ? `${game.team} vs ${game.opponent}` : `${game.team} @ ${game.opponent}`;
                         const broadcast = game.broadcast ? ` - ${game.broadcast}` : '';
+                        const searchQuery = encodeURIComponent(`${game.team} ${game.opponent} tickets`);
                         return `
                             <div class="schedule-item">
                                 <div class="schedule-date">
@@ -1504,6 +1525,11 @@
                                         ${matchup}
                                     </div>
                                     <div class="schedule-time">${dateInfo.dayName} ${dateInfo.time}${broadcast}</div>
+                                    <div class="schedule-tickets">
+                                        <a href="https://www.vividseats.com/search?searchTerm=${searchQuery}" target="_blank" class="ticket-link">VividSeats</a>
+                                        <a href="https://www.stubhub.com/secure/search?q=${searchQuery}" target="_blank" class="ticket-link">StubHub</a>
+                                        <a href="https://www.ticketmaster.com/search?q=${searchQuery}" target="_blank" class="ticket-link">Ticketmaster</a>
+                                    </div>
                                 </div>
                             </div>
                         `;
