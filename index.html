@@ -1043,40 +1043,38 @@
             color: rgba(255,255,255,0.6);
         }
 
-        /* YouTube Links */
-        .youtube-search-links {
+        /* YouTube Tabs */
+        .yt-tabs {
             display: flex;
-            flex-direction: column;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .yt-link {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #fff;
-            transition: opacity 0.2s;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .yt-link:last-child {
-            border-bottom: none;
-        }
-
-        .yt-link:hover {
-            opacity: 0.85;
-        }
-
-        .yt-link .yt-icon {
+        .yt-tab {
+            flex: 1;
+            padding: 0.5rem;
             font-size: 0.7rem;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            background: var(--dark-bg);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
         }
 
-        .yt-link.eagles { background: var(--eagles-green); }
-        .yt-link.phillies { background: var(--phillies-red); }
-        .yt-link.sixers { background: var(--sixers-blue); }
-        .yt-link.flyers { background: var(--flyers-orange); }
+        .yt-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .yt-tab.active {
+            color: #fff;
+        }
+
+        .yt-tab.active[data-channel="eagles"] { background: var(--eagles-green); }
+        .yt-tab.active[data-channel="phillies"] { background: var(--phillies-red); }
+        .yt-tab.active[data-channel="sixers"] { background: var(--sixers-blue); }
+        .yt-tab.active[data-channel="flyers"] { background: var(--flyers-orange); }
 
         /* Footer */
         .footer {
@@ -1356,25 +1354,21 @@
                     <span>&#9654;</span>
                     <h3 class="widget-title">Philly Sports Videos</h3>
                 </div>
+                <div class="yt-tabs">
+                    <button class="yt-tab active" data-channel="eagles" onclick="switchYTChannel('eagles')">Eagles</button>
+                    <button class="yt-tab" data-channel="phillies" onclick="switchYTChannel('phillies')">Phillies</button>
+                    <button class="yt-tab" data-channel="sixers" onclick="switchYTChannel('sixers')">76ers</button>
+                    <button class="yt-tab" data-channel="flyers" onclick="switchYTChannel('flyers')">Flyers</button>
+                </div>
                 <div class="widget-content" style="padding:0;">
-                    <div class="youtube-search-links">
-                        <a href="https://www.youtube.com/results?search_query=Philadelphia+Eagles+highlights+news&sp=CAI" target="_blank" class="yt-link eagles">
-                            <span class="yt-icon">&#9654;</span>
-                            <span>Eagles Videos</span>
-                        </a>
-                        <a href="https://www.youtube.com/results?search_query=Philadelphia+Phillies+highlights+news&sp=CAI" target="_blank" class="yt-link phillies">
-                            <span class="yt-icon">&#9654;</span>
-                            <span>Phillies Videos</span>
-                        </a>
-                        <a href="https://www.youtube.com/results?search_query=Philadelphia+76ers+Sixers+highlights+news&sp=CAI" target="_blank" class="yt-link sixers">
-                            <span class="yt-icon">&#9654;</span>
-                            <span>76ers Videos</span>
-                        </a>
-                        <a href="https://www.youtube.com/results?search_query=Philadelphia+Flyers+highlights+news&sp=CAI" target="_blank" class="yt-link flyers">
-                            <span class="yt-icon">&#9654;</span>
-                            <span>Flyers Videos</span>
-                        </a>
-                    </div>
+                    <iframe id="ytPlayer"
+                        width="100%"
+                        height="200"
+                        src="https://www.youtube.com/embed/videoseries?list=UUDw2gPzPsxzPGfR2DKDLfdA"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
                 </div>
             </div>
 
@@ -1455,6 +1449,28 @@
     </footer>
 
     <script>
+        // YouTube channel switching
+        const ytChannels = {
+            eagles: 'https://www.youtube.com/embed/videoseries?list=UUDw2gPzPsxzPGfR2DKDLfdA',
+            phillies: 'https://www.youtube.com/embed/videoseries?list=UUt5sgdZeuJkwfitJJulnBbQ',
+            sixers: 'https://www.youtube.com/embed/videoseries?list=UUpjBOu79XdkqG3ACE_6rRxg',
+            flyers: 'https://www.youtube.com/embed/videoseries?list=UU_1ePMluNgHMOmz4bFu3sag'
+        };
+
+        function switchYTChannel(channel) {
+            const player = document.getElementById('ytPlayer');
+            const tabs = document.querySelectorAll('.yt-tab');
+
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.channel === channel) {
+                    tab.classList.add('active');
+                }
+            });
+
+            player.src = ytChannels[channel];
+        }
+
         // Team tab switching
         const teamTabs = document.querySelectorAll('.team-tab');
         teamTabs.forEach(tab => {
