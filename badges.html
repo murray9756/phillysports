@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievement Badges - PhillySports.com</title>
+    <meta name="description" content="Earn achievement badges for your activity on PhillySports.com. Unlock rewards and show off your top badge!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; text-transform: uppercase; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .header-nav { display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.5rem 1.5rem; flex-wrap: wrap; border-top: 1px solid var(--border-color); }
+        .header-nav a { color: var(--nav-text); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.75rem; border-radius: 4px; text-transform: uppercase; }
+        .header-nav a.active { color: var(--accent-color); }
+        .nav-separator { color: var(--border-color); margin: 0 0.25rem; }
+
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; }
+
+        .stats-bar { display: flex; gap: 1.5rem; background: var(--card-bg); padding: 1rem 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--accent-color); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+        .filter-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .filter-tab { padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .filter-tab:hover, .filter-tab.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); }
+
+        .category-section { margin-bottom: 2rem; }
+        .category-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .category-title span { background: var(--border-color); padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.7rem; color: var(--text-muted); }
+
+        .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+
+        .badge-card { padding: 1.25rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); transition: all 0.2s; position: relative; }
+        .badge-card:hover { border-color: var(--accent-color); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .badge-card.locked { opacity: 0.6; }
+        .badge-card.unlocked { border-color: var(--accent-color); }
+
+        .badge-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+        .badge-icon { font-size: 2.5rem; line-height: 1; }
+        .badge-icon.locked { filter: grayscale(100%); }
+        .badge-info h3 { font-size: 1rem; font-weight: 700; }
+        .badge-info p { font-size: 0.8rem; color: var(--text-muted); }
+
+        .badge-reward { position: absolute; top: 0.75rem; right: 0.75rem; background: rgba(139,0,0,0.1); color: var(--accent-color); padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.7rem; font-weight: 700; }
+
+        .rarity-badge { display: inline-block; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; margin-top: 0.25rem; }
+        .rarity-common { background: #e0e0e0; color: #666; }
+        .rarity-rare { background: #e3f2fd; color: #1976d2; }
+        .rarity-epic { background: #f3e5f5; color: #7b1fa2; }
+        .rarity-legendary { background: #fff3e0; color: #f57c00; }
+
+        [data-theme="dark"] .rarity-common { background: rgba(150,150,150,0.2); }
+        [data-theme="dark"] .rarity-rare { background: rgba(25,118,210,0.2); }
+        [data-theme="dark"] .rarity-epic { background: rgba(123,31,162,0.2); }
+        [data-theme="dark"] .rarity-legendary { background: rgba(245,124,0,0.2); }
+
+        .progress-section { margin-top: 0.75rem; }
+        .progress-bar { height: 6px; background: var(--border-color); border-radius: 3px; overflow: hidden; margin-bottom: 0.25rem; }
+        .progress-fill { height: 100%; background: var(--accent-color); transition: width 0.3s; }
+        .progress-text { font-size: 0.7rem; color: var(--text-muted); text-align: right; }
+
+        .unlocked-date { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+        .set-top-btn { margin-top: 0.75rem; padding: 0.4rem 0.75rem; background: var(--accent-color); color: #fff; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; width: 100%; }
+        .set-top-btn:hover { opacity: 0.9; }
+        .set-top-btn.current { background: var(--border-color); color: var(--text-secondary); cursor: default; }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        .login-prompt { text-align: center; padding: 2rem; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem; }
+        .login-prompt p { margin-bottom: 1rem; }
+        .login-prompt a { color: var(--accent-color); text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .badges-grid { grid-template-columns: 1fr; }
+            .stats-bar { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <span class="nav-separator">|</span>
+            <a href="/fantasy.html">Fantasy</a>
+            <span class="nav-separator">|</span>
+            <a href="/pools.html">Pools</a>
+            <span class="nav-separator">|</span>
+            <a href="/game-threads.html">Live</a>
+            <span class="nav-separator">|</span>
+            <a href="/badges.html" class="active">Badges</a>
+            <span class="nav-separator">|</span>
+            <a href="/shop.html">Shop</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Achievement Badges</h1>
+        </div>
+
+        <div class="stats-bar" id="statsBar" style="display: none;">
+            <div class="stat-item">
+                <div class="stat-value" id="unlockedCount">0</div>
+                <div class="stat-label">Unlocked</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalCount">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="topBadge">-</div>
+                <div class="stat-label">Top Badge</div>
+            </div>
+        </div>
+
+        <div id="loginPrompt" class="login-prompt" style="display: none;">
+            <p>Log in to track your badge progress and unlock achievements!</p>
+            <a href="/login.html">Login</a> or <a href="/register.html">Create Account</a>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-category="">All Badges</button>
+            <button class="filter-tab" data-category="activity">Activity</button>
+            <button class="filter-tab" data-category="milestone">Milestones</button>
+            <button class="filter-tab" data-category="team">Team</button>
+        </div>
+
+        <div id="badgesContainer">
+            <div class="empty-state">Loading badges...</div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        let currentUser = null;
+        let currentCategory = '';
+        let allBadges = [];
+        let userTopBadge = null;
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentCategory = tab.dataset.category;
+                renderBadges();
+            });
+        });
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    userTopBadge = data.user.topBadge;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display"><span>🪙</span><span>${data.user.coinBalance || 0}</span></div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    document.getElementById('statsBar').style.display = 'flex';
+                    document.getElementById('loginPrompt').style.display = 'none';
+                } else {
+                    document.getElementById('loginPrompt').style.display = 'block';
+                }
+            } catch (e) {
+                document.getElementById('loginPrompt').style.display = 'block';
+            }
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadBadges() {
+            try {
+                const response = await fetch('/api/badges', { credentials: 'include' });
+                const data = await response.json();
+
+                if (data.success) {
+                    allBadges = data.badges;
+                    document.getElementById('unlockedCount').textContent = data.unlockedCount;
+                    document.getElementById('totalCount').textContent = data.totalBadges;
+
+                    // Find top badge
+                    if (userTopBadge) {
+                        const topBadgeData = allBadges.find(b => b.id === userTopBadge);
+                        if (topBadgeData) {
+                            document.getElementById('topBadge').textContent = topBadgeData.icon;
+                        }
+                    }
+
+                    renderBadges();
+                }
+            } catch (error) {
+                console.error('Load badges error:', error);
+                document.getElementById('badgesContainer').innerHTML = '<div class="empty-state">Failed to load badges</div>';
+            }
+        }
+
+        function renderBadges() {
+            const container = document.getElementById('badgesContainer');
+            let badges = allBadges;
+
+            if (currentCategory) {
+                badges = allBadges.filter(b => b.category === currentCategory);
+            }
+
+            if (badges.length === 0) {
+                container.innerHTML = '<div class="empty-state">No badges found</div>';
+                return;
+            }
+
+            // Group by category
+            const grouped = {};
+            badges.forEach(badge => {
+                if (!grouped[badge.category]) {
+                    grouped[badge.category] = [];
+                }
+                grouped[badge.category].push(badge);
+            });
+
+            const categoryNames = {
+                activity: 'Activity Badges',
+                milestone: 'Milestone Badges',
+                team: 'Team Badges'
+            };
+
+            let html = '';
+            const order = ['activity', 'milestone', 'team'];
+
+            order.forEach(cat => {
+                if (!grouped[cat]) return;
+
+                const catBadges = grouped[cat];
+                const unlockedInCat = catBadges.filter(b => b.isUnlocked).length;
+
+                html += `
+                    <div class="category-section">
+                        <h2 class="category-title">${categoryNames[cat]} <span>${unlockedInCat}/${catBadges.length}</span></h2>
+                        <div class="badges-grid">
+                            ${catBadges.map(badge => renderBadgeCard(badge)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Add set top badge handlers
+            container.querySelectorAll('.set-top-btn:not(.current)').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const badgeId = btn.dataset.badgeId;
+                    await setTopBadge(badgeId);
+                });
+            });
+        }
+
+        function renderBadgeCard(badge) {
+            const isTop = userTopBadge === badge.id;
+            const progressPercent = badge.progress || 0;
+
+            return `
+                <div class="badge-card ${badge.isUnlocked ? 'unlocked' : 'locked'}">
+                    ${badge.ddReward > 0 ? `<div class="badge-reward">+${badge.ddReward} DD</div>` : ''}
+                    <div class="badge-header">
+                        <span class="badge-icon ${badge.isUnlocked ? '' : 'locked'}">${badge.icon}</span>
+                        <div class="badge-info">
+                            <h3>${badge.name}</h3>
+                            <p>${badge.description}</p>
+                            <span class="rarity-badge rarity-${badge.rarity}">${badge.rarity}</span>
+                        </div>
+                    </div>
+                    ${!badge.isUnlocked && currentUser ? `
+                        <div class="progress-section">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="progress-text">${badge.currentValue || 0}/${badge.targetValue} (${progressPercent}%)</div>
+                        </div>
+                    ` : ''}
+                    ${badge.isUnlocked && currentUser ? `
+                        <button class="set-top-btn ${isTop ? 'current' : ''}" data-badge-id="${badge.id}">
+                            ${isTop ? 'Current Top Badge' : 'Set as Top Badge'}
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        async function setTopBadge(badgeId) {
+            try {
+                const response = await fetch('/api/badges/set-top', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ badgeId })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    userTopBadge = badgeId;
+                    const badge = allBadges.find(b => b.id === badgeId);
+                    if (badge) {
+                        document.getElementById('topBadge').textContent = badge.icon;
+                    }
+                    renderBadges();
+                }
+            } catch (error) {
+                console.error('Set top badge error:', error);
+            }
+        }
+
+        checkAuth().then(() => loadBadges());
+    </script>
+</body>
+</html>

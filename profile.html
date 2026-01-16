@@ -170,6 +170,28 @@
         .user-handle { font-size: 0.85rem; color: var(--text-muted); }
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
 
+        /* Badge styles */
+        .top-badge { font-size: 1.25rem; cursor: help; }
+        .badge-section { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
+        .badge-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .badge-section-title { font-size: 0.9rem; font-weight: 600; }
+        .badge-section-link { font-size: 0.8rem; color: var(--sixers-blue); }
+        .badge-collection { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .badge-item { width: 48px; height: 48px; border-radius: 8px; background: var(--dark-bg); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; }
+        .badge-item:hover { transform: scale(1.1); }
+        .badge-item.locked { opacity: 0.3; filter: grayscale(100%); }
+        .badge-count { font-size: 0.8rem; color: var(--text-muted); }
+
+        .badges-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; }
+        .badge-card-mini { padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); text-align: center; }
+        .badge-card-mini.locked { opacity: 0.5; }
+        .badge-card-mini .badge-icon-large { font-size: 2rem; margin-bottom: 0.5rem; }
+        .badge-card-mini .badge-icon-large.locked { filter: grayscale(100%); }
+        .badge-card-mini .badge-name { font-size: 0.75rem; font-weight: 600; }
+        .badge-card-mini .badge-desc { font-size: 0.65rem; color: var(--text-muted); }
+        .badge-progress-mini { height: 4px; background: var(--border-color); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+        .badge-progress-mini .fill { height: 100%; background: var(--accent-color); }
+
         .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
         .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
         .empty-state-text { font-size: 1rem; }
@@ -263,6 +285,7 @@
             <a href="/fantasy.html">Fantasy</a><span class="separator">|</span>
             <a href="/pools.html">Pools</a><span class="separator">|</span>
             <a href="/community.html">Community</a><span class="separator">|</span>
+            <a href="/badges.html">Badges</a><span class="separator">|</span>
             <a href="/shop.html">Shop</a>
         </nav>
     </header>
@@ -284,6 +307,7 @@
                     </div>
                     <div class="profile-info">
                         <h1 class="profile-name">
+                            <span class="top-badge" id="topBadgeIcon" style="display: none;" title=""></span>
                             <span id="displayName">Loading...</span>
                             <span class="team-badge" id="teamBadge" style="display: none;">
                                 <span class="team-dot"></span>
@@ -305,7 +329,21 @@
                                 <div class="stat-value" id="savedCount">0</div>
                                 <div class="stat-label">Saved</div>
                             </div>
+                            <div class="stat">
+                                <div class="stat-value" id="badgeCount">0</div>
+                                <div class="stat-label">Badges</div>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="badge-section" id="badgeSection" style="display: none;">
+                    <div class="badge-section-header">
+                        <span class="badge-section-title">Badge Collection</span>
+                        <a href="/badges.html" class="badge-section-link">View All Badges</a>
+                    </div>
+                    <div class="badge-collection" id="badgeCollection">
+                        <!-- Badges will be loaded here -->
                     </div>
                 </div>
 
@@ -346,6 +384,7 @@
 
             <div class="tabs" id="profileTabs">
                 <button class="tab active" data-tab="saved">Saved Articles</button>
+                <button class="tab" data-tab="badges">Badges</button>
                 <button class="tab" data-tab="followers">Followers</button>
                 <button class="tab" data-tab="following">Following</button>
             </div>
@@ -356,6 +395,19 @@
                         <div class="empty-state">
                             <div class="empty-state-icon">📰</div>
                             <p class="empty-state-text">No saved articles yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-badges">
+                <div class="card">
+                    <div id="badgesTab">
+                        <div class="badges-grid-full" id="badgesGrid">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🏆</div>
+                                <p class="empty-state-text">Loading badges...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -712,6 +764,7 @@
                 tab.classList.add('active');
                 document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
 
+                if (tab.dataset.tab === 'badges') loadBadgesTab();
                 if (tab.dataset.tab === 'followers') loadFollowers();
                 if (tab.dataset.tab === 'following') loadFollowing();
             });
@@ -783,10 +836,80 @@
             `;
         }
 
+        // Badge functions
+        let userBadges = [];
+
+        async function loadBadges() {
+            if (!profileUser) return;
+
+            try {
+                const response = await fetch(`/api/badges/user/${profileUser._id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    userBadges = data.badges;
+                    document.getElementById('badgeCount').textContent = data.unlockedCount;
+
+                    // Show top badge
+                    if (data.user.topBadge) {
+                        const topBadgeEl = document.getElementById('topBadgeIcon');
+                        topBadgeEl.textContent = data.user.topBadge.icon;
+                        topBadgeEl.title = data.user.topBadge.name;
+                        topBadgeEl.style.display = 'inline';
+                    }
+
+                    // Show badge collection preview
+                    const unlockedBadges = userBadges.filter(b => b.isUnlocked);
+                    if (unlockedBadges.length > 0) {
+                        document.getElementById('badgeSection').style.display = 'block';
+                        const container = document.getElementById('badgeCollection');
+                        container.innerHTML = unlockedBadges.slice(0, 10).map(badge => `
+                            <div class="badge-item" title="${badge.name}: ${badge.description}">
+                                ${badge.icon}
+                            </div>
+                        `).join('');
+
+                        if (unlockedBadges.length > 10) {
+                            container.innerHTML += `<span class="badge-count">+${unlockedBadges.length - 10} more</span>`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Load badges error:', error);
+            }
+        }
+
+        async function loadBadgesTab() {
+            const container = document.getElementById('badgesGrid');
+
+            if (userBadges.length === 0) {
+                await loadBadges();
+            }
+
+            if (userBadges.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏆</div><p class="empty-state-text">No badges available</p></div>';
+                return;
+            }
+
+            container.innerHTML = userBadges.map(badge => `
+                <div class="badge-card-mini ${badge.isUnlocked ? '' : 'locked'}">
+                    <div class="badge-icon-large ${badge.isUnlocked ? '' : 'locked'}">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                    <div class="badge-desc">${badge.description}</div>
+                    ${!badge.isUnlocked && badge.progress !== undefined ? `
+                        <div class="badge-progress-mini">
+                            <div class="fill" style="width: ${badge.progress || 0}%"></div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
         // Initialize
         async function init() {
             await checkAuth();
             await loadProfile();
+            loadBadges();
         }
 
         init();
