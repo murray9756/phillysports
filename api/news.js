@@ -247,27 +247,59 @@ export default async function handler(req, res) {
 
         // Fetch Youth Sports news (only when youth filter is active)
         if (teamFilter === 'youth') {
-            // Buying Sandlot RSS Feed
+            // Buying Sandlot - Scrape from sitemap and post pages (beehiiv newsletter)
             try {
-                const youthRes = await fetch('https://buyingsandlot.com/feed/');
-                const youthXml = await youthRes.text();
-                const youthItems = parseRSS(youthXml);
+                // Fetch sitemap to get post URLs and dates
+                const sitemapRes = await fetch('https://www.buyingsandlot.com/sitemap.xml');
+                const sitemapXml = await sitemapRes.text();
 
-                youthItems.slice(0, 15).forEach(item => {
-                    articles.push({
-                        team: 'Youth Sports',
-                        sport: 'Youth Sports',
-                        teamColor: '#00A4E8',
-                        tagClass: 'tag-youth',
-                        headline: item.title,
-                        description: item.description,
-                        link: item.link,
-                        image: item.image,
-                        published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
-                        source: 'Buying Sandlot'
-                    });
-                });
-            } catch (e) { console.error('Youth Sports RSS error:', e); }
+                // Parse sitemap for post URLs and lastmod dates
+                const postMatches = sitemapXml.matchAll(/<loc>(https:\/\/www\.buyingsandlot\.com\/p\/[^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g);
+                const posts = [];
+                for (const match of postMatches) {
+                    posts.push({ url: match[1], date: match[2] });
+                }
+
+                // Sort by date (most recent first) and take top 15
+                posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const recentPosts = posts.slice(0, 15);
+
+                // Fetch metadata from each post page (in parallel, max 5 at a time)
+                const fetchPostMeta = async (post) => {
+                    try {
+                        const postRes = await fetch(post.url);
+                        const postHtml = await postRes.text();
+
+                        // Extract meta tags
+                        const titleMatch = postHtml.match(/<meta property="og:title" content="([^"]+)"/);
+                        const descMatch = postHtml.match(/<meta property="og:description" content="([^"]+)"/);
+                        const imageMatch = postHtml.match(/<meta property="og:image" content="([^"]+)"/);
+
+                        if (titleMatch) {
+                            return {
+                                team: 'Youth Sports',
+                                sport: 'Youth Sports',
+                                teamColor: '#00A4E8',
+                                tagClass: 'tag-youth',
+                                headline: titleMatch[1],
+                                description: descMatch ? descMatch[1] : '',
+                                link: post.url,
+                                image: imageMatch ? imageMatch[1] : null,
+                                published: new Date(post.date).toISOString(),
+                                source: 'Buying Sandlot'
+                            };
+                        }
+                    } catch (e) { console.error('Post fetch error:', e); }
+                    return null;
+                };
+
+                // Fetch posts in batches of 5
+                for (let i = 0; i < recentPosts.length; i += 5) {
+                    const batch = recentPosts.slice(i, i + 5);
+                    const results = await Promise.all(batch.map(fetchPostMeta));
+                    results.filter(r => r !== null).forEach(article => articles.push(article));
+                }
+            } catch (e) { console.error('Youth Sports scrape error:', e); }
         }
 
         // Fetch College Basketball news (Philly Big 5 + Drexel)

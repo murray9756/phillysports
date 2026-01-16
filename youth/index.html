@@ -280,6 +280,9 @@
         .content-section { display: flex; flex-direction: column; gap: 1rem; }
         .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
         .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+        .news-attribution { font-size: 0.75rem; color: var(--text-muted); text-decoration: none; padding: 0.25rem 0.5rem; border-radius: 4px; background: var(--card-bg); border: 1px solid var(--border-color); transition: all 0.2s; }
+        .news-attribution:hover { color: var(--team-color); border-color: var(--team-color); }
+        .news-attribution strong { color: var(--text-secondary); }
 
         .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
         .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
@@ -511,6 +514,7 @@
         <div class="content-section">
             <div class="section-header">
                 <h2 class="section-title">Latest Youth Sports News</h2>
+                <a href="https://www.buyingsandlot.com" target="_blank" class="news-attribution">Powered by <strong>Buying Sandlot</strong> &#8599;</a>
             </div>
             <div class="carousel" id="newsCarousel">
                 <div class="carousel-inner" id="carouselInner">
