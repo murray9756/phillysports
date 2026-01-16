@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Threads - PhillySports.com</title>
+    <meta name="description" content="Live game discussion threads for Philadelphia Eagles, Phillies, 76ers, and Flyers games.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+            --widget-header-bg: #e8e3db;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-auth a:hover { background: rgba(0,0,0,0.05); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; line-height: 1; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .header-nav { display: flex; align-items: center; justify-content: center; gap: 0.25rem; padding: 0.5rem 1.5rem; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; border-top: 1px solid var(--border-color); }
+        .header-nav a { color: var(--nav-text); font-size: 0.8rem; font-weight: 600; padding: 0.4rem 0.75rem; border-radius: 4px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-nav a:hover { background: rgba(0,0,0,0.05); color: var(--accent-color); }
+        .header-nav a.active { color: var(--accent-color); }
+        .nav-separator { color: var(--border-color); margin: 0 0.25rem; }
+
+        .main-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: var(--accent-color);
+            color: #fff;
+            border-color: var(--accent-color);
+        }
+
+        .threads-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .thread-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .thread-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .thread-emoji {
+            font-size: 2.5rem;
+        }
+
+        .thread-info {
+            flex: 1;
+        }
+
+        .thread-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .thread-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .thread-score {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .score-display {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .score-status {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+
+        .status-live {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .status-pre-game {
+            color: var(--text-muted);
+        }
+
+        .status-post-game {
+            color: var(--text-secondary);
+        }
+
+        .thread-comments {
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .comments-count {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .comments-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state p {
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .page-header { flex-direction: column; gap: 1rem; }
+            .thread-card { flex-direction: column; text-align: center; }
+            .thread-meta { justify-content: center; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="/">Home</a>
+            <span class="nav-separator">|</span>
+            <a href="/eagles/">Eagles</a>
+            <span class="nav-separator">|</span>
+            <a href="/phillies/">Phillies</a>
+            <span class="nav-separator">|</span>
+            <a href="/sixers/">Sixers</a>
+            <span class="nav-separator">|</span>
+            <a href="/flyers/">Flyers</a>
+            <span class="nav-separator">|</span>
+            <a href="/trivia.html">Trivia</a>
+            <span class="nav-separator">|</span>
+            <a href="/odds.html">Odds</a>
+            <span class="nav-separator">|</span>
+            <a href="/bets.html">Bets</a>
+            <span class="nav-separator">|</span>
+            <a href="/poker.html">Poker</a>
+            <span class="nav-separator">|</span>
+            <a href="/community/">Community</a>
+            <span class="nav-separator">|</span>
+            <a href="/game-threads.html" class="active">Live</a>
+            <span class="nav-separator">|</span>
+            <a href="/shop.html">Shop</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">🔴 Game Threads</h1>
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-status="">All</button>
+                <button class="filter-tab" data-status="live">Live</button>
+                <button class="filter-tab" data-status="pre-game">Upcoming</button>
+                <button class="filter-tab" data-status="post-game">Completed</button>
+            </div>
+        </div>
+
+        <div class="threads-list" id="threadsList">
+            <div class="empty-state">Loading game threads...</div>
+        </div>
+    </main>
+
+    <script>
+        // Dark Mode
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        const teamEmojis = {
+            eagles: '🦅',
+            phillies: '⚾',
+            sixers: '🏀',
+            flyers: '🏒'
+        };
+
+        let currentStatus = '';
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentStatus = tab.dataset.status;
+                loadThreads();
+            });
+        });
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">
+                            <span>🪙</span>
+                            <span>${data.user.coinBalance || 0}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadThreads() {
+            const container = document.getElementById('threadsList');
+
+            try {
+                let url = '/api/game-threads?limit=20';
+                if (currentStatus) {
+                    url += `&status=${currentStatus}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data.success || !data.threads || data.threads.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>No game threads found</p>
+                            <p style="font-size: 0.9rem;">Threads are automatically created when Philly teams play!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.threads.map(thread => {
+                    const emoji = teamEmojis[thread.team] || '🏈';
+                    const home = thread.currentScore?.home || 0;
+                    const away = thread.currentScore?.away || 0;
+                    const period = thread.currentScore?.period || 'Pre-game';
+
+                    const gameDate = new Date(thread.gameTime);
+                    const dateStr = gameDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    const timeStr = gameDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+                    return `
+                        <a href="/game-thread.html?id=${thread._id}" class="thread-card">
+                            <span class="thread-emoji">${emoji}</span>
+                            <div class="thread-info">
+                                <div class="thread-title">${thread.title}</div>
+                                <div class="thread-meta">
+                                    <span>${dateStr} · ${timeStr}</span>
+                                    <span>${thread.sport}</span>
+                                </div>
+                            </div>
+                            <div class="thread-score">
+                                <div class="score-display">${home} - ${away}</div>
+                                <div class="score-status status-${thread.status}">${thread.status === 'live' ? '● LIVE' : period}</div>
+                            </div>
+                            <div class="thread-comments">
+                                <div class="comments-count">${thread.commentCount || 0}</div>
+                                <div class="comments-label">💬</div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Load threads error:', error);
+                container.innerHTML = '<div class="empty-state">Failed to load threads</div>';
+            }
+        }
+
+        checkAuth();
+        loadThreads();
+
+        // Refresh every 30 seconds
+        setInterval(loadThreads, 30000);
+    </script>
+</body>
+</html>
