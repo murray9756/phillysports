@@ -19,13 +19,14 @@
             --phillies-red: #E81828;
             --sixers-blue: #006BB6;
             --flyers-orange: #F74902;
-            --dark-bg: #f0ebe3;
+            --dark-bg: #faf9f6;
             --card-bg: #ffffff;
-            --border-color: #e0dcd4;
+            --border-color: #e0e0e0;
             --text-primary: #1a1a1a;
             --text-secondary: #555555;
             --text-muted: #888888;
-            --header-bg: #2c2c2c;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
             --accent-color: #8b0000;
         }
 
@@ -33,25 +34,70 @@
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
         a { color: inherit; text-decoration: none; }
 
-        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); position: sticky; top: 0; z-index: 1000; }
-        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
-        .header-logo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
-        .header-logo img { width: 120px; height: 120px; border-radius: 12px; }
-        .header-logo .tagline { font-size: 0.85rem; font-weight: 500; color: #ffd700; font-style: italic; }
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo .site-name { font-size: 1.1rem; font-weight: 700; color: var(--nav-text); }
 
-        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
-        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
-        .header-auth a:hover { background: rgba(255,255,255,0.1); }
-        .header-auth .auth-btn { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); }
-        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+        .header-search {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-        .team-nav { background: var(--header-bg); border-bottom: 1px solid #444; }
-        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
-        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.85rem; font-weight: 600; color: #aaaaaa; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
-        .team-tab:hover { color: #ffffff; }
-        .nav-divider { width: 1px; height: 20px; background: #555; margin: 0.75rem 0.5rem; }
-        .feature-tab { color: #ffd700 !important; }
-        .feature-tab:hover, .feature-tab.active { border-bottom-color: #ffd700 !important; }
+        .header-search form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-search input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #ffffff;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            width: 180px;
+            font-family: inherit;
+        }
+
+        .header-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-search button {
+            padding: 0.5rem 0.75rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .header-search button:hover {
+            opacity: 0.9;
+        }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
+        .header-auth a:hover { background: rgba(0,0,0,0.05); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255, 215, 0, 0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #b8860b; }
+
+        .main-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
+        .main-nav-inner { display: flex; justify-content: center; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0.5rem 1.5rem; flex-wrap: wrap; }
+        .main-nav a { padding: 0.5rem 0.75rem; font-size: 0.8rem; font-weight: 600; color: var(--nav-text); text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
+        .main-nav a:hover { color: var(--phillies-red); }
+        .main-nav a.active { color: var(--phillies-red); }
+        .main-nav .nav-sep { color: var(--border-color); padding: 0 0.25rem; }
 
         .main-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
 
@@ -114,35 +160,51 @@
         @media (max-width: 768px) {
             .post-title { font-size: 1.25rem; }
             .post-author-info { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .header-search { display: none; }
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-top">
+            <div class="header-search">
+                <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <input type="text" name="q" placeholder="Search the web..." required>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
             <a href="/" class="header-logo">
                 <img src="/logo.png" alt="PhillySports.com">
-                <span class="tagline">For the Diehard Fan</span>
+                <span class="site-name">PhillySports.com</span>
             </a>
             <div class="header-auth" id="authSection">
-                <a href="/login.html">Sign In</a>
-                <a href="/register.html" class="auth-btn">Join Free</a>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
             </div>
         </div>
-        <nav class="team-nav">
-            <div class="team-nav-inner">
-                <a href="/" class="team-tab">All Teams</a>
-                <a href="/eagles/" class="team-tab" data-team="eagles">Eagles</a>
-                <a href="/phillies/" class="team-tab" data-team="phillies">Phillies</a>
-                <a href="/sixers/" class="team-tab" data-team="sixers">76ers</a>
-                <a href="/flyers/" class="team-tab" data-team="flyers">Flyers</a>
-                <div class="nav-divider"></div>
-                <a href="/community/" class="team-tab feature-tab active">Community</a>
-                <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
-                <a href="/poker.html" class="team-tab feature-tab">Poker</a>
-                <a href="/predictions.html" class="team-tab feature-tab">Predictions</a>
-                <a href="/raffles/" class="team-tab feature-tab">Raffles</a>
-                <a href="/shop/" class="team-tab feature-tab">Shop</a>
+        <nav class="main-nav">
+            <div class="main-nav-inner">
+                <a href="/">Home</a>
+                <span class="nav-sep">|</span>
+                <a href="/eagles/">Eagles</a>
+                <span class="nav-sep">|</span>
+                <a href="/phillies/">Phillies</a>
+                <span class="nav-sep">|</span>
+                <a href="/sixers/">Sixers</a>
+                <span class="nav-sep">|</span>
+                <a href="/flyers/">Flyers</a>
+                <span class="nav-sep">|</span>
+                <a href="/trivia.html">Trivia</a>
+                <span class="nav-sep">|</span>
+                <a href="/odds/">Odds</a>
+                <span class="nav-sep">|</span>
+                <a href="/bets/">Bets</a>
+                <span class="nav-sep">|</span>
+                <a href="/poker.html">Poker</a>
+                <span class="nav-sep">|</span>
+                <a href="/community/" class="active">Community</a>
+                <span class="nav-sep">|</span>
+                <a href="/shop/">Shop</a>
             </div>
         </nav>
     </header>

@@ -8,13 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --dark-bg: #f0ebe3;
+            --dark-bg: #faf9f6;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --border-color: #e0e0e0;
             --card-bg: #ffffff;
-            --border-color: #e0dcd4;
             --text-primary: #1a1a1a;
             --text-secondary: #555555;
             --text-muted: #888888;
-            --header-bg: #2c2c2c;
             --accent-color: #8b0000;
             --success: #22c55e;
         }
@@ -23,13 +24,149 @@
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
         a { color: inherit; text-decoration: none; }
 
-        .header { background: var(--header-bg); border-bottom: 3px solid var(--accent-color); }
-        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
-        .header-logo img { width: 60px; height: 60px; border-radius: 12px; }
-        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
-        .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; }
-        .header-auth .auth-btn { background: var(--accent-color); }
-        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
+        /* Newspaper-style Header */
+        .header {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+        }
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+        }
+        .header-logo span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .header-search {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header-search form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-search input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #ffffff;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            width: 180px;
+            font-family: inherit;
+        }
+
+        .header-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-search button {
+            padding: 0.5rem 0.75rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .header-search button:hover {
+            opacity: 0.9;
+        }
+
+        .header-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .header-auth a {
+            color: var(--nav-text);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+        .header-auth a:hover {
+            background: rgba(0,0,0,0.05);
+        }
+        .header-auth .auth-btn {
+            background: var(--accent-color);
+            color: #fff;
+            padding: 0.5rem 1rem;
+        }
+        .header-auth .auth-btn:hover {
+            background: #6b0000;
+        }
+        .coin-display {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(139,0,0,0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--accent-color);
+        }
+
+        /* Newspaper-style Navigation */
+        .header-nav {
+            background: var(--header-bg);
+            border-bottom: 2px solid var(--text-primary);
+            padding: 0.5rem 1.5rem;
+        }
+        .header-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+        .header-nav a {
+            color: var(--nav-text);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.5rem 0.75rem;
+            border-right: 1px solid var(--border-color);
+        }
+        .header-nav a:last-child {
+            border-right: none;
+        }
+        .header-nav a:hover {
+            color: var(--accent-color);
+        }
+        .header-nav a.active {
+            color: var(--accent-color);
+        }
 
         .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
 
@@ -37,7 +174,7 @@
         .breadcrumb a { color: var(--accent-color); font-size: 0.9rem; }
 
         .raffle-detail { display: grid; grid-template-columns: 1fr 350px; gap: 2rem; }
-        @media (max-width: 768px) { .raffle-detail { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { .header-search { display: none; } .raffle-detail { grid-template-columns: 1fr; } }
 
         .raffle-image { width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, var(--accent-color), #333); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 5rem; overflow: hidden; }
         .raffle-image img { width: 100%; height: 100%; object-fit: cover; }
@@ -100,9 +237,16 @@
 </head>
 <body>
     <header class="header">
-        <div class="header-top">
+        <div class="header-inner" style="position: relative;">
+            <div class="header-search">
+                <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <input type="text" name="q" placeholder="Search the web..." required>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
             <a href="/" class="header-logo">
                 <img src="/logo.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
             </a>
             <div class="header-auth" id="headerAuth">
                 <a href="/login.html">Login</a>
@@ -111,9 +255,25 @@
         </div>
     </header>
 
+    <nav class="header-nav">
+        <div class="header-nav-inner">
+            <a href="/">Home</a>
+            <a href="/eagles/">Eagles</a>
+            <a href="/phillies/">Phillies</a>
+            <a href="/sixers/">Sixers</a>
+            <a href="/flyers/">Flyers</a>
+            <a href="/trivia/">Trivia</a>
+            <a href="/odds/">Odds</a>
+            <a href="/bets/">Bets</a>
+            <a href="/poker/">Poker</a>
+            <a href="/community/">Community</a>
+            <a href="/shop/">Shop</a>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="breadcrumb">
-            <a href="/raffles/">← Back to Raffles</a>
+            <a href="/raffles/">Back to Raffles</a>
         </div>
 
         <div id="messageArea"></div>
@@ -168,7 +328,7 @@
             if (isCompleted) {
                 purchaseSection = `
                     <div class="winner-banner">
-                        <h3>🏆 Winner Announced!</h3>
+                        <h3>Winner Announced!</h3>
                         <div class="winner-name">${escapeHtml(raffle.winnerUsername || 'Unknown')}</div>
                     </div>
                     <div class="stats-row">
@@ -207,7 +367,7 @@
                         <div class="quantity-selector">
                             <label>Number of Tickets</label>
                             <div class="quantity-row">
-                                <button class="qty-btn" onclick="changeQty(-1)">−</button>
+                                <button class="qty-btn" onclick="changeQty(-1)">-</button>
                                 <input type="number" class="qty-input" id="qtyInput" value="1" min="1" onchange="updateQty()">
                                 <button class="qty-btn" onclick="changeQty(1)">+</button>
                             </div>
@@ -240,7 +400,7 @@
                         <h4>Your Tickets (${userTickets.length})</h4>
                         <div class="ticket-list">
                             ${userTickets.map(t => `
-                                <span class="ticket-badge ${t.isWinner ? 'winner' : ''}">#${t.ticketNumber}${t.isWinner ? ' 🏆' : ''}</span>
+                                <span class="ticket-badge ${t.isWinner ? 'winner' : ''}">#${t.ticketNumber}${t.isWinner ? ' Winner' : ''}</span>
                             `).join('')}
                         </div>
                     </div>
@@ -251,7 +411,7 @@
                 <div class="raffle-detail">
                     <div class="raffle-main">
                         <div class="raffle-image">
-                            ${img ? `<img src="${img}" alt="${escapeHtml(raffle.title)}">` : '🎁'}
+                            ${img ? `<img src="${img}" alt="${escapeHtml(raffle.title)}">` : ''}
                         </div>
                         <div class="raffle-info">
                             ${raffle.team ? `<span class="raffle-team">${raffle.team}</span>` : ''}
@@ -390,7 +550,7 @@
                     currentUser = data.user;
                     const h = document.getElementById('headerAuth');
                     h.innerHTML = `
-                        <div class="coin-display" title="Diehard Dollars"><span>🪙</span><span>${data.user.coinBalance || 0}</span></div>
+                        <div class="coin-display" title="Diehard Dollars"><span>DD</span><span>${data.user.coinBalance || 0}</span></div>
                         <a href="/profile.html">${data.user.username}</a>
                     `;
                 }
