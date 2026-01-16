@@ -69,6 +69,13 @@ export default async function handler(req, res) {
         if (text.includes('esport') || text.includes('e-sport') || text.includes('league of legends') || text.includes('valorant') || text.includes('overwatch') || text.includes('counter-strike') || text.includes('cs2') || text.includes('dota')) return { team: 'eSports', color: '#9146FF', tagClass: 'tag-esports' };
         // Youth Sports detection
         if (text.includes('youth') || text.includes('sandlot') || text.includes('little league') || text.includes('high school') || text.includes('middle school') || text.includes('pee wee') || text.includes('rec league')) return { team: 'Youth Sports', color: '#00A4E8', tagClass: 'tag-youth' };
+        // College Basketball detection (Philly Big 5 + Drexel)
+        if (text.includes('villanova') || (text.includes('wildcats') && text.includes('basketball'))) return { team: 'Villanova', color: '#003366', tagClass: 'tag-villanova' };
+        if ((text.includes('penn ') || text.includes('upenn') || text.includes('quakers')) && !text.includes('penn state')) return { team: 'Penn', color: '#011F5B', tagClass: 'tag-penn' };
+        if (text.includes('la salle') || text.includes('lasalle') || text.includes('explorers')) return { team: 'La Salle', color: '#00833E', tagClass: 'tag-lasalle' };
+        if (text.includes('drexel') || (text.includes('dragons') && text.includes('basketball'))) return { team: 'Drexel', color: '#07294D', tagClass: 'tag-drexel' };
+        if (text.includes('st. joseph') || text.includes('saint joseph') || text.includes('st joseph') || (text.includes('hawks') && text.includes('basketball'))) return { team: 'St. Josephs', color: '#9E1B32', tagClass: 'tag-stjosephs' };
+        if (text.includes('temple') || (text.includes('owls') && text.includes('basketball'))) return { team: 'Temple', color: '#9D2235', tagClass: 'tag-temple' };
         return { team: 'Philly', color: '#004C54', tagClass: 'tag-eagles' };
     }
 
@@ -261,6 +268,61 @@ export default async function handler(req, res) {
                     });
                 });
             } catch (e) { console.error('Youth Sports RSS error:', e); }
+        }
+
+        // Fetch College Basketball news (Philly Big 5 + Drexel)
+        const collegeTeams = ['villanova', 'penn', 'lasalle', 'drexel', 'stjosephs', 'temple'];
+        if (collegeTeams.includes(teamFilter)) {
+            const collegeTeamConfig = {
+                'villanova': { name: 'Villanova', id: 2678, color: '#003366', mascot: 'wildcats' },
+                'penn': { name: 'Penn', id: 219, color: '#011F5B', mascot: 'quakers' },
+                'lasalle': { name: 'La Salle', id: 2325, color: '#00833E', mascot: 'explorers' },
+                'drexel': { name: 'Drexel', id: 2182, color: '#07294D', mascot: 'dragons' },
+                'stjosephs': { name: 'St. Josephs', id: 2603, color: '#9E1B32', mascot: 'hawks' },
+                'temple': { name: 'Temple', id: 218, color: '#9D2235', mascot: 'owls' }
+            };
+            const config = collegeTeamConfig[teamFilter];
+
+            // Fetch ESPN college basketball news
+            try {
+                const cbRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/news?limit=50');
+                const cbData = await cbRes.json();
+                const cbArticles = (cbData.articles || []).filter(article => {
+                    const text = `${article.headline} ${article.description || ''}`.toLowerCase();
+                    return text.includes(teamFilter) || text.includes(config.name.toLowerCase()) || text.includes(config.mascot);
+                }).slice(0, 8).map(article => ({
+                    team: config.name,
+                    sport: 'College Basketball',
+                    teamColor: config.color,
+                    tagClass: `tag-${teamFilter}`,
+                    headline: article.headline,
+                    description: article.description || '',
+                    link: article.links?.web?.href || article.links?.mobile?.href || '#',
+                    image: article.images?.[0]?.url || null,
+                    published: article.published || new Date().toISOString(),
+                    source: 'ESPN College Basketball'
+                }));
+                articles.push(...cbArticles);
+            } catch (e) { console.error('ESPN College Basketball news error:', e); }
+
+            // Fetch team-specific ESPN news
+            try {
+                const teamRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${config.id}/news?limit=20`);
+                const teamData = await teamRes.json();
+                const teamArticles = (teamData.articles || []).slice(0, 10).map(article => ({
+                    team: config.name,
+                    sport: 'College Basketball',
+                    teamColor: config.color,
+                    tagClass: `tag-${teamFilter}`,
+                    headline: article.headline,
+                    description: article.description || '',
+                    link: article.links?.web?.href || article.links?.mobile?.href || '#',
+                    image: article.images?.[0]?.url || null,
+                    published: article.published || new Date().toISOString(),
+                    source: 'ESPN'
+                }));
+                articles.push(...teamArticles);
+            } catch (e) { console.error(`ESPN ${config.name} news error:`, e); }
         }
 
         // Fetch Crossing Broad RSS feed
@@ -458,7 +520,13 @@ export default async function handler(req, res) {
                 'union': 'Union',
                 'esports': 'eSports',
                 'fusion': 'Fusion',
-                'youth': 'Youth Sports'
+                'youth': 'Youth Sports',
+                'villanova': 'Villanova',
+                'penn': 'Penn',
+                'lasalle': 'La Salle',
+                'drexel': 'Drexel',
+                'stjosephs': 'St. Josephs',
+                'temple': 'Temple'
             };
             const targetTeam = teamMap[teamFilter];
             if (targetTeam) {

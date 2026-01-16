@@ -166,6 +166,44 @@ export default async function handler(req, res) {
             }
         } catch (e) { console.error('MLS fetch error:', e); }
 
+        // College Basketball team configs
+        const collegeTeams = {
+            'villanova': { id: '2678', name: 'Villanova', color: '#003366', abbr: 'VILL' },
+            'penn': { id: '219', name: 'Penn', color: '#011F5B', abbr: 'PENN' },
+            'lasalle': { id: '2325', name: 'La Salle', color: '#00833E', abbr: 'LAS' },
+            'drexel': { id: '2182', name: 'Drexel', color: '#07294D', abbr: 'DREX' },
+            'stjosephs': { id: '2603', name: 'St. Josephs', color: '#9E1B32', abbr: 'SJU' },
+            'temple': { id: '218', name: 'Temple', color: '#9D2235', abbr: 'TEM' }
+        };
+
+        // Fetch college basketball scores if requested
+        if (teamFilter && collegeTeams[teamFilter]) {
+            const college = collegeTeams[teamFilter];
+            try {
+                const cbRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${college.id}/schedule`);
+                const cbData = await cbRes.json();
+                const completedGames = cbData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
+                const recentGame = completedGames[completedGames.length - 1];
+                if (recentGame) {
+                    const comp = recentGame.competitions[0];
+                    const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
+                    const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
+                    scores.push({
+                        sport: 'NCAAB',
+                        team: college.name,
+                        teamColor: college.color,
+                        homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
+                        homeScore: getScore(homeTeam?.score),
+                        awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
+                        awayScore: getScore(awayTeam?.score),
+                        isHome: homeTeam?.team?.id === college.id,
+                        date: recentGame.date,
+                        link: getGameLink(recentGame)
+                    });
+                }
+            } catch (e) { console.error('College basketball fetch error:', e); }
+        }
+
         // Filter by team if specified
         let filteredScores = scores;
         if (teamFilter) {
@@ -175,7 +213,14 @@ export default async function handler(req, res) {
                 'sixers': '76ers',
                 '76ers': '76ers',
                 'flyers': 'Flyers',
-                'union': 'Union'
+                'union': 'Union',
+                // College teams
+                'villanova': 'Villanova',
+                'penn': 'Penn',
+                'lasalle': 'La Salle',
+                'drexel': 'Drexel',
+                'stjosephs': 'St. Josephs',
+                'temple': 'Temple'
             };
             const targetTeam = teamMap[teamFilter];
             if (targetTeam) {

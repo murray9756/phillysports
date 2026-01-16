@@ -13,27 +13,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary Meta Tags -->
-    <title>Philadelphia Eagles News, Scores & Schedule | PhillySports.com</title>
-    <meta name="title" content="Philadelphia Eagles News, Scores & Schedule | PhillySports.com">
-    <meta name="description" content="Get the latest Philadelphia Eagles news, live scores, game schedule, roster updates, and NFL standings. Your source for Eagles football coverage.">
-    <meta name="keywords" content="Philadelphia Eagles, Eagles, Eagles news, Eagles scores, Eagles schedule, Eagles roster, NFL, football, Philly Eagles, Eagles game, Lincoln Financial Field">
+    <title>Temple Owls Basketball News, Scores & Schedule | PhillySports.com</title>
+    <meta name="title" content="Temple Owls Basketball News, Scores & Schedule | PhillySports.com">
+    <meta name="description" content="Get the latest Temple Owls basketball news, live scores, game schedule, roster updates, and AAC standings. Your source for Owls basketball coverage.">
+    <meta name="keywords" content="Temple Owls, Temple basketball, AAC, American Athletic Conference, college basketball, Philly basketball, Liacouras Center">
     <meta name="author" content="PhillySports.com">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://phillysports.com/eagles/">
+    <link rel="canonical" href="https://phillysports.com/temple/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://phillysports.com/eagles/">
-    <meta property="og:title" content="Philadelphia Eagles News, Scores & Schedule | PhillySports.com">
-    <meta property="og:description" content="Get the latest Philadelphia Eagles news, live scores, game schedule, roster updates, and NFL standings.">
+    <meta property="og:url" content="https://phillysports.com/temple/">
+    <meta property="og:title" content="Temple Owls Basketball News, Scores & Schedule | PhillySports.com">
+    <meta property="og:description" content="Get the latest Temple Owls basketball news, live scores, game schedule, roster updates, and AAC standings.">
     <meta property="og:image" content="https://phillysports.com/logo.png">
     <meta property="og:site_name" content="PhillySports.com">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://phillysports.com/eagles/">
-    <meta name="twitter:title" content="Philadelphia Eagles News, Scores & Schedule | PhillySports.com">
-    <meta name="twitter:description" content="Get the latest Philadelphia Eagles news, live scores, game schedule, roster updates, and NFL standings.">
+    <meta name="twitter:url" content="https://phillysports.com/temple/">
+    <meta name="twitter:title" content="Temple Owls Basketball News, Scores & Schedule | PhillySports.com">
+    <meta name="twitter:description" content="Get the latest Temple Owls basketball news, live scores, game schedule, roster updates, and AAC standings.">
     <meta name="twitter:image" content="https://phillysports.com/logo.png">
     <meta name="twitter:site" content="@phlsports">
 
@@ -46,21 +46,21 @@
     {
         "@context": "https://schema.org",
         "@type": "SportsTeam",
-        "name": "Philadelphia Eagles",
-        "sport": "American Football",
+        "name": "Temple Owls",
+        "sport": "Basketball",
         "memberOf": {
             "@type": "SportsOrganization",
-            "name": "NFL"
+            "name": "American Athletic Conference"
         },
-        "url": "https://phillysports.com/eagles/",
+        "url": "https://phillysports.com/temple/",
         "logo": "https://phillysports.com/logo.png"
     }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --team-color: #004C54;
-            --team-secondary: #A5ACAF;
+            --team-color: #9D2235;
+            --team-secondary: #FFFFFF;
             --dark-bg: #faf9f6;
             --card-bg: #ffffff;
             --card-bg-hover: #fafafa;
@@ -267,11 +267,6 @@
             background: rgba(255,255,255,0.05);
         }
 
-        .dropdown-menu a[href="/eagles"]:hover { color: var(--eagles-green); }
-        .dropdown-menu a[href="/phillies"]:hover { color: var(--phillies-red); }
-        .dropdown-menu a[href="/sixers"]:hover { color: var(--sixers-blue); }
-        .dropdown-menu a[href="/flyers"]:hover { color: var(--flyers-orange); }
-
         .team-hero { background: linear-gradient(135deg, var(--team-color), #000); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
         .team-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 1rem; }
@@ -353,34 +348,6 @@
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
 
-        /* All-Time Leaders Section */
-        .stats-section { grid-column: 1 / -1; margin-top: 1rem; }
-        .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
-        .stats-header { padding: 1rem; background: linear-gradient(135deg, var(--team-color), #002428); color: #fff; display: flex; align-items: center; justify-content: space-between; }
-        .stats-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-        .stats-attribution { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
-        .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
-
-        .stats-tabs { display: flex; flex-wrap: wrap; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); }
-        .stats-tab { padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
-        .stats-tab:hover { color: var(--team-color); background: rgba(0,76,84,0.05); }
-        .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: var(--card-bg); }
-
-        .stats-table-container { overflow-x: auto; }
-        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .stats-table th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-        .stats-table th:first-child { width: 40px; text-align: center; }
-        .stats-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-color); }
-        .stats-table td:first-child { text-align: center; font-weight: 600; color: var(--text-muted); }
-        .stats-table tr:hover { background: rgba(0,76,84,0.03); }
-        .stats-table tr:last-child td { border-bottom: none; }
-        .stats-table .player-name { font-weight: 600; color: var(--text-primary); }
-        .stats-table .player-years { font-size: 0.7rem; color: var(--text-muted); }
-        .stats-table .stat-highlight { font-weight: 700; color: var(--team-color); }
-
-        .stats-footer { padding: 0.75rem 1rem; background: #f5f2ed; font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
-        .stats-loading { padding: 2rem; text-align: center; color: var(--text-muted); }
-
         @media (max-width: 900px) {
             .main-container { grid-template-columns: 1fr; }
             .team-hero h1 { font-size: 1.8rem; }
@@ -391,9 +358,6 @@
         @media (max-width: 600px) {
             .article-item { flex-direction: column; }
             .article-thumb { width: 100%; height: 150px; }
-            .stats-tab { padding: 0.5rem 0.6rem; font-size: 0.7rem; }
-            .stats-table { font-size: 0.75rem; }
-            .stats-table th, .stats-table td { padding: 0.5rem; }
         }
     </style>
 </head>
@@ -489,8 +453,8 @@
     </header>
 
     <div class="team-hero">
-        <h1>Philadelphia Eagles</h1>
-        <p>News, Scores & Schedule</p>
+        <h1>Temple Owls</h1>
+        <p>AAC Basketball</p>
     </div>
 
     <main class="main-container">
@@ -498,12 +462,12 @@
             <div class="widget">
                 <div class="widget-header">
                     <span>&#127942;</span>
-                    <h3 class="widget-title">NFC East Standings</h3>
+                    <h3 class="widget-title">AAC Standings</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
                     <table class="standings-table" id="standingsTable">
                         <thead>
-                            <tr><th>Team</th><th class="record">W-L</th><th class="pct">PCT</th></tr>
+                            <tr><th>Team</th><th class="record">Conf</th><th class="pct">Overall</th></tr>
                         </thead>
                         <tbody id="standingsBody">
                             <tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:1rem;">Loading...</td></tr>
@@ -515,11 +479,11 @@
 
         <div class="content-section">
             <div class="section-header">
-                <h2 class="section-title">Latest Eagles News</h2>
+                <h2 class="section-title">Latest Owls News</h2>
             </div>
             <div class="carousel" id="newsCarousel">
                 <div class="carousel-inner" id="carouselInner">
-                    <div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127944;</div><div class="featured-content"><span class="article-tag">Loading</span><h3 class="featured-title">Loading news...</h3></div></div></div>
+                    <div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Loading</span><h3 class="featured-title">Loading news...</h3></div></div></div>
                 </div>
                 <button class="carousel-arrow prev" onclick="prevSlide()">&#10094;</button>
                 <button class="carousel-arrow next" onclick="nextSlide()">&#10095;</button>
@@ -565,9 +529,10 @@
                     <h3 class="widget-title">Quick Links</h3>
                 </div>
                 <div class="widget-content">
-                    <a href="https://www.philadelphiaeagles.com" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Website</a>
-                    <a href="https://www.philadelphiaeagles.com/tickets/" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Buy Tickets</a>
-                    <a href="https://open.spotify.com/show/6kLubboUPSinfnMesa8xhj" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Bleeding Green Nation Podcast</a>
+                    <a href="https://owlsports.com/sports/mens-basketball" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Athletics Site</a>
+                    <a href="https://owlsports.com/sports/mens-basketball/schedule" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Schedule</a>
+                    <a href="https://www.ticketmaster.com/temple-owls-basketball-tickets/artist/806156" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Buy Tickets</a>
+                    <a href="https://theamerican.org/standings.aspx?standings=119" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">AAC Conference</a>
                 </div>
             </div>
 
@@ -577,43 +542,15 @@
                     <span class="trivia-promo-title">Philly Trivia</span>
                 </div>
                 <div class="trivia-promo-body">
-                    <p class="trivia-promo-tagline">Test Your Eagles Knowledge!</p>
+                    <p class="trivia-promo-tagline">Test Your Owls Knowledge!</p>
                     <div class="trivia-promo-stats">
                         <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
                         <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
                     </div>
-                    <a href="/trivia.html?team=Eagles" class="trivia-promo-btn">Play Now</a>
+                    <a href="/trivia.html?team=Temple" class="trivia-promo-btn">Play Now</a>
                 </div>
             </div>
         </aside>
-
-        <!-- All-Time Leaders Section -->
-        <section class="stats-section">
-            <div class="stats-container">
-                <div class="stats-header">
-                    <h2><span>&#127942;</span> All-Time Eagles Leaders</h2>
-                    <span class="stats-attribution">Data from <a href="https://www.pro-football-reference.com/teams/phi/" target="_blank">Pro-Football-Reference.com</a></span>
-                </div>
-                <div class="stats-tabs" id="statsTabs">
-                    <button class="stats-tab active" data-category="currentSeason">2025 Season</button>
-                    <button class="stats-tab" data-category="passing">Passing</button>
-                    <button class="stats-tab" data-category="rushing">Rushing</button>
-                    <button class="stats-tab" data-category="receiving">Receiving</button>
-                    <button class="stats-tab" data-category="scoring">Scoring</button>
-                    <button class="stats-tab" data-category="defense">Defense</button>
-                    <button class="stats-tab" data-category="returns">Returns</button>
-                    <button class="stats-tab" data-category="kicking">Kicking</button>
-                    <button class="stats-tab" data-category="punting">Punting</button>
-                </div>
-                <div class="stats-table-container" id="statsTableContainer">
-                    <div class="stats-loading">Loading stats...</div>
-                </div>
-                <div class="stats-footer">
-                    <span id="statsUpdated">Last updated: --</span>
-                    <span>Top 10 career leaders</span>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer class="footer">
@@ -638,7 +575,8 @@
             if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
         });
 
-        const TEAM = 'eagles';
+        const TEAM = 'temple';
+        const ESPN_TEAM_ID = 218;
         let currentSlide = 0;
         let carouselInterval = null;
         let carouselArticles = [];
@@ -658,8 +596,6 @@
         function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
 
         const sourceLogos = {
-            'Crossing Broad': 'https://www.crossingbroad.com/app/themes/bramble/public/build/assets/cb-logo-AC5c2OGU.svg',
-            'On Pattison': 'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png?v=2',
             'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
         };
         function getSourceLogo(source) {
@@ -696,11 +632,9 @@
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
-                    // First 4 articles go to carousel
                     carouselArticles = data.articles.slice(0, 4);
                     const listArticles = data.articles.slice(4);
 
-                    // Populate carousel
                     carouselInner.innerHTML = carouselArticles.map(article => {
                         const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
                         return `
@@ -708,7 +642,7 @@
                                 <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="featured-article">
                                     <div class="featured-image" style="${imgStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
                                     <div class="featured-content">
-                                        <span class="article-tag">${article.team || 'Eagles'}</span>
+                                        <span class="article-tag">${article.team || 'Owls'}</span>
                                         <h3 class="featured-title">${article.headline}</h3>
                                     </div>
                                 </a>
@@ -716,15 +650,12 @@
                         `;
                     }).join('');
 
-                    // Add carousel dots
                     carouselDots.innerHTML = carouselArticles.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
 
-                    // Setup carousel auto-rotation
                     carousel.addEventListener('mouseenter', stopCarousel);
                     carousel.addEventListener('mouseleave', startCarousel);
                     startCarousel();
 
-                    // Remaining articles in list
                     if (listArticles.length > 0) {
                         container.innerHTML = listArticles.map(article => {
                             const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
@@ -742,11 +673,11 @@
                         container.innerHTML = '';
                     }
                 } else {
-                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127944;</div><div class="featured-content"><span class="article-tag">Eagles</span><h3 class="featured-title">No Eagles news available</h3></div></div></div>';
+                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Owls</span><h3 class="featured-title">No Owls news available</h3></div></div></div>';
                     container.innerHTML = '';
                 }
             } catch (e) {
-                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127944;</div><div class="featured-content"><span class="article-tag">Eagles</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
+                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Owls</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
                 container.innerHTML = '';
             }
         }
@@ -825,15 +756,15 @@
         async function loadStandings() {
             const container = document.getElementById('standingsBody');
             try {
-                const response = await fetch('/api/standings/nfl');
+                const response = await fetch('/api/standings/aac');
                 const data = await response.json();
                 if (data.standings?.length > 0) {
                     container.innerHTML = data.standings.map(team => {
-                        const isEagles = team.abbreviation === 'PHI';
+                        const isOwls = team.abbreviation === 'TEM' || team.name?.includes("Temple");
                         return `<tr>
-                            <td><span class="team-name ${isEagles ? 'highlight' : ''}">${team.abbreviation}</span></td>
-                            <td class="record">${team.wins}-${team.losses}</td>
-                            <td class="pct">${team.pct.toFixed(3)}</td>
+                            <td><span class="team-name ${isOwls ? 'highlight' : ''}">${team.abbreviation || team.name}</span></td>
+                            <td class="record">${team.confWins || 0}-${team.confLosses || 0}</td>
+                            <td class="pct">${team.wins || 0}-${team.losses || 0}</td>
                         </tr>`;
                     }).join('');
                 } else {
@@ -841,10 +772,10 @@
                 }
             } catch (e) {
                 container.innerHTML = `
-                    <tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr>
-                    <tr><td><span class="team-name">DAL</span></td><td class="record">--</td><td class="pct">---</td></tr>
-                    <tr><td><span class="team-name">WAS</span></td><td class="record">--</td><td class="pct">---</td></tr>
-                    <tr><td><span class="team-name">NYG</span></td><td class="record">--</td><td class="pct">---</td></tr>
+                    <tr><td><span class="team-name highlight">TEM</span></td><td class="record">--</td><td class="pct">--</td></tr>
+                    <tr><td><span class="team-name">MEM</span></td><td class="record">--</td><td class="pct">--</td></tr>
+                    <tr><td><span class="team-name">SMU</span></td><td class="record">--</td><td class="pct">--</td></tr>
+                    <tr><td><span class="team-name">TULN</span></td><td class="record">--</td><td class="pct">--</td></tr>
                 `;
             }
         }
@@ -854,151 +785,6 @@
         loadSchedule();
         loadRoster();
         loadStandings();
-
-        // All-Time Leaders Stats
-        let statsData = null;
-        let currentCategory = 'currentSeason';
-
-        const statsColumns = {
-            passing: ['#', 'Player', 'Yards', 'TD', 'INT', 'Rating'],
-            rushing: ['#', 'Player', 'Att', 'Yards', 'TD', 'Avg'],
-            receiving: ['#', 'Player', 'Rec', 'Yards', 'TD', 'Avg'],
-            scoring: ['#', 'Player', 'Pts', 'TD', 'FG', 'XP'],
-            defense: ['#', 'Player', 'Sacks', 'INT', 'FF', 'Tkl'],
-            returns: ['#', 'Player', 'KR Yds', 'PR Yds', 'TD'],
-            kicking: ['#', 'Player', 'FGM', 'FGA', 'FG%', 'Pts'],
-            punting: ['#', 'Player', 'Punts', 'Yards', 'Avg']
-        };
-
-        function formatNumber(num) {
-            return num ? num.toLocaleString() : '0';
-        }
-
-        function getStatValues(category, player) {
-            switch (category) {
-                case 'passing':
-                    return [formatNumber(player.yards), player.touchdowns, player.interceptions, player.rating?.toFixed(1)];
-                case 'rushing':
-                    return [formatNumber(player.attempts), formatNumber(player.yards), player.touchdowns, player.average?.toFixed(1)];
-                case 'receiving':
-                    return [formatNumber(player.receptions), formatNumber(player.yards), player.touchdowns, player.average?.toFixed(1)];
-                case 'scoring':
-                    return [formatNumber(player.points), player.touchdowns, player.fieldGoals, player.extraPoints];
-                case 'defense':
-                    return [player.sacks?.toFixed(1), player.interceptions, player.forcedFumbles, formatNumber(player.tackles)];
-                case 'returns':
-                    return [formatNumber(player.kickReturnYards), formatNumber(player.puntReturnYards), player.touchdowns];
-                case 'kicking':
-                    return [player.fieldGoalsMade, player.fieldGoalsAttempted, player.percentage?.toFixed(1) + '%', formatNumber(player.points)];
-                case 'punting':
-                    return [formatNumber(player.punts), formatNumber(player.yards), player.average?.toFixed(1)];
-                default:
-                    return [];
-            }
-        }
-
-        function renderStatsTable(category) {
-            const container = document.getElementById('statsTableContainer');
-            if (category === 'currentSeason') {
-                if (!statsData || !statsData.currentSeason) {
-                    container.innerHTML = '<div class="stats-loading">No data available</div>';
-                    return;
-                }
-                const season = statsData.currentSeason;
-                let html = `<div style="background:#e8f5e9;padding:0.75rem 1rem;text-align:center;font-weight:600;border-bottom:1px solid var(--border-color);">
-                    ${season.record} | ${season.standing}</div>`;
-                // Passing
-                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Passing</div>';
-                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>Yards</th><th>TD</th><th>INT</th></tr></thead><tbody>';
-                season.passing.forEach(p => {
-                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td class="stat-highlight">${p.yards.toLocaleString()}</td><td>${p.td}</td><td>${p.int}</td></tr>`;
-                });
-                html += '</tbody></table>';
-                // Rushing
-                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Rushing</div>';
-                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>Att</th><th>Yards</th><th>TD</th></tr></thead><tbody>';
-                season.rushing.forEach(p => {
-                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td>${p.att}</td><td class="stat-highlight">${p.yards.toLocaleString()}</td><td>${p.td}</td></tr>`;
-                });
-                html += '</tbody></table>';
-                // Receiving
-                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Receiving</div>';
-                html += '<table class="stats-table"><thead><tr><th>Player</th><th>G</th><th>Rec</th><th>Yards</th><th>TD</th></tr></thead><tbody>';
-                season.receiving.forEach(p => {
-                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.g}</td><td>${p.rec}</td><td class="stat-highlight">${p.yards.toLocaleString()}</td><td>${p.td}</td></tr>`;
-                });
-                html += '</tbody></table>';
-                // Defense
-                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Defense</div>';
-                html += '<table class="stats-table"><thead><tr><th>Player</th><th>Tackles</th><th>Sacks</th><th>INT</th></tr></thead><tbody>';
-                season.defense.forEach(p => {
-                    html += `<tr><td><span class="player-name">${p.player}</span></td><td class="stat-highlight">${p.tackles}</td><td>${p.sacks}</td><td>${p.int}</td></tr>`;
-                });
-                html += '</tbody></table>';
-                container.innerHTML = html;
-                return;
-            }
-            if (!statsData || !statsData[category]) {
-                container.innerHTML = '<div class="stats-loading">No data available</div>';
-                return;
-            }
-
-            const columns = statsColumns[category];
-            const players = statsData[category];
-
-            let html = '<table class="stats-table"><thead><tr>';
-            columns.forEach((col, i) => {
-                html += `<th>${col}</th>`;
-            });
-            html += '</tr></thead><tbody>';
-
-            players.forEach(player => {
-                const values = getStatValues(category, player);
-                html += '<tr>';
-                html += `<td>${player.rank}</td>`;
-                html += `<td><span class="player-name">${player.player}</span><br><span class="player-years">${player.years}</span></td>`;
-                values.forEach((val, i) => {
-                    const isHighlight = i === 0;
-                    html += `<td${isHighlight ? ' class="stat-highlight"' : ''}>${val}</td>`;
-                });
-                html += '</tr>';
-            });
-
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        }
-
-        function switchStatsTab(category) {
-            currentCategory = category;
-            document.querySelectorAll('.stats-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.category === category);
-            });
-            renderStatsTable(category);
-        }
-
-        async function loadStats() {
-            const container = document.getElementById('statsTableContainer');
-            try {
-                const response = await fetch('/api/stats/eagles');
-                statsData = await response.json();
-
-                if (statsData.lastUpdated) {
-                    const date = new Date(statsData.lastUpdated);
-                    document.getElementById('statsUpdated').textContent = 'Last updated: ' + date.toLocaleDateString();
-                }
-
-                renderStatsTable(currentCategory);
-            } catch (e) {
-                container.innerHTML = '<div class="stats-loading">Unable to load stats</div>';
-            }
-        }
-
-        // Setup tab click handlers
-        document.querySelectorAll('.stats-tab').forEach(tab => {
-            tab.addEventListener('click', () => switchStatsTab(tab.dataset.category));
-        });
-
-        loadStats();
 
         // Auth check for header
         async function checkAuth() {

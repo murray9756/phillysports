@@ -15,7 +15,14 @@ export default async function handler(req, res) {
         'sixers': { sport: 'basketball', league: 'nba', id: 'phi', name: '76ers' },
         '76ers': { sport: 'basketball', league: 'nba', id: 'phi', name: '76ers' },
         'flyers': { sport: 'hockey', league: 'nhl', id: 'phi', name: 'Flyers' },
-        'union': { sport: 'soccer', league: 'usa.1', id: 'phi', name: 'Union' }
+        'union': { sport: 'soccer', league: 'usa.1', id: 'phi', name: 'Union' },
+        // College Basketball (Big 5 + Drexel)
+        'villanova': { sport: 'basketball', league: 'mens-college-basketball', id: '2678', name: 'Villanova' },
+        'penn': { sport: 'basketball', league: 'mens-college-basketball', id: '219', name: 'Penn' },
+        'lasalle': { sport: 'basketball', league: 'mens-college-basketball', id: '2325', name: 'La Salle' },
+        'drexel': { sport: 'basketball', league: 'mens-college-basketball', id: '2182', name: 'Drexel' },
+        'stjosephs': { sport: 'basketball', league: 'mens-college-basketball', id: '2603', name: 'St. Josephs' },
+        'temple': { sport: 'basketball', league: 'mens-college-basketball', id: '218', name: 'Temple' }
     };
 
     const config = teamConfig[team.toLowerCase()];
