@@ -67,6 +67,8 @@ export default async function handler(req, res) {
         // eSports detection
         if (text.includes('philadelphia fusion') || text.includes('philly fusion')) return { team: 'Fusion', color: '#FFA000', tagClass: 'tag-fusion' };
         if (text.includes('esport') || text.includes('e-sport') || text.includes('league of legends') || text.includes('valorant') || text.includes('overwatch') || text.includes('counter-strike') || text.includes('cs2') || text.includes('dota')) return { team: 'eSports', color: '#9146FF', tagClass: 'tag-esports' };
+        // Youth Sports detection
+        if (text.includes('youth') || text.includes('sandlot') || text.includes('little league') || text.includes('high school') || text.includes('middle school') || text.includes('pee wee') || text.includes('rec league')) return { team: 'Youth Sports', color: '#00A4E8', tagClass: 'tag-youth' };
         return { team: 'Philly', color: '#004C54', tagClass: 'tag-eagles' };
     }
 
@@ -234,6 +236,31 @@ export default async function handler(req, res) {
                     });
                 });
             } catch (e) { console.error('The Score Esports RSS error:', e); }
+        }
+
+        // Fetch Youth Sports news (only when youth filter is active)
+        if (teamFilter === 'youth') {
+            // Buying Sandlot RSS Feed
+            try {
+                const youthRes = await fetch('https://buyingsandlot.com/feed/');
+                const youthXml = await youthRes.text();
+                const youthItems = parseRSS(youthXml);
+
+                youthItems.slice(0, 15).forEach(item => {
+                    articles.push({
+                        team: 'Youth Sports',
+                        sport: 'Youth Sports',
+                        teamColor: '#00A4E8',
+                        tagClass: 'tag-youth',
+                        headline: item.title,
+                        description: item.description,
+                        link: item.link,
+                        image: item.image,
+                        published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                        source: 'Buying Sandlot'
+                    });
+                });
+            } catch (e) { console.error('Youth Sports RSS error:', e); }
         }
 
         // Fetch Crossing Broad RSS feed
@@ -430,13 +457,16 @@ export default async function handler(req, res) {
                 'flyers': 'Flyers',
                 'union': 'Union',
                 'esports': 'eSports',
-                'fusion': 'Fusion'
+                'fusion': 'Fusion',
+                'youth': 'Youth Sports'
             };
             const targetTeam = teamMap[teamFilter];
             if (targetTeam) {
                 // For esports, include both eSports and Fusion articles
                 if (teamFilter === 'esports') {
                     filteredArticles = articles.filter(a => a.team === 'eSports' || a.team === 'Fusion');
+                } else if (teamFilter === 'youth') {
+                    filteredArticles = articles.filter(a => a.team === 'Youth Sports');
                 } else {
                     filteredArticles = articles.filter(a => a.team === targetTeam);
                 }
