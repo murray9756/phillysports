@@ -38,6 +38,10 @@
         .header-logo span { font-weight: 700; font-size: 1.1rem; color: #ffffff; }
         .header-search { display: flex; align-items: center; position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%); }
         .header-search form { display: flex; align-items: center; gap: 0.5rem; }
+        .header-search .google-logo {
+            height: 20px;
+            width: auto;
+        }
         .header-search input { padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; background: #ffffff; color: var(--text-primary); font-size: 0.8rem; width: 180px; font-family: inherit; }
         .header-search input::placeholder { color: var(--text-muted); }
         .header-search button { padding: 0.5rem 0.75rem; background: var(--accent-color); border: none; border-radius: 4px; color: white; font-weight: 600; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
@@ -198,6 +202,7 @@
         <div class="header-top" style="position: relative;">
             <div class="header-search">
                 <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
                     <input type="text" name="q" placeholder="Search the web..." required>
                     <button type="submit">Go</button>
                 </form>

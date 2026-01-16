@@ -55,6 +55,11 @@
             gap: 0.5rem;
         }
 
+        .header-search .google-logo {
+            height: 20px;
+            width: auto;
+        }
+
         .header-search input {
             padding: 0.5rem 0.75rem;
             border: 1px solid var(--border-color);
@@ -139,6 +144,7 @@
         <div class="header-top">
             <div class="header-search">
                 <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
                     <input type="text" name="q" placeholder="Search the web..." required>
                     <button type="submit">Go</button>
                 </form>
