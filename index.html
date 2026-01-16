@@ -669,46 +669,6 @@
             gap: 1.5rem;
         }
 
-        /* Leaderboard Widget */
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.8rem;
-        }
-        .leaderboard-item:last-child { border-bottom: none; }
-        .leaderboard-rank {
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.75rem;
-            border-radius: 50%;
-            background: var(--border-color);
-            flex-shrink: 0;
-        }
-        .leaderboard-rank.rank-1 { background: linear-gradient(135deg, #ffd700, #ffb800); color: #000; }
-        .leaderboard-rank.rank-2 { background: linear-gradient(135deg, #c0c0c0, #a8a8a8); color: #000; }
-        .leaderboard-rank.rank-3 { background: linear-gradient(135deg, #cd7f32, #b8702e); color: #fff; }
-        .leaderboard-username {
-            flex: 1;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .leaderboard-coins {
-            font-weight: 700;
-            color: #ff9800;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.2rem;
-        }
         .widget-footer {
             padding: 0.5rem 0.75rem;
             text-align: center;
@@ -1177,13 +1137,11 @@
                 <a href="/community/" class="team-tab feature-tab">Community</a>
                 <a href="/trivia.html" class="team-tab feature-tab">Trivia</a>
                 <a href="/poker.html" class="team-tab feature-tab">Poker</a>
-                <a href="/predictions.html" class="team-tab feature-tab">Predictions</a>
                 <a href="/odds.html" class="team-tab feature-tab">Odds</a>
                 <a href="/bets.html" class="team-tab feature-tab">Bets</a>
                 <a href="/shop/" class="team-tab feature-tab">Shop</a>
                 <a href="/marketplace/" class="team-tab feature-tab">Marketplace</a>
                 <a href="/raffles/" class="team-tab feature-tab">Raffles</a>
-                <a href="/leaderboard.html" class="team-tab feature-tab">Leaderboard</a>
             </div>
         </nav>
     </header>
@@ -1192,20 +1150,6 @@
     <main class="main-container">
         <!-- Left Sidebar -->
         <aside class="left-sidebar">
-            <!-- Leaderboard Widget -->
-            <div class="widget">
-                <div class="widget-header" style="background: linear-gradient(135deg, #ff9800, #f57c00);">
-                    <span>&#129689;</span>
-                    <h3 class="widget-title" style="color: #fff;">Top Earners</h3>
-                </div>
-                <div class="widget-content" id="leaderboardContainer" style="padding: 0.5rem;">
-                    <div style="text-align:center;color:var(--text-muted);padding:0.75rem;font-size:0.8rem;">Loading...</div>
-                </div>
-                <div class="widget-footer">
-                    <a href="/leaderboard.html">View Full Leaderboard &rarr;</a>
-                </div>
-            </div>
-
             <!-- Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
@@ -1706,36 +1650,7 @@
             }
         }
 
-        // Load leaderboard widget
-        async function loadLeaderboard() {
-            const container = document.getElementById('leaderboardContainer');
-            try {
-                const response = await fetch('/api/predictions/leaderboard?limit=5');
-                const data = await response.json();
-
-                if (data.success && data.leaderboard && data.leaderboard.length > 0) {
-                    container.innerHTML = data.leaderboard.slice(0, 5).map((entry, idx) => {
-                        const rank = idx + 1;
-                        const rankClass = rank <= 3 ? ` rank-${rank}` : '';
-                        return `
-                            <div class="leaderboard-item">
-                                <div class="leaderboard-rank${rankClass}">${rank}</div>
-                                <span class="leaderboard-username">${entry.username}</span>
-                                <span class="leaderboard-coins">&#129689; ${entry.coinBalance >= 1000 ? (entry.coinBalance / 1000).toFixed(1) + 'k' : entry.coinBalance}</span>
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.75rem;font-size:0.8rem;">No data yet</div>';
-                }
-            } catch (error) {
-                console.error('Failed to load leaderboard:', error);
-                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.75rem;font-size:0.8rem;">Unable to load</div>';
-            }
-        }
-
         // Load live data on page load
-        loadLeaderboard();
         loadScores();
         loadSchedule();
         loadNews();
