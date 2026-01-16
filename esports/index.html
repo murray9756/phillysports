@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Philadelphia eSports News | PhillySports.com</title>
+    <meta name="title" content="Philadelphia eSports News | PhillySports.com">
+    <meta name="description" content="Get the latest Philadelphia eSports news, gaming updates, tournament coverage, and competitive gaming content. Your source for Philly gaming and eSports.">
+    <meta name="keywords" content="Philadelphia eSports, Philly gaming, Philadelphia Fusion, Overwatch League, competitive gaming, eSports news, gaming tournaments, Valorant, League of Legends, Counter-Strike">
+    <meta name="author" content="PhillySports.com">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://phillysports.com/esports/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://phillysports.com/esports/">
+    <meta property="og:title" content="Philadelphia eSports News | PhillySports.com">
+    <meta property="og:description" content="Get the latest Philadelphia eSports news, gaming updates, tournament coverage, and competitive gaming content.">
+    <meta property="og:image" content="https://phillysports.com/logo.png">
+    <meta property="og:site_name" content="PhillySports.com">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://phillysports.com/esports/">
+    <meta name="twitter:title" content="Philadelphia eSports News | PhillySports.com">
+    <meta name="twitter:description" content="Get the latest Philadelphia eSports news, gaming updates, tournament coverage, and competitive gaming content.">
+    <meta name="twitter:image" content="https://phillysports.com/logo.png">
+    <meta name="twitter:site" content="@phlsports">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SportsTeam",
+        "name": "Philadelphia Fusion",
+        "sport": "eSports",
+        "memberOf": {
+            "@type": "SportsOrganization",
+            "name": "Overwatch League"
+        },
+        "url": "https://phillysports.com/esports/",
+        "logo": "https://phillysports.com/logo.png"
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --team-color: #9146FF;
+            --team-secondary: #1DB954;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --card-bg-hover: #fafafa;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #444444;
+            --text-muted: #777777;
+            --header-bg: #faf9f6;
+            --accent-color: #8b0000;
+            --nav-text: #333333;
+            --widget-header-bg: #e8e3db;
+        }
+
+        [data-theme="dark"] {
+            --team-color: #9146FF;
+            --team-secondary: #1DB954;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-bg-hover: #2a2a2a;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: center; padding: 1rem 1.5rem; max-width: 1400px; margin: 0 auto; position: relative; }
+        .header-logo { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+        .header-logo img { width: 160px; height: 160px; border-radius: 12px; }
+        .header-logo .tagline { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); font-style: italic; text-align: center; }
+        .header-search {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header-search form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-search .google-logo {
+            height: 20px;
+            width: auto;
+        }
+
+        .header-search input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #ffffff;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            width: 180px;
+            font-family: inherit;
+        }
+
+        .header-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-search button {
+            padding: 0.5rem 0.75rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .header-search button:hover {
+            opacity: 0.9;
+        }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-auth a { color: var(--nav-text); font-size: 0.8rem; font-weight: 600; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-auth a:hover { background: rgba(0,0,0,0.05); }
+        .header-auth .auth-btn { background: var(--accent-color); color: #ffffff; padding: 0.5rem 1rem; }
+        .header-auth .auth-btn:hover { opacity: 0.9; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .team-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
+        .team-nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; overflow-x: auto; }
+        .team-tab { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 600; color: var(--nav-text); border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; text-transform: uppercase; letter-spacing: 0.5px; }
+        .team-tab:hover { color: var(--accent-color); }
+        .team-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); }
+
+        .team-hero { background: linear-gradient(135deg, var(--team-color), #1a0033); padding: 2rem 1.5rem; text-align: center; color: #ffffff; }
+        .team-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .team-hero p { color: #cccccc; font-size: 1rem; }
+
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr 320px; gap: 1.5rem; }
+        .left-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+        .content-section { display: flex; flex-direction: column; gap: 1rem; }
+        .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+
+        .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
+        .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
+        .widget-header span { font-size: 1rem; }
+        .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .widget-content { padding: 0.75rem; }
+        .trivia-promo-widget { padding: 0; overflow: hidden; }
+        .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #9146FF, #1DB954); color: #fff; }
+        .trivia-promo-icon { font-size: 1.25rem; }
+        .trivia-promo-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .trivia-promo-body { padding: 1rem; text-align: center; }
+        .trivia-promo-tagline { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
+        .trivia-promo-stats { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+        .trivia-stat { display: flex; flex-direction: column; align-items: center; padding: 0.4rem 0.6rem; background: var(--dark-bg); border-radius: 6px; min-width: 60px; }
+        .trivia-stat .stat-number { font-size: 0.9rem; font-weight: 800; color: #9146FF; }
+        .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
+        .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9146FF, #1DB954); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(145, 70, 255, 0.4); }
+
+        .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
+        .article-item:hover { border-color: var(--team-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .article-thumb { width: 120px; height: 80px; background: var(--team-color); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; background-size: cover; background-position: center; }
+        .article-info { flex: 1; min-width: 0; }
+        .article-title { font-size: 1rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
+        .article-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+        .carousel { position: relative; width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
+        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; will-change: transform; }
+        .carousel-slide { width: 100%; flex: 0 0 100%; }
+        .carousel-slide .featured-article { display: block; background: var(--card-bg); }
+        .carousel-slide .featured-image { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
+        .carousel-slide .featured-content { padding: 1rem; }
+        .carousel-slide .featured-title { font-size: 1.1rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
+        .carousel-slide .article-tag { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border-radius: 3px; background: var(--team-color); color: #fff; margin-bottom: 0.5rem; }
+        .carousel-controls { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; z-index: 10; }
+        .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; border: none; transition: background 0.3s; }
+        .carousel-dot:hover { background: rgba(255,255,255,0.7); }
+        .carousel-dot.active { background: #fff; }
+        .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 10; }
+        .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
+        .carousel-arrow.prev { left: 0.5rem; }
+        .carousel-arrow.next { right: 0.5rem; }
+
+        .game-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; transition: background 0.2s; }
+        .game-link:last-child { border-bottom: none; }
+        .game-link:hover { background: var(--card-bg-hover); }
+        .game-link .game-icon { font-size: 1.2rem; }
+
+        .tournament-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .tournament-item:last-child { border-bottom: none; }
+        .tournament-date { text-align: center; min-width: 40px; }
+        .tournament-day { font-size: 1rem; font-weight: 700; }
+        .tournament-month { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
+        .tournament-info { flex: 1; }
+        .tournament-name { font-size: 0.8rem; font-weight: 600; }
+        .tournament-game { font-size: 0.7rem; color: var(--text-muted); }
+
+        .fusion-info { padding: 0.75rem; }
+        .fusion-logo { text-align: center; margin-bottom: 0.75rem; }
+        .fusion-logo img { width: 80px; height: 80px; border-radius: 8px; }
+        .fusion-details { font-size: 0.8rem; }
+        .fusion-detail { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border-color); }
+        .fusion-detail:last-child { border-bottom: none; }
+        .fusion-label { color: var(--text-muted); }
+        .fusion-value { font-weight: 600; }
+
+        .quick-links-item { display: block; padding: 0.5rem; color: var(--text-secondary); font-size: 0.85rem; border-bottom: 1px solid var(--border-color); transition: color 0.2s; }
+        .quick-links-item:last-child { border-bottom: none; }
+        .quick-links-item:hover { color: var(--team-color); }
+
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .team-hero h1 { font-size: 1.8rem; }
+        }
+        @media (max-width: 768px) {
+            .header-search { display: none; }
+        }
+        @media (max-width: 600px) {
+            .article-item { flex-direction: column; }
+            .article-thumb { width: 100%; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="header-search">
+                <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
+                    <input type="text" name="q" placeholder="Search the web..." required>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
+            <a href="/" class="header-logo">
+                <img src="/logo.png" alt="PhillySports.com">
+                <span class="tagline">Where the Diehards, Play Hard</span>
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html" class="auth-btn">Sign Up</a>
+            </div>
+        </div>
+        <nav class="team-nav">
+            <div class="team-nav-inner">
+                <a href="/" class="team-tab" data-team="all">Home</a>
+                <a href="/eagles" class="team-tab" data-team="eagles">Eagles</a>
+                <a href="/phillies" class="team-tab" data-team="phillies">Phillies</a>
+                <a href="/sixers" class="team-tab" data-team="sixers">76ers</a>
+                <a href="/flyers" class="team-tab" data-team="flyers">Flyers</a>
+                <a href="/esports" class="team-tab active" data-team="esports">eSports</a>
+                <span class="nav-divider"></span>
+                <a href="/community/" class="team-tab">Community</a>
+                <a href="/trivia.html" class="team-tab">Trivia</a>
+                <a href="/poker.html" class="team-tab">Poker</a>
+                <a href="/fantasy.html" class="team-tab">Fantasy</a>
+                <a href="/pools.html" class="team-tab">Pools</a>
+                <a href="/odds.html" class="team-tab">Odds</a>
+                <a href="/bets.html" class="team-tab">Bets</a>
+                <a href="/badges.html" class="team-tab">Badges</a>
+                <a href="/shop/" class="team-tab">Shop</a>
+                <a href="/marketplace/" class="team-tab">Marketplace</a>
+                <a href="/raffles/" class="team-tab">Raffles</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="team-hero">
+        <h1>Philadelphia eSports</h1>
+        <p>Gaming News & Coverage</p>
+    </div>
+
+    <main class="main-container">
+        <aside class="left-sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127942;</span>
+                    <h3 class="widget-title">Philadelphia Fusion</h3>
+                </div>
+                <div class="fusion-info">
+                    <div class="fusion-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5c/Philadelphia_Fusion_logo.svg/200px-Philadelphia_Fusion_logo.svg.png" alt="Philadelphia Fusion" onerror="this.style.display='none'">
+                    </div>
+                    <div class="fusion-details">
+                        <div class="fusion-detail">
+                            <span class="fusion-label">League</span>
+                            <span class="fusion-value">Overwatch League</span>
+                        </div>
+                        <div class="fusion-detail">
+                            <span class="fusion-label">Founded</span>
+                            <span class="fusion-value">2017</span>
+                        </div>
+                        <div class="fusion-detail">
+                            <span class="fusion-label">Owner</span>
+                            <span class="fusion-value">Comcast Spectacor</span>
+                        </div>
+                        <div class="fusion-detail">
+                            <span class="fusion-label">Colors</span>
+                            <span class="fusion-value" style="color: #FF9E1B;">Orange & Black</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127918;</span>
+                    <h3 class="widget-title">Quick Links</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <a href="https://overwatchleague.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#127919;</span>
+                        <span>Overwatch League</span>
+                    </a>
+                    <a href="https://lolesports.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#9876;</span>
+                        <span>League of Legends Esports</span>
+                    </a>
+                    <a href="https://valorantesports.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128299;</span>
+                        <span>Valorant Champions Tour</span>
+                    </a>
+                    <a href="https://www.hltv.org" target="_blank" class="game-link">
+                        <span class="game-icon">&#128163;</span>
+                        <span>Counter-Strike (HLTV)</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Latest eSports News</h2>
+            </div>
+            <div class="carousel" id="newsCarousel">
+                <div class="carousel-inner" id="carouselInner">
+                    <div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127918;</div><div class="featured-content"><span class="article-tag">Loading</span><h3 class="featured-title">Loading news...</h3></div></div></div>
+                </div>
+                <button class="carousel-arrow prev" onclick="prevSlide()">&#10094;</button>
+                <button class="carousel-arrow next" onclick="nextSlide()">&#10095;</button>
+                <div class="carousel-controls" id="carouselDots"></div>
+            </div>
+            <div class="article-list" id="articleList"></div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127918;</span>
+                    <h3 class="widget-title">Popular Games</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <a href="https://www.leagueoflegends.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#9876;</span>
+                        <span>League of Legends</span>
+                    </a>
+                    <a href="https://playvalorant.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128299;</span>
+                        <span>Valorant</span>
+                    </a>
+                    <a href="https://www.counter-strike.net" target="_blank" class="game-link">
+                        <span class="game-icon">&#128163;</span>
+                        <span>Counter-Strike 2</span>
+                    </a>
+                    <a href="https://overwatch.blizzard.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#127919;</span>
+                        <span>Overwatch 2</span>
+                    </a>
+                    <a href="https://www.dota2.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128737;</span>
+                        <span>Dota 2</span>
+                    </a>
+                    <a href="https://www.rocketleague.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128663;</span>
+                        <span>Rocket League</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#127942;</span>
+                    <h3 class="widget-title">Philadelphia Fusion</h3>
+                </div>
+                <div class="widget-content">
+                    <div style="text-align:center;padding:0.5rem;">
+                        <div style="font-size:2rem;margin-bottom:0.5rem;">&#127919;</div>
+                        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">Overwatch League Team</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;">Philadelphia's Professional OW Team</div>
+                        <a href="https://twitter.com/PhilaFusion" target="_blank" style="display:inline-block;padding:0.4rem 0.75rem;background:var(--team-color);color:#fff;border-radius:4px;font-size:0.75rem;font-weight:600;">Follow @PhilaFusion</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128197;</span>
+                    <h3 class="widget-title">Upcoming Tournaments</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <div class="tournament-item">
+                        <div class="tournament-date">
+                            <div class="tournament-day">TBD</div>
+                            <div class="tournament-month">2025</div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-name">VCT Americas</div>
+                            <div class="tournament-game">Valorant</div>
+                        </div>
+                    </div>
+                    <div class="tournament-item">
+                        <div class="tournament-date">
+                            <div class="tournament-day">TBD</div>
+                            <div class="tournament-month">2025</div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-name">LCS Spring Split</div>
+                            <div class="tournament-game">League of Legends</div>
+                        </div>
+                    </div>
+                    <div class="tournament-item">
+                        <div class="tournament-date">
+                            <div class="tournament-day">TBD</div>
+                            <div class="tournament-month">2025</div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-name">CS2 Major</div>
+                            <div class="tournament-game">Counter-Strike 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128279;</span>
+                    <h3 class="widget-title">Quick Links</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <a href="https://www.twitch.tv" target="_blank" class="quick-links-item">Twitch</a>
+                    <a href="https://gaming.youtube.com" target="_blank" class="quick-links-item">YouTube Gaming</a>
+                    <a href="https://www.esportsearnings.com" target="_blank" class="quick-links-item">Esports Earnings</a>
+                    <a href="https://liquipedia.net" target="_blank" class="quick-links-item">Liquipedia</a>
+                    <a href="https://dotesports.com" target="_blank" class="quick-links-item">Dot Esports</a>
+                </div>
+            </div>
+
+            <div class="widget trivia-promo-widget">
+                <div class="trivia-promo-header">
+                    <span class="trivia-promo-icon">&#129504;</span>
+                    <span class="trivia-promo-title">Gaming Trivia</span>
+                </div>
+                <div class="trivia-promo-body">
+                    <p class="trivia-promo-tagline">Test Your eSports Knowledge!</p>
+                    <div class="trivia-promo-stats">
+                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
+                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
+                    </div>
+                    <a href="/trivia.html?team=eSports" class="trivia-promo-btn">Play Now</a>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        });
+
+        const TEAM = 'esports';
+        let currentSlide = 0;
+        let carouselInterval = null;
+        let carouselArticles = [];
+
+        function goToSlide(index) {
+            const inner = document.getElementById('carouselInner');
+            const dots = document.querySelectorAll('.carousel-dot');
+            currentSlide = index;
+            if (currentSlide >= carouselArticles.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = carouselArticles.length - 1;
+            inner.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+        }
+        function nextSlide() { goToSlide(currentSlide + 1); }
+        function prevSlide() { goToSlide(currentSlide - 1); }
+        function startCarousel() { stopCarousel(); carouselInterval = setInterval(nextSlide, 5000); }
+        function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
+
+        const sourceLogos = {
+            'Dot Esports': 'https://dotesports.com/wp-content/themes/flavor/flavor/flavor-developer/flavor-developer/assets/images/de-logo.svg',
+            'ESPN Esports': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80',
+            'The Score Esports': 'https://www.thescoreesports.com/images/logo.svg',
+            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
+        };
+        function getSourceLogo(source) {
+            const logo = source && sourceLogos[source] ? sourceLogos[source] : sourceLogos['ESPN'];
+            return `<img src="${logo}" alt="${source || 'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;
+        }
+
+        function timeAgo(dateString) {
+            const now = new Date();
+            const date = new Date(dateString);
+            const seconds = Math.floor((now - date) / 1000);
+            if (seconds < 60) return 'Just now';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `${minutes}m ago`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            return `${days}d ago`;
+        }
+
+        async function loadNews() {
+            const container = document.getElementById('articleList');
+            const carouselInner = document.getElementById('carouselInner');
+            const carouselDots = document.getElementById('carouselDots');
+            const carousel = document.getElementById('newsCarousel');
+            try {
+                const response = await fetch(`/api/news?team=${TEAM}`);
+                const data = await response.json();
+                if (data.articles && data.articles.length > 0) {
+                    // First 4 articles go to carousel
+                    carouselArticles = data.articles.slice(0, 4);
+                    const listArticles = data.articles.slice(4);
+
+                    // Populate carousel
+                    carouselInner.innerHTML = carouselArticles.map(article => {
+                        const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
+                        return `
+                            <div class="carousel-slide">
+                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="featured-article">
+                                    <div class="featured-image" style="${imgStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                                    <div class="featured-content">
+                                        <span class="article-tag">${article.team || 'eSports'}</span>
+                                        <h3 class="featured-title">${article.headline}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Add carousel dots
+                    carouselDots.innerHTML = carouselArticles.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
+
+                    // Setup carousel auto-rotation
+                    carousel.addEventListener('mouseenter', stopCarousel);
+                    carousel.addEventListener('mouseleave', startCarousel);
+                    startCarousel();
+
+                    // Remaining articles in list
+                    if (listArticles.length > 0) {
+                        container.innerHTML = listArticles.map(article => {
+                            const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
+                            return `
+                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
+                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                                    <div class="article-info">
+                                        <h4 class="article-title">${article.headline}</h4>
+                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('');
+                    } else {
+                        container.innerHTML = '';
+                    }
+                } else {
+                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127918;</div><div class="featured-content"><span class="article-tag">eSports</span><h3 class="featured-title">No eSports news available</h3></div></div></div>';
+                    container.innerHTML = '';
+                }
+            } catch (e) {
+                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127918;</div><div class="featured-content"><span class="article-tag">eSports</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
+                container.innerHTML = '';
+            }
+        }
+
+        loadNews();
+
+        // Auth check for header
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me');
+                const data = await response.json();
+                if (data.user) {
+                    const headerAuth = document.getElementById('headerAuth');
+                    headerAuth.innerHTML = `
+                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display" title="Diehard Dollars"><span class="coin-icon">&#129689;</span><span>${data.user.coinBalance || 0}</span></div>
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST' });
+                        localStorage.removeItem('auth_token');
+                        window.location.reload();
+                    });
+                }
+            } catch (error) {}
+        }
+        checkAuth();
+    </script>
+</body>
+</html>

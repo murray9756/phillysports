@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     const teamFilter = team ? team.toLowerCase() : null;
 
     // Philly team identifiers to filter news
-    const phillyKeywords = ['philadelphia', 'eagles', 'phillies', '76ers', 'sixers', 'flyers', 'union', 'philly', 'jalen hurts', 'saquon', 'embiid', 'maxey'];
+    const phillyKeywords = ['philadelphia', 'eagles', 'phillies', '76ers', 'sixers', 'flyers', 'union', 'philly', 'jalen hurts', 'saquon', 'embiid', 'maxey', 'fusion'];
 
     // Parse RSS XML to extract items
     function parseRSS(xml) {
@@ -64,6 +64,9 @@ export default async function handler(req, res) {
         if (text.includes('sixer') || text.includes('76er') || text.includes('nba')) return { team: '76ers', color: '#006BB6', tagClass: 'tag-sixers' };
         if (text.includes('flyer') || text.includes('nhl')) return { team: 'Flyers', color: '#F74902', tagClass: 'tag-flyers' };
         if (text.includes('union') || text.includes('mls') || text.includes('soccer')) return { team: 'Union', color: '#B49759', tagClass: 'tag-union' };
+        // eSports detection
+        if (text.includes('philadelphia fusion') || text.includes('philly fusion')) return { team: 'Fusion', color: '#FFA000', tagClass: 'tag-fusion' };
+        if (text.includes('esport') || text.includes('e-sport') || text.includes('league of legends') || text.includes('valorant') || text.includes('overwatch') || text.includes('counter-strike') || text.includes('cs2') || text.includes('dota')) return { team: 'eSports', color: '#9146FF', tagClass: 'tag-esports' };
         return { team: 'Philly', color: '#004C54', tagClass: 'tag-eagles' };
     }
 
@@ -104,18 +107,20 @@ export default async function handler(req, res) {
         if (text.includes('76er') || text.includes('sixer') || text.includes('embiid') || text.includes('maxey')) return '76ers';
         if (text.includes('flyer')) return 'Flyers';
         if (text.includes('union')) return 'Union';
+        if (text.includes('philadelphia fusion') || text.includes('philly fusion')) return 'Fusion';
+        if (text.includes('esport') || text.includes('league of legends') || text.includes('valorant') || text.includes('overwatch')) return 'eSports';
         return 'NFL';
     }
 
     function detectColor(article) {
         const team = detectTeam(article);
-        const colors = { Eagles: '#004C54', Phillies: '#E81828', '76ers': '#006BB6', Flyers: '#F74902', Union: '#B49759' };
+        const colors = { Eagles: '#004C54', Phillies: '#E81828', '76ers': '#006BB6', Flyers: '#F74902', Union: '#B49759', eSports: '#9146FF', Fusion: '#FFA000' };
         return colors[team] || '#666666';
     }
 
     function detectTagClass(article) {
         const team = detectTeam(article);
-        const classes = { Eagles: 'tag-eagles', Phillies: 'tag-phillies', '76ers': 'tag-sixers', Flyers: 'tag-flyers', Union: 'tag-union' };
+        const classes = { Eagles: 'tag-eagles', Phillies: 'tag-phillies', '76ers': 'tag-sixers', Flyers: 'tag-flyers', Union: 'tag-union', eSports: 'tag-esports', Fusion: 'tag-fusion' };
         return classes[team] || 'tag-eagles';
     }
 
@@ -156,6 +161,80 @@ export default async function handler(req, res) {
             const mlsData = await mlsRes.json();
             articles.push(...processArticles(mlsData, 'Union', 'MLS', '#B49759', 'tag-union', 2));
         } catch (e) { console.error('MLS news error:', e); }
+
+        // Fetch eSports news (only when esports filter is active)
+        if (teamFilter === 'esports') {
+            // ESPN Esports API
+            try {
+                const esportsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/esports/news?limit=30');
+                const esportsData = await esportsRes.json();
+                const esportsArticles = (esportsData.articles || []).slice(0, 5).map(article => {
+                    const text = `${article.headline} ${article.description || ''}`.toLowerCase();
+                    const isFusion = text.includes('fusion') || text.includes('philadelphia');
+                    return {
+                        team: isFusion ? 'Fusion' : 'eSports',
+                        sport: 'eSports',
+                        teamColor: isFusion ? '#FFA000' : '#9146FF',
+                        tagClass: isFusion ? 'tag-fusion' : 'tag-esports',
+                        headline: article.headline,
+                        description: article.description || '',
+                        link: article.links?.web?.href || article.links?.mobile?.href || '#',
+                        image: article.images?.[0]?.url || null,
+                        published: article.published || new Date().toISOString(),
+                        source: 'ESPN Esports'
+                    };
+                });
+                articles.push(...esportsArticles);
+            } catch (e) { console.error('ESPN Esports news error:', e); }
+
+            // Dot Esports RSS Feed
+            try {
+                const dotRes = await fetch('https://dotesports.com/feed');
+                const dotXml = await dotRes.text();
+                const dotItems = parseRSS(dotXml);
+
+                dotItems.slice(0, 6).forEach(item => {
+                    const text = `${item.title}`.toLowerCase();
+                    const isFusion = text.includes('fusion') || text.includes('philadelphia');
+                    articles.push({
+                        team: isFusion ? 'Fusion' : 'eSports',
+                        sport: 'eSports',
+                        teamColor: isFusion ? '#FFA000' : '#9146FF',
+                        tagClass: isFusion ? 'tag-fusion' : 'tag-esports',
+                        headline: item.title,
+                        description: item.description,
+                        link: item.link,
+                        image: item.image,
+                        published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                        source: 'Dot Esports'
+                    });
+                });
+            } catch (e) { console.error('Dot Esports RSS error:', e); }
+
+            // The Score Esports RSS Feed
+            try {
+                const scoreRes = await fetch('https://www.thescoreesports.com/feed/esports.rss');
+                const scoreXml = await scoreRes.text();
+                const scoreItems = parseRSS(scoreXml);
+
+                scoreItems.slice(0, 5).forEach(item => {
+                    const text = `${item.title}`.toLowerCase();
+                    const isFusion = text.includes('fusion') || text.includes('philadelphia');
+                    articles.push({
+                        team: isFusion ? 'Fusion' : 'eSports',
+                        sport: 'eSports',
+                        teamColor: isFusion ? '#FFA000' : '#9146FF',
+                        tagClass: isFusion ? 'tag-fusion' : 'tag-esports',
+                        headline: item.title,
+                        description: item.description,
+                        link: item.link,
+                        image: item.image,
+                        published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                        source: 'The Score Esports'
+                    });
+                });
+            } catch (e) { console.error('The Score Esports RSS error:', e); }
+        }
 
         // Fetch Crossing Broad RSS feed
         try {
@@ -349,11 +428,18 @@ export default async function handler(req, res) {
                 'sixers': '76ers',
                 '76ers': '76ers',
                 'flyers': 'Flyers',
-                'union': 'Union'
+                'union': 'Union',
+                'esports': 'eSports',
+                'fusion': 'Fusion'
             };
             const targetTeam = teamMap[teamFilter];
             if (targetTeam) {
-                filteredArticles = articles.filter(a => a.team === targetTeam);
+                // For esports, include both eSports and Fusion articles
+                if (teamFilter === 'esports') {
+                    filteredArticles = articles.filter(a => a.team === 'eSports' || a.team === 'Fusion');
+                } else {
+                    filteredArticles = articles.filter(a => a.team === targetTeam);
+                }
             }
         }
 
