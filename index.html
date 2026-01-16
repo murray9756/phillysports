@@ -527,6 +527,91 @@
             margin-top: 0.25rem;
         }
 
+        /* Vote Buttons */
+        .vote-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.15rem;
+            margin-left: auto;
+            padding-left: 0.75rem;
+        }
+        .vote-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1;
+            transition: color 0.2s, transform 0.1s;
+            border-radius: 4px;
+        }
+        .vote-btn:hover {
+            color: var(--text-primary);
+            transform: scale(1.2);
+        }
+        .vote-btn.upvote.active {
+            color: #4caf50;
+        }
+        .vote-btn.downvote.active {
+            color: #f44336;
+        }
+        .vote-score {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 20px;
+            text-align: center;
+        }
+        .vote-score.positive { color: #4caf50; }
+        .vote-score.negative { color: #f44336; }
+
+        .article-item-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .article-item-wrapper:hover {
+            border-color: var(--text-muted);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .article-item-wrapper .article-link {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Featured vote buttons */
+        .featured-vote {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+            background: rgba(0,0,0,0.7);
+            padding: 0.4rem;
+            border-radius: 8px;
+            z-index: 10;
+        }
+        .featured-vote .vote-btn {
+            color: rgba(255,255,255,0.7);
+        }
+        .featured-vote .vote-btn:hover {
+            color: #fff;
+        }
+        .featured-vote .vote-btn.upvote.active { color: #4caf50; }
+        .featured-vote .vote-btn.downvote.active { color: #f44336; }
+        .featured-vote .vote-score { color: rgba(255,255,255,0.9); }
+
         /* Podcast Section */
         .podcast-section {
             margin-top: 1rem;
@@ -1486,19 +1571,27 @@
                             ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
                             : `background:${article.teamColor};`;
                         const sourceText = article.source ? ` · ${article.source}` : '';
+                        const scoreClass = article.score > 0 ? 'positive' : article.score < 0 ? 'negative' : '';
                         return `
                             <div class="carousel-slide">
-                                <a href="${article.link}" target="_blank" class="featured-article">
-                                    <div class="featured-image" style="${imageStyle}">
-                                        ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                <div class="featured-article" style="position:relative;">
+                                    <div class="featured-vote">
+                                        <button class="vote-btn upvote" onclick="vote('${article.id}', 1, event)" data-article="${article.id}">&#9650;</button>
+                                        <span class="vote-score ${scoreClass}" id="score-${article.id}">${article.score || 0}</span>
+                                        <button class="vote-btn downvote" onclick="vote('${article.id}', -1, event)" data-article="${article.id}">&#9660;</button>
                                     </div>
-                                    <div class="featured-content">
-                                        <span class="article-tag ${article.tagClass}">${article.team}</span>
-                                        <h3 class="featured-title">${article.headline}</h3>
-                                        <p class="featured-excerpt">${article.description || ''}</p>
-                                        <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
-                                    </div>
-                                </a>
+                                    <a href="${article.link}" target="_blank" style="display:block;">
+                                        <div class="featured-image" style="${imageStyle}">
+                                            ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                        </div>
+                                        <div class="featured-content">
+                                            <span class="article-tag ${article.tagClass}">${article.team}</span>
+                                            <h3 class="featured-title">${article.headline}</h3>
+                                            <p class="featured-excerpt">${article.description || ''}</p>
+                                            <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         `;
                     }).join('');
@@ -1523,17 +1616,25 @@
                                 ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
                                 : `background:${article.teamColor};`;
                             const sourceText = article.source ? ` · ${article.source}` : '';
+                            const scoreClass = article.score > 0 ? 'positive' : article.score < 0 ? 'negative' : '';
                             return `
-                                <a href="${article.link}" target="_blank" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">
-                                        ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                <div class="article-item-wrapper">
+                                    <a href="${article.link}" target="_blank" class="article-link">
+                                        <div class="article-thumb" style="${thumbStyle}">
+                                            ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                        </div>
+                                        <div class="article-info">
+                                            <span class="article-tag ${article.tagClass}">${article.team}</span>
+                                            <h4 class="article-title">${article.headline}</h4>
+                                            <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
+                                        </div>
+                                    </a>
+                                    <div class="vote-buttons">
+                                        <button class="vote-btn upvote" onclick="vote('${article.id}', 1, event)" data-article="${article.id}">&#9650;</button>
+                                        <span class="vote-score ${scoreClass}" id="score-${article.id}">${article.score || 0}</span>
+                                        <button class="vote-btn downvote" onclick="vote('${article.id}', -1, event)" data-article="${article.id}">&#9660;</button>
                                     </div>
-                                    <div class="article-info">
-                                        <span class="article-tag ${article.tagClass}">${article.team}</span>
-                                        <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${sourceText}</div>
-                                    </div>
-                                </a>
+                                </div>
                             `;
                         }).join('');
                     } else {
@@ -1555,6 +1656,53 @@
                 `;
                 carouselDots.innerHTML = '';
                 listContainer.innerHTML = '';
+            }
+        }
+
+        // Track user's votes locally
+        const userVotes = {};
+
+        // Vote on a news article
+        async function vote(articleId, voteValue, event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Check if user is clicking the same vote (toggle off)
+            const currentVote = userVotes[articleId] || 0;
+            const newVote = currentVote === voteValue ? 0 : voteValue;
+
+            try {
+                const response = await fetch('/api/news/vote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('token') ? `Bearer ${localStorage.getItem('token')}` : ''
+                    },
+                    body: JSON.stringify({ articleId, vote: newVote })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update local tracking
+                    userVotes[articleId] = newVote;
+
+                    // Update score display
+                    const scoreEl = document.getElementById(`score-${articleId}`);
+                    if (scoreEl) {
+                        scoreEl.textContent = data.score;
+                        scoreEl.className = 'vote-score' + (data.score > 0 ? ' positive' : data.score < 0 ? ' negative' : '');
+                    }
+
+                    // Update button states
+                    const upBtns = document.querySelectorAll(`.vote-btn.upvote[data-article="${articleId}"]`);
+                    const downBtns = document.querySelectorAll(`.vote-btn.downvote[data-article="${articleId}"]`);
+
+                    upBtns.forEach(btn => btn.classList.toggle('active', newVote === 1));
+                    downBtns.forEach(btn => btn.classList.toggle('active', newVote === -1));
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
             }
         }
 

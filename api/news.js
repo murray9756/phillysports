@@ -1,5 +1,11 @@
 // Vercel Serverless Function - Fetch Philly Sports News
 import { getCollection } from './lib/mongodb.js';
+import crypto from 'crypto';
+
+// Generate a stable article ID from its link
+function generateArticleId(link) {
+    return crypto.createHash('md5').update(link || '').digest('hex').substring(0, 12);
+}
 
 export default async function handler(req, res) {
     // Set CORS headers
@@ -276,8 +282,43 @@ export default async function handler(req, res) {
             });
         } catch (e) { console.error('Posts fetch error:', e); }
 
-        // Sort by published date (newest first)
-        articles.sort((a, b) => new Date(b.published) - new Date(a.published));
+        // Add article IDs to each article
+        articles.forEach(article => {
+            article.id = generateArticleId(article.link);
+        });
+
+        // Fetch vote counts from database
+        const votes = await getCollection('news_votes');
+        const articleIds = articles.map(a => a.id);
+
+        // Get vote counts for all articles
+        const votePipeline = [
+            { $match: { articleId: { $in: articleIds } } },
+            { $group: {
+                _id: '$articleId',
+                upvotes: { $sum: { $cond: [{ $eq: ['$vote', 1] }, 1, 0] } },
+                downvotes: { $sum: { $cond: [{ $eq: ['$vote', -1] }, 1, 0] } }
+            }}
+        ];
+        const voteResults = await votes.aggregate(votePipeline).toArray();
+        const voteMap = {};
+        voteResults.forEach(v => {
+            voteMap[v._id] = { upvotes: v.upvotes, downvotes: v.downvotes, score: v.upvotes - v.downvotes };
+        });
+
+        // Add vote data to articles
+        articles.forEach(article => {
+            const voteData = voteMap[article.id] || { upvotes: 0, downvotes: 0, score: 0 };
+            article.upvotes = voteData.upvotes;
+            article.downvotes = voteData.downvotes;
+            article.score = voteData.score;
+        });
+
+        // Sort by score (highest first), then by published date (newest first)
+        articles.sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return new Date(b.published) - new Date(a.published);
+        });
 
         // If we didn't find enough Philly-specific news, pad with general NFL news
         if (articles.length < 5) {
