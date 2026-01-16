@@ -1330,7 +1330,8 @@
 
         function handleHandComplete(data) {
             console.log('Hand complete:', data);
-            if (data.winners && data.winners.length > 0) {
+            if (data.winners && data.winners.length > 0 && !winnerShown) {
+                winnerShown = true;
                 showWinner(data.winners[0]);
             }
             loadGameState(); // Refresh full state
@@ -1746,11 +1747,6 @@
 
             // Render dealer button
             renderDealerButton(table.dealerPosition);
-
-            // Check for winner
-            if (hand?.status === 'complete' && hand?.winners?.length > 0) {
-                showWinner(hand.winners[0]);
-            }
 
             // Show/hide status message
             if (gameState.isStuckState) {
