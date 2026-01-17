@@ -629,13 +629,13 @@
                 }
 
                 // Show success
-                successMessage.textContent = 'Account created! Redirecting...';
+                successMessage.innerHTML = 'Account created! You got <strong>5,000 Diehard Dollars</strong> to start. Check out our premium memberships!';
                 successMessage.classList.add('show');
 
-                // Redirect after short delay
+                // Redirect to membership page after short delay
                 setTimeout(() => {
-                    window.location.href = '/';
-                }, 1000);
+                    window.location.href = '/membership.html?welcome=true';
+                }, 2000);
             } catch (error) {
                 errorMessage.textContent = error.message;
                 errorMessage.classList.add('show');

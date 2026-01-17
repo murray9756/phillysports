@@ -324,6 +324,26 @@
         .premium-badge:hover {
             background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
         }
+        /* Go Premium Link */
+        .go-premium-link {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #000 !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            padding: 0.4rem 0.75rem !important;
+            border-radius: 4px;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            animation: pulse-glow 2s infinite;
+        }
+        .go-premium-link:hover {
+            background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
+            transform: scale(1.05);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+        }
 
         /* Dark Mode Toggle */
         .theme-toggle {
@@ -2588,7 +2608,7 @@
                     const headerAuth = document.getElementById('headerAuth');
                     const premiumBadge = data.user.isSubscribed
                         ? `<a href="/membership.html" class="premium-badge" title="${data.user.subscriptionTierName}">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                        : '';
+                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
                     headerAuth.innerHTML = `
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
@@ -2598,7 +2618,8 @@
                             <span class="coin-icon">&#129689;</span>
                             <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
                         </div>
-                        <a href="/profile.html">${data.user.username}</a>${premiumBadge}
+                        ${premiumBadge}
+                        <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
                     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
