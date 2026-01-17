@@ -3,6 +3,7 @@ import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
 import { addCoins, DAILY_LOGIN_BASE, STREAK_BONUS_PER_DAY, MAX_STREAK_BONUS } from '../lib/coins.js';
 import { rateLimit } from '../lib/rateLimit.js';
+import { getDailyCoinMultiplier } from '../lib/subscriptions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -60,9 +61,14 @@ export default async function handler(req, res) {
         }
         // else: streak resets to 1
 
-        // Calculate bonus
+        // Calculate bonus with premium multiplier
         const streakBonus = Math.min((newStreak - 1) * STREAK_BONUS_PER_DAY, MAX_STREAK_BONUS);
-        const totalBonus = DAILY_LOGIN_BASE + streakBonus;
+        const baseTotal = DAILY_LOGIN_BASE + streakBonus;
+
+        // Get premium multiplier (2x for Diehard+ and Diehard Pro)
+        const multiplier = await getDailyCoinMultiplier(decoded.userId);
+        const totalBonus = baseTotal * multiplier;
+        const isPremium = multiplier > 1;
 
         // Update user streak info
         await users.updateOne(
@@ -86,10 +92,12 @@ export default async function handler(req, res) {
         );
 
         res.status(200).json({
-            message: 'Daily bonus claimed!',
+            message: isPremium ? 'Premium daily bonus claimed!' : 'Daily bonus claimed!',
             coinsEarned: totalBonus,
             baseBonus: DAILY_LOGIN_BASE,
             streakBonus,
+            premiumMultiplier: multiplier,
+            isPremium,
             streak: newStreak,
             newBalance,
             nextClaimAt: new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()

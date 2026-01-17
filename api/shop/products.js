@@ -126,7 +126,12 @@ export default async function handler(req, res) {
             isFeatured: product.isFeatured,
             inStock: product.hasVariants
                 ? product.variants?.some(v => v.inventory > 0)
-                : product.inventory > 0 || product.inventory === -1
+                : product.inventory > 0 || product.inventory === -1,
+            // Affiliate product fields
+            isAffiliate: product.isAffiliate || false,
+            affiliateSource: product.affiliateSource || null,
+            affiliateLink: product.affiliateLink || null,
+            externalProductId: product.externalProductId || null
         }));
 
         res.status(200).json({
