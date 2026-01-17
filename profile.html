@@ -117,6 +117,19 @@
         .profile-info { flex: 1; }
         .profile-name { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.75rem; }
         .profile-username { color: var(--text-muted); font-size: 1rem; margin-bottom: 0.75rem; }
+        .profile-username .premium-badge {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-left: 0.5rem;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
+        }
+        .profile-username .premium-badge:hover { background: linear-gradient(135deg, #ffdf00, #ffa500); }
         .profile-bio { color: var(--text-secondary); margin-bottom: 1rem; }
         .profile-stats { display: flex; gap: 2rem; }
         .stat { text-align: center; }
@@ -689,7 +702,10 @@
 
             // Name and username
             document.getElementById('displayName').textContent = profileUser.displayName || profileUser.username;
-            document.getElementById('username').textContent = '@' + profileUser.username;
+            document.getElementById('username').innerHTML = '@' + profileUser.username +
+                (profileUser.isSubscribed
+                    ? ` <a href="/membership.html" class="premium-badge" title="${profileUser.subscriptionTierName}">${profileUser.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
+                    : '');
             document.getElementById('bio').textContent = profileUser.bio || '';
 
             // Team badge

@@ -31,6 +31,14 @@ export default async function handler(req, res) {
             return res.status(200).json({ user: null });
         }
 
+        // Determine subscription tier name for display
+        const tierNames = {
+            'diehard_plus': 'Diehard+',
+            'diehard_pro': 'Diehard Pro'
+        };
+        const subscriptionTier = user.subscriptionTier || 'free';
+        const isSubscribed = subscriptionTier !== 'free' && user.subscriptionStatus === 'active';
+
         res.status(200).json({
             user: {
                 _id: user._id.toString(),
@@ -49,7 +57,12 @@ export default async function handler(req, res) {
                 coinBalance: user.coinBalance || 0,
                 lifetimeCoins: user.lifetimeCoins || 0,
                 dailyLoginStreak: user.dailyLoginStreak || 0,
-                badges: user.badges || []
+                badges: user.badges || [],
+                // Subscription fields
+                subscriptionTier,
+                subscriptionTierName: tierNames[subscriptionTier] || 'Free',
+                subscriptionStatus: user.subscriptionStatus || 'none',
+                isSubscribed
             }
         });
     } catch (error) {

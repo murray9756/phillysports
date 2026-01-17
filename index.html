@@ -309,6 +309,22 @@
             font-variant-numeric: tabular-nums;
         }
 
+        /* Premium Badge */
+        .premium-badge {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: #000 !important;
+            font-size: 0.65rem !important;
+            font-weight: 700 !important;
+            padding: 0.2rem 0.5rem !important;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-left: -0.5rem;
+            letter-spacing: 0.5px;
+        }
+        .premium-badge:hover {
+            background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
+        }
+
         /* Dark Mode Toggle */
         .theme-toggle {
             background: none;
@@ -2570,6 +2586,9 @@
                 const data = await response.json();
                 if (data.user) {
                     const headerAuth = document.getElementById('headerAuth');
+                    const premiumBadge = data.user.isSubscribed
+                        ? `<a href="/membership.html" class="premium-badge" title="${data.user.subscriptionTierName}">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
+                        : '';
                     headerAuth.innerHTML = `
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
@@ -2579,7 +2598,7 @@
                             <span class="coin-icon">&#129689;</span>
                             <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
                         </div>
-                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="/profile.html">${data.user.username}</a>${premiumBadge}
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
                     document.getElementById('themeToggle').addEventListener('click', toggleTheme);

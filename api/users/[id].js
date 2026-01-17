@@ -42,6 +42,14 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Determine subscription tier name for display
+        const tierNames = {
+            'diehard_plus': 'Diehard+',
+            'diehard_pro': 'Diehard Pro'
+        };
+        const subscriptionTier = user.subscriptionTier || 'free';
+        const isSubscribed = subscriptionTier !== 'free' && user.subscriptionStatus === 'active';
+
         res.status(200).json({
             user: {
                 _id: user._id.toString(),
@@ -53,7 +61,11 @@ export default async function handler(req, res) {
                 following: user.following?.map(id => id.toString()) || [],
                 followers: user.followers?.map(id => id.toString()) || [],
                 savedArticles: user.savedArticles || [],
-                createdAt: user.createdAt
+                createdAt: user.createdAt,
+                // Subscription fields (public)
+                subscriptionTier,
+                subscriptionTierName: tierNames[subscriptionTier] || 'Free',
+                isSubscribed
             }
         });
     } catch (error) {
