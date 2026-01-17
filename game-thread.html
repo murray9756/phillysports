@@ -590,13 +590,11 @@
                     <span class="game-status ${thread.status}">${thread.status.replace('-', ' ')}</span>
                     <div class="game-teams">
                         <div class="team ${isHome ? 'team-' + phillyTeam : ''}">
-                            <span class="team-emoji">${isHome ? phillyEmoji : '🏈'}</span>
                             <span class="team-name">${thread.homeTeam}</span>
                             <span class="team-score" id="homeScore">${homeScore}</span>
                         </div>
                         <span class="game-vs">@</span>
                         <div class="team ${!isHome ? 'team-' + phillyTeam : ''}">
-                            <span class="team-emoji">${!isHome ? phillyEmoji : '🏈'}</span>
                             <span class="team-name">${thread.awayTeam}</span>
                             <span class="team-score" id="awayScore">${awayScore}</span>
                         </div>
@@ -965,5 +963,7 @@
         // Init
         checkAuth().then(loadThread);
     </script>
+    <!-- Live Ticker -->
+    <script src="/js/live-ticker.js"></script>
 </body>
 </html>
