@@ -1562,39 +1562,17 @@
                 </div>
             </div>
 
-            <!-- Twitter/X Feed Widget -->
+            <!-- Twitter/X Feed Widget (Elfsight) -->
             <div class="widget">
                 <div class="widget-header">
                     <span>&#128038;</span>
                     <h3 class="widget-title">@phlsports</h3>
                 </div>
-                <div class="widget-content" style="padding: 0;">
-                    <a class="twitter-timeline"
-                       data-height="350"
-                       data-theme="dark"
-                       data-chrome="noheader nofooter noborders"
-                       href="https://x.com/phlsports">
-                       Loading tweets...
-                    </a>
+                <div class="widget-content" style="padding: 0; min-height: 350px;">
+                    <script src="https://elfsightcdn.com/platform.js" async></script>
+                    <div class="elfsight-app-40682ef3-76f7-4670-84af-bc08c8e8ba9f" data-elfsight-app-lazy></div>
                 </div>
             </div>
-            <script>
-                // Load Twitter widget with explicit initialization
-                window.twttr = (function(d, s, id) {
-                    var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
-                    if (d.getElementById(id)) return t;
-                    js = d.createElement(s);
-                    js.id = id;
-                    js.src = "https://platform.twitter.com/widgets.js";
-                    fjs.parentNode.insertBefore(js, fjs);
-                    t._e = [];
-                    t.ready = function(f) { t._e.push(f); };
-                    return t;
-                }(document, "script", "twitter-wjs"));
-                twttr.ready(function(twttr) {
-                    twttr.widgets.load();
-                });
-            </script>
 
             <!-- Newsletter Widget -->
             <div class="widget newsletter-widget">
@@ -1635,19 +1613,6 @@
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            // Update Twitter widget theme
-            updateTwitterTheme(newTheme);
-        }
-
-        function updateTwitterTheme(theme) {
-            const twitterTimeline = document.querySelector('.twitter-timeline');
-            if (twitterTimeline) {
-                twitterTimeline.setAttribute('data-theme', theme);
-                // Reload Twitter widget to apply new theme
-                if (window.twttr && window.twttr.widgets) {
-                    window.twttr.widgets.load();
-                }
-            }
         }
 
         // Initialize theme immediately to prevent flash
