@@ -1,33 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Homepage - Priority 1.0 -->
     <url>
         <loc>https://phillysports.com/</loc>
-        <lastmod>2026-01-10</lastmod>
+        <lastmod>2026-01-17</lastmod>
         <changefreq>hourly</changefreq>
         <priority>1.0</priority>
     </url>
+
+    <!-- Pro Team Pages - Priority 0.9 -->
     <url>
         <loc>https://phillysports.com/eagles/</loc>
-        <lastmod>2026-01-10</lastmod>
+        <lastmod>2026-01-17</lastmod>
         <changefreq>hourly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://phillysports.com/phillies/</loc>
-        <lastmod>2026-01-10</lastmod>
+        <lastmod>2026-01-17</lastmod>
         <changefreq>hourly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://phillysports.com/sixers/</loc>
-        <lastmod>2026-01-10</lastmod>
+        <lastmod>2026-01-17</lastmod>
         <changefreq>hourly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://phillysports.com/flyers/</loc>
-        <lastmod>2026-01-10</lastmod>
+        <lastmod>2026-01-17</lastmod>
         <changefreq>hourly</changefreq>
         <priority>0.9</priority>
+    </url>
+
+    <!-- College Team Pages - Priority 0.8 -->
+    <url>
+        <loc>https://phillysports.com/villanova/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/penn/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/temple/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/drexel/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/lasalle/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/stjosephs/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Gaming Pages - Priority 0.8 -->
+    <url>
+        <loc>https://phillysports.com/trivia.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/fantasy.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/pools.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/poker.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Betting Pages - Priority 0.8 -->
+    <url>
+        <loc>https://phillysports.com/odds.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/bets.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/predictions.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Live Content - Priority 0.8 -->
+    <url>
+        <loc>https://phillysports.com/game-threads.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Community Pages - Priority 0.7 -->
+    <url>
+        <loc>https://phillysports.com/community/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/community/clubs/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/community/watch-parties/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/community/tailgates/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/community/events/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Shop Pages - Priority 0.7 -->
+    <url>
+        <loc>https://phillysports.com/shop/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/marketplace/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/raffles/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Utility Pages - Priority 0.6 -->
+    <url>
+        <loc>https://phillysports.com/leaderboard.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>hourly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/source-leaderboard.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/badges.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Other Sections - Priority 0.6 -->
+    <url>
+        <loc>https://phillysports.com/esports/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/youth/</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Auth Pages - Priority 0.5 -->
+    <url>
+        <loc>https://phillysports.com/login.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://phillysports.com/register.html</loc>
+        <lastmod>2026-01-17</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
     </url>
 </urlset>
