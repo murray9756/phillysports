@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Party - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+        }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        .theme-toggle .theme-icon-dark { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .main-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .party-header { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 1.5rem; }
+        .party-banner { padding: 2rem; background: linear-gradient(135deg, var(--sixers-blue), var(--eagles-green)); color: white; }
+        .party-banner.eagles { background: linear-gradient(135deg, var(--eagles-green), #003333); }
+        .party-banner.phillies { background: linear-gradient(135deg, var(--phillies-red), #990000); }
+        .party-banner.sixers { background: linear-gradient(135deg, var(--sixers-blue), #003366); }
+        .party-banner.flyers { background: linear-gradient(135deg, var(--flyers-orange), #cc3300); }
+        .party-banner .team-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .party-banner .date-time { font-size: 1rem; opacity: 0.9; margin-bottom: 0.5rem; }
+        .party-banner .title { font-size: 1.75rem; font-weight: 800; }
+
+        .party-content { padding: 1.5rem; }
+        .party-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .party-meta .meta-item { display: flex; align-items: flex-start; gap: 0.5rem; }
+        .party-meta .meta-icon { font-size: 1.25rem; }
+        .party-meta .meta-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .party-meta .meta-value { font-weight: 600; }
+
+        .party-description { color: var(--text-secondary); margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+
+        .party-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--dark-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: var(--border-color); }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .rsvp-options { display: flex; gap: 0.5rem; align-items: center; }
+        .rsvp-options select { padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-family: inherit; }
+
+        .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .attendees-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+        .attendee-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--dark-bg); border-radius: 8px; }
+        .attendee-card .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .attendee-card .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .attendee-card .name { font-size: 0.85rem; font-weight: 500; }
+
+        .host-badge { background: rgba(255,215,0,0.2); color: #b8860b; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 0.5rem; }
+
+        .amenities-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+        .amenity { padding: 0.25rem 0.75rem; background: var(--dark-bg); border-radius: 4px; font-size: 0.8rem; }
+
+        .status-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .status-badge.cancelled { background: rgba(220,53,69,0.1); color: #dc3545; }
+        .status-badge.past { background: rgba(108,117,125,0.1); color: #6c757d; }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .party-meta { flex-direction: column; gap: 1rem; }
+            .party-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo-weathered.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div id="partyContent">
+            <div class="loading">Loading watch party...</div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        let currentUser = null;
+        let party = null;
+        const partyId = new URLSearchParams(window.location.search).get('id');
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">🪙 ${Math.round(data.user.coinBalance || 0)}</div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                }
+            } catch (e) {}
+        }
+
+        async function loadParty() {
+            if (!partyId) {
+                document.getElementById('partyContent').innerHTML = '<div class="empty-state">Party not found</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/watch-parties/${partyId}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!data.success || !data.party) {
+                    document.getElementById('partyContent').innerHTML = '<div class="empty-state">Party not found</div>';
+                    return;
+                }
+
+                party = data.party;
+                document.title = `${party.title} - PhillySports.com`;
+                renderParty();
+            } catch (error) {
+                console.error('Failed to load party:', error);
+                document.getElementById('partyContent').innerHTML = '<div class="empty-state">Failed to load party</div>';
+            }
+        }
+
+        function renderParty() {
+            const isPast = new Date(party.gameTime) < new Date();
+            const isCancelled = party.status === 'cancelled';
+            const hasRsvp = !!party.userRsvp;
+            const isHost = party.isHost;
+
+            let statusBadge = '';
+            if (isCancelled) statusBadge = '<span class="status-badge cancelled">Cancelled</span>';
+            else if (isPast) statusBadge = '<span class="status-badge past">Past Event</span>';
+
+            document.getElementById('partyContent').innerHTML = `
+                <div class="party-header">
+                    <div class="party-banner ${party.team || ''}">
+                        <div class="team-icon">${getTeamEmoji(party.team)}</div>
+                        <div class="date-time">${formatDateTime(party.gameTime)}</div>
+                        <div class="title">${party.title} ${statusBadge}</div>
+                    </div>
+                    <div class="party-content">
+                        <div class="party-meta">
+                            <div class="meta-item">
+                                <span class="meta-icon">${getLocationIcon(party.locationType)}</span>
+                                <div>
+                                    <div class="meta-label">Location</div>
+                                    <div class="meta-value">${party.locationType === 'virtual' ? 'Virtual Party' : party.location?.name || 'TBD'}</div>
+                                    ${party.location?.address ? `<div style="font-size: 0.8rem; color: var(--text-muted);">${party.location.address}${party.location.city ? `, ${party.location.city}` : ''}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">👥</span>
+                                <div>
+                                    <div class="meta-label">Attendance</div>
+                                    <div class="meta-value">${party.attendeeCount} going${party.capacity ? ` / ${party.capacity} max` : ''}</div>
+                                </div>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-icon">${party.costPerPerson > 0 ? '💰' : '🆓'}</span>
+                                <div>
+                                    <div class="meta-label">Cost</div>
+                                    <div class="meta-value">${party.costPerPerson > 0 ? `$${party.costPerPerson}` : 'Free'}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${party.description ? `<div class="party-description">${party.description}</div>` : ''}
+
+                        ${!isPast && !isCancelled ? `
+                            <div class="party-actions">
+                                ${!currentUser ? `
+                                    <a href="/login.html" class="btn btn-primary">Login to RSVP</a>
+                                ` : isHost ? `
+                                    <button class="btn btn-danger" onclick="cancelParty()">Cancel Party</button>
+                                ` : hasRsvp ? `
+                                    <button class="btn btn-secondary" onclick="cancelRsvp()">Cancel RSVP</button>
+                                    <span style="color: var(--text-muted);">You're ${party.userRsvp.status}!</span>
+                                ` : `
+                                    <div class="rsvp-options">
+                                        <button class="btn btn-primary" onclick="rsvp('going')">I'm Going!</button>
+                                        <button class="btn btn-secondary" onclick="rsvp('maybe')">Maybe</button>
+                                    </div>
+                                `}
+                            </div>
+                        ` : ''}
+
+                        ${party.amenities && party.amenities.length > 0 ? `
+                            <div class="amenities-list">
+                                ${party.amenities.map(a => `<span class="amenity">${a}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="party-header" style="margin-top: 1.5rem;">
+                    <div class="party-content">
+                        <h3 class="section-title">👥 Who's Going (${party.attendeeCount})</h3>
+                        <div class="attendees-grid">
+                            ${party.attendees && party.attendees.length > 0 ? party.attendees.map(a => `
+                                <a href="/profile.html?username=${a.username}" class="attendee-card">
+                                    <div class="avatar">
+                                        ${a.profilePhoto ? `<img src="${a.profilePhoto}" alt="">` : '👤'}
+                                    </div>
+                                    <div class="name">
+                                        ${a.displayName || a.username}
+                                        ${a.userId === party.hostId ? '<span class="host-badge">Host</span>' : ''}
+                                    </div>
+                                </a>
+                            `).join('') : '<div style="color: var(--text-muted);">No attendees yet</div>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function rsvp(status) {
+            try {
+                const response = await fetch(`/api/watch-parties/${partyId}/rsvp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ status, guestCount: 0 })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message);
+                    loadParty();
+                } else {
+                    alert(data.error || 'Failed to RSVP');
+                }
+            } catch (error) {
+                alert('Failed to RSVP');
+            }
+        }
+
+        async function cancelRsvp() {
+            if (!confirm('Cancel your RSVP?')) return;
+            try {
+                const response = await fetch(`/api/watch-parties/${partyId}/rsvp`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('RSVP cancelled');
+                    loadParty();
+                } else {
+                    alert(data.error || 'Failed to cancel');
+                }
+            } catch (error) {
+                alert('Failed to cancel');
+            }
+        }
+
+        async function cancelParty() {
+            if (!confirm('Cancel this watch party? This cannot be undone.')) return;
+            try {
+                const response = await fetch(`/api/watch-parties/${partyId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Party cancelled');
+                    window.location.href = '/community/watch-parties/';
+                } else {
+                    alert(data.error || 'Failed to cancel');
+                }
+            } catch (error) {
+                alert('Failed to cancel');
+            }
+        }
+
+        function getTeamEmoji(team) {
+            const emojis = { eagles: '🦅', phillies: '⚾', sixers: '🏀', flyers: '🏒' };
+            return emojis[team] || '🏆';
+        }
+
+        function getLocationIcon(type) {
+            const icons = { bar: '🍺', home: '🏠', venue: '🏟️', virtual: '💻' };
+            return icons[type] || '📍';
+        }
+
+        function formatDateTime(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
+        checkAuth().then(() => loadParty());
+    </script>
+</body>
+</html>

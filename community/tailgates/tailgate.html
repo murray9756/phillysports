@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailgate - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+            --success-color: #2e7d32;
+            --warning-color: #f57c00;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+        }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; line-height: 1; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        .theme-toggle .theme-icon-dark { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .main-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
+        .nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+        .nav-item { padding: 0.75rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--nav-text); text-transform: uppercase; }
+        .nav-item:hover { color: var(--accent-color); }
+        .nav-dropdown { position: relative; }
+        .dropdown-trigger { display: flex; align-items: center; gap: 0.25rem; cursor: pointer; }
+        .dropdown-arrow { font-size: 0.5rem; }
+        .dropdown-menu { position: absolute; top: 100%; left: 0; background: var(--header-bg); border: 1px solid var(--border-color); border-radius: 4px; min-width: 150px; opacity: 0; visibility: hidden; z-index: 1000; }
+        .nav-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; }
+        .dropdown-menu a { display: block; padding: 0.6rem 1rem; font-size: 0.8rem; }
+        .dropdown-menu a:hover { background: rgba(0,0,0,0.05); color: var(--accent-color); }
+
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+        .back-link:hover { color: var(--text-primary); }
+
+        .tailgate-header { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; margin-bottom: 1.5rem; }
+        .header-bar { padding: 1rem; display: flex; align-items: center; justify-content: space-between; }
+        .header-bar.eagles { background: linear-gradient(135deg, rgba(0,76,84,0.2), rgba(0,76,84,0.1)); }
+        .header-bar.phillies { background: linear-gradient(135deg, rgba(232,24,40,0.2), rgba(232,24,40,0.1)); }
+        .header-bar.sixers { background: linear-gradient(135deg, rgba(0,107,182,0.2), rgba(0,107,182,0.1)); }
+        .header-bar.flyers { background: linear-gradient(135deg, rgba(247,73,2,0.2), rgba(247,73,2,0.1)); }
+        .header-bar .team-badge { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+        .header-bar .team-badge .icon { font-size: 1.5rem; }
+        .header-bar .status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .header-bar .status-badge.upcoming { background: rgba(46,125,50,0.2); color: var(--success-color); }
+        .header-bar .status-badge.cancelled { background: rgba(211,47,47,0.2); color: #d32f2f; }
+        .header-bar .status-badge.past { background: var(--dark-bg); color: var(--text-muted); }
+
+        .tailgate-content { padding: 1.5rem; }
+        .tailgate-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .tailgate-meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.9rem; }
+        .tailgate-meta span { display: flex; align-items: center; gap: 0.35rem; }
+        .tailgate-description { color: var(--text-secondary); margin-bottom: 1rem; white-space: pre-wrap; }
+
+        .location-card { background: var(--dark-bg); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .location-card h4 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .location-card .venue { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .location-card .details { font-size: 0.9rem; color: var(--text-secondary); }
+
+        .schedule-card { background: var(--dark-bg); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .schedule-card h4 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .schedule-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); }
+        .schedule-item:last-child { border-bottom: none; }
+        .schedule-item .label { color: var(--text-secondary); }
+        .schedule-item .time { font-weight: 600; }
+
+        .host-info { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--dark-bg); border-radius: 8px; margin-bottom: 1rem; }
+        .host-info .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; overflow: hidden; }
+        .host-info .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .host-info .details { flex: 1; }
+        .host-info .name { font-weight: 600; }
+        .host-info .label { font-size: 0.8rem; color: var(--text-muted); }
+
+        .action-buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--eagles-green), #006644); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--dark-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { border-color: var(--text-muted); }
+        .btn-danger { background: rgba(211,47,47,0.1); color: #d32f2f; border: 1px solid rgba(211,47,47,0.3); }
+        .btn-danger:hover { background: rgba(211,47,47,0.2); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .rsvp-status { padding: 0.75rem 1rem; background: rgba(46,125,50,0.1); border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; color: var(--success-color); font-weight: 600; }
+
+        .sidebar { display: grid; gap: 1.5rem; }
+        .card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.25rem; }
+        .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .attendee-list { display: flex; flex-direction: column; gap: 0.75rem; max-height: 300px; overflow-y: auto; }
+        .attendee { display: flex; align-items: center; gap: 0.75rem; }
+        .attendee .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--dark-bg); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .attendee .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .attendee .info { flex: 1; }
+        .attendee .name { font-weight: 500; font-size: 0.9rem; }
+        .attendee .meta { font-size: 0.75rem; color: var(--text-muted); }
+        .attendee .badge { padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .attendee .badge.host { background: rgba(139,0,0,0.1); color: var(--accent-color); }
+        .attendee .badge.going { background: rgba(46,125,50,0.1); color: var(--success-color); }
+        .attendee .badge.maybe { background: rgba(245,124,0,0.1); color: var(--warning-color); }
+
+        .needed-items { display: flex; flex-direction: column; gap: 0.5rem; }
+        .needed-item { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem; background: var(--dark-bg); border-radius: 6px; }
+        .needed-item .item-info { flex: 1; }
+        .needed-item .item-name { font-weight: 500; font-size: 0.9rem; }
+        .needed-item .quantity { font-size: 0.75rem; color: var(--text-muted); }
+        .needed-item .claim-btn { padding: 0.35rem 0.75rem; font-size: 0.75rem; background: var(--flyers-orange); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .needed-item .claimed { font-size: 0.75rem; color: var(--success-color); }
+
+        .contributions-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .contribution { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; background: var(--dark-bg); border-radius: 6px; }
+        .contribution .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--card-bg); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 0.8rem; }
+        .contribution .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .contribution .info { flex: 1; font-size: 0.85rem; }
+        .contribution .status { padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; }
+        .contribution .status.committed { background: rgba(245,124,0,0.1); color: var(--warning-color); }
+        .contribution .status.packed { background: rgba(0,107,182,0.1); color: var(--sixers-blue); }
+        .contribution .status.delivered { background: rgba(46,125,50,0.1); color: var(--success-color); }
+
+        .amenities-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .amenity { padding: 0.35rem 0.75rem; background: var(--dark-bg); border-radius: 20px; font-size: 0.8rem; }
+
+        .rules-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .rule { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); }
+        .rule::before { content: '•'; color: var(--accent-color); }
+
+        .add-contribution { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+        .add-contribution input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; margin-bottom: 0.5rem; background: var(--dark-bg); color: var(--text-primary); font-family: inherit; }
+        .add-contribution button { width: 100%; padding: 0.5rem; font-size: 0.85rem; }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .error { text-align: center; padding: 3rem; color: #d32f2f; }
+
+        .content-grid { display: grid; grid-template-columns: 1fr 350px; gap: 1.5rem; }
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo-weathered.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="/" class="nav-item">Home</a>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/eagles/">Eagles</a>
+                        <a href="/phillies/">Phillies</a>
+                        <a href="/sixers/">76ers</a>
+                        <a href="/flyers/">Flyers</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/community/">Forums</a>
+                        <a href="/community/clubs/">Fan Clubs</a>
+                        <a href="/community/watch-parties/">Watch Parties</a>
+                        <a href="/community/tailgates/">Tailgates</a>
+                        <a href="/badges.html">Badges</a>
+                    </div>
+                </div>
+                <a href="/game-threads.html" class="nav-item">Live</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <a href="/community/tailgates/" class="back-link">← Back to Tailgates</a>
+        <div id="tailgateContainer">
+            <div class="loading">Loading tailgate...</div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        let currentUser = null;
+        let tailgate = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">🪙 ${Math.round(data.user.coinBalance || 0)}</div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                }
+            } catch (e) {}
+        }
+
+        async function loadTailgate() {
+            const container = document.getElementById('tailgateContainer');
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                container.innerHTML = '<div class="error">Invalid tailgate ID</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/tailgates/${id}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    container.innerHTML = `<div class="error">${data.error || 'Tailgate not found'}</div>`;
+                    return;
+                }
+
+                tailgate = data.tailgate;
+                document.title = `${tailgate.title} - PhillySports.com`;
+                renderTailgate();
+            } catch (error) {
+                console.error('Failed to load tailgate:', error);
+                container.innerHTML = '<div class="error">Failed to load tailgate. Please try again.</div>';
+            }
+        }
+
+        function renderTailgate() {
+            const container = document.getElementById('tailgateContainer');
+            const isHost = currentUser && tailgate.hostId === currentUser._id;
+            const userRsvp = currentUser && tailgate.attendees?.find(a => a.userId === currentUser._id);
+            const isPast = new Date(tailgate.schedule?.arrivalTime) < new Date();
+            const isCancelled = tailgate.status === 'cancelled';
+
+            let statusClass = 'upcoming';
+            let statusText = 'Upcoming';
+            if (isCancelled) {
+                statusClass = 'cancelled';
+                statusText = 'Cancelled';
+            } else if (isPast) {
+                statusClass = 'past';
+                statusText = 'Past';
+            }
+
+            container.innerHTML = `
+                <div class="tailgate-header">
+                    <div class="header-bar ${tailgate.team || ''}">
+                        <div class="team-badge">
+                            <span class="icon">${getTeamEmoji(tailgate.team)}</span>
+                            <span>${getTeamName(tailgate.team)}</span>
+                        </div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="tailgate-content">
+                        <h1 class="tailgate-title">${tailgate.title}</h1>
+                        <div class="tailgate-meta">
+                            <span>👥 ${tailgate.attendeeCount} attending</span>
+                            ${tailgate.capacity ? `<span>📊 ${tailgate.capacity} max</span>` : ''}
+                            ${tailgate.costPerPerson > 0 ? `<span>💰 $${tailgate.costPerPerson} per person</span>` : '<span>🆓 Free</span>'}
+                        </div>
+                        ${tailgate.description ? `<p class="tailgate-description">${tailgate.description}</p>` : ''}
+
+                        <div class="location-card">
+                            <h4>🅿️ Location</h4>
+                            <div class="venue">${tailgate.location?.venueName || 'TBD'}</div>
+                            <div class="details">
+                                ${tailgate.location?.lot ? `Lot ${tailgate.location.lot}` : ''}
+                                ${tailgate.location?.spotNumber ? ` - Spot ${tailgate.location.spotNumber}` : ''}
+                                ${tailgate.location?.meetupPoint ? `<br>Meetup: ${tailgate.location.meetupPoint}` : ''}
+                                ${tailgate.location?.address ? `<br>${tailgate.location.address}, ${tailgate.location.city}, ${tailgate.location.state}` : ''}
+                            </div>
+                        </div>
+
+                        <div class="schedule-card">
+                            <h4>📅 Schedule</h4>
+                            <div class="schedule-item">
+                                <span class="label">Arrival Time</span>
+                                <span class="time">${formatDateTime(tailgate.schedule?.arrivalTime)}</span>
+                            </div>
+                            ${tailgate.schedule?.kickoffTime ? `
+                                <div class="schedule-item">
+                                    <span class="label">Game Time</span>
+                                    <span class="time">${formatDateTime(tailgate.schedule.kickoffTime)}</span>
+                                </div>
+                            ` : ''}
+                            ${tailgate.schedule?.endTime ? `
+                                <div class="schedule-item">
+                                    <span class="label">End Time</span>
+                                    <span class="time">${formatDateTime(tailgate.schedule.endTime)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="host-info">
+                            <div class="avatar">
+                                ${tailgate.host?.profilePhoto ? `<img src="${tailgate.host.profilePhoto}" alt="">` : '👤'}
+                            </div>
+                            <div class="details">
+                                <div class="name">${tailgate.host?.displayName || tailgate.host?.username || 'Unknown'}</div>
+                                <div class="label">Host</div>
+                            </div>
+                        </div>
+
+                        ${userRsvp ? `
+                            <div class="rsvp-status">
+                                ✓ You're ${userRsvp.status === 'going' ? 'going' : 'a maybe'}
+                                ${userRsvp.guestCount > 0 ? ` (+${userRsvp.guestCount} guest${userRsvp.guestCount > 1 ? 's' : ''})` : ''}
+                            </div>
+                        ` : ''}
+
+                        ${!isCancelled && !isPast ? `
+                            <div class="action-buttons">
+                                ${!currentUser ? `
+                                    <a href="/login.html" class="btn btn-primary">Login to RSVP</a>
+                                ` : userRsvp ? `
+                                    <button class="btn btn-secondary" onclick="updateRsvp('${userRsvp.status === 'going' ? 'maybe' : 'going'}')">
+                                        Change to ${userRsvp.status === 'going' ? 'Maybe' : 'Going'}
+                                    </button>
+                                    ${!isHost ? `<button class="btn btn-danger" onclick="cancelRsvp()">Cancel RSVP</button>` : ''}
+                                ` : `
+                                    <button class="btn btn-primary" onclick="rsvp('going')">I'm Going!</button>
+                                    <button class="btn btn-secondary" onclick="rsvp('maybe')">Maybe</button>
+                                `}
+                                ${isHost ? `
+                                    <button class="btn btn-danger" onclick="cancelTailgate()">Cancel Tailgate</button>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="sidebar">
+                        <!-- Needed Items -->
+                        ${(tailgate.neededItems?.length > 0 || (userRsvp && !isPast && !isCancelled)) ? `
+                            <div class="card">
+                                <h3>📋 Needed Items</h3>
+                                <div class="needed-items">
+                                    ${tailgate.neededItems?.length > 0 ? tailgate.neededItems.map((item, idx) => `
+                                        <div class="needed-item">
+                                            <div class="item-info">
+                                                <div class="item-name">${item.item}</div>
+                                                ${item.quantity > 1 ? `<div class="quantity">Qty: ${item.quantity}</div>` : ''}
+                                            </div>
+                                            ${item.claimedBy ? `
+                                                <span class="claimed">✓ Claimed</span>
+                                            ` : (currentUser && userRsvp && !isPast && !isCancelled ? `
+                                                <button class="claim-btn" onclick="claimItem(${idx}, '${item.item}')">Claim</button>
+                                            ` : '')}
+                                        </div>
+                                    `).join('') : '<div style="color: var(--text-muted); font-size: 0.85rem;">No items needed</div>'}
+                                </div>
+                                ${userRsvp && !isPast && !isCancelled ? `
+                                    <div class="add-contribution">
+                                        <input type="text" id="contributionItem" placeholder="I'll bring...">
+                                        <button class="btn btn-primary" onclick="addContribution()">Add Contribution (+15 coins)</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+
+                        <!-- Contributions -->
+                        ${tailgate.contributions?.length > 0 ? `
+                            <div class="card">
+                                <h3>🍔 What's Being Brought</h3>
+                                <div class="contributions-list">
+                                    ${tailgate.contributions.map(c => `
+                                        <div class="contribution">
+                                            <div class="avatar">
+                                                ${c.profilePhoto ? `<img src="${c.profilePhoto}" alt="">` : '👤'}
+                                            </div>
+                                            <div class="info">
+                                                <strong>${c.displayName || c.username}</strong> is bringing ${c.item}
+                                                ${c.quantity > 1 ? `(x${c.quantity})` : ''}
+                                            </div>
+                                            <span class="status ${c.status}">${c.status}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Amenities -->
+                        ${tailgate.amenities?.length > 0 ? `
+                            <div class="card">
+                                <h3>🎯 Amenities</h3>
+                                <div class="amenities-list">
+                                    ${tailgate.amenities.map(a => `<span class="amenity">${a}</span>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Rules -->
+                        ${tailgate.rules?.length > 0 ? `
+                            <div class="card">
+                                <h3>📜 Rules</h3>
+                                <div class="rules-list">
+                                    ${tailgate.rules.map(r => `<div class="rule">${r}</div>`).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Attendees -->
+                    <div class="card">
+                        <h3>👥 Who's Coming (${tailgate.attendeeCount})</h3>
+                        <div class="attendee-list">
+                            ${tailgate.attendees?.map(a => `
+                                <div class="attendee">
+                                    <div class="avatar">
+                                        ${a.profilePhoto ? `<img src="${a.profilePhoto}" alt="">` : '👤'}
+                                    </div>
+                                    <div class="info">
+                                        <div class="name">${a.displayName || a.username}</div>
+                                        ${a.guestCount > 0 ? `<div class="meta">+${a.guestCount} guest${a.guestCount > 1 ? 's' : ''}</div>` : ''}
+                                    </div>
+                                    <span class="badge ${a.userId === tailgate.hostId ? 'host' : a.status}">${a.userId === tailgate.hostId ? 'Host' : a.status}</span>
+                                </div>
+                            `).join('') || '<div style="color: var(--text-muted);">No attendees yet</div>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function rsvp(status) {
+            try {
+                const response = await fetch(`/api/tailgates/${tailgate.id}/rsvp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ status, guestCount: 0 })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    loadTailgate();
+                } else {
+                    alert(data.error || 'Failed to RSVP');
+                }
+            } catch (error) {
+                alert('Failed to RSVP');
+            }
+        }
+
+        async function updateRsvp(status) {
+            await rsvp(status);
+        }
+
+        async function cancelRsvp() {
+            if (!confirm('Are you sure you want to cancel your RSVP?')) return;
+            try {
+                const response = await fetch(`/api/tailgates/${tailgate.id}/rsvp`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    loadTailgate();
+                } else {
+                    alert(data.error || 'Failed to cancel RSVP');
+                }
+            } catch (error) {
+                alert('Failed to cancel RSVP');
+            }
+        }
+
+        async function cancelTailgate() {
+            if (!confirm('Are you sure you want to cancel this tailgate? This cannot be undone.')) return;
+            try {
+                const response = await fetch(`/api/tailgates/${tailgate.id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    loadTailgate();
+                } else {
+                    alert(data.error || 'Failed to cancel tailgate');
+                }
+            } catch (error) {
+                alert('Failed to cancel tailgate');
+            }
+        }
+
+        async function claimItem(index, itemName) {
+            try {
+                const response = await fetch(`/api/tailgates/${tailgate.id}/contributions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ item: itemName, neededItemIndex: index })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`Great! You earned ${data.coinsAwarded} coins!`);
+                    loadTailgate();
+                } else {
+                    alert(data.error || 'Failed to claim item');
+                }
+            } catch (error) {
+                alert('Failed to claim item');
+            }
+        }
+
+        async function addContribution() {
+            const input = document.getElementById('contributionItem');
+            const item = input.value.trim();
+            if (!item) {
+                alert('Please enter what you\'ll bring');
+                return;
+            }
+            try {
+                const response = await fetch(`/api/tailgates/${tailgate.id}/contributions`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ item })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    input.value = '';
+                    alert(`Great! You earned ${data.coinsAwarded} coins!`);
+                    loadTailgate();
+                } else {
+                    alert(data.error || 'Failed to add contribution');
+                }
+            } catch (error) {
+                alert('Failed to add contribution');
+            }
+        }
+
+        function getTeamEmoji(team) {
+            const emojis = { eagles: '🦅', phillies: '⚾', sixers: '🏀', flyers: '🏒', union: '⚽' };
+            return emojis[team] || '🏆';
+        }
+
+        function getTeamName(team) {
+            const names = { eagles: 'Eagles', phillies: 'Phillies', sixers: '76ers', flyers: 'Flyers', union: 'Union' };
+            return names[team] || 'Philly Sports';
+        }
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return 'TBD';
+            const date = new Date(dateStr);
+            const options = { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        checkAuth().then(loadTailgate);
+    </script>
+</body>
+</html>

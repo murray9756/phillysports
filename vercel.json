@@ -27,6 +27,10 @@
     {
       "path": "/api/game-threads/check",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/pools/check",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

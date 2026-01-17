@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host a Watch Party - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --accent-color: #8b0000;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+        }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        .theme-toggle .theme-icon-dark { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .main-container { max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--text-secondary); }
+
+        .form-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-family: inherit; font-size: 0.95rem; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-color); }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .form-group .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .location-fields { display: none; }
+        .location-fields.active { display: block; }
+
+        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; width: 100%; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .reward-banner { background: linear-gradient(135deg, rgba(255,152,0,0.1), rgba(255,193,7,0.1)); border: 1px solid rgba(255,152,0,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .reward-banner .icon { font-size: 1.5rem; }
+        .reward-banner .text strong { color: #ff9800; }
+
+        .login-prompt { text-align: center; padding: 3rem; }
+        .login-prompt .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .login-prompt a { color: var(--accent-color); font-weight: 600; }
+
+        .amenities-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+        .amenity-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: var(--dark-bg); border-radius: 6px; cursor: pointer; }
+        .amenity-option input { margin: 0; }
+        .amenity-option label { cursor: pointer; font-size: 0.85rem; }
+
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+            .amenities-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo-weathered.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Host a Watch Party</h1>
+            <p class="page-subtitle">Bring Philly fans together for the big game</p>
+        </div>
+
+        <div id="content">
+            <div class="login-prompt">
+                <div class="icon">🔒</div>
+                <p>Please log in to host a watch party</p>
+                <a href="/login.html">Login</a> or <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        let currentUser = null;
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">🪙 ${Math.round(data.user.coinBalance || 0)}</div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    showForm();
+                }
+            } catch (e) {}
+        }
+
+        function showForm() {
+            document.getElementById('content').innerHTML = `
+                <div class="reward-banner">
+                    <div class="icon">🪙</div>
+                    <div class="text">Hosting a party earns you <strong>+25 Diehard Dollars!</strong></div>
+                </div>
+
+                <div class="form-card">
+                    <form id="createForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="title">Party Title *</label>
+                            <input type="text" id="title" required minlength="5" maxlength="200" placeholder="e.g., Eagles vs Cowboys Watch Party">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" maxlength="2000" placeholder="What should guests know about your party?"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="team">Team</label>
+                                <select id="team">
+                                    <option value="">Select Team</option>
+                                    <option value="eagles">Eagles</option>
+                                    <option value="phillies">Phillies</option>
+                                    <option value="sixers">76ers</option>
+                                    <option value="flyers">Flyers</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gameTime">Game Date & Time *</label>
+                                <input type="datetime-local" id="gameTime" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="locationType">Location Type *</label>
+                            <select id="locationType" required onchange="toggleLocationFields()">
+                                <option value="">Select Type</option>
+                                <option value="bar">Bar/Restaurant</option>
+                                <option value="home">Home</option>
+                                <option value="venue">Other Venue</option>
+                                <option value="virtual">Virtual (Online)</option>
+                            </select>
+                        </div>
+
+                        <div id="physicalLocation" class="location-fields">
+                            <div class="form-group">
+                                <label for="locationName">Location Name *</label>
+                                <input type="text" id="locationName" placeholder="e.g., Xfinity Live! or John's House">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" placeholder="Street address">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">City</label>
+                                    <input type="text" id="city" placeholder="Philadelphia">
+                                </div>
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <input type="text" id="state" value="PA" maxlength="2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="virtualLocation" class="location-fields">
+                            <div class="form-group">
+                                <label for="virtualLink">Virtual Link *</label>
+                                <input type="url" id="virtualLink" placeholder="Zoom, Discord, or other link">
+                                <p class="hint">Attendees will see this after RSVPing</p>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="capacity">Max Capacity</label>
+                                <input type="number" id="capacity" min="2" max="1000" placeholder="Leave blank for unlimited">
+                            </div>
+                            <div class="form-group">
+                                <label for="costPerPerson">Cost Per Person ($)</label>
+                                <input type="number" id="costPerPerson" min="0" step="0.01" value="0" placeholder="0 for free">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Amenities</label>
+                            <div class="amenities-grid">
+                                <div class="amenity-option">
+                                    <input type="checkbox" id="food" value="food-provided">
+                                    <label for="food">🍕 Food Provided</label>
+                                </div>
+                                <div class="amenity-option">
+                                    <input type="checkbox" id="byob" value="byob">
+                                    <label for="byob">🍺 BYOB</label>
+                                </div>
+                                <div class="amenity-option">
+                                    <input type="checkbox" id="drinks" value="drinks-provided">
+                                    <label for="drinks">🥤 Drinks Provided</label>
+                                </div>
+                                <div class="amenity-option">
+                                    <input type="checkbox" id="family" value="family-friendly">
+                                    <label for="family">👨‍👩‍👧 Family Friendly</label>
+                                </div>
+                                <div class="amenity-option">
+                                    <input type="checkbox" id="parking" value="parking">
+                                    <label for="parking">🚗 Parking Available</label>
+                                </div>
+                                <div class="amenity-option">
+                                    <input type="checkbox" id="bigtv" value="big-screen">
+                                    <label for="bigtv">📺 Big Screen</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Create Watch Party</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function toggleLocationFields() {
+            const type = document.getElementById('locationType').value;
+            document.getElementById('physicalLocation').classList.toggle('active', type && type !== 'virtual');
+            document.getElementById('virtualLocation').classList.toggle('active', type === 'virtual');
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+
+            const locationType = document.getElementById('locationType').value;
+            const amenities = [];
+            document.querySelectorAll('.amenity-option input:checked').forEach(cb => amenities.push(cb.value));
+
+            const formData = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                team: document.getElementById('team').value || null,
+                gameTime: document.getElementById('gameTime').value,
+                locationType,
+                location: locationType !== 'virtual' ? {
+                    name: document.getElementById('locationName').value,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value
+                } : null,
+                virtualLink: locationType === 'virtual' ? document.getElementById('virtualLink').value : null,
+                capacity: document.getElementById('capacity').value || null,
+                costPerPerson: parseFloat(document.getElementById('costPerPerson').value) || 0,
+                amenities
+            };
+
+            try {
+                const response = await fetch('/api/watch-parties', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Watch party created! You earned +${data.coinsAwarded} Diehard Dollars!`);
+                    window.location.href = `/community/watch-parties/party.html?id=${data.party.id}`;
+                } else {
+                    alert(data.error || 'Failed to create party');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Create Watch Party';
+                }
+            } catch (error) {
+                alert('Failed to create party. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Watch Party';
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fan Clubs - PhillySports.com</title>
+    <meta name="description" content="Join or create fan clubs on PhillySports.com. Connect with fellow Eagles, Phillies, 76ers, and Flyers fans in organized groups.">
+    <link rel="canonical" href="https://phillysports.com/community/clubs/">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+            --widget-header-bg: #e8e3db;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-bg-hover: #2a2a2a;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header-search form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-search .google-logo {
+            height: 20px;
+            width: auto;
+        }
+
+        .header-search input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #ffffff;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            width: 360px;
+            font-family: inherit;
+        }
+
+        .header-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .header-search button {
+            padding: 0.5rem 0.75rem;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .header-search button:hover {
+            opacity: 0.9;
+        }
+
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-auth a:hover { background: rgba(0,0,0,0.05); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .main-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
+        .nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; align-items: center; }
+        .nav-item { padding: 0.75rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--nav-text); text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: color 0.2s; white-space: nowrap; text-decoration: none; }
+        .nav-item:hover { color: var(--accent-color); }
+        .nav-dropdown { position: relative; }
+        .dropdown-trigger { display: flex; align-items: center; gap: 0.25rem; }
+        .dropdown-arrow { font-size: 0.5rem; transition: transform 0.2s; }
+        .dropdown-menu { position: absolute; top: 100%; left: 0; background: var(--header-bg); border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 150px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s; z-index: 1000; }
+        .nav-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown:hover .dropdown-arrow { transform: rotate(180deg); }
+        .dropdown-menu a { display: block; padding: 0.6rem 1rem; color: var(--nav-text); font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: background 0.2s, color 0.2s; }
+        .dropdown-menu a:hover { background: rgba(0,0,0,0.05); color: var(--accent-color); }
+
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; }
+        .page-subtitle { color: var(--text-secondary); font-size: 1rem; }
+
+        .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; font-weight: 600; border-radius: 6px; transition: opacity 0.2s; border: none; cursor: pointer; font-size: 0.9rem; }
+        .btn-primary:hover { opacity: 0.9; }
+
+        .filters { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+        .filters select, .filters input { padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-size: 0.85rem; font-family: inherit; }
+        .filters input { flex: 1; min-width: 200px; }
+
+        .clubs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+        .club-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.2s; }
+        .club-card:hover { border-color: var(--text-muted); box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .club-card .cover { height: 80px; background: linear-gradient(135deg, var(--sixers-blue), var(--eagles-green)); position: relative; }
+        .club-card .cover.eagles { background: linear-gradient(135deg, var(--eagles-green), #003333); }
+        .club-card .cover.phillies { background: linear-gradient(135deg, var(--phillies-red), #990000); }
+        .club-card .cover.sixers { background: linear-gradient(135deg, var(--sixers-blue), #003366); }
+        .club-card .cover.flyers { background: linear-gradient(135deg, var(--flyers-orange), #cc3300); }
+        .club-card .logo { width: 60px; height: 60px; border-radius: 50%; background: var(--card-bg); border: 3px solid var(--card-bg); position: absolute; bottom: -30px; left: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .club-card .content { padding: 2.5rem 1rem 1rem; }
+        .club-card .name { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .club-card .team-badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .club-card .team-badge.eagles { background: rgba(0,76,84,0.1); color: var(--eagles-green); }
+        .club-card .team-badge.phillies { background: rgba(232,24,40,0.1); color: var(--phillies-red); }
+        .club-card .team-badge.sixers { background: rgba(0,107,182,0.1); color: var(--sixers-blue); }
+        .club-card .team-badge.flyers { background: rgba(247,73,2,0.1); color: var(--flyers-orange); }
+        .club-card .team-badge.all { background: rgba(139,0,0,0.1); color: var(--accent-color); }
+        .club-card .description { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .club-card .stats { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted); }
+        .club-card .stats span { display: flex; align-items: center; gap: 0.25rem; }
+        .club-card .tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+        .club-card .tag { padding: 0.2rem 0.5rem; background: var(--dark-bg); border-radius: 4px; font-size: 0.7rem; color: var(--text-muted); }
+        .club-card .verified { color: #1da1f2; margin-left: 0.25rem; }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        .loading { text-align: center; padding: 2rem; color: var(--text-muted); }
+
+        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; }
+        .pagination button { padding: 0.5rem 1rem; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-family: inherit; }
+        .pagination button:hover:not(:disabled) { background: var(--dark-bg); }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination button.active { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        @media (max-width: 768px) {
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .filters { flex-direction: column; }
+            .filters select, .filters input { width: 100%; }
+            .header-search { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="header-search">
+                <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
+                    <input type="text" name="q" placeholder="Search the web..." required>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
+            <a href="/" class="header-logo">
+                <img src="/logo-weathered.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="/" class="nav-item">Home</a>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/eagles/">Eagles</a>
+                        <a href="/phillies/">Phillies</a>
+                        <a href="/sixers/">76ers</a>
+                        <a href="/flyers/">Flyers</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">College <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/villanova">Villanova</a>
+                        <a href="/penn">Penn</a>
+                        <a href="/lasalle">La Salle</a>
+                        <a href="/drexel">Drexel</a>
+                        <a href="/stjosephs">St. Joseph's</a>
+                        <a href="/temple">Temple</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/fantasy.html">Fantasy</a>
+                        <a href="/pools.html">Pools</a>
+                        <a href="/poker.html">Poker</a>
+                        <a href="/trivia.html">Trivia</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Betting <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/odds.html">Odds</a>
+                        <a href="/bets.html">Bets</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/community/">Forums</a>
+                        <a href="/community/clubs/">Fan Clubs</a>
+                        <a href="/badges.html">Badges</a>
+                        <a href="/leaderboard.html">Leaderboard</a>
+                        <a href="/source-leaderboard.html">Source Rankings</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/shop/">Shop</a>
+                        <a href="/marketplace/">Marketplace</a>
+                        <a href="/raffles/">Raffles</a>
+                    </div>
+                </div>
+                <a href="/esports/" class="nav-item">eSports</a>
+                <a href="/youth" class="nav-item">Youth</a>
+                <a href="/game-threads.html" class="nav-item">Live</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Fan Clubs</h1>
+                <p class="page-subtitle">Join or create fan clubs to connect with fellow Philly fans</p>
+            </div>
+            <a href="/community/clubs/create.html" class="btn-primary" id="createBtn" style="display: none;">
+                <span>+</span> Create Club
+            </a>
+        </div>
+
+        <div class="filters">
+            <select id="teamFilter">
+                <option value="">All Teams</option>
+                <option value="eagles">Eagles</option>
+                <option value="phillies">Phillies</option>
+                <option value="sixers">76ers</option>
+                <option value="flyers">Flyers</option>
+            </select>
+            <select id="sortFilter">
+                <option value="popular">Most Popular</option>
+                <option value="recent">Recently Created</option>
+                <option value="name">Alphabetical</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Search clubs...">
+        </div>
+
+        <div id="clubsContainer" class="clubs-grid">
+            <div class="loading">Loading clubs...</div>
+        </div>
+
+        <div id="pagination" class="pagination" style="display: none;"></div>
+    </main>
+
+    <script>
+        // Dark Mode Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        });
+
+        let currentUser = null;
+        let currentPage = 1;
+        const limit = 12;
+
+        // Check auth state
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">
+                            <span class="coin-icon">🪙</span>
+                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    document.getElementById('createBtn').style.display = 'inline-flex';
+                }
+            } catch (e) {}
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            window.location.reload();
+        }
+
+        async function loadClubs() {
+            const container = document.getElementById('clubsContainer');
+            const team = document.getElementById('teamFilter').value;
+            const sort = document.getElementById('sortFilter').value;
+            const search = document.getElementById('searchInput').value;
+
+            container.innerHTML = '<div class="loading">Loading clubs...</div>';
+
+            try {
+                const params = new URLSearchParams({ page: currentPage, limit, sort });
+                if (team) params.append('team', team);
+                if (search) params.append('search', search);
+
+                const response = await fetch(`/api/clubs?${params}`);
+                const data = await response.json();
+
+                if (!data.success || !data.clubs || data.clubs.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">🎉</div>
+                            <p>No clubs found. Be the first to create one!</p>
+                        </div>
+                    `;
+                    document.getElementById('pagination').style.display = 'none';
+                    return;
+                }
+
+                container.innerHTML = data.clubs.map(club => `
+                    <a href="/community/clubs/club.html?id=${club.id}" class="club-card">
+                        <div class="cover ${club.team || 'all'}">
+                            <div class="logo">${getTeamEmoji(club.team)}</div>
+                        </div>
+                        <div class="content">
+                            <div class="name">
+                                ${club.name}
+                                ${club.isVerified ? '<span class="verified" title="Verified">✓</span>' : ''}
+                            </div>
+                            <span class="team-badge ${club.team || 'all'}">${getTeamName(club.team)}</span>
+                            <p class="description">${club.description || 'No description'}</p>
+                            <div class="stats">
+                                <span>👥 ${club.memberCount} member${club.memberCount !== 1 ? 's' : ''}</span>
+                                <span>📅 ${formatDate(club.createdAt)}</span>
+                            </div>
+                            ${club.tags && club.tags.length > 0 ? `
+                                <div class="tags">
+                                    ${club.tags.slice(0, 3).map(t => `<span class="tag">#${t}</span>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </a>
+                `).join('');
+
+                // Pagination
+                const { pagination } = data;
+                if (pagination.totalPages > 1) {
+                    document.getElementById('pagination').style.display = 'flex';
+                    document.getElementById('pagination').innerHTML = `
+                        <button ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">Previous</button>
+                        <span style="padding: 0.5rem; color: var(--text-muted);">Page ${currentPage} of ${pagination.totalPages}</span>
+                        <button ${currentPage === pagination.totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next</button>
+                    `;
+                } else {
+                    document.getElementById('pagination').style.display = 'none';
+                }
+
+            } catch (error) {
+                console.error('Failed to load clubs:', error);
+                container.innerHTML = '<div class="empty-state"><p>Failed to load clubs. Please try again.</p></div>';
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadClubs();
+        }
+
+        function getTeamEmoji(team) {
+            const emojis = {
+                eagles: '🦅',
+                phillies: '⚾',
+                sixers: '🏀',
+                flyers: '🏒',
+                union: '⚽',
+                villanova: '🏀',
+                penn: '🏈',
+                lasalle: '🏀',
+                drexel: '🏀',
+                stjosephs: '🏀',
+                temple: '🏀'
+            };
+            return emojis[team] || '🏆';
+        }
+
+        function getTeamName(team) {
+            const names = {
+                eagles: 'Eagles',
+                phillies: 'Phillies',
+                sixers: '76ers',
+                flyers: 'Flyers',
+                union: 'Union',
+                villanova: 'Villanova',
+                penn: 'Penn',
+                lasalle: 'La Salle',
+                drexel: 'Drexel',
+                stjosephs: "St. Joseph's",
+                temple: 'Temple',
+                all: 'All Teams'
+            };
+            return names[team] || 'All Teams';
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            if (days === 0) return 'Today';
+            if (days === 1) return 'Yesterday';
+            if (days < 30) return `${days}d ago`;
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        // Event listeners
+        document.getElementById('teamFilter').addEventListener('change', () => { currentPage = 1; loadClubs(); });
+        document.getElementById('sortFilter').addEventListener('change', () => { currentPage = 1; loadClubs(); });
+
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => { currentPage = 1; loadClubs(); }, 300);
+        });
+
+        checkAuth();
+        loadClubs();
+    </script>
+</body>
+</html>

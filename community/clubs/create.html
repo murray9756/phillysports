@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Fan Club - PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #faf9f6;
+            --nav-text: #333333;
+            --accent-color: #8b0000;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+        }
+
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; line-height: 1; }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-logo span { font-weight: 700; font-size: 1.1rem; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        .main-container { max-width: 600px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--text-secondary); }
+
+        .form-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 2rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-family: inherit; font-size: 0.95rem; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-color); }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        .form-group .hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .tags-input { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); min-height: 45px; cursor: text; }
+        .tags-input .tag { display: flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.8rem; }
+        .tags-input .tag button { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1rem; line-height: 1; }
+        .tags-input input { flex: 1; min-width: 100px; border: none; background: transparent; color: var(--text-primary); font-family: inherit; padding: 0.25rem; }
+        .tags-input input:focus { outline: none; }
+
+        .btn { padding: 0.75rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; width: 100%; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .reward-banner { background: linear-gradient(135deg, rgba(255,152,0,0.1), rgba(255,193,7,0.1)); border: 1px solid rgba(255,152,0,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .reward-banner .icon { font-size: 1.5rem; }
+        .reward-banner .text { font-size: 0.9rem; }
+        .reward-banner .text strong { color: #ff9800; }
+
+        .login-prompt { text-align: center; padding: 3rem; }
+        .login-prompt .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .login-prompt p { margin-bottom: 1rem; color: var(--text-secondary); }
+        .login-prompt a { color: var(--accent-color); font-weight: 600; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="/" class="header-logo">
+                <img src="/logo-weathered.png" alt="PhillySports.com">
+                <span>PhillySports.com</span>
+            </a>
+            <div class="header-auth" id="authSection">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">Create a Fan Club</h1>
+            <p class="page-subtitle">Start your own community for fellow Philly fans</p>
+        </div>
+
+        <div id="content">
+            <div class="login-prompt">
+                <div class="icon">🔒</div>
+                <p>Please log in to create a fan club</p>
+                <a href="/login.html">Login</a> or <a href="/register.html">Register</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        let currentUser = null;
+        let tags = [];
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUser = data.user;
+                    document.getElementById('authSection').innerHTML = `
+                        <button class="theme-toggle" id="themeToggle">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display">
+                            <span>🪙</span>
+                            <span>${Math.round(data.user.coinBalance || 0)}</span>
+                        </div>
+                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
+                    `;
+                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    showForm();
+                }
+            } catch (e) {}
+        }
+
+        function showForm() {
+            document.getElementById('content').innerHTML = `
+                <div class="reward-banner">
+                    <div class="icon">🪙</div>
+                    <div class="text">Creating a club earns you <strong>+50 Diehard Dollars!</strong></div>
+                </div>
+
+                <div class="form-card">
+                    <form id="createForm" onsubmit="handleSubmit(event)">
+                        <div class="form-group">
+                            <label for="name">Club Name *</label>
+                            <input type="text" id="name" name="name" required minlength="3" maxlength="100" placeholder="e.g., Section 420 Dawgs">
+                            <p class="hint">3-100 characters</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" maxlength="500" placeholder="Tell fans what your club is about..."></textarea>
+                            <p class="hint">Optional, max 500 characters</p>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="team">Team</label>
+                                <select id="team" name="team">
+                                    <option value="all">All Teams</option>
+                                    <option value="eagles">Eagles</option>
+                                    <option value="phillies">Phillies</option>
+                                    <option value="sixers">76ers</option>
+                                    <option value="flyers">Flyers</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="type">Club Type</label>
+                                <select id="type" name="type">
+                                    <option value="public">Public - Anyone can join</option>
+                                    <option value="private">Private - Approval required</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <div class="tags-input" id="tagsContainer" onclick="document.getElementById('tagInput').focus()">
+                                <input type="text" id="tagInput" placeholder="Type and press Enter...">
+                            </div>
+                            <p class="hint">Add up to 10 tags (e.g., tailgating, road-trips)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Social Links (Optional)</label>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <input type="url" id="twitter" placeholder="Twitter/X URL">
+                                <input type="url" id="instagram" placeholder="Instagram URL">
+                                <input type="url" id="discord" placeholder="Discord Invite URL">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Create Club</button>
+                    </form>
+                </div>
+            `;
+
+            // Tags input handling
+            const tagInput = document.getElementById('tagInput');
+            const tagsContainer = document.getElementById('tagsContainer');
+
+            tagInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const value = tagInput.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+                    if (value && !tags.includes(value) && tags.length < 10) {
+                        tags.push(value);
+                        renderTags();
+                    }
+                    tagInput.value = '';
+                }
+            });
+
+            function renderTags() {
+                const existing = tagsContainer.querySelectorAll('.tag');
+                existing.forEach(t => t.remove());
+
+                tags.forEach((tag, i) => {
+                    const el = document.createElement('span');
+                    el.className = 'tag';
+                    el.innerHTML = `#${tag} <button type="button" onclick="removeTag(${i})">&times;</button>`;
+                    tagsContainer.insertBefore(el, tagInput);
+                });
+            }
+
+            window.removeTag = function(index) {
+                tags.splice(index, 1);
+                renderTags();
+            };
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+
+            const formData = {
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value,
+                team: document.getElementById('team').value,
+                type: document.getElementById('type').value,
+                tags: tags,
+                socialLinks: {
+                    twitter: document.getElementById('twitter').value || null,
+                    instagram: document.getElementById('instagram').value || null,
+                    discord: document.getElementById('discord').value || null
+                }
+            };
+
+            try {
+                const response = await fetch('/api/clubs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert(`Club created! You earned +${data.coinsAwarded} Diehard Dollars!`);
+                    window.location.href = `/community/clubs/club.html?id=${data.club.id}`;
+                } else {
+                    alert(data.error || 'Failed to create club');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Create Club';
+                }
+            } catch (error) {
+                alert('Failed to create club. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Club';
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
