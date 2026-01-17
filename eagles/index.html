@@ -511,6 +511,18 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Source Leaderboard Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128240;</span>
+                    <h3 class="widget-title">Top Sources</h3>
+                </div>
+                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
+            </div>
         </aside>
 
         <div class="content-section">
@@ -696,6 +708,35 @@
             return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
         }
 
+        async function loadSourceLeaderboard() {
+            const container = document.getElementById('sourceLeaderboardWidget');
+            if (!container) return;
+            try {
+                const response = await fetch('/api/articles/source-stats?limit=5');
+                const data = await response.json();
+
+                if (data.success && data.sources && data.sources.length > 0) {
+                    container.innerHTML = data.sources.map((source, i) => {
+                        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+                        return `
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
+                                <span style="display:flex;align-items:center;gap:0.4rem;">
+                                    <span style="width:1.5rem;text-align:center;">${medal}</span>
+                                    <span style="font-weight:500;">${source.source}</span>
+                                </span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">${source.totalClicks.toLocaleString()}</span>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">No data yet</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load source leaderboard:', error);
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Unable to load</div>';
+            }
+        }
+
         async function loadNews() {
             const container = document.getElementById('articleList');
             const carouselInner = document.getElementById('carouselInner');
@@ -859,6 +900,7 @@
             }
         }
 
+        loadSourceLeaderboard();
         loadNews();
         loadScores();
         loadSchedule();

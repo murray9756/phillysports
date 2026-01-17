@@ -422,6 +422,18 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Source Leaderboard Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <span>&#128240;</span>
+                    <h3 class="widget-title">Top Sources</h3>
+                </div>
+                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
+            </div>
         </aside>
         <div class="content-section">
             <div class="section-header"><h2 class="section-title">Latest Phillies News</h2></div>
@@ -529,6 +541,35 @@
         function getSourceLogo(s){const l=s&&sourceLogos[s]?sourceLogos[s]:sourceLogos['ESPN'];return`<img src="${l}" alt="${s||'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;}
         function timeAgo(d){const s=Math.floor((new Date()-new Date(d))/1000);if(s<60)return'Just now';const m=Math.floor(s/60);if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
         function formatGameDate(d){const date=new Date(d);return{day:date.getDate(),month:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.getMonth()],dayName:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][date.getDay()],time:date.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};}
+        async function loadSourceLeaderboard() {
+            const container = document.getElementById('sourceLeaderboardWidget');
+            if (!container) return;
+            try {
+                const response = await fetch('/api/articles/source-stats?limit=5');
+                const data = await response.json();
+
+                if (data.success && data.sources && data.sources.length > 0) {
+                    container.innerHTML = data.sources.map((source, i) => {
+                        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+                        return `
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
+                                <span style="display:flex;align-items:center;gap:0.4rem;">
+                                    <span style="width:1.5rem;text-align:center;">${medal}</span>
+                                    <span style="font-weight:500;">${source.source}</span>
+                                </span>
+                                <span style="color:var(--text-muted);font-size:0.75rem;">${source.totalClicks.toLocaleString()}</span>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">No data yet</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load source leaderboard:', error);
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Unable to load</div>';
+            }
+        }
+
         async function loadNews(){const c=document.getElementById('articleList');const carouselInner=document.getElementById('carouselInner');const carouselDots=document.getElementById('carouselDots');const carousel=document.getElementById('newsCarousel');try{const r=await fetch(`/api/news?team=${TEAM}`);const d=await r.json();if(d.articles?.length>0){carouselArticles=d.articles.slice(0,4);
                     // Limit to 5 more articles (10 total) to minimize height
                     const listArticles=d.articles.slice(4, 9);carouselInner.innerHTML=carouselArticles.map(a=>{const imgStyle=a.image?`background-image:url('${a.image}');background-size:cover;background-position:center;`:'background:var(--team-color);';return`<div class="carousel-slide"><a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="featured-article"><div class="featured-image" style="${imgStyle}">${!a.image?getSourceLogo(a.source):''}</div><div class="featured-content"><span class="article-tag">${a.team||'Phillies'}</span><h3 class="featured-title">${a.headline}</h3></div></a></div>`;}).join('');carouselDots.innerHTML=carouselArticles.map((_,i)=>`<button class="carousel-dot${i===0?' active':''}" onclick="goToSlide(${i})"></button>`).join('');carousel.addEventListener('mouseenter',stopCarousel);carousel.addEventListener('mouseleave',startCarousel);startCarousel();if(listArticles.length>0){c.innerHTML=listArticles.map(a=>`<a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="article-item"><div class="article-thumb" style="${a.image?`background-image:url('${a.image}');background-size:cover;background-position:center;`:''}">${!a.image?getSourceLogo(a.source):''}</div><div class="article-info"><h4 class="article-title">${a.headline}</h4><div class="article-meta">${timeAgo(a.published)}${a.source?' · '+a.source:''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div></div></a>`).join('');}else{c.innerHTML='';}}else{carouselInner.innerHTML='<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">'+getSourceLogo()+'</div><div class="featured-content"><span class="article-tag">Phillies</span><h3 class="featured-title">No news available</h3></div></div></div>';c.innerHTML='';}}catch(e){carouselInner.innerHTML='<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">'+getSourceLogo()+'</div><div class="featured-content"><span class="article-tag">Phillies</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';c.innerHTML='';}}
@@ -536,7 +577,7 @@
         async function loadSchedule(){const c=document.getElementById('scheduleContainer');try{const r=await fetch(`/api/schedule?team=${TEAM}`);const d=await r.json();if(d.schedule?.length>0){c.innerHTML=d.schedule.map(g=>{const f=formatGameDate(g.date);return`<div class="schedule-item"><div class="schedule-date"><div class="schedule-day">${f.day}</div><div class="schedule-month">${f.month}</div></div><div class="schedule-info"><div class="schedule-matchup">${g.isHome?'vs':'@'} ${g.opponent}</div><div class="schedule-time">${f.dayName} ${f.time}${g.broadcast?' · '+g.broadcast:''}</div></div></div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadRoster(){const c=document.getElementById('rosterContainer');try{const r=await fetch(`/api/roster?team=${TEAM}`);const d=await r.json();if(d.players?.length>0){c.innerHTML=d.players.map(p=>`<div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;"><span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${p.number||'-'}</span>${p.link?`<a href="${p.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${p.name}</a>`:`<span style="flex:1;font-weight:500;">${p.name}</span>`}<span style="color:var(--text-muted);font-size:0.75rem;">${p.position}</span></div>`).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No roster available</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load roster</div>';}}
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/mlb');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.pct.toFixed(3)}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">NYM</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">ATL</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">MIA</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">WSH</span></td><td class="record">--</td><td class="pct">---</td></tr>`;}}
-        loadNews();loadScores();loadSchedule();loadRoster();loadStandings();
+        loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStandings();
 
         // All-Time Leaders Stats
         let statsData = null;
