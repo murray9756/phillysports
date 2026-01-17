@@ -295,6 +295,7 @@
                 <button class="admin-tab active" data-tab="posts">Posts</button>
                 <button class="admin-tab" data-tab="new">New Post</button>
                 <button class="admin-tab" data-tab="coins">Coins</button>
+                <button class="admin-tab" data-tab="system">System</button>
             </div>
 
             <div id="messageArea"></div>
@@ -388,6 +389,39 @@
                     <a href="/predictions.html" class="btn btn-secondary" style="text-align: center; text-decoration: none;">View Predictions</a>
                 </div>
             </div>
+
+            <!-- System Maintenance -->
+            <div id="systemTab" class="card hidden">
+                <h2>System Maintenance</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Database and system administration tasks.</p>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Setup Indexes -->
+                    <div style="padding: 1rem; background: var(--widget-header-bg); border-radius: 6px;">
+                        <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Database Indexes</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Create or update database indexes for optimal performance. Run this after deployment or when adding new features.
+                        </p>
+                        <button class="btn btn-primary" id="setupIndexesBtn" onclick="runSetupIndexes()">
+                            Setup Indexes
+                        </button>
+                        <div id="indexResults" style="margin-top: 1rem; display: none;"></div>
+                    </div>
+
+                    <!-- Rate Limit Info -->
+                    <div style="padding: 1rem; background: var(--widget-header-bg); border-radius: 6px;">
+                        <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Rate Limiting</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">
+                            Rate limiting is active on sensitive endpoints:
+                        </p>
+                        <ul style="font-size: 0.85rem; color: var(--text-secondary); margin: 0.5rem 0 0 1.5rem;">
+                            <li>Auth (login/register): 10 requests per 15 minutes</li>
+                            <li>Purchases: 20 requests per hour</li>
+                            <li>General API: 60 requests per minute</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -473,12 +507,55 @@
                 document.getElementById('postsTab').classList.toggle('hidden', tabName !== 'posts');
                 document.getElementById('newTab').classList.toggle('hidden', tabName !== 'new');
                 document.getElementById('coinsTab').classList.toggle('hidden', tabName !== 'coins');
+                document.getElementById('systemTab').classList.toggle('hidden', tabName !== 'system');
 
                 if (tabName === 'new') {
                     resetForm();
                 }
             });
         });
+
+        // Setup indexes
+        async function runSetupIndexes() {
+            const btn = document.getElementById('setupIndexesBtn');
+            const resultsDiv = document.getElementById('indexResults');
+
+            btn.disabled = true;
+            btn.textContent = 'Running...';
+            resultsDiv.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/admin/setup-indexes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    let html = '<div style="font-size: 0.85rem;">';
+                    html += '<strong style="color: var(--success);">Setup Complete!</strong><ul style="margin: 0.5rem 0 0 1rem;">';
+                    data.results.forEach(r => {
+                        const icon = r.status === 'success' ? '✓' : '✗';
+                        const color = r.status === 'success' ? 'var(--success)' : '#dc2626';
+                        html += `<li style="color: ${color}">${icon} ${r.collection}: ${r.status}${r.message ? ' - ' + r.message : ''}</li>`;
+                    });
+                    html += '</ul></div>';
+                    resultsDiv.innerHTML = html;
+                    showMessage('Database indexes setup complete!', 'success');
+                } else {
+                    resultsDiv.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">Error: ${data.error}</div>`;
+                    showMessage(data.error || 'Failed to setup indexes', 'error');
+                }
+            } catch (e) {
+                resultsDiv.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">Error: ${e.message}</div>`;
+                showMessage('Failed to setup indexes', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Setup Indexes';
+                resultsDiv.style.display = 'block';
+            }
+        }
 
         // Award coins form
         document.getElementById('awardForm').addEventListener('submit', async (e) => {
