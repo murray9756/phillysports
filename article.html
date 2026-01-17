@@ -417,6 +417,21 @@
             window.location.reload();
         }
 
+        // Track article click for source leaderboard
+        function trackArticleClick() {
+            if (articleData && articleData.source) {
+                fetch('/api/articles/track-click', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        source: articleData.source,
+                        articleUrl: articleUrl,
+                        title: articleData.title
+                    })
+                }).catch(err => console.error('Track click error:', err));
+            }
+        }
+
         // Load article metadata (from URL or fallback)
         async function loadArticle() {
             if (!articleUrl) {
@@ -504,7 +519,7 @@
                             ${articleData.date ? `<span>${formatDate(articleData.date)}</span>` : ''}
                         </div>
                         ${articleData.description ? `<p class="article-description">${escapeHtml(articleData.description)}</p>` : ''}
-                        <a href="${articleUrl}" target="_blank" rel="noopener" class="read-full-btn">Read Full Article →</a>
+                        <a href="${articleUrl}" target="_blank" rel="noopener" class="read-full-btn" onclick="trackArticleClick()">Read Full Article →</a>
                     </div>
                 </div>
 
