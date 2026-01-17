@@ -11,7 +11,6 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "icon": "./assets/icon.png",
-    "owner": "phillysports",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -30,7 +29,9 @@
         "NSCameraUsageDescription": "Take photos for your profile or marketplace listings",
         "NSPhotoLibraryUsageDescription": "Select photos for your profile or marketplace listings",
         "NSLocationWhenInUseUsageDescription": "Find nearby watch parties and tailgates",
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       },
       "entitlements": {
         "aps-environment": "production"
@@ -62,7 +63,10 @@
               "pathPrefix": "/"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -81,6 +85,14 @@
           "color": "#8B0000",
           "sounds": []
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
+        }
       ]
     ],
     "notification": {
@@ -96,12 +108,13 @@
       "apiUrl": "https://phillysports.com/api",
       "pusherKey": "YOUR_PUSHER_KEY",
       "pusherCluster": "us2",
+      "router": {
+        "origin": false
+      },
       "eas": {
-        "projectId": "YOUR_EAS_PROJECT_ID"
+        "projectId": "dadc0063-27a6-4111-9cc0-32bab903db4d"
       }
     },
-    "updates": {
-      "url": "https://u.expo.dev/YOUR_EAS_PROJECT_ID"
-    }
+    "owner": "murray44"
   }
 }
