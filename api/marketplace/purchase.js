@@ -8,6 +8,7 @@ import { spendCoins, addCoins } from '../lib/coins.js';
 import { createPaymentIntent } from '../lib/payments/stripe.js';
 import { createPayPalOrder } from '../lib/payments/paypal.js';
 import { generateOrderNumber, calculateCommission, validatePurchase } from '../lib/orders/utils.js';
+import { rateLimit } from '../lib/rateLimit.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,6 +22,10 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    // Rate limit: 20 purchases per hour
+    const allowed = await rateLimit(req, res, 'sensitive');
+    if (!allowed) return;
 
     try {
         const decoded = await authenticate(req);

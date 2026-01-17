@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
 import { addCoins, DAILY_LOGIN_BASE, STREAK_BONUS_PER_DAY, MAX_STREAK_BONUS } from '../lib/coins.js';
+import { rateLimit } from '../lib/rateLimit.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,6 +16,10 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    // Rate limit: 60 requests per minute (general API limit)
+    const allowed = await rateLimit(req, res, 'api');
+    if (!allowed) return;
 
     try {
         const decoded = await authenticate(req);

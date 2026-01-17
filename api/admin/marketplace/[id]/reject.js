@@ -4,6 +4,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
+import { sendNotification } from '../../../notifications/send.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -72,8 +73,20 @@ export default async function handler(req, res) {
             { returnDocument: 'after' }
         );
 
-        // TODO: Send notification to seller with rejection reason
-        // This would integrate with a notification system
+        // Send notification to seller with rejection reason
+        try {
+            await sendNotification(
+                listing.sellerId.toString(),
+                'listing_rejected',
+                'Listing Rejected',
+                `Your listing "${listing.title}" was not approved. Reason: ${reason.trim()}`,
+                `/marketplace/my-listings`,
+                { listingId: result._id.toString(), title: listing.title, reason: reason.trim() }
+            );
+        } catch (notifyError) {
+            console.error('Failed to send rejection notification:', notifyError);
+            // Don't fail the request if notification fails
+        }
 
         res.status(200).json({
             success: true,

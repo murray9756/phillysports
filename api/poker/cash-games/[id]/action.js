@@ -8,6 +8,7 @@ import { processAction, getValidActions, sanitizeHandForPlayer } from '../../../
 import { broadcastTableUpdate, sendPrivateCards, PUSHER_EVENTS } from '../../../lib/pusher.js';
 import { HAND_STATUS, ACTIONS } from '../../../lib/poker/constants.js';
 import { chooseBotAction } from '../../../lib/poker/botManager.js';
+import { rateLimit } from '../../../lib/rateLimit.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,6 +22,10 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    // Rate limit: 60 actions per minute (generous for poker)
+    const allowed = await rateLimit(req, res, 'api');
+    if (!allowed) return;
 
     const { id } = req.query;
 

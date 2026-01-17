@@ -2,6 +2,7 @@
 import { ObjectId } from 'mongodb';
 import { authenticate } from '../../lib/auth.js';
 import { purchaseTickets } from '../../lib/raffle.js';
+import { rateLimit } from '../../lib/rateLimit.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,6 +16,10 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    // Rate limit: 20 purchases per hour
+    const allowed = await rateLimit(req, res, 'sensitive');
+    if (!allowed) return;
 
     try {
         // Require authentication

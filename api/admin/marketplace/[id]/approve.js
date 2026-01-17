@@ -4,6 +4,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
+import { sendNotification } from '../../../notifications/send.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -70,8 +71,20 @@ export default async function handler(req, res) {
             { returnDocument: 'after' }
         );
 
-        // TODO: Send notification to seller that listing is approved
-        // This would integrate with a notification system
+        // Send notification to seller that listing is approved
+        try {
+            await sendNotification(
+                listing.sellerId.toString(),
+                'listing_approved',
+                'Listing Approved!',
+                `Your listing "${listing.title}" is now live on the marketplace!`,
+                `/marketplace/listing/${result._id}`,
+                { listingId: result._id.toString(), title: listing.title }
+            );
+        } catch (notifyError) {
+            console.error('Failed to send approval notification:', notifyError);
+            // Don't fail the request if notification fails
+        }
 
         res.status(200).json({
             success: true,

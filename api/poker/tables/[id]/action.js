@@ -5,6 +5,7 @@ import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
 import { processAction, getCurrentHand, getValidActions } from '../../../lib/poker/gameEngine.js';
 import { ObjectId } from 'mongodb';
+import { rateLimit } from '../../../lib/rateLimit.js';
 
 export default async function handler(req, res) {
   // Set CORS headers
@@ -19,6 +20,10 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Rate limit: 60 actions per minute (generous for poker)
+  const allowed = await rateLimit(req, res, 'api');
+  if (!allowed) return;
 
   try {
     const user = await authenticate(req);

@@ -3,7 +3,15 @@ const require = createRequire(import.meta.url);
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+// JWT_SECRET is required - no fallback for security
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+    if (process.env.NODE_ENV === 'production') {
+        throw new Error('JWT_SECRET environment variable is required in production');
+    }
+    console.warn('WARNING: JWT_SECRET not set. Using insecure default for development only.');
+}
+const EFFECTIVE_JWT_SECRET = JWT_SECRET || 'dev-only-insecure-key-do-not-use-in-production';
 const JWT_EXPIRES_IN = '7d';
 const SALT_ROUNDS = 12;
 
@@ -22,14 +30,14 @@ export function generateToken(user) {
             email: user.email,
             username: user.username
         },
-        JWT_SECRET,
+        EFFECTIVE_JWT_SECRET,
         { expiresIn: JWT_EXPIRES_IN }
     );
 }
 
 export function verifyToken(token) {
     try {
-        return jwt.verify(token, JWT_SECRET);
+        return jwt.verify(token, EFFECTIVE_JWT_SECRET);
     } catch (error) {
         return null;
     }

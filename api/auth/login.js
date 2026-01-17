@@ -1,6 +1,7 @@
 import { getCollection } from '../lib/mongodb.js';
 import { comparePassword, generateToken, setAuthCookie } from '../lib/auth.js';
 import { validateLogin } from '../lib/validate.js';
+import { rateLimit } from '../lib/rateLimit.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,6 +15,10 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
+    // Rate limit: 10 attempts per 15 minutes
+    const allowed = await rateLimit(req, res, 'auth');
+    if (!allowed) return;
 
     try {
         const { email, password } = req.body;
