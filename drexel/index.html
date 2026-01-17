@@ -490,6 +490,14 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+            <!-- Twitter/X Feed Widget (Elfsight Grid) -->
+            <div class="twitter-feed-section" style="margin-top: 1.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">@phlsports on X</h2>
+                </div>
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-7528f403-5471-4dc5-a101-711400f2b9ae" data-elfsight-app-lazy></div>
+            </div>
         </div>
 
         <aside class="sidebar">
@@ -532,18 +540,6 @@
                     <a href="https://drexeldragons.com/sports/mens-basketball" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Athletics Site</a>
                     <a href="https://drexeldragons.com/sports/mens-basketball/schedule" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Full Schedule</a>
                     <a href="https://drexeldragons.com/tickets" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Buy Tickets</a>
-                </div>
-            </div>
-
-            <!-- Twitter/X Feed Widget (Elfsight) -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128038;</span>
-                    <h3 class="widget-title">@phlsports</h3>
-                </div>
-                <div class="widget-content" style="padding: 0; min-height: 350px;">
-                    <script src="https://elfsightcdn.com/platform.js" async></script>
-                    <div class="elfsight-app-40682ef3-76f7-4670-84af-bc08c8e8ba9f" data-elfsight-app-lazy></div>
                 </div>
             </div>
 
@@ -655,8 +651,9 @@
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
-                    carouselArticles = data.articles.slice(0, 4);
-                    const listArticles = data.articles.slice(4);
+                    carouselArticles = data.articles.slice(0, 5);
+                    // Limit to 5 more articles (10 total) to minimize height
+                    const remainingArticles = data.articles.slice(5, 10);
 
                     carouselInner.innerHTML = carouselArticles.map(article => {
                         const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
@@ -679,8 +676,8 @@
                     carousel.addEventListener('mouseleave', startCarousel);
                     startCarousel();
 
-                    if (listArticles.length > 0) {
-                        container.innerHTML = listArticles.map(article => {
+                    if (remainingArticles.length > 0) {
+                        container.innerHTML = remainingArticles.map(article => {
                             const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
                             return `
                                 <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">

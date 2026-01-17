@@ -525,6 +525,15 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+
+            <!-- Twitter/X Feed Widget (Elfsight Grid) -->
+            <div class="twitter-feed-section" style="margin-top: 1.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">@phlsports on X</h2>
+                </div>
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-7528f403-5471-4dc5-a101-711400f2b9ae" data-elfsight-app-lazy></div>
+            </div>
         </div>
 
         <aside class="sidebar">
@@ -586,18 +595,6 @@
                     <a href="https://www.maxpreps.com/pa" target="_blank" class="quick-links-item">MaxPreps PA</a>
                     <a href="https://www.piaa.org" target="_blank" class="quick-links-item">PIAA Official</a>
                     <a href="https://www.nfhsnetwork.com" target="_blank" class="quick-links-item">NFHS Network</a>
-                </div>
-            </div>
-
-            <!-- Twitter/X Feed Widget (Elfsight) -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128038;</span>
-                    <h3 class="widget-title">@phlsports</h3>
-                </div>
-                <div class="widget-content" style="padding: 0; min-height: 350px;">
-                    <script src="https://elfsightcdn.com/platform.js" async></script>
-                    <div class="elfsight-app-40682ef3-76f7-4670-84af-bc08c8e8ba9f" data-elfsight-app-lazy></div>
                 </div>
             </div>
 
@@ -692,7 +689,8 @@
                 if (data.articles && data.articles.length > 0) {
                     // First 4 articles go to carousel
                     carouselArticles = data.articles.slice(0, 4);
-                    const listArticles = data.articles.slice(4);
+                    // Limit to 10 total articles (4 in carousel + 6 in list)
+                    const listArticles = data.articles.slice(4, 10);
 
                     // Populate carousel
                     carouselInner.innerHTML = carouselArticles.map(article => {
