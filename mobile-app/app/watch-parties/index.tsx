@@ -7,15 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import { Stack, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/context/ThemeContext';
-import { useAuth } from '@/context/AuthContext';
 import { communityService } from '@/services/api';
-import api from '@/services/api';
 import { TeamColors } from '@/constants/Colors';
 
 interface WatchParty {
@@ -36,12 +33,10 @@ interface WatchParty {
 
 export default function WatchPartiesScreen() {
   const { colors } = useTheme();
-  const { isAuthenticated } = useAuth();
 
   const [parties, setParties] = useState<WatchParty[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [joining, setJoining] = useState<string | null>(null);
 
   useEffect(() => {
     loadParties();
@@ -62,24 +57,6 @@ export default function WatchPartiesScreen() {
     setRefreshing(true);
     await loadParties();
     setRefreshing(false);
-  };
-
-  const rsvp = async (partyId: string) => {
-    if (!isAuthenticated) {
-      Alert.alert('Sign In Required', 'Please sign in to RSVP');
-      return;
-    }
-
-    setJoining(partyId);
-    try {
-      await api.post(`/watch-parties/${partyId}/rsvp`);
-      await loadParties();
-      Alert.alert('RSVP Confirmed!', 'See you there!');
-    } catch (error: any) {
-      Alert.alert('Error', error.response?.data?.message || 'Failed to RSVP');
-    } finally {
-      setJoining(null);
-    }
   };
 
   const getTeamColor = (team: string) => {
@@ -137,76 +114,65 @@ export default function WatchPartiesScreen() {
               const isFull = party.maxAttendees && party.attendees >= party.maxAttendees;
 
               return (
-                <View
+                <Link
                   key={party._id}
-                  style={[styles.partyCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                  href={{
+                    pathname: '/watch-parties/[id]',
+                    params: { id: party._id },
+                  }}
+                  asChild
                 >
-                  <View style={[styles.teamStripe, { backgroundColor: teamColor }]} />
+                  <TouchableOpacity
+                    style={[styles.partyCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                  >
+                    <View style={[styles.teamStripe, { backgroundColor: teamColor }]} />
 
-                  <View style={styles.partyContent}>
-                    <View style={styles.partyHeader}>
-                      <Text style={[styles.partyTitle, { color: colors.text }]}>{party.title}</Text>
-                      {party.isAttending && (
-                        <View style={[styles.attendingBadge, { backgroundColor: '#4CAF50' }]}>
-                          <Ionicons name="checkmark" size={12} color="#fff" />
-                          <Text style={styles.attendingText}>Going</Text>
+                    <View style={styles.partyContent}>
+                      <View style={styles.partyHeader}>
+                        <Text style={[styles.partyTitle, { color: colors.text }]}>{party.title}</Text>
+                        {party.isAttending && (
+                          <View style={[styles.attendingBadge, { backgroundColor: '#4CAF50' }]}>
+                            <Ionicons name="checkmark" size={12} color="#fff" />
+                            <Text style={styles.attendingText}>Going</Text>
+                          </View>
+                        )}
+                      </View>
+
+                      <Text style={[styles.gameText, { color: teamColor }]}>{party.game}</Text>
+
+                      <View style={styles.partyDetails}>
+                        <View style={styles.detailRow}>
+                          <Ionicons name="calendar" size={14} color={colors.textMuted} />
+                          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+                            {formatDate(party.date)} at {party.time}
+                          </Text>
                         </View>
-                      )}
+                        <View style={styles.detailRow}>
+                          <Ionicons name="location" size={14} color={colors.textMuted} />
+                          <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+                            {party.location}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.partyFooter}>
+                        <View style={styles.attendeeCount}>
+                          <Ionicons name="people" size={16} color={colors.textMuted} />
+                          <Text style={[styles.attendeeText, { color: colors.text }]}>
+                            {party.attendees}
+                            {party.maxAttendees && ` / ${party.maxAttendees}`}
+                          </Text>
+                        </View>
+
+                        {isFull && !party.isAttending && (
+                          <View style={[styles.fullBadge, { backgroundColor: colors.textMuted }]}>
+                            <Text style={styles.fullText}>Full</Text>
+                          </View>
+                        )}
+                      </View>
                     </View>
-
-                    <Text style={[styles.gameText, { color: teamColor }]}>{party.game}</Text>
-
-                    <View style={styles.partyDetails}>
-                      <View style={styles.detailRow}>
-                        <Ionicons name="calendar" size={14} color={colors.textMuted} />
-                        <Text style={[styles.detailText, { color: colors.textSecondary }]}>
-                          {formatDate(party.date)} at {party.time}
-                        </Text>
-                      </View>
-                      <View style={styles.detailRow}>
-                        <Ionicons name="location" size={14} color={colors.textMuted} />
-                        <Text style={[styles.detailText, { color: colors.textSecondary }]}>
-                          {party.location}
-                        </Text>
-                      </View>
-                      <View style={styles.detailRow}>
-                        <Ionicons name="person" size={14} color={colors.textMuted} />
-                        <Text style={[styles.detailText, { color: colors.textSecondary }]}>
-                          Hosted by {party.host}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.partyFooter}>
-                      <View style={styles.attendeeCount}>
-                        <Ionicons name="people" size={16} color={colors.textMuted} />
-                        <Text style={[styles.attendeeText, { color: colors.text }]}>
-                          {party.attendees}
-                          {party.maxAttendees && ` / ${party.maxAttendees}`}
-                        </Text>
-                      </View>
-
-                      {!party.isAttending && (
-                        <TouchableOpacity
-                          style={[
-                            styles.rsvpButton,
-                            { backgroundColor: isFull ? colors.textMuted : teamColor },
-                          ]}
-                          onPress={() => rsvp(party._id)}
-                          disabled={joining === party._id || isFull}
-                        >
-                          {joining === party._id ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                          ) : (
-                            <Text style={styles.rsvpButtonText}>
-                              {isFull ? 'Full' : 'RSVP'}
-                            </Text>
-                          )}
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                </Link>
               );
             })
           )}
@@ -304,9 +270,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.05)',
   },
   attendeeCount: {
     flexDirection: 'row',
@@ -317,14 +280,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  rsvpButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 6,
+  fullBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 4,
   },
-  rsvpButtonText: {
+  fullText: {
     color: '#fff',
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '600',
   },
 });

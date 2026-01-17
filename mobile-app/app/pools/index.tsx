@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import { Stack, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,12 +32,11 @@ interface Pool {
 
 export default function PoolsScreen() {
   const { colors } = useTheme();
-  const { user, isAuthenticated, refreshUser } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const [pools, setPools] = useState<Pool[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [joining, setJoining] = useState<string | null>(null);
 
   useEffect(() => {
     loadPools();
@@ -59,42 +57,6 @@ export default function PoolsScreen() {
     setRefreshing(true);
     await loadPools();
     setRefreshing(false);
-  };
-
-  const joinPool = async (poolId: string, entryFee: number) => {
-    if (!isAuthenticated) {
-      Alert.alert('Sign In Required', 'Please sign in to join pools');
-      return;
-    }
-
-    if ((user?.coinBalance || 0) < entryFee) {
-      Alert.alert('Insufficient Balance', 'You need more Diehard Dollars to join this pool');
-      return;
-    }
-
-    Alert.alert(
-      'Join Pool',
-      `Entry fee: ${entryFee} coins. Continue?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Join',
-          onPress: async () => {
-            setJoining(poolId);
-            try {
-              await api.post(`/pools/${poolId}/join`);
-              await loadPools();
-              await refreshUser();
-              Alert.alert('Success!', 'You have joined the pool. Good luck!');
-            } catch (error: any) {
-              Alert.alert('Error', error.response?.data?.message || 'Failed to join pool');
-            } finally {
-              setJoining(null);
-            }
-          },
-        },
-      ]
-    );
   };
 
   const getPoolIcon = (type: string): keyof typeof Ionicons.glyphMap => {
@@ -174,87 +136,80 @@ export default function PoolsScreen() {
           ) : (
             pools.map((pool) => {
               const poolColor = getPoolColor(pool.type);
-              const isJoining = joining === pool._id;
               const spotsLeft = pool.maxEntries - pool.currentEntries;
 
               return (
-                <View
+                <Link
                   key={pool._id}
-                  style={[styles.poolCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                  href={{
+                    pathname: '/pools/[id]',
+                    params: { id: pool._id },
+                  }}
+                  asChild
                 >
-                  <View style={[styles.poolIcon, { backgroundColor: poolColor }]}>
-                    <Ionicons name={getPoolIcon(pool.type)} size={24} color="#fff" />
-                  </View>
-
-                  <View style={styles.poolInfo}>
-                    <View style={styles.poolHeader}>
-                      <Text style={[styles.poolName, { color: colors.text }]}>{pool.name}</Text>
-                      <View style={[styles.typeBadge, { backgroundColor: poolColor }]}>
-                        <Text style={styles.typeText}>{pool.type.toUpperCase()}</Text>
-                      </View>
+                  <TouchableOpacity
+                    style={[styles.poolCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                  >
+                    <View style={[styles.poolIcon, { backgroundColor: poolColor }]}>
+                      <Ionicons name={getPoolIcon(pool.type)} size={24} color="#fff" />
                     </View>
 
-                    {pool.game && (
-                      <Text style={[styles.poolGame, { color: colors.textSecondary }]}>{pool.game}</Text>
-                    )}
-
-                    <View style={styles.poolStats}>
-                      <View style={styles.stat}>
-                        <Ionicons name="ticket" size={14} color={colors.textMuted} />
-                        <Text style={[styles.statText, { color: colors.text }]}>
-                          {pool.entryFee} 🪙
-                        </Text>
-                      </View>
-                      <View style={styles.stat}>
-                        <Ionicons name="trophy" size={14} color={colors.textMuted} />
-                        <Text style={[styles.statText, { color: colors.text }]}>
-                          {pool.prizePool.toLocaleString()} 🪙
-                        </Text>
-                      </View>
-                      <View style={styles.stat}>
-                        <Ionicons name="people" size={14} color={colors.textMuted} />
-                        <Text style={[styles.statText, { color: colors.text }]}>
-                          {pool.currentEntries}/{pool.maxEntries}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View style={styles.poolFooter}>
-                      <Text style={[styles.startDate, { color: colors.textMuted }]}>
-                        Starts {formatDate(pool.startsAt)}
-                      </Text>
-
-                      {pool.status === 'open' && !pool.userEntered && (
-                        <TouchableOpacity
-                          style={[styles.joinButton, { backgroundColor: poolColor }]}
-                          onPress={() => joinPool(pool._id, pool.entryFee)}
-                          disabled={isJoining || spotsLeft === 0}
-                        >
-                          {isJoining ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                          ) : (
-                            <Text style={styles.joinButtonText}>
-                              {spotsLeft === 0 ? 'Full' : 'Join'}
-                            </Text>
-                          )}
-                        </TouchableOpacity>
-                      )}
-
-                      {pool.userEntered && (
-                        <View style={[styles.enteredBadge, { backgroundColor: '#4CAF50' }]}>
-                          <Ionicons name="checkmark" size={14} color="#fff" />
-                          <Text style={styles.enteredText}>Entered</Text>
+                    <View style={styles.poolInfo}>
+                      <View style={styles.poolHeader}>
+                        <Text style={[styles.poolName, { color: colors.text }]}>{pool.name}</Text>
+                        <View style={[styles.typeBadge, { backgroundColor: poolColor }]}>
+                          <Text style={styles.typeText}>{pool.type.toUpperCase()}</Text>
                         </View>
+                      </View>
+
+                      {pool.game && (
+                        <Text style={[styles.poolGame, { color: colors.textSecondary }]}>{pool.game}</Text>
                       )}
 
-                      {pool.status !== 'open' && (
-                        <Text style={[styles.statusText, { color: colors.textMuted }]}>
-                          {pool.status === 'locked' ? 'In Progress' : 'Completed'}
+                      <View style={styles.poolStats}>
+                        <View style={styles.stat}>
+                          <Ionicons name="ticket" size={14} color={colors.textMuted} />
+                          <Text style={[styles.statText, { color: colors.text }]}>
+                            {pool.entryFee} 🪙
+                          </Text>
+                        </View>
+                        <View style={styles.stat}>
+                          <Ionicons name="trophy" size={14} color={colors.textMuted} />
+                          <Text style={[styles.statText, { color: colors.text }]}>
+                            {pool.prizePool.toLocaleString()} 🪙
+                          </Text>
+                        </View>
+                        <View style={styles.stat}>
+                          <Ionicons name="people" size={14} color={colors.textMuted} />
+                          <Text style={[styles.statText, { color: colors.text }]}>
+                            {pool.currentEntries}/{pool.maxEntries}
+                          </Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.poolFooter}>
+                        <Text style={[styles.startDate, { color: colors.textMuted }]}>
+                          Starts {formatDate(pool.startsAt)}
                         </Text>
-                      )}
+
+                        {pool.userEntered && (
+                          <View style={[styles.enteredBadge, { backgroundColor: '#4CAF50' }]}>
+                            <Ionicons name="checkmark" size={14} color="#fff" />
+                            <Text style={styles.enteredText}>Entered</Text>
+                          </View>
+                        )}
+
+                        {!pool.userEntered && pool.status === 'open' && (
+                          <View style={[styles.spotsTag, { backgroundColor: colors.background }]}>
+                            <Text style={[styles.spotsText, { color: colors.textMuted }]}>
+                              {spotsLeft} spots left
+                            </Text>
+                          </View>
+                        )}
+                      </View>
                     </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                </Link>
               );
             })
           )}
@@ -380,16 +335,6 @@ const styles = StyleSheet.create({
   startDate: {
     fontSize: 12,
   },
-  joinButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  joinButtonText: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '700',
-  },
   enteredBadge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -403,8 +348,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
-  statusText: {
-    fontSize: 12,
-    fontStyle: 'italic',
+  spotsTag: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  spotsText: {
+    fontSize: 11,
   },
 });
