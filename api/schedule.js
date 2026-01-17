@@ -4,13 +4,15 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-    // Get team filter from query params
-    const { team } = req.query;
+    // Get team filter and days limit from query params
+    const { team, days } = req.query;
     const teamFilter = team ? team.toLowerCase() : null;
+    const daysLimit = parseInt(days) || 10; // Default to 10 days
 
     try {
         const schedule = [];
         const now = new Date();
+        const maxDate = new Date(now.getTime() + daysLimit * 24 * 60 * 60 * 1000);
 
         // Fetch NFL (Eagles) schedule
         try {
@@ -18,7 +20,7 @@ export default async function handler(req, res) {
             const nflData = await nflRes.json();
             const upcomingEagles = nflData.events?.filter(e => {
                 const gameDate = new Date(e.date);
-                return gameDate > now && !e.competitions?.[0]?.status?.type?.completed;
+                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
             }).slice(0, 2) || [];
 
             upcomingEagles.forEach(game => {
@@ -44,7 +46,7 @@ export default async function handler(req, res) {
             const nbaData = await nbaRes.json();
             const upcomingSixers = nbaData.events?.filter(e => {
                 const gameDate = new Date(e.date);
-                return gameDate > now && !e.competitions?.[0]?.status?.type?.completed;
+                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
             }).slice(0, 2) || [];
 
             upcomingSixers.forEach(game => {
@@ -70,7 +72,7 @@ export default async function handler(req, res) {
             const nhlData = await nhlRes.json();
             const upcomingFlyers = nhlData.events?.filter(e => {
                 const gameDate = new Date(e.date);
-                return gameDate > now && !e.competitions?.[0]?.status?.type?.completed;
+                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
             }).slice(0, 2) || [];
 
             upcomingFlyers.forEach(game => {
@@ -96,7 +98,7 @@ export default async function handler(req, res) {
             const mlbData = await mlbRes.json();
             const upcomingPhillies = mlbData.events?.filter(e => {
                 const gameDate = new Date(e.date);
-                return gameDate > now && !e.competitions?.[0]?.status?.type?.completed;
+                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
             }).slice(0, 2) || [];
 
             upcomingPhillies.forEach(game => {
@@ -122,7 +124,7 @@ export default async function handler(req, res) {
             const mlsData = await mlsRes.json();
             const upcomingUnion = mlsData.events?.filter(e => {
                 const gameDate = new Date(e.date);
-                return gameDate > now && !e.competitions?.[0]?.status?.type?.completed;
+                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
             }).slice(0, 2) || [];
 
             upcomingUnion.forEach(game => {
@@ -163,7 +165,7 @@ export default async function handler(req, res) {
                 const cbData = await cbRes.json();
                 const upcomingGames = cbData.events?.filter(e => {
                     const gameDate = new Date(e.date);
-                    return gameDate > now && !e.competitions?.[0]?.status?.type?.completed;
+                    return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
                 }).slice(0, 5) || [];
 
                 upcomingGames.forEach(game => {
