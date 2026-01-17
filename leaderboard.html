@@ -197,6 +197,7 @@
         .dropdown-menu a[href="/sixers"]:hover { color: #006BB6; }
         .dropdown-menu a[href="/flyers"]:hover { color: #F74902; }
     </style>
+    <link rel="stylesheet" href="/css/mobile-menu.css">
 </head>
 <body>
     <header class="header">
@@ -284,6 +285,104 @@
             </div>
         </nav>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Menu Panel -->
+    <nav class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <span>Menu</span>
+            <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+        </div>
+        <div class="mobile-menu-search">
+            <form action="https://www.google.com/search" method="GET" target="_blank">
+                <input type="text" name="q" placeholder="Search the web..." required>
+                <button type="submit">Go</button>
+            </form>
+        </div>
+        <div class="mobile-menu-auth">
+            <a href="/login.html" class="login-btn">Login</a>
+            <a href="/register.html" class="signup-btn">Sign Up</a>
+        </div>
+        <div class="mobile-nav-items">
+            <a href="/" class="mobile-nav-item">Home</a>
+            <div class="mobile-nav-dropdown">
+                <div class="mobile-nav-dropdown-trigger">
+                    <span>Pro Teams</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="mobile-nav-dropdown-menu">
+                    <a href="/eagles">Eagles</a>
+                    <a href="/phillies">Phillies</a>
+                    <a href="/sixers">76ers</a>
+                    <a href="/flyers">Flyers</a>
+                </div>
+            </div>
+            <div class="mobile-nav-dropdown">
+                <div class="mobile-nav-dropdown-trigger">
+                    <span>College</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="mobile-nav-dropdown-menu">
+                    <a href="/villanova">Villanova</a>
+                    <a href="/penn">Penn</a>
+                    <a href="/lasalle">La Salle</a>
+                    <a href="/drexel">Drexel</a>
+                    <a href="/stjosephs">St. Joseph's</a>
+                    <a href="/temple">Temple</a>
+                </div>
+            </div>
+            <div class="mobile-nav-dropdown">
+                <div class="mobile-nav-dropdown-trigger">
+                    <span>Gaming</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="mobile-nav-dropdown-menu">
+                    <a href="/fantasy.html">Fantasy</a>
+                    <a href="/pools.html">Pools</a>
+                    <a href="/poker.html">Poker</a>
+                    <a href="/trivia.html">Trivia</a>
+                </div>
+            </div>
+            <div class="mobile-nav-dropdown">
+                <div class="mobile-nav-dropdown-trigger">
+                    <span>Betting</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="mobile-nav-dropdown-menu">
+                    <a href="/odds.html">Odds</a>
+                    <a href="/bets.html">Bets</a>
+                </div>
+            </div>
+            <div class="mobile-nav-dropdown">
+                <div class="mobile-nav-dropdown-trigger">
+                    <span>Community</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="mobile-nav-dropdown-menu">
+                    <a href="/community/">Forums</a>
+                    <a href="/badges.html">Badges</a>
+                    <a href="/leaderboard.html">Leaderboard</a>
+                    <a href="/source-leaderboard.html">Source Rankings</a>
+                </div>
+            </div>
+            <div class="mobile-nav-dropdown">
+                <div class="mobile-nav-dropdown-trigger">
+                    <span>Shop</span>
+                    <span class="arrow">&#9660;</span>
+                </div>
+                <div class="mobile-nav-dropdown-menu">
+                    <a href="/shop/">Shop</a>
+                    <a href="/marketplace/">Marketplace</a>
+                    <a href="/raffles/">Raffles</a>
+                </div>
+            </div>
+            <a href="/esports" class="mobile-nav-item">eSports</a>
+            <a href="/youth" class="mobile-nav-item">Youth</a>
+            <a href="/game-threads.html" class="mobile-nav-item">Live</a>
+        </div>
+    </nav>
 
     <section class="page-hero">
         <h1>&#129689; Diehard Dollar Leaderboard</h1>
@@ -401,5 +500,6 @@
         checkAuth();
         loadLeaderboard();
     </script>
+    <script src="/js/mobile-menu.js"></script>
 </body>
 </html>
