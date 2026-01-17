@@ -1,0 +1,52 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAM_ID.com.phillysports.app",
+        "paths": [
+          "/",
+          "/teams",
+          "/team/*",
+          "/gaming",
+          "/trivia",
+          "/predictions",
+          "/poker",
+          "/poker/*",
+          "/pools",
+          "/pools/*",
+          "/community",
+          "/forums",
+          "/forums/*",
+          "/clubs",
+          "/clubs/*",
+          "/watch-parties",
+          "/watch-parties/*",
+          "/tailgates",
+          "/tailgates/*",
+          "/messages",
+          "/messages/*",
+          "/game-threads",
+          "/game-threads/*",
+          "/shop",
+          "/shop/*",
+          "/marketplace",
+          "/marketplace/*",
+          "/raffles",
+          "/raffles/*",
+          "/profile",
+          "/profile/*",
+          "/settings/*",
+          "/login",
+          "/register",
+          "/forgot-password"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEAM_ID.com.phillysports.app"
+    ]
+  }
+}

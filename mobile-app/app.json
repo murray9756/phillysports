@@ -3,11 +3,15 @@
     "name": "PhillySports",
     "slug": "phillysports",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "scheme": "phillysports",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "icon": "./assets/icon.png",
+    "owner": "phillysports",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -16,16 +20,28 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.phillysports.app",
+      "buildNumber": "1",
       "associatedDomains": [
         "applinks:phillysports.com",
         "applinks:www.phillysports.com"
       ],
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Use Face ID to securely login to your account"
+        "NSFaceIDUsageDescription": "Use Face ID to securely login to your account",
+        "NSCameraUsageDescription": "Take photos for your profile or marketplace listings",
+        "NSPhotoLibraryUsageDescription": "Select photos for your profile or marketplace listings",
+        "NSLocationWhenInUseUsageDescription": "Find nearby watch parties and tailgates",
+        "UIBackgroundModes": ["remote-notification"]
+      },
+      "entitlements": {
+        "aps-environment": "production"
+      },
+      "config": {
+        "usesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "com.phillysports.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#8B0000"
@@ -79,7 +95,13 @@
     "extra": {
       "apiUrl": "https://phillysports.com/api",
       "pusherKey": "YOUR_PUSHER_KEY",
-      "pusherCluster": "us2"
+      "pusherCluster": "us2",
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/YOUR_EAS_PROJECT_ID"
     }
   }
 }
