@@ -836,7 +836,7 @@
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>
                         </button>
-                        <div class="coin-display" title="Diehard Dollars"><span class="coin-icon">&#129689;</span><span>${data.user.coinBalance || 0}</span></div>
+                        <div class="coin-display" title="Diehard Dollars"><span class="coin-icon">&#129689;</span><span>${Math.round(data.user.coinBalance || 0)}</span></div>
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
@@ -869,7 +869,7 @@
                                     <span style="width:1.5rem;text-align:center;">${medal}</span>
                                     <a href="/profile.html?username=${user.username}" style="font-weight:500;color:var(--text-primary);">${user.username}</a>
                                 </span>
-                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${user.coinBalance.toLocaleString()}</span>
+                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
                             </div>
                         `;
                     }).join('');

@@ -459,7 +459,7 @@
                         </button>
                         <div class="coin-display" title="Diehard Dollars" id="headerBalance">
                             <span>&#129689;</span>
-                            <span>${data.user.coinBalance || 0}</span>
+                            <span>${Math.round(data.user.coinBalance || 0)}</span>
                         </div>
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>

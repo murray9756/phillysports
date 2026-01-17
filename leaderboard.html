@@ -308,7 +308,7 @@
                         </button>
                         <div class="coin-display" title="Diehard Dollars">
                             <span>&#129689;</span>
-                            <span>${data.user.coinBalance || 0}</span>
+                            <span>${Math.round(data.user.coinBalance || 0)}</span>
                         </div>
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
@@ -362,7 +362,7 @@
                         <tr>
                             <td class="rank-cell rank-${entry.rank}">${getRankEmoji(entry.rank)}</td>
                             <td class="user-cell">${entry.username}</td>
-                            <td class="coins-cell">&#129689; ${entry.coinBalance.toLocaleString()}</td>
+                            <td class="coins-cell">&#129689; ${Math.round(entry.coinBalance).toLocaleString()}</td>
                         </tr>
                     `;
                 });

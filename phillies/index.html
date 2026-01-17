@@ -570,7 +570,7 @@
                                     <span style="width:1.5rem;text-align:center;">${medal}</span>
                                     <a href="/profile.html?username=${user.username}" style="font-weight:500;color:var(--text-primary);">${user.username}</a>
                                 </span>
-                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${user.coinBalance.toLocaleString()}</span>
+                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
                             </div>
                         `;
                     }).join('');
@@ -723,7 +723,7 @@
 
         loadStats();
 
-        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars"><span>&#129689;</span><span>${d.user.coinBalance||0}</span></div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('themeToggle').addEventListener('click',toggleTheme);document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
+        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars"><span>&#129689;</span><span>${Math.round(d.user.coinBalance || 0)}</span></div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('themeToggle').addEventListener('click',toggleTheme);document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
     </script>
 </body>
 </html>

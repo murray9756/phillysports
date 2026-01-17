@@ -450,7 +450,7 @@
                         </button>
                         <div class="coin-display">
                             <span>🪙</span>
-                            <span>${data.user.coinBalance || 0}</span>
+                            <span>${Math.round(data.user.coinBalance || 0)}</span>
                         </div>
                         <a href="/profile.html">${data.user.displayName || data.user.username}</a>
                         <a href="#" onclick="logout(); return false;">Logout</a>
