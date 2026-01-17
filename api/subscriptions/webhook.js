@@ -55,7 +55,32 @@ export default async function handler(req, res) {
                 // Handle subscription checkouts
                 if (session.mode === 'subscription' && session.subscription) {
                     console.log('Checkout completed for subscription:', session.subscription);
-                    // Subscription will be activated by customer.subscription.created event
+
+                    // Also activate here as backup (in case subscription.created doesn't have metadata)
+                    const userId = session.metadata?.userId;
+                    const tier = session.metadata?.tier;
+
+                    if (userId && tier) {
+                        const users = await getCollection('users');
+                        const now = new Date();
+                        const endDate = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+                        await users.updateOne(
+                            { _id: new ObjectId(userId) },
+                            {
+                                $set: {
+                                    subscriptionTier: tier,
+                                    subscriptionStatus: 'active',
+                                    subscriptionStartDate: now,
+                                    subscriptionEndDate: endDate,
+                                    subscriptionInterval: session.metadata?.interval || 'month',
+                                    stripeSubscriptionId: session.subscription,
+                                    updatedAt: now
+                                }
+                            }
+                        );
+                        console.log(`Subscription activated via checkout for user ${userId}, tier ${tier}`);
+                    }
                 }
 
                 // Handle coin pack purchases
@@ -106,10 +131,20 @@ export default async function handler(req, res) {
             case 'customer.subscription.created':
             case 'customer.subscription.updated': {
                 const subscription = event.data.object;
-                const userId = subscription.metadata?.userId;
+                let userId = subscription.metadata?.userId;
+
+                // If no userId in metadata, try to find user by customer ID
+                if (!userId && subscription.customer) {
+                    const users = await getCollection('users');
+                    const user = await users.findOne({ stripeCustomerId: subscription.customer });
+                    if (user) {
+                        userId = user._id.toString();
+                        console.log(`Found user ${userId} by customer ID ${subscription.customer}`);
+                    }
+                }
 
                 if (!userId) {
-                    console.error('No userId in subscription metadata');
+                    console.error('No userId found - metadata:', subscription.metadata, 'customer:', subscription.customer);
                     break;
                 }
 
