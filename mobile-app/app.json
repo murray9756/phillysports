@@ -34,8 +34,22 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#8B0000",
+          "sounds": []
+        }
+      ]
     ],
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#8B0000",
+      "androidMode": "default",
+      "androidCollapsedTitle": "PhillySports"
+    },
     "experiments": {
       "typedRoutes": true
     },

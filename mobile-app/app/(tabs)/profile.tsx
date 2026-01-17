@@ -27,7 +27,7 @@ const menuSections: { title: string; items: MenuItem[] }[] = [
     title: 'Account',
     items: [
       { title: 'Edit Profile', icon: 'person-circle', href: '/profile/edit' },
-      { title: 'Notifications', icon: 'notifications', href: '/profile/notifications' },
+      { title: 'Notifications', icon: 'notifications', href: '/settings/notifications' },
       { title: 'Privacy & Security', icon: 'shield-checkmark', href: '/profile/privacy' },
     ],
   },
