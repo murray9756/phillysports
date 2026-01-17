@@ -76,13 +76,17 @@ export async function authenticate(req) {
 
 export function setAuthCookie(res, token) {
     const isProduction = process.env.NODE_ENV === 'production';
+    // Use domain=.phillysports.com to work across www and non-www
+    const domain = isProduction ? '; Domain=.phillysports.com' : '';
     res.setHeader('Set-Cookie', [
-        `auth_token=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${7 * 24 * 60 * 60}${isProduction ? '; Secure' : ''}`
+        `auth_token=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7 * 24 * 60 * 60}${isProduction ? '; Secure' : ''}${domain}`
     ]);
 }
 
 export function clearAuthCookie(res) {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const domain = isProduction ? '; Domain=.phillysports.com' : '';
     res.setHeader('Set-Cookie', [
-        'auth_token=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0'
+        `auth_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${domain}`
     ]);
 }
