@@ -563,6 +563,7 @@
                 const res = await fetch('/api/subscriptions/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({
                         tier,
                         interval: billingInterval
@@ -570,11 +571,14 @@
                 });
 
                 const data = await res.json();
+                console.log('Checkout response:', data);
 
                 if (data.checkoutUrl) {
                     window.location.href = data.checkoutUrl;
+                } else if (data.url) {
+                    window.location.href = data.url;
                 } else {
-                    throw new Error(data.error || 'Failed to create checkout');
+                    throw new Error(data.error || 'No checkout URL returned');
                 }
             } catch (e) {
                 showToast(e.message || 'Failed to start checkout', 'error');
