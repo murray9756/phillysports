@@ -409,6 +409,23 @@
                         <div id="indexResults" style="margin-top: 1rem; display: none;"></div>
                     </div>
 
+                    <!-- Stripe Setup -->
+                    <div style="padding: 1rem; background: var(--widget-header-bg); border-radius: 6px;">
+                        <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Stripe Products</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                            Create subscription products and prices in Stripe for memberships. Only run once.
+                        </p>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-secondary" id="viewStripeBtn" onclick="viewStripeProducts()">
+                                View Products
+                            </button>
+                            <button class="btn btn-primary" id="setupStripeBtn" onclick="runStripeSetup()">
+                                Create Products
+                            </button>
+                        </div>
+                        <div id="stripeResults" style="margin-top: 1rem; display: none;"></div>
+                    </div>
+
                     <!-- Rate Limit Info -->
                     <div style="padding: 1rem; background: var(--widget-header-bg); border-radius: 6px;">
                         <h3 style="font-size: 1rem; margin-bottom: 0.5rem;">Rate Limiting</h3>
@@ -554,6 +571,114 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Setup Indexes';
+                resultsDiv.style.display = 'block';
+            }
+        }
+
+        // View existing Stripe products
+        async function viewStripeProducts() {
+            const btn = document.getElementById('viewStripeBtn');
+            const resultsDiv = document.getElementById('stripeResults');
+
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+            resultsDiv.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/admin/stripe-setup', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (data.products.length === 0) {
+                        resultsDiv.innerHTML = '<div style="font-size: 0.85rem; color: var(--text-muted);">No subscription products found. Click "Create Products" to set them up.</div>';
+                    } else {
+                        let html = '<div style="font-size: 0.85rem;">';
+                        html += '<strong>Existing Products:</strong><ul style="margin: 0.5rem 0 0 1rem;">';
+                        data.products.forEach(p => {
+                            html += `<li>${p.name} (${p.id})</li>`;
+                        });
+                        html += '</ul>';
+                        html += '<strong style="margin-top: 0.5rem; display: block;">Prices:</strong><ul style="margin: 0.5rem 0 0 1rem;">';
+                        data.prices.forEach(p => {
+                            const amt = (p.unitAmount / 100).toFixed(2);
+                            const interval = p.recurring?.interval || 'one-time';
+                            html += `<li>$${amt}/${interval} (${p.id})</li>`;
+                        });
+                        html += '</ul></div>';
+                        resultsDiv.innerHTML = html;
+                    }
+                } else {
+                    resultsDiv.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">Error: ${data.error}</div>`;
+                }
+            } catch (e) {
+                resultsDiv.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">Error: ${e.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'View Products';
+                resultsDiv.style.display = 'block';
+            }
+        }
+
+        // Create Stripe products
+        async function runStripeSetup() {
+            const btn = document.getElementById('setupStripeBtn');
+            const resultsDiv = document.getElementById('stripeResults');
+
+            if (!confirm('This will create new subscription products in Stripe. Continue?')) {
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+            resultsDiv.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/admin/stripe-setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    let html = '<div style="font-size: 0.85rem;">';
+                    html += '<strong style="color: var(--success);">Products Created!</strong>';
+                    html += '<div style="margin-top: 0.75rem;"><strong>Products:</strong></div>';
+                    html += '<ul style="margin: 0.25rem 0 0 1rem;">';
+                    data.products.forEach(p => {
+                        html += `<li>${p.name}</li>`;
+                    });
+                    html += '</ul>';
+                    html += '<div style="margin-top: 0.5rem;"><strong>Prices:</strong></div>';
+                    html += '<ul style="margin: 0.25rem 0 0 1rem;">';
+                    data.prices.forEach(p => {
+                        html += `<li>${p.name}: ${p.amount}</li>`;
+                    });
+                    html += '</ul>';
+                    html += '<div style="margin-top: 0.75rem; padding: 0.75rem; background: var(--bg-elevated); border-radius: 4px;">';
+                    html += '<strong>Environment Variables to Add:</strong>';
+                    html += '<pre style="margin: 0.5rem 0 0 0; font-size: 0.75rem; overflow-x: auto;">';
+                    Object.entries(data.envVars).forEach(([k, v]) => {
+                        html += `${k}=${v}\n`;
+                    });
+                    html += '</pre></div>';
+                    html += '</div>';
+                    resultsDiv.innerHTML = html;
+                    showMessage('Stripe products created! Add the environment variables to Vercel.', 'success');
+                } else {
+                    resultsDiv.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">Error: ${data.error}${data.message ? '<br>' + data.message : ''}</div>`;
+                    showMessage(data.error || 'Failed to create products', 'error');
+                }
+            } catch (e) {
+                resultsDiv.innerHTML = `<div style="color: #dc2626; font-size: 0.85rem;">Error: ${e.message}</div>`;
+                showMessage('Failed to create Stripe products', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Create Products';
                 resultsDiv.style.display = 'block';
             }
         }

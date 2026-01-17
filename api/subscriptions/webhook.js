@@ -1,6 +1,7 @@
-// Stripe Subscription Webhook
-// POST: Handle Stripe webhook events for subscriptions
+// Stripe Webhook
+// POST: Handle Stripe webhook events for subscriptions and purchases
 
+import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { constructWebhookEvent } from '../lib/payments/stripe.js';
 import {
@@ -51,10 +52,53 @@ export default async function handler(req, res) {
             case 'checkout.session.completed': {
                 const session = event.data.object;
 
-                // Only handle subscription checkouts
+                // Handle subscription checkouts
                 if (session.mode === 'subscription' && session.subscription) {
                     console.log('Checkout completed for subscription:', session.subscription);
                     // Subscription will be activated by customer.subscription.created event
+                }
+
+                // Handle coin pack purchases
+                if (session.mode === 'payment' && session.metadata?.type === 'coin_purchase') {
+                    const userId = session.metadata.userId;
+                    const coins = parseInt(session.metadata.coins, 10);
+                    const packId = session.metadata.packId;
+
+                    if (userId && coins > 0) {
+                        const users = await getCollection('users');
+                        const purchases = await getCollection('coin_purchases');
+
+                        // Check if already processed (idempotency)
+                        const existing = await purchases.findOne({ stripeSessionId: session.id });
+                        if (existing) {
+                            console.log(`Coin purchase already processed: ${session.id}`);
+                            break;
+                        }
+
+                        // Add coins to user
+                        await users.updateOne(
+                            { _id: new ObjectId(userId) },
+                            {
+                                $inc: { diehardDollars: coins },
+                                $set: { updatedAt: new Date() }
+                            }
+                        );
+
+                        // Record purchase
+                        await purchases.insertOne({
+                            userId: new ObjectId(userId),
+                            stripeSessionId: session.id,
+                            stripePaymentIntent: session.payment_intent,
+                            packId,
+                            coins,
+                            amountPaid: session.amount_total,
+                            currency: session.currency,
+                            status: 'completed',
+                            createdAt: new Date()
+                        });
+
+                        console.log(`Added ${coins} Diehard Dollars to user ${userId}`);
+                    }
                 }
                 break;
             }
