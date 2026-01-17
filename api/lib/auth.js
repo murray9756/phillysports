@@ -85,8 +85,13 @@ export function setAuthCookie(res, token) {
 
 export function clearAuthCookie(res) {
     const isProduction = process.env.NODE_ENV === 'production';
-    const domain = isProduction ? '; Domain=.phillysports.com' : '';
-    res.setHeader('Set-Cookie', [
-        `auth_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${domain}`
-    ]);
+    const secure = isProduction ? '; Secure' : '';
+    // Clear cookies from all possible domain variations to handle legacy cookies
+    const cookies = [
+        `auth_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`,
+        `auth_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}; Domain=.phillysports.com`,
+        `auth_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}; Domain=phillysports.com`,
+        `auth_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}; Domain=www.phillysports.com`
+    ];
+    res.setHeader('Set-Cookie', cookies);
 }
