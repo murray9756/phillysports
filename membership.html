@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-KRBRNKNC97');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Membership | PhillySports.com</title>
+    <meta name="description" content="Upgrade to Diehard+ or Diehard Pro for exclusive benefits, 2x daily coins, ad-free experience, and more.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="manifest" href="/public/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --header-bg: #faf9f6; --nav-text: #333333; --widget-header-bg: #e8e3db; --success: #22c55e; --gold: #ffd700; }
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-bg-hover: #2a2a2a;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --nav-text: #d0d0d0;
+            --widget-header-bg: #2a2a2a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+        .header-logo { display: flex; align-items: center; gap: 0.5rem; }
+        .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
+        .header-search { display: flex; align-items: center; position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%); }
+        .header-search form { display: flex; align-items: center; gap: 0.5rem; }
+        .header-search .google-logo { height: 20px; width: auto; }
+        .header-search input { padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: 4px; background: #ffffff; color: var(--text-primary); font-size: 0.8rem; width: 360px; font-family: inherit; }
+        .header-search input::placeholder { color: var(--text-muted); }
+        .header-search button { padding: 0.5rem 0.75rem; background: var(--accent-color); border: none; border-radius: 4px; color: white; font-weight: 600; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+        .header-search button:hover { opacity: 0.9; }
+        .header-auth { display: flex; align-items: center; gap: 1rem; }
+        .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .header-auth a:hover { background: rgba(0,0,0,0.05); }
+        .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+
+        /* Main Navigation */
+        .main-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
+        .nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; align-items: center; }
+        .nav-item { padding: 0.75rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--nav-text); text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: color 0.2s; white-space: nowrap; text-decoration: none; }
+        .nav-item:hover { color: var(--accent-color); }
+        .nav-dropdown { position: relative; }
+        .dropdown-trigger { display: flex; align-items: center; gap: 0.25rem; }
+        .dropdown-arrow { font-size: 0.5rem; transition: transform 0.2s; }
+        .dropdown-menu { position: absolute; top: 100%; left: 0; background: var(--header-bg); border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 150px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s; z-index: 1000; }
+        .nav-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+        .nav-dropdown:hover .dropdown-arrow { transform: rotate(180deg); }
+        .dropdown-menu a { display: block; padding: 0.6rem 1rem; color: var(--nav-text); font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: background 0.2s, color 0.2s; }
+        .dropdown-menu a:hover { background: rgba(0,0,0,0.05); color: var(--accent-color); }
+        [data-theme="dark"] .dropdown-menu a:hover { background: rgba(255,255,255,0.05); }
+
+        /* Theme Toggle */
+        .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; line-height: 1; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; }
+        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
+        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        /* Hero Section */
+        .page-hero { background: linear-gradient(135deg, #8b0000, #5c0000); padding: 3rem 1.5rem; text-align: center; color: white; }
+        .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .page-hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* Current Status Banner */
+        .status-banner { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 1rem 1.5rem; text-align: center; }
+        .status-banner.premium { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,152,0,0.1)); border-color: var(--gold); }
+        .status-text { font-size: 0.9rem; color: var(--text-secondary); }
+        .status-text strong { color: var(--accent-color); }
+        .status-banner.premium .status-text strong { color: #b8860b; }
+
+        /* Main Content */
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        /* Pricing Grid */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .pricing-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
+        .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .pricing-card.popular { border-color: var(--accent-color); }
+        .pricing-card.current { border-color: var(--success); background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(34,197,94,0.02)); }
+        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-color); color: white; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .current-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tier-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .tier-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .tier-price { font-size: 2.5rem; font-weight: 800; color: var(--accent-color); margin-bottom: 0.25rem; }
+        .tier-price span { font-size: 1rem; font-weight: 500; color: var(--text-muted); }
+        .tier-annual { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .tier-annual strong { color: var(--success); }
+        .benefits-list { list-style: none; margin-bottom: 1.5rem; }
+        .benefits-list li { padding: 0.5rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border-color); }
+        .benefits-list li:last-child { border-bottom: none; }
+        .benefits-list .check { color: var(--success); font-weight: bold; }
+        .benefits-list .x { color: var(--text-muted); }
+        .subscribe-btn { width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .subscribe-btn.primary { background: var(--accent-color); color: white; }
+        .subscribe-btn.primary:hover { opacity: 0.9; transform: scale(1.02); }
+        .subscribe-btn.secondary { background: var(--border-color); color: var(--text-primary); }
+        .subscribe-btn.current { background: var(--success); color: white; cursor: default; }
+        .subscribe-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Billing Toggle */
+        .billing-toggle { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; align-items: center; }
+        .billing-toggle label { font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; padding: 0.5rem 1rem; border-radius: 20px; transition: all 0.2s; }
+        .billing-toggle label.active { background: var(--accent-color); color: white; }
+        .billing-toggle .save-badge { background: var(--success); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+
+        /* Manage Section */
+        .manage-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
+        .manage-section h3 { font-size: 1.1rem; margin-bottom: 1rem; }
+        .manage-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .manage-btn { padding: 0.75rem 1.5rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .manage-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+        .manage-btn.danger { border-color: #dc2626; color: #dc2626; }
+        .manage-btn.danger:hover { background: #dc2626; color: white; }
+
+        /* FAQ Section */
+        .faq-section { margin-top: 3rem; }
+        .faq-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+        .faq-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.75rem; }
+        .faq-question { padding: 1rem 1.25rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question:hover { color: var(--accent-color); }
+        .faq-answer { padding: 0 1.25rem 1rem; font-size: 0.9rem; color: var(--text-secondary); display: none; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+        /* Footer */
+        .footer { margin-top: 3rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 9999; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .toast.success { background: #4caf50; }
+        .toast.error { background: #f44336; }
+
+        /* Loading */
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            .header-search { display: none; }
+            .page-hero h1 { font-size: 1.75rem; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .tier-price { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top" style="position: relative;">
+            <div class="header-search">
+                <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
+                    <input type="text" name="q" placeholder="Search the web..." required>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
+            <a href="/" class="header-logo">
+                <img src="/logo-weathered.png" alt="PhillySports.com">
+            </a>
+            <div class="header-auth" id="headerAuth">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
+                <a href="/login.html">Login</a>
+                <a href="/register.html">Register</a>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="/" class="nav-item">Home</a>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/eagles">Eagles</a>
+                        <a href="/phillies">Phillies</a>
+                        <a href="/sixers">76ers</a>
+                        <a href="/flyers">Flyers</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">College <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/villanova">Villanova</a>
+                        <a href="/penn">Penn</a>
+                        <a href="/lasalle">La Salle</a>
+                        <a href="/drexel">Drexel</a>
+                        <a href="/stjosephs">St. Joseph's</a>
+                        <a href="/temple">Temple</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/fantasy.html">Fantasy</a>
+                        <a href="/pools.html">Pools</a>
+                        <a href="/poker.html">Poker</a>
+                        <a href="/trivia.html">Trivia</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Betting <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/odds.html">Odds</a>
+                        <a href="/bets.html">Bets</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/community/">Forums</a>
+                        <a href="/badges.html">Badges</a>
+                        <a href="/leaderboard.html">Leaderboard</a>
+                        <a href="/source-leaderboard.html">Source Rankings</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown">
+                    <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
+                    <div class="dropdown-menu">
+                        <a href="/shop.html">Shop</a>
+                        <a href="/marketplace/">Marketplace</a>
+                        <a href="/raffles/">Raffles</a>
+                    </div>
+                </div>
+                <a href="/esports" class="nav-item">eSports</a>
+                <a href="/youth" class="nav-item">Youth</a>
+                <a href="/game-threads.html" class="nav-item">Live</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <h1>&#11088; Premium Membership</h1>
+        <p>Unlock exclusive benefits, earn 2x daily coins, and support PhillySports.com</p>
+    </section>
+
+    <div class="status-banner" id="statusBanner" style="display: none;">
+        <p class="status-text" id="statusText"></p>
+    </div>
+
+    <main class="main-container">
+        <div class="billing-toggle">
+            <label id="monthlyLabel" class="active" onclick="setBilling('month')">Monthly</label>
+            <label id="annualLabel" onclick="setBilling('year')">Annual <span class="save-badge">Save 25%</span></label>
+        </div>
+
+        <div class="pricing-grid" id="pricingGrid">
+            <!-- Free Tier -->
+            <div class="pricing-card" id="freeTier">
+                <div class="tier-icon">&#127941;</div>
+                <h2 class="tier-name">Free</h2>
+                <div class="tier-price">$0<span>/month</span></div>
+                <div class="tier-annual">&nbsp;</div>
+                <ul class="benefits-list">
+                    <li><span class="check">&#10003;</span> Access to all content</li>
+                    <li><span class="check">&#10003;</span> Daily login bonus (10 DD)</li>
+                    <li><span class="check">&#10003;</span> Forums & community</li>
+                    <li><span class="check">&#10003;</span> Poker & gaming</li>
+                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">Ad-free experience</span></li>
+                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">2x daily coin bonus</span></li>
+                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">Exclusive badges</span></li>
+                </ul>
+                <button class="subscribe-btn secondary" id="freeBtn" disabled>Current Plan</button>
+            </div>
+
+            <!-- Diehard+ Tier -->
+            <div class="pricing-card popular" id="plusTier">
+                <span class="popular-badge">Most Popular</span>
+                <div class="tier-icon">&#11088;</div>
+                <h2 class="tier-name">Diehard+</h2>
+                <div class="tier-price" id="plusPrice">$4.99<span>/month</span></div>
+                <div class="tier-annual" id="plusAnnual">or $44.90/year <strong>(Save $15)</strong></div>
+                <ul class="benefits-list">
+                    <li><span class="check">&#10003;</span> Everything in Free</li>
+                    <li><span class="check">&#10003;</span> <strong>Ad-free experience</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>2x daily coin bonus (20 DD)</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>Exclusive Diehard+ badge</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>Early access to raffles</strong></li>
+                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">Exclusive forums</span></li>
+                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">@phillysports.com email</span></li>
+                </ul>
+                <button class="subscribe-btn primary" id="plusBtn" onclick="subscribe('diehard_plus')">Subscribe to Diehard+</button>
+            </div>
+
+            <!-- Diehard Pro Tier -->
+            <div class="pricing-card" id="proTier">
+                <div class="tier-icon">&#128293;</div>
+                <h2 class="tier-name">Diehard Pro</h2>
+                <div class="tier-price" id="proPrice">$9.99<span>/month</span></div>
+                <div class="tier-annual" id="proAnnual">or $89/year <strong>(Save $31)</strong></div>
+                <ul class="benefits-list">
+                    <li><span class="check">&#10003;</span> Everything in Diehard+</li>
+                    <li><span class="check">&#10003;</span> <strong>Exclusive Pro forums</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>Priority poker tables</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>10% merch discount</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>Exclusive Diehard Pro badge</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>@phillysports.com email</strong></li>
+                    <li><span class="check">&#10003;</span> <strong>Priority support</strong></li>
+                </ul>
+                <button class="subscribe-btn primary" id="proBtn" onclick="subscribe('diehard_pro')">Subscribe to Diehard Pro</button>
+            </div>
+        </div>
+
+        <!-- Subscription Management (shown when subscribed) -->
+        <div class="manage-section" id="manageSection" style="display: none;">
+            <h3>Manage Your Subscription</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;" id="manageInfo"></p>
+            <div class="manage-buttons">
+                <button class="manage-btn" onclick="openPortal()">Manage Billing</button>
+                <button class="manage-btn" id="cancelBtn" onclick="cancelSubscription()">Cancel Subscription</button>
+                <button class="manage-btn" id="reactivateBtn" onclick="reactivateSubscription()" style="display: none;">Reactivate Subscription</button>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What are Diehard Dollars?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Diehard Dollars (DD) are our virtual currency. Earn them through daily logins, community participation, and predictions. Spend them on badges, raffle entries, and marketplace items.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Can I cancel anytime?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! You can cancel your subscription at any time. You'll keep your benefits until the end of your current billing period.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What is the @phillysports.com email?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Diehard Pro members get a custom email address (yourname@phillysports.com) powered by Zoho Mail. It's a real email you can use anywhere!
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    How does the 2x coin bonus work?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Premium members earn double Diehard Dollars on their daily login bonus. Free users get 10 DD base + streak bonus, while premium members get 20 DD base + streak bonus.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Do you offer refunds?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    We don't offer refunds for partial billing periods, but you can cancel anytime and keep benefits until your period ends. Contact us for special circumstances.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer class="footer">
+        <p class="footer-copy">&copy; 2025 PhillySports.com. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        initTheme();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // State
+        let currentUser = null;
+        let subscriptionStatus = null;
+        let billingInterval = 'month';
+
+        // Check auth and subscription status
+        async function init() {
+            // Check URL params for success/cancel
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('success') === 'true') {
+                showToast('Subscription activated! Welcome to the club!', 'success');
+                window.history.replaceState({}, '', '/membership.html');
+            } else if (params.get('canceled') === 'true') {
+                showToast('Checkout canceled', 'error');
+                window.history.replaceState({}, '', '/membership.html');
+            }
+
+            try {
+                const authRes = await fetch('/api/auth/me');
+                const authData = await authRes.json();
+
+                if (authData.user) {
+                    currentUser = authData.user;
+                    updateHeader();
+                }
+
+                // Get subscription status
+                const subRes = await fetch('/api/subscriptions/status');
+                subscriptionStatus = await subRes.json();
+
+                updateUI();
+            } catch (e) {
+                console.error('Init error:', e);
+            }
+        }
+
+        function updateHeader() {
+            const headerAuth = document.getElementById('headerAuth');
+            if (currentUser) {
+                headerAuth.innerHTML = `
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" onclick="toggleTheme()">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                    </button>
+                    <a href="/profile.html">${currentUser.username}</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                `;
+            }
+        }
+
+        function updateUI() {
+            if (!subscriptionStatus) return;
+
+            const statusBanner = document.getElementById('statusBanner');
+            const statusText = document.getElementById('statusText');
+            const manageSection = document.getElementById('manageSection');
+            const manageInfo = document.getElementById('manageInfo');
+
+            // Update status banner
+            if (subscriptionStatus.tier !== 'free' && subscriptionStatus.isActive) {
+                statusBanner.style.display = 'block';
+                statusBanner.classList.add('premium');
+
+                const endDate = subscriptionStatus.endDate ? new Date(subscriptionStatus.endDate).toLocaleDateString() : '';
+
+                if (subscriptionStatus.status === 'canceling') {
+                    statusText.innerHTML = `You're currently on <strong>${subscriptionStatus.tierName}</strong>. Your subscription will end on ${endDate}.`;
+                } else {
+                    statusText.innerHTML = `You're currently on <strong>${subscriptionStatus.tierName}</strong>. Next billing date: ${endDate}`;
+                }
+
+                // Show management section
+                manageSection.style.display = 'block';
+                manageInfo.textContent = subscriptionStatus.status === 'canceling'
+                    ? 'Your subscription is set to cancel at the end of your billing period.'
+                    : 'Manage your billing, update payment method, or cancel your subscription.';
+
+                // Show/hide buttons based on status
+                document.getElementById('cancelBtn').style.display = subscriptionStatus.status === 'canceling' ? 'none' : 'inline-block';
+                document.getElementById('reactivateBtn').style.display = subscriptionStatus.status === 'canceling' ? 'inline-block' : 'none';
+            }
+
+            // Update pricing cards
+            updatePricingCards();
+        }
+
+        function updatePricingCards() {
+            const currentTier = subscriptionStatus?.tier || 'free';
+
+            // Reset all cards
+            document.querySelectorAll('.pricing-card').forEach(card => {
+                card.classList.remove('current');
+                const badge = card.querySelector('.current-badge');
+                if (badge) badge.remove();
+            });
+
+            // Mark current tier
+            if (currentTier === 'free') {
+                document.getElementById('freeBtn').textContent = 'Current Plan';
+                document.getElementById('freeBtn').disabled = true;
+                document.getElementById('freeBtn').classList.remove('current');
+            } else if (currentTier === 'diehard_plus') {
+                document.getElementById('plusTier').classList.add('current');
+                document.getElementById('plusTier').classList.remove('popular');
+                const badge = document.querySelector('#plusTier .popular-badge');
+                if (badge) badge.outerHTML = '<span class="current-badge">Current Plan</span>';
+                document.getElementById('plusBtn').textContent = 'Current Plan';
+                document.getElementById('plusBtn').disabled = true;
+                document.getElementById('plusBtn').classList.add('current');
+                document.getElementById('plusBtn').classList.remove('primary');
+
+                // Enable free tier button for downgrade info
+                document.getElementById('freeBtn').textContent = 'Downgrade';
+                document.getElementById('freeBtn').disabled = false;
+            } else if (currentTier === 'diehard_pro') {
+                document.getElementById('proTier').classList.add('current');
+                const proTier = document.getElementById('proTier');
+                proTier.insertAdjacentHTML('afterbegin', '<span class="current-badge">Current Plan</span>');
+                document.getElementById('proBtn').textContent = 'Current Plan';
+                document.getElementById('proBtn').disabled = true;
+                document.getElementById('proBtn').classList.add('current');
+                document.getElementById('proBtn').classList.remove('primary');
+
+                // Enable other tiers for downgrade info
+                document.getElementById('freeBtn').textContent = 'Downgrade';
+                document.getElementById('freeBtn').disabled = false;
+                document.getElementById('plusBtn').textContent = 'Downgrade to Diehard+';
+                document.getElementById('plusBtn').disabled = false;
+            }
+        }
+
+        function setBilling(interval) {
+            billingInterval = interval;
+
+            document.getElementById('monthlyLabel').classList.toggle('active', interval === 'month');
+            document.getElementById('annualLabel').classList.toggle('active', interval === 'year');
+
+            if (interval === 'year') {
+                document.getElementById('plusPrice').innerHTML = '$44.90<span>/year</span>';
+                document.getElementById('plusAnnual').innerHTML = 'Just $3.74/month <strong>(Save 25%)</strong>';
+                document.getElementById('proPrice').innerHTML = '$89<span>/year</span>';
+                document.getElementById('proAnnual').innerHTML = 'Just $7.42/month <strong>(Save 26%)</strong>';
+            } else {
+                document.getElementById('plusPrice').innerHTML = '$4.99<span>/month</span>';
+                document.getElementById('plusAnnual').innerHTML = 'or $44.90/year <strong>(Save $15)</strong>';
+                document.getElementById('proPrice').innerHTML = '$9.99<span>/month</span>';
+                document.getElementById('proAnnual').innerHTML = 'or $89/year <strong>(Save $31)</strong>';
+            }
+        }
+
+        async function subscribe(tier) {
+            if (!currentUser) {
+                window.location.href = '/login.html?redirect=/membership.html';
+                return;
+            }
+
+            try {
+                const btn = tier === 'diehard_plus' ? document.getElementById('plusBtn') : document.getElementById('proBtn');
+                btn.disabled = true;
+                btn.textContent = 'Loading...';
+
+                const res = await fetch('/api/subscriptions/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tier,
+                        interval: billingInterval
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.checkoutUrl) {
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    throw new Error(data.error || 'Failed to create checkout');
+                }
+            } catch (e) {
+                showToast(e.message || 'Failed to start checkout', 'error');
+                // Reset buttons
+                updatePricingCards();
+            }
+        }
+
+        async function openPortal() {
+            try {
+                const res = await fetch('/api/subscriptions/portal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (data.portalUrl) {
+                    window.location.href = data.portalUrl;
+                } else {
+                    throw new Error(data.error || 'Failed to open portal');
+                }
+            } catch (e) {
+                showToast(e.message || 'Failed to open billing portal', 'error');
+            }
+        }
+
+        async function cancelSubscription() {
+            if (!confirm('Are you sure you want to cancel? You\'ll keep your benefits until the end of your billing period.')) {
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/subscriptions/cancel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Subscription canceled. You\'ll keep benefits until period ends.', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (e) {
+                showToast(e.message || 'Failed to cancel', 'error');
+            }
+        }
+
+        async function reactivateSubscription() {
+            try {
+                const res = await fetch('/api/subscriptions/reactivate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Subscription reactivated!', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (e) {
+                showToast(e.message || 'Failed to reactivate', 'error');
+            }
+        }
+
+        function toggleFaq(el) {
+            el.parentElement.classList.toggle('open');
+        }
+
+        async function logout() {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 4000);
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
