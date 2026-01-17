@@ -573,14 +573,20 @@
                 const data = await res.json();
                 console.log('Checkout response:', data);
 
-                if (data.checkoutUrl) {
-                    window.location.href = data.checkoutUrl;
-                } else if (data.url) {
-                    window.location.href = data.url;
+                if (!res.ok) {
+                    throw new Error(data.error || 'Checkout failed');
+                }
+
+                const redirectUrl = data.checkoutUrl || data.url;
+                console.log('Redirecting to:', redirectUrl);
+
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
                 } else {
-                    throw new Error(data.error || 'No checkout URL returned');
+                    throw new Error('No checkout URL in response');
                 }
             } catch (e) {
+                console.error('Checkout error:', e);
                 showToast(e.message || 'Failed to start checkout', 'error');
                 // Reset buttons
                 updatePricingCards();
