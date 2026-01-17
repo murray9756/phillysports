@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "PhillySports",
+    "slug": "phillysports",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "phillysports",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#8b0000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.phillysports.app",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Use Face ID to securely login to your account"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#8b0000"
+      },
+      "package": "com.phillysports.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-local-authentication",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#8b0000"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiUrl": "https://phillysports.com/api",
+      "pusherKey": "YOUR_PUSHER_KEY",
+      "pusherCluster": "us2"
+    }
+  }
+}
