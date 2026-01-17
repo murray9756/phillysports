@@ -45,8 +45,8 @@ export default async function handler(req, res) {
         const intervalKey = interval === 'year' ? 'annual' : 'monthly';
 
         const returnUrl = process.env.SITE_URL
-            ? `${process.env.SITE_URL}/membership`
-            : 'https://phillysports.com/membership';
+            ? `${process.env.SITE_URL}/membership.html`
+            : 'https://phillysports.com/membership.html';
 
         const session = await createCheckoutSession(
             decoded.userId,
