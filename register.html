@@ -116,7 +116,14 @@
             opacity: 0.9;
         }
 
-        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
+        /* Hide Google search on smaller screens */
+        @media (max-width: 1200px) {
+            .header-search {
+                display: none;
+            }
+        }
+
+        .header { background: var(--header-bg); border-bottom: 1px solid var(--border-color); position: relative; z-index: 100; }
         .header-top { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.5rem; max-width: 1400px; margin: 0 auto; }
         .header-logo { display: flex; align-items: center; gap: 0.5rem; }
         .header-logo img { width: 40px; height: 40px; border-radius: 6px; }
