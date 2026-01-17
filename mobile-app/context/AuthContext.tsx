@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { authService, getToken, removeToken } from '@/services/api';
+import { authService, getToken, removeToken, setToken } from '@/services/api';
+import { biometricService } from '@/services/biometrics';
 
 interface User {
   _id: string;
@@ -17,10 +18,12 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithToken: (token: string) => Promise<{ success: boolean; error?: string }>;
   register: (username: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   updateCoinBalance: (newBalance: number) => void;
+  enableBiometricLogin: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -67,6 +70,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const loginWithToken = async (token: string) => {
+    try {
+      // Set the token first
+      await setToken(token);
+      // Then validate it by getting user info
+      const response = await authService.getMe();
+      if (response.user) {
+        setUser(response.user);
+        // Update stored token if needed
+        await biometricService.updateStoredToken(token);
+        return { success: true };
+      }
+      await removeToken();
+      return { success: false, error: 'Invalid token' };
+    } catch (error: any) {
+      await removeToken();
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Token validation failed'
+      };
+    }
+  };
+
+  const enableBiometricLogin = async (): Promise<boolean> => {
+    if (!user) return false;
+    const token = await getToken();
+    if (!token) return false;
+    return await biometricService.enableBiometricLogin(user.email, token);
+  };
+
   const register = async (username: string, email: string, password: string) => {
     try {
       const response = await authService.register(username, email, password);
@@ -89,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Logout even if API call fails
     }
+    // Note: We don't disable biometrics on logout so user can still use it next time
     setUser(null);
   };
 
@@ -116,10 +150,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         isAuthenticated: !!user,
         login,
+        loginWithToken,
         register,
         logout,
         refreshUser,
         updateCoinBalance,
+        enableBiometricLogin,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,17 +16,50 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
+import { useBiometrics } from '@/hooks/useBiometrics';
 
 export default function LoginScreen() {
   const { colors } = useTheme();
-  const { login } = useAuth();
+  const { login, loginWithToken } = useAuth();
   const router = useRouter();
+  const {
+    isAvailable: biometricsAvailable,
+    isEnabled: biometricsEnabled,
+    biometricName,
+    storedEmail,
+    loginWithBiometrics,
+  } = useBiometrics();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [biometricLoading, setBiometricLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
+  // Auto-trigger biometric login on mount if available
+  useEffect(() => {
+    if (biometricsAvailable && biometricsEnabled && storedEmail) {
+      handleBiometricLogin();
+    }
+  }, [biometricsAvailable, biometricsEnabled, storedEmail]);
+
+  const handleBiometricLogin = async () => {
+    setBiometricLoading(true);
+    try {
+      const result = await loginWithBiometrics();
+      if (result.success && result.credentials) {
+        await loginWithToken(result.credentials.token);
+        router.replace('/(tabs)');
+      } else if (result.error && result.error !== 'Authentication cancelled') {
+        Alert.alert('Biometric Login Failed', result.error);
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.message || 'Biometric login failed');
+    } finally {
+      setBiometricLoading(false);
+    }
+  };
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -161,7 +194,7 @@ export default function LoginScreen() {
           <TouchableOpacity
             style={[styles.submitButton, { backgroundColor: colors.primary }]}
             onPress={handleLogin}
-            disabled={loading}
+            disabled={loading || biometricLoading}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
@@ -169,6 +202,43 @@ export default function LoginScreen() {
               <Text style={styles.submitButtonText}>Sign In</Text>
             )}
           </TouchableOpacity>
+
+          {/* Biometric Login */}
+          {biometricsAvailable && biometricsEnabled && storedEmail && (
+            <>
+              <View style={styles.divider}>
+                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+                <Text style={[styles.dividerText, { color: colors.textMuted }]}>or</Text>
+                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.biometricButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+                onPress={handleBiometricLogin}
+                disabled={loading || biometricLoading}
+              >
+                {biometricLoading ? (
+                  <ActivityIndicator color={colors.primary} />
+                ) : (
+                  <>
+                    <Ionicons
+                      name={biometricName.includes('Face') ? 'scan' : 'finger-print'}
+                      size={24}
+                      color={colors.primary}
+                    />
+                    <View style={styles.biometricTextContainer}>
+                      <Text style={[styles.biometricButtonText, { color: colors.text }]}>
+                        Sign in with {biometricName}
+                      </Text>
+                      <Text style={[styles.biometricEmail, { color: colors.textMuted }]}>
+                        {storedEmail}
+                      </Text>
+                    </View>
+                  </>
+                )}
+              </TouchableOpacity>
+            </>
+          )}
         </View>
 
         {/* Register Link */}
@@ -264,5 +334,38 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: 15,
     fontWeight: '700',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+  },
+  dividerText: {
+    paddingHorizontal: 12,
+    fontSize: 14,
+  },
+  biometricButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 14,
+  },
+  biometricTextContainer: {
+    flex: 1,
+  },
+  biometricButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  biometricEmail: {
+    fontSize: 13,
+    marginTop: 2,
   },
 });
