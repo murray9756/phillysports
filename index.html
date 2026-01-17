@@ -1003,7 +1003,7 @@
             border-radius: 50%;
         }
 
-        /* Trivia Promo Widget */
+        /* Trivia Widget */
         .trivia-promo-widget {
             padding: 0;
             overflow: hidden;
@@ -1029,73 +1029,157 @@
             letter-spacing: 0.5px;
         }
 
-        .trivia-promo-body {
-            padding: 1.25rem;
-            text-align: center;
+        .trivia-widget-body {
+            padding: 1rem;
         }
 
-        .trivia-promo-tagline {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        .trivia-loading {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 1rem;
+        }
+
+        .trivia-team-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .trivia-team-badge.Eagles { background: rgba(0,76,84,0.15); color: #004C54; }
+        .trivia-team-badge.Phillies { background: rgba(232,24,40,0.15); color: #E81828; }
+        .trivia-team-badge.t76ers { background: rgba(0,107,182,0.15); color: #006BB6; }
+        .trivia-team-badge.Flyers { background: rgba(247,73,2,0.15); color: #F74902; }
+
+        .trivia-question-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .trivia-difficulty {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .trivia-difficulty.easy { color: #4caf50; }
+        .trivia-difficulty.medium { color: #ff9800; }
+        .trivia-difficulty.hard { color: #f44336; }
+
+        .trivia-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .trivia-option {
+            padding: 0.6rem 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .trivia-option:hover:not(:disabled) {
+            border-color: #673ab7;
+            background: rgba(103, 58, 183, 0.05);
+        }
+
+        .trivia-option:disabled {
+            cursor: default;
+        }
+
+        .trivia-option.correct {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .trivia-option.incorrect {
+            background: rgba(244, 67, 54, 0.15);
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .trivia-option.reveal-correct {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: #4caf50;
+        }
+
+        .trivia-result {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .trivia-result.correct {
+            background: rgba(76, 175, 80, 0.15);
+            color: #2e7d32;
+        }
+
+        .trivia-result.incorrect {
+            background: rgba(244, 67, 54, 0.15);
+            color: #c62828;
+        }
+
+        .trivia-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .trivia-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .trivia-btn:hover {
+            opacity: 0.9;
+        }
+
+        .trivia-btn-primary {
+            background: linear-gradient(135deg, #673ab7, #9c27b0);
+            color: white;
+        }
+
+        .trivia-btn-secondary {
+            background: var(--border-color);
             color: var(--text-primary);
         }
 
-        .trivia-promo-stats {
-            display: flex;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .trivia-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.5rem 0.75rem;
-            background: var(--dark-bg);
-            border-radius: 8px;
-            min-width: 70px;
-        }
-
-        .trivia-stat .stat-number {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #673ab7;
-        }
-
-        .trivia-stat .stat-label {
-            font-size: 0.6rem;
+        .trivia-login-prompt {
+            text-align: center;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            text-transform: uppercase;
+            margin-top: 0.5rem;
         }
 
-        .trivia-promo-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .trivia-promo-btn {
-            display: inline-block;
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #9c27b0, #673ab7);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.95rem;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .trivia-promo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4);
+        .trivia-login-prompt a {
+            color: #673ab7;
+            font-weight: 600;
         }
 
         /* Newsletter Widget */
@@ -1548,30 +1632,14 @@
                 </div>
             </div>
 
-            <!-- Trivia Promo Widget -->
+            <!-- Trivia Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-icon">&#129504;</span>
-                    <span class="trivia-promo-title">Philly Sports Trivia</span>
+                    <span class="trivia-promo-title">Quick Trivia</span>
                 </div>
-                <div class="trivia-promo-body">
-                    <p class="trivia-promo-tagline">Think you know Philly sports?</p>
-                    <div class="trivia-promo-stats">
-                        <div class="trivia-stat">
-                            <span class="stat-number">80+</span>
-                            <span class="stat-label">Questions</span>
-                        </div>
-                        <div class="trivia-stat">
-                            <span class="stat-number">4</span>
-                            <span class="stat-label">Teams</span>
-                        </div>
-                        <div class="trivia-stat">
-                            <span class="stat-number">&#129689;10</span>
-                            <span class="stat-label">Per Correct</span>
-                        </div>
-                    </div>
-                    <p class="trivia-promo-desc">Test your knowledge of Eagles, Phillies, 76ers & Flyers history and earn Diehard Dollars!</p>
-                    <a href="/trivia.html" class="trivia-promo-btn">Play Now</a>
+                <div class="trivia-widget-body" id="triviaWidget">
+                    <div class="trivia-loading">Loading question...</div>
                 </div>
             </div>
 
@@ -2056,6 +2124,156 @@
         setInterval(loadScores, 5 * 60 * 1000);
         setInterval(loadSchedule, 5 * 60 * 1000);
         setInterval(loadNews, 5 * 60 * 1000);
+
+        // Trivia Widget
+        let currentTriviaQuestion = null;
+        let triviaAnswered = false;
+
+        async function loadTriviaQuestion() {
+            const widget = document.getElementById('triviaWidget');
+            widget.innerHTML = '<div class="trivia-loading">Loading question...</div>';
+
+            try {
+                const response = await fetch('/api/trivia');
+                const data = await response.json();
+
+                if (!data.success || !data.question) {
+                    widget.innerHTML = `
+                        <div style="text-align:center;padding:1rem;">
+                            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">
+                                ${data.message || 'No questions available'}
+                            </p>
+                            <a href="/trivia.html" class="trivia-btn trivia-btn-primary" style="display:inline-block;padding:0.5rem 1rem;text-decoration:none;">
+                                Play Full Trivia
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                currentTriviaQuestion = data.question;
+                triviaAnswered = false;
+                renderTriviaQuestion(data.question);
+            } catch (error) {
+                widget.innerHTML = `
+                    <div style="text-align:center;padding:1rem;">
+                        <p style="color:var(--text-muted);font-size:0.85rem;">Failed to load question</p>
+                        <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-secondary" style="margin-top:0.5rem;">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTriviaQuestion(q) {
+            const widget = document.getElementById('triviaWidget');
+            const teamClass = q.team === '76ers' ? 't76ers' : q.team;
+
+            widget.innerHTML = `
+                <span class="trivia-team-badge ${teamClass}">${q.team}</span>
+                <span class="trivia-difficulty ${q.difficulty}">${q.difficulty}</span>
+                <p class="trivia-question-text">${q.question}</p>
+                <div class="trivia-options">
+                    ${q.options.map((opt, i) => `
+                        <button class="trivia-option" onclick="submitTriviaAnswer('${opt.replace(/'/g, "\\'")}', this)">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        async function submitTriviaAnswer(answer, btn) {
+            if (triviaAnswered) return;
+            triviaAnswered = true;
+
+            // Disable all buttons
+            const options = document.querySelectorAll('.trivia-option');
+            options.forEach(opt => opt.disabled = true);
+
+            try {
+                const response = await fetch('/api/trivia', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        questionId: currentTriviaQuestion._id,
+                        selectedAnswer: answer
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 401) {
+                    // Not logged in
+                    options.forEach(opt => {
+                        if (opt.textContent.trim() === data.correctAnswer) {
+                            opt.classList.add('reveal-correct');
+                        }
+                    });
+
+                    const widget = document.getElementById('triviaWidget');
+                    widget.innerHTML += `
+                        <div class="trivia-result ${btn.textContent.trim() === data.correctAnswer ? 'correct' : 'incorrect'}">
+                            ${btn.textContent.trim() === data.correctAnswer ? 'Correct!' : 'Incorrect - ' + (data.correctAnswer || 'Try again')}
+                        </div>
+                        <div class="trivia-login-prompt">
+                            <a href="/login.html">Login</a> to earn Diehard Dollars!
+                        </div>
+                        <div class="trivia-actions">
+                            <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Next Question</button>
+                            <a href="/trivia.html" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Mark correct/incorrect
+                options.forEach(opt => {
+                    const optText = opt.textContent.trim();
+                    if (optText === data.correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (opt === btn && !data.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+
+                // Show result
+                const widget = document.getElementById('triviaWidget');
+                let resultHtml = '';
+                if (data.correct) {
+                    resultHtml = `<div class="trivia-result correct">Correct! +${data.coinsEarned} &#129689;</div>`;
+                    // Update coin display
+                    const coinBalance = document.querySelector('.coin-balance');
+                    if (coinBalance) coinBalance.textContent = Math.round(data.newBalance);
+                } else {
+                    resultHtml = `<div class="trivia-result incorrect">Incorrect! ${data.coinsLost > 0 ? '-' + data.coinsLost + ' &#129689;' : ''}</div>`;
+                    if (data.coinsLost > 0) {
+                        const coinBalance = document.querySelector('.coin-balance');
+                        if (coinBalance) coinBalance.textContent = Math.round(data.newBalance);
+                    }
+                }
+
+                widget.innerHTML += `
+                    ${resultHtml}
+                    <div class="trivia-actions">
+                        <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Next Question</button>
+                        <a href="/trivia.html" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
+                    </div>
+                `;
+            } catch (error) {
+                const widget = document.getElementById('triviaWidget');
+                widget.innerHTML += `
+                    <div class="trivia-result incorrect">Error submitting answer</div>
+                    <div class="trivia-actions">
+                        <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Load trivia on page load
+        loadTriviaQuestion();
 
         // Auth check for header
         async function checkAuth() {
