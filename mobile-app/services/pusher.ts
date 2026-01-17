@@ -1,12 +1,32 @@
 import Pusher from 'pusher-js';
 import { getToken } from './api';
 
-// Pusher configuration
-const PUSHER_KEY = process.env.EXPO_PUBLIC_PUSHER_KEY || 'YOUR_PUSHER_KEY';
-const PUSHER_CLUSTER = process.env.EXPO_PUBLIC_PUSHER_CLUSTER || 'us2';
 const API_URL = 'https://phillysports.com/api';
 
 let pusherClient: Pusher | null = null;
+let pusherConfig: { key: string; cluster: string } | null = null;
+
+// Fetch Pusher config from API (same as website)
+const fetchPusherConfig = async (): Promise<{ key: string; cluster: string }> => {
+  if (pusherConfig) {
+    return pusherConfig;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/pusher/config`);
+    const data = await response.json();
+
+    if (data.key && data.cluster) {
+      pusherConfig = { key: data.key, cluster: data.cluster };
+      return pusherConfig;
+    }
+    throw new Error('Invalid Pusher config');
+  } catch (error) {
+    console.error('Failed to fetch Pusher config:', error);
+    // Fallback
+    return { key: '', cluster: 'us2' };
+  }
+};
 
 // Initialize Pusher client
 export const initPusher = async (): Promise<Pusher> => {
@@ -14,10 +34,17 @@ export const initPusher = async (): Promise<Pusher> => {
     return pusherClient;
   }
 
-  const token = await getToken();
+  const [config, token] = await Promise.all([
+    fetchPusherConfig(),
+    getToken(),
+  ]);
 
-  pusherClient = new Pusher(PUSHER_KEY, {
-    cluster: PUSHER_CLUSTER,
+  if (!config.key) {
+    throw new Error('Pusher key not available');
+  }
+
+  pusherClient = new Pusher(config.key, {
+    cluster: config.cluster,
     authEndpoint: `${API_URL}/pusher/auth`,
     auth: {
       headers: {

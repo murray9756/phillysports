@@ -106,8 +106,6 @@
     },
     "extra": {
       "apiUrl": "https://phillysports.com/api",
-      "pusherKey": "YOUR_PUSHER_KEY",
-      "pusherCluster": "us2",
       "router": {
         "origin": false
       },
