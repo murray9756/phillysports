@@ -278,6 +278,21 @@
         .header-auth { display: flex; align-items: center; gap: 1rem; }
         .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 600; }
         .header-auth a:hover { color: var(--accent-color); }
+
+        /* Subscription Section */
+        .subscription-section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .subscription-section.premium { border-color: #ffd700; background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,152,0,0.05)); }
+        .subscription-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .subscription-title { font-size: 1.1rem; font-weight: 700; }
+        .subscription-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; padding: 0.3rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .subscription-badge.free { background: var(--border-color); color: var(--text-primary); }
+        .subscription-details { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+        .subscription-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .subscription-actions .btn { padding: 0.6rem 1.25rem; font-size: 0.85rem; border-radius: 6px; text-decoration: none; display: inline-block; text-align: center; }
+        .subscription-actions .btn-upgrade { background: linear-gradient(135deg, var(--phillies-red), var(--flyers-orange)); color: white; border: none; cursor: pointer; font-weight: 600; }
+        .subscription-actions .btn-upgrade:hover { opacity: 0.9; }
+        .subscription-actions .btn-manage { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-primary); }
+        .subscription-actions .btn-manage:hover { border-color: var(--accent-color); color: var(--accent-color); }
     </style>
 </head>
 <body>
@@ -528,6 +543,18 @@
                     </div>
                 </div>
 
+                <!-- Subscription Section - only shown on own profile -->
+                <div class="subscription-section" id="subscriptionSection" style="display: none;">
+                    <div class="subscription-header">
+                        <span class="subscription-title">Membership</span>
+                        <span class="subscription-badge" id="subscriptionBadge">Free</span>
+                    </div>
+                    <p class="subscription-details" id="subscriptionDetails">Upgrade to get 2x daily coins, ad-free experience, and exclusive badges.</p>
+                    <div class="subscription-actions" id="subscriptionActions">
+                        <a href="/membership.html" class="btn btn-upgrade">Upgrade Now</a>
+                    </div>
+                </div>
+
                 <div class="profile-actions" id="profileActions">
                     <button class="btn btn-primary" id="editProfileBtn" style="display: none;">Edit Profile</button>
                     <a href="/settings.html" class="btn btn-secondary" id="settingsBtn" style="display: none;">Settings</a>
@@ -743,6 +770,7 @@
                 document.getElementById('settingsBtn').style.display = 'block';
                 document.getElementById('editPhotoBtn').style.display = 'flex';
                 loadSavedArticles();
+                renderSubscriptionSection();
             } else if (currentUser) {
                 const followBtn = document.getElementById('followBtn');
                 followBtn.style.display = 'block';
@@ -752,6 +780,41 @@
 
             // Update page title
             document.title = `${profileUser.displayName || profileUser.username} | PhillySports.com`;
+        }
+
+        function renderSubscriptionSection() {
+            const section = document.getElementById('subscriptionSection');
+            const badge = document.getElementById('subscriptionBadge');
+            const details = document.getElementById('subscriptionDetails');
+            const actions = document.getElementById('subscriptionActions');
+
+            section.style.display = 'block';
+
+            const tier = currentUser.subscriptionTier || 'free';
+            const isSubscribed = currentUser.isSubscribed;
+
+            if (tier === 'free' || !isSubscribed) {
+                section.classList.remove('premium');
+                badge.textContent = 'Free';
+                badge.classList.add('free');
+                details.textContent = 'Upgrade to get 2x daily coins, ad-free experience, and exclusive badges.';
+                actions.innerHTML = '<a href="/membership.html" class="btn btn-upgrade">Upgrade Now</a>';
+            } else if (tier === 'diehard_plus') {
+                section.classList.add('premium');
+                badge.textContent = 'Diehard+';
+                badge.classList.remove('free');
+                details.textContent = 'You have 2x daily coins, ad-free browsing, and the Diehard+ badge.';
+                actions.innerHTML = `
+                    <a href="/membership.html" class="btn btn-upgrade">Upgrade to Pro</a>
+                    <a href="/membership.html" class="btn btn-manage">Manage</a>
+                `;
+            } else if (tier === 'diehard_pro') {
+                section.classList.add('premium');
+                badge.textContent = 'Diehard Pro';
+                badge.classList.remove('free');
+                details.textContent = 'You have all premium benefits including exclusive forums and @phillysports.com email.';
+                actions.innerHTML = '<a href="/membership.html" class="btn btn-manage">Manage Subscription</a>';
+            }
         }
 
         function updateFollowButton(isFollowing) {
