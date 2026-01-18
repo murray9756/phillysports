@@ -274,6 +274,7 @@
                         <span style="font-size: 0.85rem; color: var(--text-muted);" id="sourcesCount">0 sources</span>
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn btn-primary" id="seedSourcesBtn" style="font-size: 0.8rem;">Seed Philly Sources</button>
+                            <button class="btn btn-secondary" id="updateTeamsBtn" style="font-size: 0.8rem;">Fix Categories</button>
                             <button class="btn btn-secondary" id="addSourceBtn" style="font-size: 0.8rem;">+ Add Manually</button>
                         </div>
                     </div>
@@ -1464,6 +1465,34 @@
 
             btn.disabled = false;
             btn.textContent = 'Seed Philly Sources';
+        });
+
+        // Fix Categories - update existing sources with correct teams
+        document.getElementById('updateTeamsBtn')?.addEventListener('click', async () => {
+            const btn = document.getElementById('updateTeamsBtn');
+            btn.disabled = true;
+            btn.textContent = 'Fixing...';
+
+            try {
+                const res = await fetch('/api/admin/content/update-source-teams', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(`Fixed categories for ${data.updated} sources`, 'success');
+                    loadContentSources();
+                } else {
+                    showMessage(data.error || 'Failed to fix categories', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to fix categories', 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Fix Categories';
         });
 
         document.getElementById('cancelSourceBtn')?.addEventListener('click', () => {
