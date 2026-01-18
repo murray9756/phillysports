@@ -5,9 +5,9 @@ import { ObjectId } from 'mongodb';
 import { authenticate } from '../../lib/auth.js';
 import { getCollection } from '../../lib/mongodb.js';
 
-// Map old broken URLs to new correct URLs + teams
+// Map URLs to correct teams (both old and new URLs)
 const URL_FIXES = {
-    // SB Nation sites - /rss/current → /rss/index.xml
+    // SB Nation sites - old URLs
     'https://www.bleedinggreennation.com/rss/current': {
         newUrl: 'https://www.bleedinggreennation.com/rss/index.xml',
         teams: ['eagles']
@@ -33,7 +33,27 @@ const URL_FIXES = {
         teams: ['college']
     },
 
-    // Keep existing URL, just fix teams
+    // SB Nation sites - new URLs (in case already fixed)
+    'https://www.bleedinggreennation.com/rss/index.xml': {
+        teams: ['eagles']
+    },
+    'https://www.thegoodphight.com/rss/index.xml': {
+        teams: ['phillies']
+    },
+    'https://www.libertyballers.com/rss/index.xml': {
+        teams: ['sixers']
+    },
+    'https://www.broadstreethockey.com/rss/index.xml': {
+        teams: ['flyers']
+    },
+    'https://www.vuhoops.com/rss/index.xml': {
+        teams: ['college']
+    },
+    'https://www.blackshoediaries.com/rss/index.xml': {
+        teams: ['college']
+    },
+
+    // Local Philly sources
     'https://www.crossingbroad.com/feed': {
         teams: ['eagles', 'phillies', 'sixers', 'flyers']
     },
