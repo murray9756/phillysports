@@ -1510,7 +1510,9 @@
         // Edit source
         async function editSource(sourceId) {
             try {
-                const res = await fetch('/api/admin/content/sources');
+                const res = await fetch('/api/admin/content/sources', {
+                    credentials: 'include'
+                });
                 const data = await res.json();
                 const source = data.sources.find(s => s._id === sourceId);
 
@@ -1578,12 +1580,13 @@
                 const res = await fetch('/api/admin/content/sources', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ sourceId, active })
                 });
 
                 if (res.ok) {
                     showMessage(active ? 'Source enabled' : 'Source disabled', 'success');
-                    loadSources();
+                    loadContentSources();
                 } else {
                     const data = await res.json();
                     showMessage(data.error || 'Failed to update', 'error');
@@ -1601,12 +1604,13 @@
                 const res = await fetch('/api/admin/content/sources', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ sourceId })
                 });
 
                 if (res.ok) {
                     showMessage('Source deleted', 'success');
-                    loadSources();
+                    loadContentSources();
                 } else {
                     const data = await res.json();
                     showMessage(data.error || 'Failed to delete', 'error');
@@ -1615,6 +1619,11 @@
                 showMessage('Failed to delete source', 'error');
             }
         }
+
+        // Expose functions to global scope for onclick handlers
+        window.editSource = editSource;
+        window.toggleSourceActive = toggleSourceActive;
+        window.deleteSource = deleteSource;
 
         let selectedLogoUrl = '';
 
