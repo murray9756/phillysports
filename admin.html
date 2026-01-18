@@ -1381,7 +1381,9 @@
             container.innerHTML = '<p style="color: var(--text-muted);">Loading sources...</p>';
 
             try {
-                const res = await fetch('/api/admin/content/sources');
+                const res = await fetch('/api/admin/content/sources', {
+                    credentials: 'include'
+                });
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -1509,11 +1511,13 @@
 
         // Edit source
         async function editSource(sourceId) {
+            console.log('editSource called with:', sourceId);
             try {
                 const res = await fetch('/api/admin/content/sources', {
                     credentials: 'include'
                 });
                 const data = await res.json();
+                console.log('editSource data:', data);
                 const source = data.sources.find(s => s._id === sourceId);
 
                 if (source) {
