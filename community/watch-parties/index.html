@@ -76,6 +76,8 @@
         .header-auth { display: flex; align-items: center; gap: 1rem; }
         .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; }
         .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+        .premium-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.5rem; text-decoration: none; }
+        .go-premium-link { color: #ffd700; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
 
         .main-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
         .nav-inner { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; align-items: center; }
@@ -379,12 +381,16 @@
                 if (response.ok) {
                     const data = await response.json();
                     currentUser = data.user;
+                    const premiumBadge = data.user.isSubscribed
+                        ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
+                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
                     document.getElementById('authSection').innerHTML = `
                         <button class="theme-toggle" id="themeToggle">
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>
                         </button>
                         <div class="coin-display">🪙 ${Math.round(data.user.coinBalance || 0)}</div>
+                        ${premiumBadge}
                         <a href="/profile.html">${data.user.displayName || data.user.username}</a>
                     `;
                     document.getElementById('themeToggle').addEventListener('click', toggleTheme);

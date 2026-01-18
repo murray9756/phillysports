@@ -56,6 +56,8 @@
         .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
         .header-auth a:hover { background: rgba(0,0,0,0.05); }
         .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+        .premium-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.5rem; text-decoration: none; }
+        .go-premium-link { color: #ffd700; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
         .page-hero { background: linear-gradient(135deg, #2196F3, #1976D2); padding: 1.5rem 1.5rem; text-align: center; color: #ffffff; }
         .page-hero h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem; }
         .page-hero p { font-size: 0.9rem; opacity: 0.9; }
@@ -351,6 +353,9 @@
                 const response = await fetch('/api/auth/me');
                 const data = await response.json();
                 if (data.user) {
+                    const premiumBadge = data.user.isSubscribed
+                        ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
+                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
                     document.getElementById('headerAuth').innerHTML = `
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
@@ -360,6 +365,7 @@
                             <span>&#129689;</span>
                             <span>${Math.round(data.user.coinBalance || 0)}</span>
                         </div>
+                        ${premiumBadge}
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
