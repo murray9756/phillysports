@@ -1452,15 +1452,15 @@
                 });
                 const data = await res.json();
 
-                if (data.success) {
-                    alert(`Done! Added ${data.added} new sources, ${data.skipped} already existed.`);
+                if (res.ok && data.success) {
+                    showMessage(`Added ${data.added} new sources, ${data.skipped} already existed`, 'success');
                     loadContentSources(); // Refresh the list
                 } else {
-                    alert(data.error || 'Failed to seed sources');
+                    showMessage(data.error || 'Failed to seed sources', 'error');
                 }
             } catch (error) {
                 console.error('Seed sources error:', error);
-                alert('Failed to seed sources');
+                showMessage('Failed to seed sources', 'error');
             }
 
             btn.disabled = false;
