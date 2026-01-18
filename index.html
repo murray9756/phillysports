@@ -2479,17 +2479,6 @@
 
         <!-- Right Sidebar -->
         <aside class="sidebar">
-            <!-- Curated Videos Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#9654;</span>
-                    <h3 class="widget-title">Philly Sports Videos</h3>
-                </div>
-                <div class="widget-content" id="videosWidget" style="padding:0;">
-                    <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.85rem;">Loading videos...</div>
-                </div>
-            </div>
-
             <!-- Trivia Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
@@ -3541,9 +3530,6 @@
             currentVideoIndex = index;
             renderVideoWidget();
         }
-
-        // Load videos widget on page load
-        loadVideosWidget();
 
         // Auth check for header
         async function checkAuth() {

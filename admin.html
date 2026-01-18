@@ -239,7 +239,10 @@
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <div id="queueStats" style="font-size: 0.85rem; color: var(--text-muted);">Loading...</div>
-                        <button class="btn btn-primary" id="fetchContentBtn" style="font-size: 0.85rem;">Fetch New Content</button>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-danger" id="clearQueueBtn" style="font-size: 0.85rem;">Clear Queue</button>
+                            <button class="btn btn-primary" id="fetchContentBtn" style="font-size: 0.85rem;">Fetch New Content</button>
+                        </div>
                     </div>
                     <div id="queueList" style="display: flex; flex-direction: column; gap: 1rem;">
                         <p style="color: var(--text-muted);">Loading queue...</p>
@@ -314,13 +317,13 @@
                             <input type="url" id="sourceFeedUrl" placeholder="https://..." style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
                         </div>
                         <div class="form-group" style="margin-top: 0.75rem;">
-                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Categories</label>
+                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Categories <span style="color: var(--text-muted);">(select teams this source covers)</span></label>
                             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
                                 <span style="font-size: 0.75rem; color: var(--text-muted);">Teams:</span>
-                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="eagles" checked> Eagles</label>
-                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="phillies" checked> Phillies</label>
-                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="sixers" checked> Sixers</label>
-                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="flyers" checked> Flyers</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="eagles"> Eagles</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="phillies"> Phillies</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="sixers"> Sixers</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="flyers"> Flyers</label>
                                 <span style="font-size: 0.75rem; color: var(--text-muted); border-left: 1px solid var(--border-color); padding-left: 0.75rem;">Other:</span>
                                 <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="college"> College</label>
                                 <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="esports"> Esports</label>
@@ -1031,15 +1034,15 @@
                                     <label style="font-size: 0.8rem; font-weight: 500; display: block; margin-bottom: 0.5rem;">Categories</label>
                                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                         <span style="font-size: 0.75rem; color: var(--text-muted); padding-right: 0.5rem;">Teams:</span>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="eagles" checked> Eagles</label>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="phillies" checked> Phillies</label>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="sixers" checked> Sixers</label>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="flyers" checked> Flyers</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="eagles" ${(item.teams || []).includes('eagles') ? 'checked' : ''}> Eagles</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="phillies" ${(item.teams || []).includes('phillies') ? 'checked' : ''}> Phillies</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="sixers" ${(item.teams || []).includes('sixers') ? 'checked' : ''}> Sixers</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="flyers" ${(item.teams || []).includes('flyers') ? 'checked' : ''}> Flyers</label>
                                         <span style="font-size: 0.75rem; color: var(--text-muted); padding: 0 0.5rem; border-left: 1px solid var(--border-color);">Other:</span>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="college"> College</label>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="esports"> Esports</label>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="youth"> Youth</label>
-                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="general"> General</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="college" ${(item.teams || []).includes('college') ? 'checked' : ''}> College</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="esports" ${(item.teams || []).includes('esports') ? 'checked' : ''}> Esports</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="youth" ${(item.teams || []).includes('youth') ? 'checked' : ''}> Youth</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="general" ${(item.teams || []).includes('general') ? 'checked' : ''}> General</label>
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -1170,6 +1173,38 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Fetch New Content';
+            }
+        });
+
+        // Clear Queue
+        document.getElementById('clearQueueBtn')?.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to clear all pending items from the queue?')) {
+                return;
+            }
+
+            const btn = document.getElementById('clearQueueBtn');
+            btn.disabled = true;
+            btn.textContent = 'Clearing...';
+
+            try {
+                const res = await fetch('/api/admin/content/clear-queue', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(`Cleared ${data.deletedCount} items from queue`, 'success');
+                    loadContentQueue();
+                } else {
+                    showMessage(data.error || 'Failed to clear queue', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to clear queue', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Clear Queue';
             }
         });
 

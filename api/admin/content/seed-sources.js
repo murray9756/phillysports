@@ -149,19 +149,6 @@ const DEFAULT_SOURCES = [
         description: 'Flyers news and analysis'
     },
 
-    // ===== UNION =====
-    {
-        name: 'Brotherly Game',
-        type: 'rss',
-        feedUrl: 'https://www.brotherlygame.com/rss/current',
-        logoUrl: null,
-        category: 'news',
-        teams: ['union'],
-        active: true,
-        autoPublish: false,
-        description: 'Philadelphia Union coverage from SB Nation'
-    },
-
     // ===== COLLEGE - BIG 5 + PENN STATE =====
     {
         name: 'VU Hoops (Villanova)',

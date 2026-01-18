@@ -246,7 +246,15 @@ export default async function handler(req, res) {
             let newItems = 0;
             let autoPublished = 0;
 
+            // Only include items from the last 24 hours
+            const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
             for (const item of items) {
+                // Skip items older than 24 hours
+                if (item.publishedAt && item.publishedAt < oneDayAgo) {
+                    continue;
+                }
+
                 // Check if already in queue or published
                 const existingInQueue = await queue.findOne({ sourceUrl: item.sourceUrl });
                 const existingInCurated = await curated.findOne({ sourceUrl: item.sourceUrl });
@@ -286,9 +294,11 @@ export default async function handler(req, res) {
                     totalAutoPublished++;
                 } else {
                     // Add to queue for manual review
+                    // Use source's teams as default categories
                     await queue.insertOne({
                         sourceId: source._id,
                         sourceName: source.name,
+                        sourceLogoUrl: source.logoUrl || null,
                         sourceUrl: item.sourceUrl,
                         type: source.category,
                         title: item.title,
@@ -297,7 +307,8 @@ export default async function handler(req, res) {
                         author: item.author,
                         publishedAt: item.publishedAt,
                         fetchedAt: new Date(),
-                        status: 'pending'
+                        status: 'pending',
+                        teams: source.teams || []
                     });
                 }
 
