@@ -745,89 +745,196 @@
             color: var(--text-secondary);
         }
 
-        /* Carousel */
-        .carousel {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
+        /* Featured Story (replaces carousel) */
+        .featured-hero {
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            overflow: hidden;
+            background: var(--card-bg);
+            margin-bottom: 1rem;
         }
 
-        .carousel-inner {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            will-change: transform;
-        }
-
-        .carousel-slide {
+        .featured-hero-image {
             width: 100%;
-            flex: 0 0 100%;
-        }
-
-        .carousel-slide .featured-article {
-            border: none;
-            border-radius: 0;
-        }
-
-        .carousel-controls {
-            position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 0.5rem;
-            z-index: 10;
-        }
-
-        .carousel-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.4);
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            border: none;
-        }
-
-        .carousel-dot:hover {
-            background: rgba(255,255,255,0.7);
-        }
-
-        .carousel-dot.active {
-            background: #fff;
-            transform: scale(1.2);
-        }
-
-        .carousel-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: #fff;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s;
-            z-index: 10;
+            font-size: 3rem;
         }
 
-        .carousel-arrow:hover {
-            background: rgba(0,0,0,0.8);
+        .featured-hero-content {
+            padding: 1rem;
         }
 
-        .carousel-arrow.prev {
-            left: 0.75rem;
+        .featured-hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
-        .carousel-arrow.next {
-            right: 0.75rem;
+        .featured-hero-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .featured-hero-excerpt {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .curator-review {
+            background: var(--widget-header-bg);
+            border-left: 3px solid var(--accent-color);
+            padding: 0.75rem 1rem;
+            margin-top: 0.75rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .curator-review-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .curator-review-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .curator-review-author {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            text-align: right;
+        }
+
+        .featured-hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .story-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .story-list-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .story-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .story-item:hover {
+            background: var(--card-bg-hover);
+        }
+
+        .story-thumb {
+            width: 80px;
+            height: 55px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .story-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .story-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .story-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .story-curator-note {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .load-more-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.75rem;
+        }
+
+        .load-more-btn:hover {
+            background: var(--card-bg-hover);
+            color: var(--accent-color);
         }
 
         .article-meta {
@@ -2067,26 +2174,27 @@
                 <h2 class="section-title">Latest News</h2>
             </div>
 
-            <!-- Featured Carousel -->
-            <div class="carousel" id="newsCarousel">
-                <div class="carousel-inner" id="carouselInner">
-                    <div class="carousel-slide">
-                        <div class="featured-article">
-                            <div class="featured-image"><span>&#128240;</span></div>
-                            <div class="featured-content">
-                                <span class="article-tag tag-eagles">Loading</span>
-                                <h3 class="featured-title">Loading latest news...</h3>
-                                <p class="featured-excerpt">Fetching the latest Philly sports stories...</p>
-                            </div>
+            <!-- Featured Story -->
+            <div id="featuredStory">
+                <div class="featured-hero">
+                    <div class="featured-hero-image" style="background:var(--border-color);">
+                        <span>&#128240;</span>
+                    </div>
+                    <div class="featured-hero-content">
+                        <div class="featured-hero-meta">
+                            <span class="article-tag tag-eagles">Loading</span>
+                            <span>Loading...</span>
                         </div>
+                        <h2 class="featured-hero-title">Loading latest news...</h2>
+                        <p class="featured-hero-excerpt">Fetching the latest Philly sports stories...</p>
                     </div>
                 </div>
-                <button class="carousel-arrow prev" onclick="prevSlide()">&#10094;</button>
-                <button class="carousel-arrow next" onclick="nextSlide()">&#10095;</button>
-                <div class="carousel-controls" id="carouselDots"></div>
             </div>
 
-            <!-- Article List -->
+            <!-- Story List -->
+            <div class="story-list-header">
+                <span class="story-list-title">Today's Stories</span>
+            </div>
             <div class="article-list" id="articleList">
                 <div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading news...</div>
             </div>
@@ -2447,142 +2555,300 @@
             return fallbackEmoji || '&#128240;';
         }
 
-        // Carousel state
-        let currentSlide = 0;
-        let carouselInterval = null;
-        let carouselArticles = [];
+        // Team tag class mapping
+        const teamTagClass = {
+            eagles: 'tag-eagles',
+            phillies: 'tag-phillies',
+            sixers: 'tag-sixers',
+            flyers: 'tag-flyers'
+        };
 
-        function goToSlide(index) {
-            const inner = document.getElementById('carouselInner');
-            const dots = document.querySelectorAll('.carousel-dot');
-            currentSlide = index;
-            if (currentSlide >= carouselArticles.length) currentSlide = 0;
-            if (currentSlide < 0) currentSlide = carouselArticles.length - 1;
-            inner.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
-        }
-
-        function nextSlide() { goToSlide(currentSlide + 1); }
-        function prevSlide() { goToSlide(currentSlide - 1); }
-
-        function startCarousel() {
-            stopCarousel();
-            carouselInterval = setInterval(nextSlide, 5000);
-        }
-
-        function stopCarousel() {
-            if (carouselInterval) clearInterval(carouselInterval);
-        }
-
+        // Load curated content (with fallback to news API)
         async function loadNews() {
-            const carouselInner = document.getElementById('carouselInner');
-            const carouselDots = document.getElementById('carouselDots');
-            const carousel = document.getElementById('newsCarousel');
+            const featuredContainer = document.getElementById('featuredStory');
             const listContainer = document.getElementById('articleList');
 
             try {
-                const response = await fetch('/api/news');
-                const data = await response.json();
+                // First try to get curated content
+                const curatedRes = await fetch('/api/content?page=home&limit=10');
+                const curatedData = await curatedRes.json();
 
-                if (data.articles && data.articles.length > 0) {
-                    // Take first 5 articles for carousel
-                    carouselArticles = data.articles.slice(0, 5);
-                    // Limit to 5 more articles (10 total) to minimize height
-                    const remainingArticles = data.articles.slice(5, 10);
+                // Check if we have curated content
+                if (curatedData && (curatedData.featured || (curatedData.items && curatedData.items.length > 0))) {
+                    renderCuratedContent(curatedData, featuredContainer, listContainer);
+                    return;
+                }
 
-                    // Build carousel slides
-                    carouselInner.innerHTML = carouselArticles.map(article => {
-                        const imageStyle = article.image
-                            ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
-                            : `background:${article.teamColor};`;
-                        const sourceText = article.source ? ` · ${article.source}` : '';
-                        const scoreClass = article.score > 0 ? 'positive' : article.score < 0 ? 'negative' : '';
-                        const articleUrl = `/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}`;
-                        return `
-                            <div class="carousel-slide">
-                                <div class="featured-article" style="position:relative;">
-                                    <div class="featured-vote">
-                                        <button class="vote-btn upvote" onclick="vote('${article.id}', 1, event)" data-article="${article.id}">&#9650;</button>
-                                        <span class="vote-score ${scoreClass}" id="score-${article.id}">${article.score || 0}</span>
-                                        <button class="vote-btn downvote" onclick="vote('${article.id}', -1, event)" data-article="${article.id}">&#9660;</button>
-                                    </div>
-                                    <a href="${articleUrl}" style="display:block;">
-                                        <div class="featured-image" style="${imageStyle}">
-                                            ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
-                                        </div>
-                                        <div class="featured-content">
-                                            <span class="article-tag ${article.tagClass}">${article.team}</span>
-                                            <h3 class="featured-title">${article.headline}</h3>
-                                            <p class="featured-excerpt">${article.description || ''}</p>
-                                            <div class="article-meta">${timeAgo(article.published)}${sourceText} · <span style="color:var(--accent-color);">&#128172; Discuss</span></div>
-                                        </div>
-                                    </a>
-                                </div>
+                // Fall back to news API
+                await loadNewsFromAPI(featuredContainer, listContainer);
+            } catch (error) {
+                console.error('Failed to load curated content, trying news API:', error);
+                try {
+                    await loadNewsFromAPI(featuredContainer, listContainer);
+                } catch (e) {
+                    console.error('Failed to load news:', e);
+                    featuredContainer.innerHTML = `
+                        <div class="featured-hero">
+                            <div class="featured-hero-image" style="background:var(--border-color);">&#128240;</div>
+                            <div class="featured-hero-content">
+                                <h2 class="featured-hero-title">Unable to load news</h2>
+                                <p class="featured-hero-excerpt">Please try again later.</p>
                             </div>
+                        </div>
+                    `;
+                    listContainer.innerHTML = '';
+                }
+            }
+        }
+
+        // Render curated content
+        function renderCuratedContent(data, featuredContainer, listContainer) {
+            const featured = data.featured;
+            const items = data.items || [];
+
+            // Render featured story
+            if (featured) {
+                const imageStyle = featured.thumbnail
+                    ? `background-image:url('${featured.thumbnail}');`
+                    : `background:var(--border-color);`;
+                const teamTag = featured.teams?.[0] || 'eagles';
+                const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+
+                featuredContainer.innerHTML = `
+                    <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+                        <div class="featured-hero">
+                            <div class="featured-hero-image" style="${imageStyle}">
+                                ${!featured.thumbnail ? '&#128240;' : ''}
+                            </div>
+                            <div class="featured-hero-content">
+                                <div class="featured-hero-meta">
+                                    <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
+                                    <span>${featured.sourceName || 'PhillySports'}</span>
+                                    <span>·</span>
+                                    <span>${timeAgo(featured.curatedAt || featured.publishedAt)}</span>
+                                </div>
+                                <h2 class="featured-hero-title">${escapeHtml(featured.title)}</h2>
+                                <p class="featured-hero-excerpt">${escapeHtml(featured.description || '')}</p>
+                                ${featured.curatorReview ? `
+                                    <div class="curator-review">
+                                        <div class="curator-review-label">&#128172; Curator's Take</div>
+                                        <div class="curator-review-text">"${escapeHtml(featured.curatorReview)}"</div>
+                                        <div class="curator-review-author">— ${featured.curatorUsername || 'PhillySports'}</div>
+                                    </div>
+                                ` : ''}
+                                <div class="featured-hero-cta">Read Full Article &#8594;</div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            } else if (items.length > 0) {
+                // Use first item as featured if no explicit featured
+                const first = items.shift();
+                const imageStyle = first.thumbnail
+                    ? `background-image:url('${first.thumbnail}');`
+                    : `background:var(--border-color);`;
+                const teamTag = first.teams?.[0] || 'eagles';
+                const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+
+                featuredContainer.innerHTML = `
+                    <a href="${first.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+                        <div class="featured-hero">
+                            <div class="featured-hero-image" style="${imageStyle}">
+                                ${!first.thumbnail ? '&#128240;' : ''}
+                            </div>
+                            <div class="featured-hero-content">
+                                <div class="featured-hero-meta">
+                                    <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
+                                    <span>${first.sourceName || 'PhillySports'}</span>
+                                    <span>·</span>
+                                    <span>${timeAgo(first.curatedAt || first.publishedAt)}</span>
+                                </div>
+                                <h2 class="featured-hero-title">${escapeHtml(first.title)}</h2>
+                                <p class="featured-hero-excerpt">${escapeHtml(first.description || '')}</p>
+                                ${first.curatorReview ? `
+                                    <div class="curator-review">
+                                        <div class="curator-review-label">&#128172; Curator's Take</div>
+                                        <div class="curator-review-text">"${escapeHtml(first.curatorReview)}"</div>
+                                        <div class="curator-review-author">— ${first.curatorUsername || 'PhillySports'}</div>
+                                    </div>
+                                ` : ''}
+                                <div class="featured-hero-cta">Read Full Article &#8594;</div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }
+
+            // Render story list
+            if (items.length > 0) {
+                listContainer.innerHTML = items.map(item => {
+                    const thumbStyle = item.thumbnail
+                        ? `background-image:url('${item.thumbnail}');`
+                        : `background:var(--border-color);`;
+                    const teamTag = item.teams?.[0] || 'eagles';
+                    const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+
+                    return `
+                        <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;">
+                            <div class="story-thumb" style="${thumbStyle}">
+                                ${!item.thumbnail ? '&#128240;' : ''}
+                            </div>
+                            <div class="story-info">
+                                <div class="story-meta">
+                                    <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
+                                    <span>${item.sourceName || 'PhillySports'}</span>
+                                    <span>·</span>
+                                    <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                                </div>
+                                <div class="story-title">${escapeHtml(item.title)}</div>
+                                ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+
+                // Add load more if there are more items
+                if (data.hasMore) {
+                    listContainer.innerHTML += `<button class="load-more-btn" onclick="loadMoreStories()">Load More Stories</button>`;
+                }
+            } else {
+                listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No more stories available.</div>';
+            }
+        }
+
+        // Fallback: Load from news API
+        async function loadNewsFromAPI(featuredContainer, listContainer) {
+            const response = await fetch('/api/news');
+            const data = await response.json();
+
+            if (data.articles && data.articles.length > 0) {
+                const featured = data.articles[0];
+                const remaining = data.articles.slice(1, 10);
+
+                // Render featured
+                const imageStyle = featured.image
+                    ? `background-image:url('${featured.image}');`
+                    : `background:${featured.teamColor || 'var(--border-color)'};`;
+
+                featuredContainer.innerHTML = `
+                    <a href="/article.html?url=${encodeURIComponent(featured.link)}&title=${encodeURIComponent(featured.headline || '')}&image=${encodeURIComponent(featured.image || '')}&source=${encodeURIComponent(featured.source || '')}" style="text-decoration:none;color:inherit;display:block;">
+                        <div class="featured-hero">
+                            <div class="featured-hero-image" style="${imageStyle}">
+                                ${!featured.image ? getSourceLogo(featured.source, sportEmoji[featured.team]) : ''}
+                            </div>
+                            <div class="featured-hero-content">
+                                <div class="featured-hero-meta">
+                                    <span class="article-tag ${featured.tagClass}">${featured.team}</span>
+                                    <span>${featured.source || ''}</span>
+                                    <span>·</span>
+                                    <span>${timeAgo(featured.published)}</span>
+                                </div>
+                                <h2 class="featured-hero-title">${featured.headline}</h2>
+                                <p class="featured-hero-excerpt">${featured.description || ''}</p>
+                                <div class="featured-hero-cta">Read Full Article &#8594;</div>
+                            </div>
+                        </div>
+                    </a>
+                `;
+
+                // Render list
+                if (remaining.length > 0) {
+                    listContainer.innerHTML = remaining.map(article => {
+                        const thumbStyle = article.image
+                            ? `background-image:url('${article.image}');`
+                            : `background:${article.teamColor || 'var(--border-color)'};`;
+                        const articleUrl = `/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}`;
+
+                        return `
+                            <a href="${articleUrl}" class="story-item" style="text-decoration:none;">
+                                <div class="story-thumb" style="${thumbStyle}">
+                                    ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                </div>
+                                <div class="story-info">
+                                    <div class="story-meta">
+                                        <span class="article-tag ${article.tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${article.team}</span>
+                                        <span>${article.source || ''}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(article.published)}</span>
+                                    </div>
+                                    <div class="story-title">${article.headline}</div>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                } else {
+                    listContainer.innerHTML = '';
+                }
+            }
+        }
+
+        // Escape HTML for display
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load more stories (pagination)
+        let storyOffset = 10;
+        async function loadMoreStories() {
+            const listContainer = document.getElementById('articleList');
+            const btn = listContainer.querySelector('.load-more-btn');
+            if (btn) {
+                btn.textContent = 'Loading...';
+                btn.disabled = true;
+            }
+
+            try {
+                const res = await fetch(`/api/content?page=home&limit=10&offset=${storyOffset}`);
+                const data = await res.json();
+
+                if (data.items && data.items.length > 0) {
+                    // Remove load more button
+                    if (btn) btn.remove();
+
+                    // Append new items
+                    const newItems = data.items.map(item => {
+                        const thumbStyle = item.thumbnail
+                            ? `background-image:url('${item.thumbnail}');`
+                            : `background:var(--border-color);`;
+                        const teamTag = item.teams?.[0] || 'eagles';
+                        const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+
+                        return `
+                            <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;">
+                                <div class="story-thumb" style="${thumbStyle}">
+                                    ${!item.thumbnail ? '&#128240;' : ''}
+                                </div>
+                                <div class="story-info">
+                                    <div class="story-meta">
+                                        <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
+                                        <span>${item.sourceName || 'PhillySports'}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                                    </div>
+                                    <div class="story-title">${escapeHtml(item.title)}</div>
+                                    ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                                </div>
+                            </a>
                         `;
                     }).join('');
 
-                    // Build dots
-                    carouselDots.innerHTML = carouselArticles.map((_, i) =>
-                        `<button class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></button>`
-                    ).join('');
+                    listContainer.insertAdjacentHTML('beforeend', newItems);
+                    storyOffset += 10;
 
-                    // Pause on hover
-                    carousel.addEventListener('mouseenter', stopCarousel);
-                    carousel.addEventListener('mouseleave', startCarousel);
-
-                    // Start auto-rotation
-                    currentSlide = 0;
-                    startCarousel();
-
-                    // Render remaining articles in list
-                    if (remainingArticles.length > 0) {
-                        listContainer.innerHTML = remainingArticles.map(article => {
-                            const thumbStyle = article.image
-                                ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
-                                : `background:${article.teamColor};`;
-                            const sourceText = article.source ? ` · ${article.source}` : '';
-                            const scoreClass = article.score > 0 ? 'positive' : article.score < 0 ? 'negative' : '';
-                            const articleUrl = `/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}`;
-                            return `
-                                <div class="article-item-wrapper">
-                                    <a href="${articleUrl}" class="article-link">
-                                        <div class="article-thumb" style="${thumbStyle}">
-                                            ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
-                                        </div>
-                                        <div class="article-info">
-                                            <span class="article-tag ${article.tagClass}">${article.team}</span>
-                                            <h4 class="article-title">${article.headline}</h4>
-                                            <div class="article-meta">${timeAgo(article.published)}${sourceText} · <span style="color:var(--accent-color);">&#128172; Discuss</span></div>
-                                        </div>
-                                    </a>
-                                    <div class="vote-buttons">
-                                        <button class="vote-btn upvote" onclick="vote('${article.id}', 1, event)" data-article="${article.id}">&#9650;</button>
-                                        <span class="vote-score ${scoreClass}" id="score-${article.id}">${article.score || 0}</span>
-                                        <button class="vote-btn downvote" onclick="vote('${article.id}', -1, event)" data-article="${article.id}">&#9660;</button>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('');
-                    } else {
-                        listContainer.innerHTML = '';
+                    // Add new load more if there are more
+                    if (data.hasMore) {
+                        listContainer.insertAdjacentHTML('beforeend', `<button class="load-more-btn" onclick="loadMoreStories()">Load More Stories</button>`);
                     }
                 }
-            } catch (error) {
-                console.error('Failed to load news:', error);
-                carouselInner.innerHTML = `
-                    <div class="carousel-slide">
-                        <div class="featured-article">
-                            <div class="featured-image" style="background:var(--border-color);">&#128240;</div>
-                            <div class="featured-content">
-                                <h3 class="featured-title">Unable to load news</h3>
-                                <p class="featured-excerpt">Please try again later.</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                carouselDots.innerHTML = '';
-                listContainer.innerHTML = '';
+            } catch (e) {
+                console.error('Failed to load more:', e);
+                if (btn) {
+                    btn.textContent = 'Load More Stories';
+                    btn.disabled = false;
+                }
             }
         }
 

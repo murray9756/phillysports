@@ -334,6 +334,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="posts">Posts</button>
                 <button class="admin-tab" data-tab="new">New Post</button>
+                <button class="admin-tab" data-tab="curation">Content</button>
                 <button class="admin-tab" data-tab="feedback">Feedback</button>
                 <button class="admin-tab" data-tab="coins">Coins</button>
                 <button class="admin-tab" data-tab="system">System</button>
@@ -394,6 +395,115 @@
                         <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Content Curation -->
+            <div id="curationTab" class="card hidden">
+                <h2>Content Curation</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Curate news, podcasts, and videos from your sources. Add your editorial review before publishing.</p>
+
+                <!-- Curation Sub-tabs -->
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+                    <button class="btn btn-secondary curation-subtab active" data-subtab="queue">Queue</button>
+                    <button class="btn btn-secondary curation-subtab" data-subtab="published">Published</button>
+                    <button class="btn btn-secondary curation-subtab" data-subtab="sources">Sources</button>
+                </div>
+
+                <!-- Queue Section -->
+                <div id="queueSection">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div id="queueStats" style="font-size: 0.85rem; color: var(--text-muted);">Loading...</div>
+                        <button class="btn btn-primary" id="fetchContentBtn" style="font-size: 0.85rem;">Fetch New Content</button>
+                    </div>
+                    <div id="queueList" style="display: flex; flex-direction: column; gap: 1rem;">
+                        <p style="color: var(--text-muted);">Loading queue...</p>
+                    </div>
+                </div>
+
+                <!-- Published Section -->
+                <div id="publishedSection" class="hidden">
+                    <div id="publishedStats" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Loading...</div>
+                    <div id="publishedList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <p style="color: var(--text-muted);">Loading published content...</p>
+                    </div>
+                </div>
+
+                <!-- Sources Section -->
+                <div id="sourcesSection" class="hidden">
+                    <!-- Quick Add Source -->
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--widget-header-bg); border-radius: 8px;">
+                        <label style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Add New Source</label>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">Paste any URL and we'll automatically find the RSS feed</p>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <input type="url" id="discoverUrl" placeholder="https://example.com or https://example.com/feed" style="flex: 1; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); font-size: 0.9rem;">
+                            <button class="btn btn-primary" id="discoverBtn" style="white-space: nowrap;">Discover Feed</button>
+                        </div>
+                        <div id="discoverResult" style="margin-top: 0.75rem; display: none;"></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);" id="sourcesCount">0 sources</span>
+                        <button class="btn btn-secondary" id="addSourceBtn" style="font-size: 0.8rem;">+ Add Manually</button>
+                    </div>
+                    <div id="sourcesList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <p style="color: var(--text-muted);">Loading sources...</p>
+                    </div>
+
+                    <!-- Add/Edit Source Form (Manual) -->
+                    <div id="sourceForm" class="hidden" style="margin-top: 1rem; padding: 1rem; background: var(--widget-header-bg); border-radius: 8px;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1rem;" id="sourceFormTitle">Add Source</h3>
+                        <input type="hidden" id="sourceId">
+                        <div class="form-group" style="margin-bottom: 0.75rem;">
+                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Name</label>
+                            <input type="text" id="sourceName" placeholder="ESPN Philadelphia" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                            <div class="form-group">
+                                <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Type</label>
+                                <select id="sourceType" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
+                                    <option value="rss">RSS Feed</option>
+                                    <option value="scrape">Web Scrape</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="twitter">Twitter/X</option>
+                                    <option value="manual">Manual</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Category</label>
+                                <select id="sourceCategory" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
+                                    <option value="news">News</option>
+                                    <option value="podcast">Podcast</option>
+                                    <option value="video">Video</option>
+                                    <option value="social">Social</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 0.75rem;">
+                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Feed URL</label>
+                            <input type="url" id="sourceFeedUrl" placeholder="https://..." style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
+                        </div>
+                        <div class="form-group" style="margin-top: 0.75rem;">
+                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Teams</label>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="eagles" checked> Eagles</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="phillies" checked> Phillies</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="sixers" checked> Sixers</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="flyers" checked> Flyers</label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 0.75rem; padding: 0.75rem; background: var(--card-bg); border-radius: 6px; border: 1px solid var(--border-color);">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer;">
+                                <input type="checkbox" id="sourceAutoPublish">
+                                <strong>Auto-Publish</strong>
+                            </label>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; margin-left: 1.5rem;">Trusted source - publish directly to site without manual review (e.g., your own newsletter)</p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn btn-primary" id="saveSourceBtn">Save Source</button>
+                            <button class="btn btn-secondary" id="cancelSourceBtn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Feedback Management -->
@@ -866,6 +976,15 @@
             });
             document.getElementById('postsTab').classList.toggle('hidden', tabName !== 'posts');
             document.getElementById('newTab').classList.toggle('hidden', tabName !== 'new');
+            document.getElementById('curationTab').classList.toggle('hidden', tabName !== 'curation');
+            document.getElementById('feedbackTab').classList.toggle('hidden', tabName !== 'feedback');
+            document.getElementById('coinsTab')?.classList.toggle('hidden', tabName !== 'coins');
+            document.getElementById('systemTab')?.classList.toggle('hidden', tabName !== 'system');
+
+            // Load curation data when switching to that tab
+            if (tabName === 'curation') {
+                loadContentQueue();
+            }
         }
 
         // Cancel button
@@ -1002,6 +1121,654 @@
                 loadFeedback(btn.dataset.filter);
             });
         });
+
+        // ===== CONTENT CURATION FUNCTIONS =====
+
+        let currentCurationSubtab = 'queue';
+
+        // Curation sub-tab switching
+        document.querySelectorAll('.curation-subtab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.curation-subtab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCurationSubtab = btn.dataset.subtab;
+
+                document.getElementById('queueSection').classList.toggle('hidden', currentCurationSubtab !== 'queue');
+                document.getElementById('publishedSection').classList.toggle('hidden', currentCurationSubtab !== 'published');
+                document.getElementById('sourcesSection').classList.toggle('hidden', currentCurationSubtab !== 'sources');
+
+                if (currentCurationSubtab === 'queue') loadContentQueue();
+                else if (currentCurationSubtab === 'published') loadPublishedContent();
+                else if (currentCurationSubtab === 'sources') loadSources();
+            });
+        });
+
+        // Load content queue
+        async function loadContentQueue() {
+            const container = document.getElementById('queueList');
+            const statsDiv = document.getElementById('queueStats');
+            container.innerHTML = '<p style="color: var(--text-muted);">Loading queue...</p>';
+
+            try {
+                const res = await fetch('/api/admin/content/queue');
+                const data = await res.json();
+
+                if (!res.ok) {
+                    container.innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                statsDiv.innerHTML = `${data.statusCounts.pending} pending &middot; ${data.statusCounts.published} published &middot; ${data.statusCounts.skipped} skipped`;
+
+                if (data.items && data.items.length > 0) {
+                    container.innerHTML = data.items.map(item => `
+                        <div class="queue-item" id="queue-${item._id}" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
+                            <div style="display: flex; gap: 1rem;">
+                                ${item.thumbnail ? `<img src="${item.thumbnail}" style="width: 100px; height: 70px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">` : '<div style="width: 100px; height: 70px; background: var(--border-color); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-muted);">No image</div>'}
+                                <div style="flex: 1; min-width: 0;">
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+                                        <span style="text-transform: uppercase; font-weight: 600;">${item.type || 'news'}</span> &middot; ${item.sourceName || 'Unknown'} &middot; ${formatDate(item.publishedAt || item.fetchedAt)}
+                                    </div>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.title)}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.description || '')}</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
+                                <div style="margin-bottom: 0.5rem;">
+                                    <label style="font-size: 0.8rem; font-weight: 500;">Curator Review (optional)</label>
+                                    <textarea id="review-${item._id}" placeholder="Add your take on this content..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; min-height: 60px; resize: vertical; margin-top: 0.25rem;"></textarea>
+                                </div>
+                                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="eagles" checked> Eagles</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="phillies" checked> Phillies</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="sixers" checked> Sixers</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="flyers" checked> Flyers</label>
+                                    <label style="font-size: 0.8rem; margin-left: auto;"><input type="checkbox" id="featured-${item._id}"> Featured</label>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+                                    <button class="btn btn-success" onclick="publishQueueItem('${item._id}')" style="font-size: 0.85rem;">Publish</button>
+                                    <button class="btn btn-secondary" onclick="skipQueueItem('${item._id}')" style="font-size: 0.85rem;">Skip</button>
+                                    <a href="${item.sourceUrl}" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; text-decoration: none;">View Source</a>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="color: var(--text-muted);">No pending items. Click "Fetch New Content" to pull from sources.</p>';
+                }
+            } catch (e) {
+                console.error('Load queue error:', e);
+                container.innerHTML = '<p style="color: #dc2626;">Failed to load queue</p>';
+            }
+        }
+
+        // Publish a queue item
+        async function publishQueueItem(itemId) {
+            const reviewEl = document.getElementById(`review-${itemId}`);
+            const featuredEl = document.getElementById(`featured-${itemId}`);
+            const teamCheckboxes = document.querySelectorAll(`.team-check[data-id="${itemId}"]:checked`);
+
+            const teams = Array.from(teamCheckboxes).map(cb => cb.value);
+            const curatorReview = reviewEl?.value || '';
+            const featured = featuredEl?.checked || false;
+
+            try {
+                const res = await fetch('/api/admin/content/queue', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        itemId,
+                        action: 'publish',
+                        curatorReview,
+                        teams,
+                        featured,
+                        featuredOnPages: featured ? ['home'] : []
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage('Content published!', 'success');
+                    document.getElementById(`queue-${itemId}`)?.remove();
+                    loadContentQueue(); // Refresh stats
+                } else {
+                    showMessage(data.error || 'Failed to publish', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to publish content', 'error');
+            }
+        }
+
+        // Skip a queue item
+        async function skipQueueItem(itemId) {
+            try {
+                const res = await fetch('/api/admin/content/queue', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ itemId, action: 'skip' })
+                });
+
+                if (res.ok) {
+                    showMessage('Item skipped', 'success');
+                    document.getElementById(`queue-${itemId}`)?.remove();
+                    loadContentQueue();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to skip', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to skip item', 'error');
+            }
+        }
+
+        // Fetch new content from sources
+        document.getElementById('fetchContentBtn')?.addEventListener('click', async () => {
+            const btn = document.getElementById('fetchContentBtn');
+            btn.disabled = true;
+            btn.textContent = 'Fetching...';
+
+            try {
+                const res = await fetch('/api/admin/content/fetch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(`Fetched ${data.totalFetched} items, ${data.totalNew} new`, 'success');
+                    loadContentQueue();
+                } else {
+                    showMessage(data.error || 'Failed to fetch content', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to fetch content', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Fetch New Content';
+            }
+        });
+
+        // Load published content
+        async function loadPublishedContent() {
+            const container = document.getElementById('publishedList');
+            const statsDiv = document.getElementById('publishedStats');
+            container.innerHTML = '<p style="color: var(--text-muted);">Loading published content...</p>';
+
+            try {
+                const res = await fetch('/api/admin/content/curated');
+                const data = await res.json();
+
+                if (!res.ok) {
+                    container.innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                const counts = data.typeCounts || {};
+                statsDiv.innerHTML = `${data.total} total &middot; ${counts.news || 0} news &middot; ${counts.podcast || 0} podcasts &middot; ${counts.video || 0} videos`;
+
+                if (data.items && data.items.length > 0) {
+                    container.innerHTML = data.items.map(item => `
+                        <div class="published-item" style="display: flex; gap: 1rem; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; align-items: flex-start;">
+                            ${item.thumbnail ? `<img src="${item.thumbnail}" style="width: 80px; height: 55px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">` : ''}
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.2rem;">
+                                    <span style="text-transform: uppercase; font-weight: 600;">${item.type || 'news'}</span>
+                                    ${item.featured ? '<span style="background: var(--accent-color); color: #fff; padding: 0.1rem 0.3rem; border-radius: 3px; margin-left: 0.25rem;">FEATURED</span>' : ''}
+                                    &middot; ${item.sourceName} &middot; ${formatDate(item.curatedAt)}
+                                </div>
+                                <div style="font-weight: 500; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.title)}</div>
+                                ${item.curatorReview ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; font-style: italic;">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                            </div>
+                            <div style="display: flex; gap: 0.25rem; flex-shrink: 0;">
+                                <button class="btn btn-secondary" onclick="toggleFeatured('${item._id}', ${!item.featured})" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">${item.featured ? 'Unfeature' : 'Feature'}</button>
+                                <button class="btn btn-danger" onclick="archiveContent('${item._id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">Archive</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="color: var(--text-muted);">No published content yet. Publish items from the queue.</p>';
+                }
+            } catch (e) {
+                console.error('Load published error:', e);
+                container.innerHTML = '<p style="color: #dc2626;">Failed to load published content</p>';
+            }
+        }
+
+        // Toggle featured status
+        async function toggleFeatured(contentId, featured) {
+            try {
+                const res = await fetch('/api/admin/content/curated', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contentId,
+                        featured,
+                        featuredOnPages: featured ? ['home'] : []
+                    })
+                });
+
+                if (res.ok) {
+                    showMessage(featured ? 'Content featured!' : 'Content unfeatured', 'success');
+                    loadPublishedContent();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to update', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to update content', 'error');
+            }
+        }
+
+        // Archive content
+        async function archiveContent(contentId) {
+            if (!confirm('Archive this content? It will be hidden from the site.')) return;
+
+            try {
+                const res = await fetch('/api/admin/content/curated', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contentId })
+                });
+
+                if (res.ok) {
+                    showMessage('Content archived', 'success');
+                    loadPublishedContent();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to archive', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to archive content', 'error');
+            }
+        }
+
+        // Load content sources
+        async function loadSources() {
+            const container = document.getElementById('sourcesList');
+            const countSpan = document.getElementById('sourcesCount');
+            container.innerHTML = '<p style="color: var(--text-muted);">Loading sources...</p>';
+
+            try {
+                const res = await fetch('/api/admin/content/sources');
+                const data = await res.json();
+
+                if (!res.ok) {
+                    container.innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                countSpan.textContent = `${data.sources.length} sources`;
+
+                if (data.sources && data.sources.length > 0) {
+                    container.innerHTML = data.sources.map(src => `
+                        <div class="source-item" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px;">
+                            <div>
+                                <div style="font-weight: 500;">
+                                    ${escapeHtml(src.name)}
+                                    ${src.autoPublish ? '<span style="background: #dbeafe; color: #1e40af; font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.5rem; font-weight: 600;">AUTO-PUBLISH</span>' : ''}
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                    ${src.type} &middot; ${src.category} &middot; ${src.active ? '<span style="color: var(--success);">Active</span>' : '<span style="color: #dc2626;">Inactive</span>'}
+                                    ${src.lastFetched ? ` &middot; Last: ${formatDate(src.lastFetched)}` : ''}
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.25rem;">
+                                <button class="btn btn-secondary" onclick="editSource('${src._id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">Edit</button>
+                                <button class="btn btn-secondary" onclick="toggleSourceActive('${src._id}', ${!src.active})" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">${src.active ? 'Disable' : 'Enable'}</button>
+                                <button class="btn btn-danger" onclick="deleteSource('${src._id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p style="color: var(--text-muted);">No sources configured. Add an RSS feed to get started.</p>';
+                }
+            } catch (e) {
+                console.error('Load sources error:', e);
+                container.innerHTML = '<p style="color: #dc2626;">Failed to load sources</p>';
+            }
+        }
+
+        // Sources cache for editing
+        let sourcesCache = [];
+
+        // Show/hide source form
+        document.getElementById('addSourceBtn')?.addEventListener('click', () => {
+            document.getElementById('sourceForm').classList.remove('hidden');
+            document.getElementById('sourceFormTitle').textContent = 'Add Source';
+            document.getElementById('sourceId').value = '';
+            document.getElementById('sourceName').value = '';
+            document.getElementById('sourceType').value = 'rss';
+            document.getElementById('sourceCategory').value = 'news';
+            document.getElementById('sourceFeedUrl').value = '';
+            document.getElementById('sourceAutoPublish').checked = false;
+            document.querySelectorAll('.sourceTeam').forEach(cb => cb.checked = true);
+        });
+
+        document.getElementById('cancelSourceBtn')?.addEventListener('click', () => {
+            document.getElementById('sourceForm').classList.add('hidden');
+        });
+
+        // Edit source
+        async function editSource(sourceId) {
+            try {
+                const res = await fetch('/api/admin/content/sources');
+                const data = await res.json();
+                const source = data.sources.find(s => s._id === sourceId);
+
+                if (source) {
+                    document.getElementById('sourceForm').classList.remove('hidden');
+                    document.getElementById('sourceFormTitle').textContent = 'Edit Source';
+                    document.getElementById('sourceId').value = source._id;
+                    document.getElementById('sourceName').value = source.name;
+                    document.getElementById('sourceType').value = source.type;
+                    document.getElementById('sourceCategory').value = source.category;
+                    document.getElementById('sourceFeedUrl').value = source.feedUrl || '';
+                    document.getElementById('sourceAutoPublish').checked = source.autoPublish || false;
+                    document.querySelectorAll('.sourceTeam').forEach(cb => {
+                        cb.checked = source.teams?.includes(cb.value);
+                    });
+                }
+            } catch (e) {
+                showMessage('Failed to load source', 'error');
+            }
+        }
+
+        // Save source
+        document.getElementById('saveSourceBtn')?.addEventListener('click', async () => {
+            const sourceId = document.getElementById('sourceId').value;
+            const name = document.getElementById('sourceName').value;
+            const type = document.getElementById('sourceType').value;
+            const category = document.getElementById('sourceCategory').value;
+            const feedUrl = document.getElementById('sourceFeedUrl').value;
+            const teams = Array.from(document.querySelectorAll('.sourceTeam:checked')).map(cb => cb.value);
+            const autoPublish = document.getElementById('sourceAutoPublish').checked;
+
+            if (!name) {
+                showMessage('Name is required', 'error');
+                return;
+            }
+
+            try {
+                const method = sourceId ? 'PATCH' : 'POST';
+                const body = { name, type, category, feedUrl, teams, active: true, autoPublish };
+                if (sourceId) body.sourceId = sourceId;
+
+                const res = await fetch('/api/admin/content/sources', {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage(sourceId ? 'Source updated!' : 'Source added!', 'success');
+                    document.getElementById('sourceForm').classList.add('hidden');
+                    loadSources();
+                } else {
+                    showMessage(data.error || 'Failed to save source', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to save source', 'error');
+            }
+        });
+
+        // Toggle source active
+        async function toggleSourceActive(sourceId, active) {
+            try {
+                const res = await fetch('/api/admin/content/sources', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sourceId, active })
+                });
+
+                if (res.ok) {
+                    showMessage(active ? 'Source enabled' : 'Source disabled', 'success');
+                    loadSources();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to update', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to update source', 'error');
+            }
+        }
+
+        // Delete source
+        async function deleteSource(sourceId) {
+            if (!confirm('Delete this source? This cannot be undone.')) return;
+
+            try {
+                const res = await fetch('/api/admin/content/sources', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sourceId })
+                });
+
+                if (res.ok) {
+                    showMessage('Source deleted', 'success');
+                    loadSources();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to delete', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to delete source', 'error');
+            }
+        }
+
+        let selectedLogoUrl = '';
+
+        // Discover feed from URL
+        document.getElementById('discoverBtn')?.addEventListener('click', async () => {
+            const urlInput = document.getElementById('discoverUrl');
+            const resultDiv = document.getElementById('discoverResult');
+            const btn = document.getElementById('discoverBtn');
+
+            const url = urlInput.value.trim();
+            if (!url) {
+                showMessage('Please enter a URL', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Discovering...';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Searching for RSS feeds and site logos...</p>';
+
+            try {
+                const res = await fetch('/api/admin/content/discover', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    const src = data.source;
+                    selectedLogoUrl = '';
+
+                    // Build logo options from discovered site logos
+                    const logos = src.logos || [];
+                    const logoOptionsHtml = logos.length > 0
+                        ? logos.map((logo, i) => `
+                            <div class="logo-option" data-url="${logo.url}" title="${logo.type}" style="width: 50px; height: 50px; border: 2px solid ${i === 0 ? 'var(--success)' : 'var(--border-color)'}; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff;">
+                                <img src="${logo.url}" alt="${logo.type}" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        `).join('')
+                        : '<div style="color: var(--text-muted); font-size: 0.8rem;">No logos found on site</div>';
+
+                    // Auto-select first logo
+                    if (logos.length > 0) {
+                        selectedLogoUrl = logos[0].url;
+                    }
+
+                    resultDiv.innerHTML = `
+                        <div style="padding: 1rem; background: var(--card-bg); border-radius: 6px; border: 1px solid var(--success);">
+                            <div style="color: var(--success); font-weight: 600; margin-bottom: 0.5rem;">&#10003; ${data.message}</div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <div style="font-weight: 600;">${escapeHtml(src.name)}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">${src.type.toUpperCase()} &middot; ${src.category} &middot; ${src.itemCount || 0} items found</div>
+                                ${src.description ? `<div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">${escapeHtml(src.description.substring(0, 150))}${src.description.length > 150 ? '...' : ''}</div>` : ''}
+                                ${data.warning ? `<div style="font-size: 0.8rem; color: var(--warning); margin-top: 0.25rem;">&#9888; ${data.warning}</div>` : ''}
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <label style="display: block; font-size: 0.8rem; font-weight: 500; margin-bottom: 0.35rem;">Site Logo (from ${new URL(src.feedUrl).hostname}):</label>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;" id="logoOptions">
+                                    ${logoOptionsHtml}
+                                    <div class="logo-option" data-url="custom" title="Custom URL" style="width: 50px; height: 50px; border: 2px solid var(--border-color); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: var(--card-bg);">+</div>
+                                </div>
+                                <input type="url" id="customLogoUrl" placeholder="Paste custom logo URL" style="display: none; width: 100%; margin-top: 0.5rem; padding: 0.4rem; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.85rem; background: var(--card-bg); color: var(--text-primary);">
+                            </div>
+                            <div style="margin-bottom: 0.75rem;">
+                                <label style="display: block; font-size: 0.8rem; font-weight: 500; margin-bottom: 0.35rem;">Teams:</label>
+                                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="eagles" checked> Eagles</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="phillies" checked> Phillies</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="sixers" checked> Sixers</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="flyers" checked> Flyers</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-success" onclick="addDiscoveredSource('${escapeHtml(src.name)}', '${src.type}', '${src.category}', '${escapeHtml(src.feedUrl)}')" style="font-size: 0.85rem;">Add This Source</button>
+                        </div>
+                    `;
+
+                    // Setup logo selection
+                    setupLogoSelection();
+                } else {
+                    // Show discovered logos even if no RSS found
+                    const logos = data.metadata?.logos || [];
+                    const logoOptionsHtml = logos.length > 0
+                        ? logos.map((logo, i) => `
+                            <div class="logo-option" data-url="${logo.url}" title="${logo.type}" style="width: 40px; height: 40px; border: 2px solid ${i === 0 ? 'var(--accent-color)' : 'var(--border-color)'}; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff;">
+                                <img src="${logo.url}" alt="${logo.type}" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        `).join('')
+                        : '';
+
+                    resultDiv.innerHTML = `
+                        <div style="padding: 1rem; background: var(--card-bg); border-radius: 6px; border: 1px solid #dc2626;">
+                            <div style="color: #dc2626; font-weight: 600; margin-bottom: 0.5rem;">&#10007; ${data.error}</div>
+                            ${data.suggestions ? `
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    <strong>Suggestions:</strong>
+                                    <ul style="margin: 0.25rem 0 0 1rem;">
+                                        ${data.suggestions.map(s => `<li>${s}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            ${data.metadata?.name ? `
+                                <div style="margin-top: 0.75rem; font-size: 0.85rem;">
+                                    <strong>Site detected:</strong> ${escapeHtml(data.metadata.name)}
+                                    ${logoOptionsHtml ? `<div style="display: flex; gap: 0.35rem; margin-top: 0.35rem;">${logoOptionsHtml}</div>` : ''}
+                                    <button class="btn btn-secondary" onclick="openManualForm('${escapeHtml(data.metadata.name)}', '${url}')" style="margin-top: 0.5rem; font-size: 0.75rem; padding: 0.25rem 0.5rem;">Add Manually</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                console.error('Discover error:', e);
+                resultDiv.innerHTML = `
+                    <div style="padding: 0.75rem; background: var(--card-bg); border-radius: 6px; border: 1px solid #dc2626;">
+                        <div style="color: #dc2626; font-size: 0.85rem;">Failed to discover feed. Check the URL and try again.</div>
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Discover Feed';
+            }
+        });
+
+        // Setup logo selection handlers
+        function setupLogoSelection() {
+            const options = document.querySelectorAll('.logo-option');
+            const customInput = document.getElementById('customLogoUrl');
+
+            options.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    options.forEach(o => o.style.borderColor = 'var(--border-color)');
+                    opt.style.borderColor = 'var(--success)';
+
+                    const url = opt.dataset.url;
+                    if (url === 'custom') {
+                        customInput.style.display = 'block';
+                        selectedLogoUrl = customInput.value;
+                    } else {
+                        customInput.style.display = 'none';
+                        selectedLogoUrl = url;
+                    }
+                });
+            });
+
+            if (customInput) {
+                customInput.addEventListener('input', () => {
+                    selectedLogoUrl = customInput.value;
+                });
+            }
+        }
+
+        // Add discovered source
+        async function addDiscoveredSource(name, type, category, feedUrl) {
+            const teams = Array.from(document.querySelectorAll('.discoverTeam:checked')).map(cb => cb.value);
+            const customLogoInput = document.getElementById('customLogoUrl');
+
+            // Use custom logo if entered
+            let logoUrl = selectedLogoUrl;
+            if (customLogoInput && customLogoInput.style.display !== 'none' && customLogoInput.value) {
+                logoUrl = customLogoInput.value;
+            }
+
+            if (!logoUrl) {
+                showMessage('Please select a logo for this source', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/content/sources', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        type,
+                        category,
+                        feedUrl,
+                        teams,
+                        logoUrl,
+                        active: true
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showMessage('Source added successfully!', 'success');
+                    document.getElementById('discoverUrl').value = '';
+                    document.getElementById('discoverResult').style.display = 'none';
+                    loadSources();
+                } else {
+                    showMessage(data.error || 'Failed to add source', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to add source', 'error');
+            }
+        }
+
+        // Open manual form with pre-filled data
+        function openManualForm(name, url) {
+            document.getElementById('discoverResult').style.display = 'none';
+            document.getElementById('sourceForm').classList.remove('hidden');
+            document.getElementById('sourceFormTitle').textContent = 'Add Source Manually';
+            document.getElementById('sourceId').value = '';
+            document.getElementById('sourceName').value = name || '';
+            document.getElementById('sourceType').value = 'rss';
+            document.getElementById('sourceCategory').value = 'news';
+            document.getElementById('sourceFeedUrl').value = url || '';
+            document.querySelectorAll('.sourceTeam').forEach(cb => cb.checked = true);
+        }
 
         // Init
         checkAuth();
