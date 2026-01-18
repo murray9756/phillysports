@@ -1483,14 +1483,16 @@
 
                 const data = await res.json();
 
-                if (res.ok) {
+                if (res.ok && data.success) {
                     showMessage(`Fixed categories for ${data.updated} sources`, 'success');
                     loadContentSources();
                 } else {
-                    showMessage(data.error || 'Failed to fix categories', 'error');
+                    console.error('Fix categories error:', res.status, data);
+                    showMessage(data.error || `Failed to fix categories (${res.status})`, 'error');
                 }
             } catch (e) {
-                showMessage('Failed to fix categories', 'error');
+                console.error('Fix categories exception:', e);
+                showMessage('Failed to fix categories: ' + e.message, 'error');
             }
 
             btn.disabled = false;
