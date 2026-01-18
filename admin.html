@@ -1036,7 +1036,7 @@
             container.innerHTML = '<p style="color: var(--text-muted);">Loading queue...</p>';
 
             try {
-                const res = await fetch('/api/admin/content/queue');
+                const res = await fetch('/api/admin/content/queue', { credentials: 'include' });
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -1156,6 +1156,7 @@
                 const res = await fetch('/api/admin/content/queue', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({
                         itemId,
                         action: 'publish',
@@ -1188,6 +1189,7 @@
                 const res = await fetch('/api/admin/content/queue', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ itemId, action: 'skip' })
                 });
 
@@ -1213,7 +1215,8 @@
             try {
                 const res = await fetch('/api/admin/content/fetch', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
                 });
 
                 const data = await res.json();
@@ -1295,6 +1298,7 @@
                 const res = await fetch('/api/admin/content/quick-add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(requestBody)
                 });
 
@@ -1342,7 +1346,7 @@
             container.innerHTML = '<p style="color: var(--text-muted);">Loading published content...</p>';
 
             try {
-                const res = await fetch('/api/admin/content/curated');
+                const res = await fetch('/api/admin/content/curated', { credentials: 'include' });
                 const data = await res.json();
 
                 if (!res.ok) {
@@ -1387,6 +1391,7 @@
                 const res = await fetch('/api/admin/content/curated', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({
                         contentId,
                         featured,
@@ -1414,6 +1419,7 @@
                 const res = await fetch('/api/admin/content/curated', {
                     method: 'DELETE',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ contentId })
                 });
 
@@ -1682,6 +1688,7 @@
                 const res = await fetch('/api/admin/content/sources', {
                     method,
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify(body)
                 });
 
@@ -1776,6 +1783,7 @@
                 const res = await fetch('/api/admin/content/discover', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ url })
                 });
 
@@ -1925,6 +1933,7 @@
                 const res = await fetch('/api/admin/content/sources', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({
                         name,
                         type,
