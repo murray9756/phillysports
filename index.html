@@ -2722,8 +2722,13 @@
                 const tagClass = teamTagClass[teamTag] || 'tag-eagles';
 
                 featuredContainer.innerHTML = `
-                    <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
-                        <div class="featured-hero">
+                    <div class="featured-hero" style="position:relative;">
+                        <div class="featured-vote">
+                            <button class="vote-btn upvote" data-article="${featured._id}" onclick="vote('${featured._id}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${featured._id}">0</span>
+                            <button class="vote-btn downvote" data-article="${featured._id}" onclick="vote('${featured._id}', -1, event)">&#9660;</button>
+                        </div>
+                        <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
                             <div class="featured-hero-image" style="${imageStyle}">
                                 ${!featured.thumbnail ? '&#128240;' : ''}
                             </div>
@@ -2745,8 +2750,8 @@
                                 ` : ''}
                                 <div class="featured-hero-cta">Read Full Article &#8594;</div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 `;
             } else if (items.length > 0) {
                 // Use first item as featured if no explicit featured
@@ -2758,8 +2763,13 @@
                 const tagClass = teamTagClass[teamTag] || 'tag-eagles';
 
                 featuredContainer.innerHTML = `
-                    <a href="${first.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
-                        <div class="featured-hero">
+                    <div class="featured-hero" style="position:relative;">
+                        <div class="featured-vote">
+                            <button class="vote-btn upvote" data-article="${first._id}" onclick="vote('${first._id}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${first._id}">0</span>
+                            <button class="vote-btn downvote" data-article="${first._id}" onclick="vote('${first._id}', -1, event)">&#9660;</button>
+                        </div>
+                        <a href="${first.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
                             <div class="featured-hero-image" style="${imageStyle}">
                                 ${!first.thumbnail ? '&#128240;' : ''}
                             </div>
@@ -2781,8 +2791,8 @@
                                 ` : ''}
                                 <div class="featured-hero-cta">Read Full Article &#8594;</div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 `;
             }
 
@@ -2796,21 +2806,28 @@
                     const tagClass = teamTagClass[teamTag] || 'tag-eagles';
 
                     return `
-                        <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;">
-                            <div class="story-thumb" style="${thumbStyle}">
-                                ${!item.thumbnail ? '&#128240;' : ''}
+                        <div class="story-item-wrapper">
+                            <div class="vote-buttons">
+                                <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${item._id}">0</span>
+                                <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
                             </div>
-                            <div class="story-info">
-                                <div class="story-meta">
-                                    <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
-                                    <span>${item.sourceName || 'PhillySports'}</span>
-                                    <span>·</span>
-                                    <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                            <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                                <div class="story-thumb" style="${thumbStyle}">
+                                    ${!item.thumbnail ? '&#128240;' : ''}
                                 </div>
-                                <div class="story-title">${escapeHtml(item.title)}</div>
-                                ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
-                            </div>
-                        </a>
+                                <div class="story-info">
+                                    <div class="story-meta">
+                                        <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
+                                        <span>${item.sourceName || 'PhillySports'}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                                    </div>
+                                    <div class="story-title">${escapeHtml(item.title)}</div>
+                                    ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                                </div>
+                            </a>
+                        </div>
                     `;
                 }).join('');
 
