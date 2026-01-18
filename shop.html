@@ -78,6 +78,20 @@
         .badge-rarity.legendary { background: linear-gradient(135deg, #ffd700, #ff9800); color: #5d4037; }
         .badge-price { display: flex; align-items: center; gap: 0.35rem; font-weight: 700; color: #ff9800; }
         .buy-btn { background: linear-gradient(135deg, #ffd700, #ff9800); color: #1a1a1a; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+
+        /* Coin Packs */
+        .coin-packs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .coin-pack { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.2s; position: relative; }
+        .coin-pack:hover { border-color: #ffd700; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,215,0,0.2); }
+        .coin-pack.popular { border-color: #ffd700; }
+        .coin-pack.popular::before { content: 'BEST VALUE'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ffd700, #ff9800); color: #000; padding: 0.2rem 0.75rem; border-radius: 10px; font-size: 0.65rem; font-weight: 700; }
+        .pack-coins { font-size: 2rem; font-weight: 800; color: #ff9800; margin-bottom: 0.25rem; }
+        .pack-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+        .pack-bonus { font-size: 0.75rem; color: #4caf50; font-weight: 600; margin-bottom: 0.75rem; }
+        .pack-price { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.75rem; }
+        .pack-buy-btn { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+        .pack-buy-btn:hover { opacity: 0.9; transform: scale(1.02); }
+        .pack-buy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .buy-btn:hover { transform: scale(1.05); box-shadow: 0 2px 8px rgba(255,152,0,0.4); }
         .buy-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .buy-btn.owned-btn { background: #4caf50; color: white; cursor: default; }
@@ -277,6 +291,17 @@
     </section>
 
     <main class="main-container">
+        <!-- Buy Diehard Dollars Section -->
+        <div class="shop-section" id="coinPacksSection">
+            <div class="section-header">
+                <span class="section-title">Buy Diehard Dollars</span>
+            </div>
+            <div class="coin-packs-grid" id="coinPacksGrid">
+                Loading packs...
+            </div>
+        </div>
+
+        <!-- Spend Diehard Dollars Section -->
         <div id="shopContent" class="loading">Loading shop...</div>
     </main>
 
@@ -508,8 +533,79 @@
             }
         }
 
+        // Load coin packs for purchase
+        async function loadCoinPacks() {
+            try {
+                const response = await fetch('/api/coins/packs');
+                const data = await response.json();
+
+                if (!data.packs) {
+                    throw new Error('Failed to load packs');
+                }
+
+                renderCoinPacks(data.packs);
+            } catch (error) {
+                console.error('Load packs error:', error);
+                document.getElementById('coinPacksGrid').innerHTML = '<p>Failed to load coin packs</p>';
+            }
+        }
+
+        function renderCoinPacks(packs) {
+            const grid = document.getElementById('coinPacksGrid');
+            grid.innerHTML = packs.map(pack => `
+                <div class="coin-pack ${pack.popular ? 'popular' : ''}">
+                    <div class="pack-coins">${pack.coins.toLocaleString()}</div>
+                    <div class="pack-name">${pack.name}</div>
+                    <div class="pack-bonus">${pack.bonus > 0 ? `+${pack.bonus.toLocaleString()} bonus!` : '&nbsp;'}</div>
+                    <div class="pack-price">${pack.priceDisplay}</div>
+                    <button class="pack-buy-btn" onclick="purchaseCoinPack('${pack.id}', '${pack.name}', ${pack.coins})">
+                        Buy Now
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function purchaseCoinPack(packId, packName, coins) {
+            if (!currentBalance && currentBalance !== 0) {
+                window.location.href = '/login.html?redirect=/shop.html';
+                return;
+            }
+
+            try {
+                const btn = event.target;
+                btn.disabled = true;
+                btn.textContent = 'Loading...';
+
+                const response = await fetch('/api/coins/purchase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ packId })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Purchase failed');
+                }
+
+                if (data.checkoutUrl) {
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    throw new Error('No checkout URL returned');
+                }
+            } catch (error) {
+                console.error('Purchase error:', error);
+                showToast(error.message, 'error');
+                loadCoinPacks(); // Reset buttons
+            }
+        }
+
         // Initialize
-        checkAuth().then(loadShop);
+        checkAuth().then(() => {
+            loadCoinPacks();
+            loadShop();
+        });
     </script>
     <!-- Service Worker Registration -->
     <script>
