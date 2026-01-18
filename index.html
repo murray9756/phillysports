@@ -2945,6 +2945,12 @@
             return null;
         }
 
+        // Helper to detect TikTok URL
+        function isTikTokUrl(url) {
+            if (!url) return false;
+            return url.includes('tiktok.com');
+        }
+
         // Render curated content
         function renderCuratedContent(data, featuredContainer, listContainer) {
             const featured = data.featured;
@@ -2992,6 +2998,51 @@
                                     <div class="featured-hero-actions">
                                         <div class="featured-hero-cta" style="background:#ff0000;color:#fff;padding:0.5rem 1rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.5rem;">
                                             <span style="font-size:1.2rem;">&#9658;</span> Watch on YouTube
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="/article.html?url=${encodeURIComponent(featured.sourceUrl)}&title=${encodeURIComponent(featured.title || '')}&image=${encodeURIComponent(featured.thumbnail || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
+                                <span class="comment-link-icon">&#128172;</span>
+                                <span>Discuss</span>
+                            </a>
+                        </div>
+                    `;
+                } else if (isTikTokUrl(featured.sourceUrl)) {
+                    // Render TikTok with thumbnail and Watch on TikTok button
+                    const thumbUrl = featured.thumbnail || '';
+                    featuredContainer.innerHTML = `
+                        <div class="featured-hero" style="position:relative;">
+                            <div class="featured-vote">
+                                <button class="vote-btn upvote" data-article="${featured._id}" onclick="vote('${featured._id}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${featured._id}">0</span>
+                                <button class="vote-btn downvote" data-article="${featured._id}" onclick="vote('${featured._id}', -1, event)">&#9660;</button>
+                            </div>
+                            <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+                                <div class="featured-hero-image" style="${thumbUrl ? `background-image:url('${thumbUrl}');` : 'background:#000;'}position:relative;">
+                                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:linear-gradient(135deg,#25F4EE,#FE2C55,#000);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                                        <div style="width:0;height:0;border-left:20px solid #fff;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:5px;"></div>
+                                    </div>
+                                </div>
+                                <div class="featured-hero-content">
+                                    <div class="featured-hero-meta">
+                                        <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
+                                        <span>${featured.sourceName || 'TikTok'}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(featured.curatedAt || featured.publishedAt)}</span>
+                                    </div>
+                                    <h2 class="featured-hero-title">${escapeHtml(featured.title)}</h2>
+                                    <p class="featured-hero-excerpt">${escapeHtml(featured.description || '')}</p>
+                                    ${featured.curatorReview ? `
+                                        <div class="curator-review">
+                                            <div class="curator-review-label">&#128172; Curator's Take</div>
+                                            <div class="curator-review-text">"${escapeHtml(featured.curatorReview)}"</div>
+                                            <div class="curator-review-author">— ${featured.curatorUsername || 'PhillySports'}</div>
+                                        </div>
+                                    ` : ''}
+                                    <div class="featured-hero-actions">
+                                        <div class="featured-hero-cta" style="background:linear-gradient(135deg,#25F4EE,#FE2C55);color:#fff;padding:0.5rem 1rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.5rem;font-weight:600;">
+                                            <span style="font-size:1.2rem;">&#9658;</span> Watch on TikTok
                                         </div>
                                     </div>
                                 </div>
