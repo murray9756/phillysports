@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Edit Source - Admin - PhillySports.com</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --header-bg: #2c2c2c;
+            --accent-color: #8b0000;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --widget-header-bg: #e8e3db;
+        }
+
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-bg: #1a1a1a;
+            --widget-header-bg: #2a2a2a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 1.5rem; }
+
+        .back-link { display: inline-block; margin-bottom: 1rem; color: var(--accent-color); text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 500; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+        .checkbox-group label { display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; cursor: pointer; }
+        .checkbox-group input[type="checkbox"] { width: auto; }
+
+        .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--border-color); color: var(--text-primary); }
+        .btn-danger { background: #dc2626; color: white; }
+
+        .btn-group { display: flex; gap: 0.5rem; margin-top: 1.5rem; }
+
+        .message {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .message.success { background: #dcfce7; color: #166534; }
+        .message.error { background: #fee2e2; color: #991b1b; }
+
+        .loading { text-align: center; padding: 2rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin.html" class="back-link">&larr; Back to Admin</a>
+
+        <div class="card">
+            <h1 id="pageTitle">Edit Source</h1>
+
+            <div id="messageArea"></div>
+            <div id="loadingArea" class="loading">Loading source...</div>
+
+            <form id="sourceForm" style="display: none;">
+                <input type="hidden" id="sourceId">
+
+                <div class="form-group">
+                    <label for="sourceName">Name</label>
+                    <input type="text" id="sourceName" placeholder="ESPN Philadelphia" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sourceType">Type</label>
+                    <select id="sourceType">
+                        <option value="rss">RSS Feed</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="twitter">Twitter/X</option>
+                        <option value="manual">Manual</option>
+                        <option value="beehiiv">Beehiiv Newsletter</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sourceCategory">Category</label>
+                    <select id="sourceCategory">
+                        <option value="news">News</option>
+                        <option value="podcast">Podcast</option>
+                        <option value="video">Video</option>
+                        <option value="social">Social</option>
+                        <option value="newsletter">Newsletter</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sourceFeedUrl">Feed URL</label>
+                    <input type="url" id="sourceFeedUrl" placeholder="https://example.com/feed">
+                </div>
+
+                <div class="form-group">
+                    <label for="sourceLogoUrl">Logo URL (optional)</label>
+                    <input type="url" id="sourceLogoUrl" placeholder="https://example.com/logo.png">
+                </div>
+
+                <div class="form-group">
+                    <label>Teams/Categories</label>
+                    <p class="hint">Select which teams this source covers</p>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" class="sourceTeam" value="eagles"> Eagles</label>
+                        <label><input type="checkbox" class="sourceTeam" value="phillies"> Phillies</label>
+                        <label><input type="checkbox" class="sourceTeam" value="sixers"> Sixers</label>
+                        <label><input type="checkbox" class="sourceTeam" value="flyers"> Flyers</label>
+                        <label><input type="checkbox" class="sourceTeam" value="college"> College</label>
+                        <label><input type="checkbox" class="sourceTeam" value="esports"> Esports</label>
+                        <label><input type="checkbox" class="sourceTeam" value="youth"> Youth</label>
+                        <label><input type="checkbox" class="sourceTeam" value="general"> General</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="sourceAutoPublish">
+                        Auto-publish content (skip curation queue)
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="sourceActive" checked>
+                        Active (fetch content from this source)
+                    </label>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='/admin.html'">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="deleteBtn">Delete Source</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        const sourceId = new URLSearchParams(window.location.search).get('id');
+
+        function showMessage(text, type) {
+            const area = document.getElementById('messageArea');
+            area.innerHTML = `<div class="message ${type}">${text}</div>`;
+        }
+
+        async function loadSource() {
+            if (!sourceId) {
+                document.getElementById('loadingArea').innerHTML = '<p style="color: #dc2626;">No source ID provided</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/content/sources', {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    document.getElementById('loadingArea').innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                const source = data.sources.find(s => s._id === sourceId);
+
+                if (!source) {
+                    document.getElementById('loadingArea').innerHTML = '<p style="color: #dc2626;">Source not found</p>';
+                    return;
+                }
+
+                // Populate form
+                document.getElementById('sourceId').value = source._id;
+                document.getElementById('sourceName').value = source.name || '';
+                document.getElementById('sourceType').value = source.type || 'rss';
+                document.getElementById('sourceCategory').value = source.category || 'news';
+                document.getElementById('sourceFeedUrl').value = source.feedUrl || '';
+                document.getElementById('sourceLogoUrl').value = source.logoUrl || '';
+                document.getElementById('sourceAutoPublish').checked = source.autoPublish || false;
+                document.getElementById('sourceActive').checked = source.active !== false;
+
+                // Set team checkboxes
+                document.querySelectorAll('.sourceTeam').forEach(cb => {
+                    cb.checked = source.teams?.includes(cb.value) || false;
+                });
+
+                // Show form, hide loading
+                document.getElementById('loadingArea').style.display = 'none';
+                document.getElementById('sourceForm').style.display = 'block';
+                document.getElementById('pageTitle').textContent = `Edit: ${source.name}`;
+
+            } catch (e) {
+                console.error('Load error:', e);
+                document.getElementById('loadingArea').innerHTML = '<p style="color: #dc2626;">Failed to load source</p>';
+            }
+        }
+
+        document.getElementById('sourceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const teams = Array.from(document.querySelectorAll('.sourceTeam:checked')).map(cb => cb.value);
+
+            const payload = {
+                sourceId: document.getElementById('sourceId').value,
+                name: document.getElementById('sourceName').value,
+                type: document.getElementById('sourceType').value,
+                category: document.getElementById('sourceCategory').value,
+                feedUrl: document.getElementById('sourceFeedUrl').value || null,
+                logoUrl: document.getElementById('sourceLogoUrl').value || null,
+                teams: teams,
+                autoPublish: document.getElementById('sourceAutoPublish').checked,
+                active: document.getElementById('sourceActive').checked
+            };
+
+            try {
+                const res = await fetch('/api/admin/content/sources', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showMessage('Source updated successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 1000);
+                } else {
+                    showMessage(data.error || 'Failed to update source', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to save changes', 'error');
+            }
+        });
+
+        document.getElementById('deleteBtn').addEventListener('click', async () => {
+            if (!confirm('Delete this source? This cannot be undone.')) return;
+
+            try {
+                const res = await fetch('/api/admin/content/sources', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ sourceId })
+                });
+
+                if (res.ok) {
+                    showMessage('Source deleted', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/admin.html';
+                    }, 1000);
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to delete', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to delete source', 'error');
+            }
+        });
+
+        // Load on page ready
+        loadSource();
+    </script>
+</body>
+</html>

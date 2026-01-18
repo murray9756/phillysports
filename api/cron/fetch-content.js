@@ -251,13 +251,17 @@ export default async function handler(req, res) {
             // Only include items from the last 24 hours
             const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
+            let skippedNoDate = 0;
+            let skippedOld = 0;
+
             for (const item of items) {
                 // Skip items without a valid date or older than 24 hours
                 if (!item.publishedAt || !(item.publishedAt instanceof Date) || isNaN(item.publishedAt.getTime())) {
-                    console.log(`Skipping item without valid date: ${item.title}`);
+                    skippedNoDate++;
                     continue;
                 }
                 if (item.publishedAt < oneDayAgo) {
+                    skippedOld++;
                     continue;
                 }
 
@@ -331,9 +335,13 @@ export default async function handler(req, res) {
             results.push({
                 source: source.name,
                 fetched: items.length,
+                skippedNoDate,
+                skippedOld,
                 new: newItems,
                 autoPublished: autoPublished
             });
+
+            console.log(`Source ${source.name}: fetched=${items.length}, skippedNoDate=${skippedNoDate}, skippedOld=${skippedOld}, new=${newItems}`);
         }
 
         // Log the cron run

@@ -1407,7 +1407,7 @@
                                 </div>
                             </div>
                             <div style="display: flex; gap: 0.25rem;">
-                                <button class="btn btn-secondary" onclick="editSource('${src._id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">Edit</button>
+                                <a href="/admin/edit-source.html?id=${src._id}" class="btn btn-secondary" style="font-size: 0.75rem; padding: 0.3rem 0.5rem; text-decoration: none;">Edit</a>
                                 <button class="btn btn-secondary" onclick="toggleSourceActive('${src._id}', ${!src.active})" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">${src.active ? 'Disable' : 'Enable'}</button>
                                 <button class="btn btn-danger" onclick="deleteSource('${src._id}')" style="font-size: 0.75rem; padding: 0.3rem 0.5rem;">Delete</button>
                             </div>
@@ -1524,7 +1524,9 @@
                 console.log('Found source:', source);
 
                 if (source) {
-                    document.getElementById('sourceForm').classList.remove('hidden');
+                    const form = document.getElementById('sourceForm');
+                    form.classList.remove('hidden');
+                    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     document.getElementById('sourceFormTitle').textContent = 'Edit Source';
                     document.getElementById('sourceId').value = source._id;
                     document.getElementById('sourceName').value = source.name;
