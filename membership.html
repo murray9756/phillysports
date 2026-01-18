@@ -533,11 +533,13 @@
                 document.getElementById('proBtn').classList.add('current');
                 document.getElementById('proBtn').classList.remove('primary');
 
-                // Enable other tiers for downgrade info
-                document.getElementById('freeBtn').textContent = 'Downgrade';
+                // Enable other tiers for downgrade
+                document.getElementById('freeBtn').textContent = 'Cancel';
                 document.getElementById('freeBtn').disabled = false;
-                document.getElementById('plusBtn').textContent = 'Downgrade to Diehard+';
+                document.getElementById('freeBtn').onclick = () => downgradeTier('free');
+                document.getElementById('plusBtn').textContent = 'Downgrade to Plus';
                 document.getElementById('plusBtn').disabled = false;
+                document.getElementById('plusBtn').onclick = () => downgradeTier('diehard_plus');
             }
         }
 
@@ -636,6 +638,37 @@
             } catch (e) {
                 showToast(e.message || 'Failed to upgrade', 'error');
                 updatePricingCards();
+            }
+        }
+
+        async function downgradeTier(newTier) {
+            const tierNames = { 'diehard_plus': 'Diehard+', 'free': 'Free' };
+            const msg = newTier === 'free'
+                ? 'Cancel your subscription? You\'ll keep your benefits until the end of your billing period.'
+                : `Downgrade to ${tierNames[newTier]}? You'll keep Pro benefits until your next billing date, then switch to Plus.`;
+
+            if (!confirm(msg)) {
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/subscriptions/downgrade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ newTier })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Downgrade failed');
+                }
+
+                showToast(data.message, 'success');
+                setTimeout(() => location.reload(), 2000);
+            } catch (e) {
+                showToast(e.message || 'Failed to downgrade', 'error');
             }
         }
 
