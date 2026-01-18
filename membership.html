@@ -516,6 +516,11 @@
                 document.getElementById('plusBtn').classList.add('current');
                 document.getElementById('plusBtn').classList.remove('primary');
 
+                // Enable Pro tier button for upgrade
+                document.getElementById('proBtn').textContent = 'Upgrade to Pro';
+                document.getElementById('proBtn').disabled = false;
+                document.getElementById('proBtn').onclick = () => upgradeTier('diehard_pro');
+
                 // Enable free tier button for downgrade info
                 document.getElementById('freeBtn').textContent = 'Downgrade';
                 document.getElementById('freeBtn').disabled = false;
@@ -595,6 +600,41 @@
                 console.error('Checkout error:', e);
                 showToast(e.message || 'Failed to start checkout', 'error');
                 // Reset buttons
+                updatePricingCards();
+            }
+        }
+
+        async function upgradeTier(newTier) {
+            const tierNames = { 'diehard_plus': 'Diehard+', 'diehard_pro': 'Diehard Pro' };
+            if (!confirm(`Upgrade to ${tierNames[newTier]}? You'll be charged a prorated amount for the remainder of your billing period.`)) {
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('proBtn');
+                btn.disabled = true;
+                btn.textContent = 'Upgrading...';
+
+                const res = await fetch('/api/subscriptions/upgrade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ newTier })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Upgrade failed');
+                }
+
+                const chargeMsg = data.proratedCharge
+                    ? ` You were charged $${data.proratedCharge.toFixed(2)} for the prorated difference.`
+                    : '';
+                showToast(`Upgraded to ${tierNames[newTier]}!${chargeMsg}`, 'success');
+                setTimeout(() => location.reload(), 2000);
+            } catch (e) {
+                showToast(e.message || 'Failed to upgrade', 'error');
                 updatePricingCards();
             }
         }
