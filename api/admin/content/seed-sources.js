@@ -57,7 +57,7 @@ const DEFAULT_SOURCES = [
     {
         name: 'Bleeding Green Nation',
         type: 'rss',
-        feedUrl: 'https://www.bleedinggreennation.com/rss/current',
+        feedUrl: 'https://www.bleedinggreennation.com/rss/index.xml',
         logoUrl: 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396113/bgn_icon.0.png',
         category: 'news',
         teams: ['eagles'],
@@ -81,7 +81,7 @@ const DEFAULT_SOURCES = [
     {
         name: 'The Good Phight',
         type: 'rss',
-        feedUrl: 'https://www.thegoodphight.com/rss/current',
+        feedUrl: 'https://www.thegoodphight.com/rss/index.xml',
         logoUrl: 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396225/goodphight_icon.0.png',
         category: 'news',
         teams: ['phillies'],
@@ -105,7 +105,7 @@ const DEFAULT_SOURCES = [
     {
         name: 'Liberty Ballers',
         type: 'rss',
-        feedUrl: 'https://www.libertyballers.com/rss/current',
+        feedUrl: 'https://www.libertyballers.com/rss/index.xml',
         logoUrl: 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396183/libballers_icon.0.png',
         category: 'news',
         teams: ['sixers'],
@@ -129,7 +129,7 @@ const DEFAULT_SOURCES = [
     {
         name: 'Broad Street Hockey',
         type: 'rss',
-        feedUrl: 'https://www.broadstreethockey.com/rss/current',
+        feedUrl: 'https://www.broadstreethockey.com/rss/index.xml',
         logoUrl: 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396071/bsh_icon.0.png',
         category: 'news',
         teams: ['flyers'],
@@ -153,7 +153,7 @@ const DEFAULT_SOURCES = [
     {
         name: 'VU Hoops (Villanova)',
         type: 'rss',
-        feedUrl: 'https://www.vuhoops.com/rss/current',
+        feedUrl: 'https://www.vuhoops.com/rss/index.xml',
         logoUrl: null,
         category: 'news',
         teams: ['college'],
@@ -175,7 +175,7 @@ const DEFAULT_SOURCES = [
     {
         name: 'Black Shoe Diaries (Penn State)',
         type: 'rss',
-        feedUrl: 'https://www.blackshoediaries.com/rss/current',
+        feedUrl: 'https://www.blackshoediaries.com/rss/index.xml',
         logoUrl: null,
         category: 'news',
         teams: ['college'],

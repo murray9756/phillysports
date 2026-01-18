@@ -275,7 +275,7 @@
                         <span style="font-size: 0.85rem; color: var(--text-muted);" id="sourcesCount">0 sources</span>
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn btn-primary" id="seedSourcesBtn" style="font-size: 0.8rem;">Seed Philly Sources</button>
-                            <button class="btn btn-secondary" id="updateTeamsBtn" style="font-size: 0.8rem;">Fix Categories</button>
+                            <button class="btn btn-secondary" id="fixSourcesBtn" style="font-size: 0.8rem;">Fix Broken Feeds</button>
                             <button class="btn btn-secondary" id="addSourceBtn" style="font-size: 0.8rem;">+ Add Manually</button>
                         </div>
                     </div>
@@ -1582,39 +1582,38 @@
             btn.textContent = 'Seed Philly Sources';
         });
 
-        // Fix Categories - update existing sources with correct teams
-        document.getElementById('updateTeamsBtn')?.addEventListener('click', async () => {
-            console.log('Fix Categories clicked');
-            const btn = document.getElementById('updateTeamsBtn');
+        // Fix Broken Feeds - update URLs and teams for existing sources
+        document.getElementById('fixSourcesBtn')?.addEventListener('click', async () => {
+            if (!confirm('This will fix broken RSS URLs and update team categories for all sources. Continue?')) {
+                return;
+            }
+
+            const btn = document.getElementById('fixSourcesBtn');
             btn.disabled = true;
             btn.textContent = 'Fixing...';
-            console.log('Calling API...');
 
             try {
-                const res = await fetch('/api/admin/content/update-source-teams', {
+                const res = await fetch('/api/admin/content/fix-sources', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
                 });
-                console.log('Response status:', res.status);
 
                 const data = await res.json();
-                console.log('Response data:', data);
 
                 if (res.ok && data.success) {
-                    showMessage(`Fixed categories for ${data.updated} sources`, 'success');
+                    showMessage(`Fixed ${data.urlsFixed} URLs, updated ${data.teamsUpdated} teams, disabled ${data.disabled} broken feeds`, 'success');
                     loadSources();
                 } else {
-                    console.error('Fix categories error:', res.status, data);
-                    showMessage(data.error || `Failed to fix categories (${res.status})`, 'error');
+                    showMessage(data.error || 'Failed to fix sources', 'error');
                 }
             } catch (e) {
-                console.error('Fix categories exception:', e);
-                showMessage('Failed to fix categories: ' + e.message, 'error');
+                console.error('Fix sources error:', e);
+                showMessage('Failed to fix sources: ' + e.message, 'error');
             }
 
             btn.disabled = false;
-            btn.textContent = 'Fix Categories';
+            btn.textContent = 'Fix Broken Feeds';
         });
 
         document.getElementById('cancelSourceBtn')?.addEventListener('click', () => {
