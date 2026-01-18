@@ -218,6 +218,25 @@
 
                 <!-- Queue Section -->
                 <div id="queueSection">
+                    <!-- Quick Add Content -->
+                    <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--widget-header-bg); border-radius: 8px;">
+                        <label style="display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem;">Quick Add Content</label>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">Paste any URL - articles, blog posts, YouTube, TikTok - we'll fetch the details automatically</p>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                            <input type="url" id="quickAddUrl" placeholder="https://..." style="flex: 1; min-width: 250px; padding: 0.6rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); font-size: 0.9rem;">
+                            <button class="btn btn-primary" id="quickAddBtn" style="white-space: nowrap;">Add to Queue</button>
+                        </div>
+                        <!-- Optional: Override source attribution -->
+                        <details style="margin-top: 0.5rem;">
+                            <summary style="font-size: 0.8rem; color: var(--text-muted); cursor: pointer;">Override source attribution (optional)</summary>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+                                <input type="text" id="quickAddSourceName" placeholder="Source name (e.g., Crossing Broad)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); font-size: 0.85rem;">
+                                <input type="url" id="quickAddSourceLogo" placeholder="Source logo URL (optional)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary); font-size: 0.85rem;">
+                            </div>
+                        </details>
+                        <div id="quickAddResult" style="margin-top: 0.75rem; display: none;"></div>
+                    </div>
+
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <div id="queueStats" style="font-size: 0.85rem; color: var(--text-muted);">Loading...</div>
                         <button class="btn btn-primary" id="fetchContentBtn" style="font-size: 0.85rem;">Fetch New Content</button>
@@ -250,7 +269,10 @@
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <span style="font-size: 0.85rem; color: var(--text-muted);" id="sourcesCount">0 sources</span>
-                        <button class="btn btn-secondary" id="addSourceBtn" style="font-size: 0.8rem;">+ Add Manually</button>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-primary" id="seedSourcesBtn" style="font-size: 0.8rem;">Seed Philly Sources</button>
+                            <button class="btn btn-secondary" id="addSourceBtn" style="font-size: 0.8rem;">+ Add Manually</button>
+                        </div>
                     </div>
                     <div id="sourcesList" style="display: flex; flex-direction: column; gap: 0.75rem;">
                         <p style="color: var(--text-muted);">Loading sources...</p>
@@ -269,6 +291,7 @@
                                 <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Type</label>
                                 <select id="sourceType" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
                                     <option value="rss">RSS Feed</option>
+                                    <option value="beehiiv">Beehiiv Newsletter</option>
                                     <option value="scrape">Web Scrape</option>
                                     <option value="youtube">YouTube</option>
                                     <option value="twitter">Twitter/X</option>
@@ -279,6 +302,7 @@
                                 <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Category</label>
                                 <select id="sourceCategory" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
                                     <option value="news">News</option>
+                                    <option value="newsletter">Newsletter</option>
                                     <option value="podcast">Podcast</option>
                                     <option value="video">Video</option>
                                     <option value="social">Social</option>
@@ -961,7 +985,7 @@
                     return;
                 }
 
-                statsDiv.innerHTML = `${data.statusCounts.pending} pending &middot; ${data.statusCounts.published} published &middot; ${data.statusCounts.skipped} skipped`;
+                statsDiv.innerHTML = `${data.statusCounts.pending || data.items?.length || 0} items awaiting review`;
 
                 if (data.items && data.items.length > 0) {
                     container.innerHTML = data.items.map(item => `
@@ -993,8 +1017,11 @@
                                         <label style="font-size: 0.8rem; font-weight: 500;">Content Type</label>
                                         <select id="type-${item._id}" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; margin-top: 0.25rem; background: var(--card-bg); color: var(--text-primary);">
                                             <option value="article" ${item.type === 'article' || item.type === 'news' ? 'selected' : ''}>Article</option>
+                                            <option value="newsletter" ${item.type === 'newsletter' ? 'selected' : ''}>Newsletter</option>
                                             <option value="podcast" ${item.type === 'podcast' ? 'selected' : ''}>Podcast</option>
-                                            <option value="video" ${item.type === 'video' ? 'selected' : ''}>Video</option>
+                                            <option value="youtube" ${item.type === 'youtube' ? 'selected' : ''}>YouTube</option>
+                                            <option value="tiktok" ${item.type === 'tiktok' ? 'selected' : ''}>TikTok</option>
+                                            <option value="video" ${item.type === 'video' ? 'selected' : ''}>Other Video</option>
                                             <option value="tweet" ${item.type === 'tweet' || item.type === 'social' ? 'selected' : ''}>Tweet</option>
                                             <option value="picture" ${item.type === 'picture' ? 'selected' : ''}>Picture</option>
                                         </select>
@@ -1143,6 +1170,76 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Fetch New Content';
+            }
+        });
+
+        // Quick Add Content (any URL)
+        document.getElementById('quickAddBtn')?.addEventListener('click', async () => {
+            const urlInput = document.getElementById('quickAddUrl');
+            const sourceNameInput = document.getElementById('quickAddSourceName');
+            const sourceLogoInput = document.getElementById('quickAddSourceLogo');
+            const resultDiv = document.getElementById('quickAddResult');
+            const btn = document.getElementById('quickAddBtn');
+
+            const url = urlInput.value.trim();
+            if (!url) {
+                showMessage('Please enter a URL', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Fetching content info...</p>';
+
+            // Build request body with optional overrides
+            const requestBody = { url };
+            const sourceName = sourceNameInput?.value?.trim();
+            const sourceLogoUrl = sourceLogoInput?.value?.trim();
+            if (sourceName) requestBody.sourceName = sourceName;
+            if (sourceLogoUrl) requestBody.sourceLogoUrl = sourceLogoUrl;
+
+            try {
+                const res = await fetch('/api/admin/content/quick-add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    const item = data.item;
+                    resultDiv.innerHTML = `
+                        <div style="display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem; background: #dcfce7; border-radius: 6px;">
+                            ${item.thumbnail ? `<img src="${item.thumbnail}" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">` : (item.sourceLogoUrl ? `<img src="${item.sourceLogoUrl}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 4px;">` : '')}
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-size: 0.85rem; font-weight: 500; color: #166534; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.title)}</div>
+                                <div style="font-size: 0.75rem; color: #15803d;">${item.sourceName}${item.author ? ' • ' + item.author : ''} • Added to queue</div>
+                            </div>
+                        </div>
+                    `;
+                    urlInput.value = '';
+                    if (sourceNameInput) sourceNameInput.value = '';
+                    if (sourceLogoInput) sourceLogoInput.value = '';
+                    showMessage(data.isVideo ? 'Video added to queue!' : 'Article added to queue!', 'success');
+                    loadContentQueue(); // Refresh the queue
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #dc2626; font-size: 0.85rem;">${data.error}</p>`;
+                }
+            } catch (e) {
+                resultDiv.innerHTML = `<p style="color: #dc2626; font-size: 0.85rem;">Failed to add content: ${e.message}</p>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Add to Queue';
+            }
+        });
+
+        // Allow Enter key to submit quick add
+        document.getElementById('quickAddUrl')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('quickAddBtn')?.click();
             }
         });
 
@@ -1300,6 +1397,38 @@
             document.getElementById('sourceFeedUrl').value = '';
             document.getElementById('sourceAutoPublish').checked = false;
             document.querySelectorAll('.sourceTeam').forEach(cb => cb.checked = true);
+        });
+
+        // Seed default Philly sports sources
+        document.getElementById('seedSourcesBtn')?.addEventListener('click', async () => {
+            if (!confirm('This will add default Philly sports news sources (Crossing Broad, PhillyVoice, SB Nation team blogs, etc.). Continue?')) {
+                return;
+            }
+
+            const btn = document.getElementById('seedSourcesBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding sources...';
+
+            try {
+                const res = await fetch('/api/admin/content/seed-sources', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    alert(`Done! Added ${data.added} new sources, ${data.skipped} already existed.`);
+                    loadContentSources(); // Refresh the list
+                } else {
+                    alert(data.error || 'Failed to seed sources');
+                }
+            } catch (error) {
+                console.error('Seed sources error:', error);
+                alert('Failed to seed sources');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Seed Philly Sources';
         });
 
         document.getElementById('cancelSourceBtn')?.addEventListener('click', () => {

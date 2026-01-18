@@ -6,6 +6,7 @@
 import { ObjectId } from 'mongodb';
 import { authenticate } from '../../lib/auth.js';
 import { getCollection } from '../../lib/mongodb.js';
+import { fetchOEmbed, detectPlatform, extractYouTubeId, getVideoThumbnail } from '../../lib/oembed.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -148,29 +149,45 @@ export default async function handler(req, res) {
             }
 
             if (action === 'skip') {
-                await queue.updateOne(
-                    { _id: new ObjectId(itemId) },
-                    {
-                        $set: {
-                            status: 'skipped',
-                            skippedAt: new Date(),
-                            skippedBy: new ObjectId(decoded.userId)
-                        }
-                    }
-                );
+                // Delete the item from queue - no need to keep skipped items
+                await queue.deleteOne({ _id: new ObjectId(itemId) });
 
                 return res.status(200).json({ success: true, action: 'skipped' });
             }
 
             // Publish the item
+            const finalType = contentType || item.type || 'article';
+
+            // For video content (tiktok, youtube), fetch oEmbed data
+            let embedData = null;
+            let finalThumbnail = thumbnail || imageUrl || item.thumbnail;
+            const platform = detectPlatform(item.sourceUrl);
+
+            if (finalType === 'tiktok' || finalType === 'youtube' || finalType === 'video') {
+                if (platform === 'tiktok' || platform === 'youtube') {
+                    embedData = await fetchOEmbed(item.sourceUrl);
+
+                    // Use oEmbed thumbnail if no custom thumbnail provided
+                    if (!finalThumbnail && embedData?.thumbnailUrl) {
+                        finalThumbnail = embedData.thumbnailUrl;
+                    }
+
+                    // For YouTube, we can generate a predictable thumbnail URL
+                    if (!finalThumbnail && platform === 'youtube') {
+                        finalThumbnail = getVideoThumbnail(item.sourceUrl);
+                    }
+                }
+            }
+
             const curatedItem = {
-                type: contentType || item.type || 'article',
+                type: finalType,
                 sourceUrl: item.sourceUrl,
                 sourceName: item.sourceName,
-                title: item.title,
+                title: embedData?.title || item.title,
                 description: item.description,
-                thumbnail: thumbnail || imageUrl || item.thumbnail,
-                author: item.author,
+                thumbnail: finalThumbnail,
+                author: embedData?.authorName || item.author,
+                authorUrl: embedData?.authorUrl || null,
                 publishedAt: item.publishedAt,
                 curatedAt: new Date(),
                 curatedBy: new ObjectId(decoded.userId),
@@ -180,7 +197,12 @@ export default async function handler(req, res) {
                 teams: teams || ['eagles', 'phillies', 'sixers', 'flyers'],
                 featured: featured || false,
                 featuredOnPages: featuredOnPages || [],
-                status: 'published'
+                status: 'published',
+                // Video embed data
+                platform: platform,
+                embedHtml: embedData?.embedHtml || null,
+                embedWidth: embedData?.width || null,
+                embedHeight: embedData?.height || null
             };
 
             // If setting as featured, unfeatured any existing featured items for those pages
@@ -199,18 +221,8 @@ export default async function handler(req, res) {
 
             const result = await curated.insertOne(curatedItem);
 
-            // Mark queue item as published
-            await queue.updateOne(
-                { _id: new ObjectId(itemId) },
-                {
-                    $set: {
-                        status: 'published',
-                        publishedAt: new Date(),
-                        publishedBy: new ObjectId(decoded.userId),
-                        curatedContentId: result.insertedId
-                    }
-                }
-            );
+            // Delete the queue item - content is now in curated_content
+            await queue.deleteOne({ _id: new ObjectId(itemId) });
 
             res.status(200).json({
                 success: true,

@@ -89,13 +89,19 @@ export default async function handler(req, res) {
             description: item.description,
             thumbnail: item.thumbnail,
             author: item.author,
+            authorUrl: item.authorUrl,
             publishedAt: item.publishedAt,
             curatedAt: item.curatedAt,
             curatorUsername: item.curatorUsername,
             curatorNote: item.curatorNote,
             curatorReview: item.curatorReview,
             teams: item.teams,
-            featured: item.featured
+            featured: item.featured,
+            // Video embed data
+            platform: item.platform,
+            embedHtml: item.embedHtml,
+            embedWidth: item.embedWidth,
+            embedHeight: item.embedHeight
         });
 
         res.status(200).json({
