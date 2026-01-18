@@ -1455,7 +1455,7 @@
 
                 if (res.ok && data.success) {
                     showMessage(`Added ${data.added} new sources, ${data.skipped} already existed`, 'success');
-                    loadContentSources(); // Refresh the list
+                    loadSources(); // Refresh the list
                 } else {
                     showMessage(data.error || 'Failed to seed sources', 'error');
                 }
@@ -1489,7 +1489,7 @@
 
                 if (res.ok && data.success) {
                     showMessage(`Fixed categories for ${data.updated} sources`, 'success');
-                    loadContentSources();
+                    loadSources();
                 } else {
                     console.error('Fix categories error:', res.status, data);
                     showMessage(data.error || `Failed to fix categories (${res.status})`, 'error');
@@ -1586,7 +1586,7 @@
 
                 if (res.ok) {
                     showMessage(active ? 'Source enabled' : 'Source disabled', 'success');
-                    loadContentSources();
+                    loadSources();
                 } else {
                     const data = await res.json();
                     showMessage(data.error || 'Failed to update', 'error');
@@ -1610,7 +1610,7 @@
 
                 if (res.ok) {
                     showMessage('Source deleted', 'success');
-                    loadContentSources();
+                    loadSources();
                 } else {
                     const data = await res.json();
                     showMessage(data.error || 'Failed to delete', 'error');
@@ -1624,6 +1624,7 @@
         window.editSource = editSource;
         window.toggleSourceActive = toggleSourceActive;
         window.deleteSource = deleteSource;
+        window.loadSources = loadSources;
 
         let selectedLogoUrl = '';
 
