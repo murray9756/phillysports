@@ -143,6 +143,28 @@
         .buy-coins-link:hover {
             opacity: 1;
         }
+        /* Feedback Modal */
+        .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .feedback-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .feedback-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
+        .feedback-modal-overlay.active { display: flex; }
+        .feedback-modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .feedback-modal h3 { margin: 0 0 1rem 0; color: var(--accent-color); }
+        .feedback-modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .feedback-type-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .feedback-type-option { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .feedback-type-option:hover { border-color: var(--accent-color); }
+        .feedback-type-option.selected { border-color: var(--accent-color); background: rgba(139, 0, 0, 0.1); }
+        .feedback-type-option input { display: none; }
+        .feedback-textarea { width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: inherit; font-size: 0.9rem; resize: vertical; margin-bottom: 1rem; }
+        .feedback-textarea:focus { outline: none; border-color: var(--accent-color); }
+        .feedback-submit { width: 100%; padding: 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .feedback-submit:hover { opacity: 0.9; }
+        .feedback-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        .feedback-reward { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; }
+        .feedback-reward span { color: #b8860b; font-weight: 600; }
+        .feedback-success { text-align: center; padding: 1rem; }
+        .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
         .premium-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.5rem; text-decoration: none; }
         .go-premium-link { color: #ffd700; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
 
@@ -282,6 +304,7 @@
                 <span class="site-name">PhillySports.com</span>
             </a>
             <div class="header-auth" id="authSection">
+                <button class="feedback-btn" onclick="openFeedbackModal()">Report Issue</button>
                 <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                     <span class="theme-icon-light">&#9790;</span>
                     <span class="theme-icon-dark">&#9728;</span>
@@ -417,6 +440,7 @@
                         ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
                         : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
                     document.getElementById('authSection').innerHTML = `
+                        <button class="feedback-btn" onclick="openFeedbackModal()">Report Issue</button>
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>
@@ -577,5 +601,24 @@
 
         checkAuth();
     </script>
+<!-- Feedback Modal -->
+<div class="feedback-modal-overlay" id="feedbackModalOverlay">
+    <div class="feedback-modal">
+        <button class="feedback-modal-close" id="feedbackModalClose">&times;</button>
+        <h3>Report an Issue</h3>
+        <form id="feedbackForm">
+            <div class="feedback-type-group">
+                <label class="feedback-type-option selected"><input type="radio" name="feedbackType" value="bug" checked><span>Bug Report</span></label>
+                <label class="feedback-type-option"><input type="radio" name="feedbackType" value="feature"><span>Feature Request</span></label>
+            </div>
+            <textarea class="feedback-textarea" name="description" placeholder="Please describe the issue or feature in detail..." required minlength="10" maxlength="2000"></textarea>
+            <button type="submit" class="feedback-submit">Submit</button>
+        </form>
+        <div class="feedback-reward">Earn <span>100 Diehard Dollars</span> for each submission!</div>
+    </div>
+</div>
+<script>
+(function(){const o=document.getElementById('feedbackModalOverlay'),f=document.getElementById('feedbackForm'),c=document.getElementById('feedbackModalClose'),t=document.querySelectorAll('.feedback-type-option');window.openFeedbackModal=function(){o.classList.add('active');document.body.style.overflow='hidden'};function close(){o.classList.remove('active');document.body.style.overflow=''}c.addEventListener('click',close);o.addEventListener('click',function(e){if(e.target===o)close()});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&o.classList.contains('active'))close()});t.forEach(opt=>{opt.addEventListener('click',function(){t.forEach(x=>x.classList.remove('selected'));this.classList.add('selected')})});f.addEventListener('submit',async function(e){e.preventDefault();const btn=f.querySelector('.feedback-submit'),orig=btn.textContent;btn.disabled=true;btn.textContent='Submitting...';try{const fd=new FormData(f),res=await fetch('/api/feedback/submit',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({type:fd.get('feedbackType'),description:fd.get('description'),page:window.location.pathname})});const data=await res.json();if(res.ok){document.querySelector('.feedback-modal').innerHTML='<button class="feedback-modal-close" onclick="document.getElementById(\'feedbackModalOverlay\').classList.remove(\'active\');document.body.style.overflow=\'\';location.reload()">×</button><div class="feedback-success"><h4>Thank You!</h4><p>'+data.message+'</p>'+(data.coinsAwarded>0?'<p style="color:#b8860b;font-weight:600">+'+data.coinsAwarded+' Diehard Dollars earned!</p>':'')+(data.isLoggedIn?'':'<p style="font-size:0.85rem;color:var(--text-muted)">Log in to earn rewards!</p>')+'</div>'}else{alert(data.error||'Failed');btn.disabled=false;btn.textContent=orig}}catch(err){alert('Error submitting');btn.disabled=false;btn.textContent=orig}})})();
+</script>
 </body>
 </html>
