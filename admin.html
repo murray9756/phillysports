@@ -89,6 +89,17 @@
 
         .hidden { display: none; }
 
+        /* Feedback items */
+        .feedback-item { padding: 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 0.75rem; }
+        .feedback-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+        .feedback-meta { font-size: 0.8rem; color: var(--text-muted); }
+        .feedback-type { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .feedback-type.bug { background: #fee2e2; color: #991b1b; }
+        .feedback-type.feature { background: #dbeafe; color: #1e40af; }
+        .feedback-description { font-size: 0.9rem; line-height: 1.5; margin: 0.75rem 0; white-space: pre-wrap; word-break: break-word; }
+        .feedback-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        .feedback-filter.active { background: var(--accent-color); color: #fff; }
+
         /* Dark Mode Toggle */
         .theme-toggle {
             background: none;
@@ -295,6 +306,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="posts">Posts</button>
                 <button class="admin-tab" data-tab="new">New Post</button>
+                <button class="admin-tab" data-tab="feedback">Feedback</button>
                 <button class="admin-tab" data-tab="coins">Coins</button>
                 <button class="admin-tab" data-tab="system">System</button>
             </div>
@@ -354,6 +366,23 @@
                         <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
                     </div>
                 </form>
+            </div>
+
+            <!-- Feedback Management -->
+            <div id="feedbackTab" class="card hidden">
+                <h2>User Feedback</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">Bug reports and feature requests from users. Users earn 100 DD per submission.</p>
+
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary feedback-filter active" data-filter="all">All</button>
+                    <button class="btn btn-secondary feedback-filter" data-filter="bug">Bugs</button>
+                    <button class="btn btn-secondary feedback-filter" data-filter="feature">Features</button>
+                    <button class="btn btn-secondary feedback-filter" data-filter="new">New Only</button>
+                </div>
+
+                <div id="feedbackList" class="posts-list">
+                    <p>Loading feedback...</p>
+                </div>
             </div>
 
             <!-- Coins Management -->
@@ -524,11 +553,15 @@
                 const tabName = tab.dataset.tab;
                 document.getElementById('postsTab').classList.toggle('hidden', tabName !== 'posts');
                 document.getElementById('newTab').classList.toggle('hidden', tabName !== 'new');
+                document.getElementById('feedbackTab').classList.toggle('hidden', tabName !== 'feedback');
                 document.getElementById('coinsTab').classList.toggle('hidden', tabName !== 'coins');
                 document.getElementById('systemTab').classList.toggle('hidden', tabName !== 'system');
 
                 if (tabName === 'new') {
                     resetForm();
+                }
+                if (tabName === 'feedback') {
+                    loadFeedback();
                 }
             });
         });
@@ -839,6 +872,108 @@
                 month: 'short', day: 'numeric', year: 'numeric'
             });
         }
+
+        // Feedback management
+        let currentFeedbackFilter = 'all';
+
+        async function loadFeedback(filter = currentFeedbackFilter) {
+            currentFeedbackFilter = filter;
+            const container = document.getElementById('feedbackList');
+            container.innerHTML = '<p>Loading feedback...</p>';
+
+            try {
+                let url = '/api/admin/feedback';
+                if (filter === 'bug' || filter === 'feature') {
+                    url += `?type=${filter}`;
+                } else if (filter === 'new') {
+                    url += '?status=new';
+                }
+
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    container.innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                if (data.feedback && data.feedback.length > 0) {
+                    container.innerHTML = data.feedback.map(f => `
+                        <div class="feedback-item" id="feedback-${f._id}">
+                            <div class="feedback-header">
+                                <div>
+                                    <span class="feedback-type ${f.type}">${f.type}</span>
+                                    <span class="feedback-meta"> &middot; ${f.username} &middot; ${formatDate(f.createdAt)}</span>
+                                </div>
+                                <span class="feedback-meta">${f.page}</span>
+                            </div>
+                            <div class="feedback-description">${escapeHtml(f.description)}</div>
+                            <div class="feedback-actions">
+                                ${f.status === 'new' ? `<button class="btn btn-secondary" onclick="updateFeedbackStatus('${f._id}', 'reviewing')">Mark Reviewing</button>` : ''}
+                                ${f.status !== 'resolved' ? `<button class="btn btn-success" onclick="updateFeedbackStatus('${f._id}', 'resolved')">Resolve</button>` : ''}
+                                <button class="btn btn-danger" onclick="deleteFeedback('${f._id}')">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p>No feedback submissions yet.</p>';
+                }
+            } catch (e) {
+                console.error('Load feedback error:', e);
+                container.innerHTML = '<p style="color: #dc2626;">Failed to load feedback</p>';
+            }
+        }
+
+        async function updateFeedbackStatus(feedbackId, status) {
+            try {
+                const res = await fetch('/api/admin/feedback', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ feedbackId, status })
+                });
+
+                if (res.ok) {
+                    showMessage(`Feedback marked as ${status}`, 'success');
+                    loadFeedback();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to update feedback', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to update feedback', 'error');
+            }
+        }
+
+        async function deleteFeedback(feedbackId) {
+            if (!confirm('Are you sure you want to delete this feedback?')) return;
+
+            try {
+                const res = await fetch('/api/admin/feedback', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ feedbackId })
+                });
+
+                if (res.ok) {
+                    showMessage('Feedback deleted', 'success');
+                    document.getElementById(`feedback-${feedbackId}`)?.remove();
+                } else {
+                    const data = await res.json();
+                    showMessage(data.error || 'Failed to delete feedback', 'error');
+                }
+            } catch (e) {
+                showMessage('Failed to delete feedback', 'error');
+            }
+        }
+
+        // Feedback filter buttons
+        document.querySelectorAll('.feedback-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.feedback-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadFeedback(btn.dataset.filter);
+            });
+        });
 
         // Init
         checkAuth();
