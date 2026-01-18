@@ -115,7 +115,7 @@ async function parseRSS(feedUrl) {
                     description: cleanText(description)?.substring(0, 500),
                     thumbnail,
                     author: cleanText(author),
-                    publishedAt: pubDate ? new Date(pubDate) : new Date()
+                    publishedAt: pubDate ? new Date(pubDate) : null  // Don't fake dates
                 });
             }
         }
@@ -234,6 +234,8 @@ export default async function handler(req, res) {
         for (const source of sources) {
             if (!source.feedUrl) continue;
 
+            console.log(`Fetching from source: ${source.name}, teams: ${JSON.stringify(source.teams)}`);
+
             // Parse based on source type
             let items = [];
             if (source.type === 'beehiiv') {
@@ -250,8 +252,12 @@ export default async function handler(req, res) {
             const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
             for (const item of items) {
-                // Skip items older than 24 hours
-                if (item.publishedAt && item.publishedAt < oneDayAgo) {
+                // Skip items without a valid date or older than 24 hours
+                if (!item.publishedAt || !(item.publishedAt instanceof Date) || isNaN(item.publishedAt.getTime())) {
+                    console.log(`Skipping item without valid date: ${item.title}`);
+                    continue;
+                }
+                if (item.publishedAt < oneDayAgo) {
                     continue;
                 }
 
