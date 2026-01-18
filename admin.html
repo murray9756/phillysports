@@ -1696,6 +1696,7 @@
 
         // Toggle source active
         async function toggleSourceActive(sourceId, active) {
+            console.log('toggleSourceActive called:', sourceId, active);
             try {
                 const res = await fetch('/api/admin/content/sources', {
                     method: 'PATCH',
@@ -1703,6 +1704,7 @@
                     credentials: 'include',
                     body: JSON.stringify({ sourceId, active })
                 });
+                console.log('toggleSourceActive response:', res.status);
 
                 if (res.ok) {
                     showMessage(active ? 'Source enabled' : 'Source disabled', 'success');

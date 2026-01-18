@@ -134,6 +134,8 @@ export default async function handler(req, res) {
         for (const source of sources) {
             if (!source.feedUrl) continue;
 
+            console.log(`Fetching: ${source.name}, teams: ${JSON.stringify(source.teams)}, feedUrl: ${source.feedUrl}`);
+
             const items = await parseRSS(source.feedUrl);
             totalFetched += items.length;
 
