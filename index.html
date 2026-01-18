@@ -869,6 +869,56 @@
             letter-spacing: 0.5px;
         }
 
+        /* Content Filters */
+        .content-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            min-width: 60px;
+        }
+        .filter-btn {
+            padding: 0.35rem 0.65rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        .filter-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            color: #fff;
+        }
+        @media (max-width: 600px) {
+            .content-filters { padding: 0.5rem; }
+            .filter-label { min-width: auto; width: 100%; margin-bottom: 0.25rem; }
+            .filter-btn { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+        }
+
         .story-item {
             display: flex;
             gap: 0.75rem;
@@ -2208,8 +2258,30 @@
 
             <!-- Story List -->
             <div class="story-list-header">
-                <span class="story-list-title">Today's Stories</span>
+                <span class="story-list-title">Carefully Curated Content</span>
             </div>
+
+            <!-- Content Filters -->
+            <div class="content-filters" id="contentFilters">
+                <div class="filter-group">
+                    <span class="filter-label">Type:</span>
+                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
+                    <button class="filter-btn" data-filter="type" data-value="podcast">Podcasts</button>
+                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Category:</span>
+                    <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="category" data-value="eagles">Eagles</button>
+                    <button class="filter-btn" data-filter="category" data-value="phillies">Phillies</button>
+                    <button class="filter-btn" data-filter="category" data-value="sixers">Sixers</button>
+                    <button class="filter-btn" data-filter="category" data-value="flyers">Flyers</button>
+                    <button class="filter-btn" data-filter="category" data-value="college">College</button>
+                    <button class="filter-btn" data-filter="category" data-value="esports">Esports</button>
+                </div>
+            </div>
+
             <div class="article-list" id="articleList">
                 <div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading news...</div>
             </div>
@@ -2578,14 +2650,33 @@
             flyers: 'tag-flyers'
         };
 
+        // Current filter state
+        let currentFilters = { type: 'all', category: 'all' };
+
         // Load curated content (with fallback to news API)
-        async function loadNews() {
+        async function loadNews(filters = {}) {
             const featuredContainer = document.getElementById('featuredStory');
             const listContainer = document.getElementById('articleList');
 
+            // Update filter state
+            if (filters.type) currentFilters.type = filters.type;
+            if (filters.category) currentFilters.category = filters.category;
+
+            // Build query params
+            let queryParams = 'page=home&limit=10';
+            if (currentFilters.type !== 'all') {
+                queryParams += `&type=${currentFilters.type}`;
+            }
+            if (currentFilters.category !== 'all') {
+                queryParams += `&team=${currentFilters.category}`;
+            }
+
+            // Show loading state
+            listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading...</div>';
+
             try {
                 // First try to get curated content
-                const curatedRes = await fetch('/api/content?page=home&limit=10');
+                const curatedRes = await fetch(`/api/content?${queryParams}`);
                 const curatedData = await curatedRes.json();
 
                 // Check if we have curated content
@@ -2920,6 +3011,23 @@
         loadDiehardLeaderboard();
         loadSourceLeaderboard();
         loadNews();
+
+        // Content filter handlers
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filterType = btn.dataset.filter;  // 'type' or 'category'
+                const filterValue = btn.dataset.value;
+
+                // Update active state for this filter group
+                document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b => {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+
+                // Reload with new filter
+                loadNews({ [filterType]: filterValue });
+            });
+        });
 
         // Refresh data every 5 minutes
         setInterval(loadScores, 5 * 60 * 1000);

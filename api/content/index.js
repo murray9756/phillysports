@@ -47,12 +47,17 @@ export default async function handler(req, res) {
         // Get featured item separately if not explicitly requesting featured only
         let featuredItem = null;
         if (featured !== 'true' && featured !== 'false') {
-            featuredItem = await curated.findOne({
+            const featuredFilter = {
                 status: 'published',
                 featured: true,
-                featuredOnPages: page,
-                ...(team && { teams: team })
-            });
+                featuredOnPages: page
+            };
+            // Apply team filter to featured item
+            if (team) featuredFilter.teams = team;
+            // Apply type filter to featured item
+            if (type) featuredFilter.type = type;
+
+            featuredItem = await curated.findOne(featuredFilter);
         }
 
         // Get content list
