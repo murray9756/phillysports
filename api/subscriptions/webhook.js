@@ -104,7 +104,7 @@ export default async function handler(req, res) {
                         await users.updateOne(
                             { _id: new ObjectId(userId) },
                             {
-                                $inc: { diehardDollars: coins },
+                                $inc: { coinBalance: coins, lifetimeCoins: coins },
                                 $set: { updatedAt: new Date() }
                             }
                         );
