@@ -1607,7 +1607,7 @@
                 const data = await res.json();
 
                 if (res.ok && data.success) {
-                    showMessage(`Fixed ${data.urlsFixed} URLs, updated ${data.teamsUpdated} teams, disabled ${data.disabled} broken feeds`, 'success');
+                    showMessage(`Fixed ${data.urlsFixed} URLs, updated ${data.teamsUpdated} teams, deleted ${data.disabled} broken feeds`, 'success');
                     loadSources();
                 } else {
                     showMessage(data.error || 'Failed to fix sources', 'error');

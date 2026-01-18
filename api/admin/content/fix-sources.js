@@ -131,22 +131,19 @@ export default async function handler(req, res) {
             }
         }
 
-        // Disable broken sources
+        // Delete broken sources that can't be fixed
         for (const url of SOURCES_TO_DISABLE) {
-            const result = await sourcesCollection.updateOne(
-                { feedUrl: url },
-                { $set: { active: false } }
-            );
+            const result = await sourcesCollection.deleteOne({ feedUrl: url });
 
-            if (result.matchedCount > 0) {
+            if (result.deletedCount > 0) {
                 disabled++;
-                results.push({ url, status: 'disabled' });
+                results.push({ url, status: 'deleted' });
             }
         }
 
         res.status(200).json({
             success: true,
-            message: `Fixed ${urlsFixed} URLs, updated ${teamsUpdated} teams, disabled ${disabled} broken sources`,
+            message: `Fixed ${urlsFixed} URLs, updated ${teamsUpdated} teams, deleted ${disabled} broken sources`,
             urlsFixed,
             teamsUpdated,
             disabled,
