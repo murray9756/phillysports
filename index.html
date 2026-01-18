@@ -2851,13 +2851,30 @@
                 const curatedRes = await fetch(`/api/content?${queryParams}`);
                 const curatedData = await curatedRes.json();
 
-                // Check if we have curated content
-                if (curatedData && (curatedData.featured || (curatedData.items && curatedData.items.length > 0))) {
+                // Check if we have enough curated content (at least 5 items)
+                const hasFeatured = curatedData && curatedData.featured;
+                const curatedItems = curatedData?.items || [];
+                const hasEnoughCurated = curatedItems.length >= 5;
+
+                if (hasFeatured || hasEnoughCurated) {
+                    // Render curated content
                     renderCuratedContent(curatedData, featuredContainer, listContainer);
+
+                    // If we have featured but not enough items, supplement with news API
+                    if (hasFeatured && !hasEnoughCurated) {
+                        try {
+                            const newsData = await fetchNewsAPI();
+                            if (newsData && newsData.articles) {
+                                appendNewsItems(listContainer, newsData.articles.slice(0, 10 - curatedItems.length));
+                            }
+                        } catch (e) {
+                            console.log('Could not supplement with news API:', e);
+                        }
+                    }
                     return;
                 }
 
-                // Fall back to news API
+                // Fall back entirely to news API
                 await loadNewsFromAPI(featuredContainer, listContainer);
             } catch (error) {
                 console.error('Failed to load curated content, trying news API:', error);
@@ -2877,6 +2894,41 @@
                     listContainer.innerHTML = '';
                 }
             }
+        }
+
+        // Helper to fetch news API data
+        async function fetchNewsAPI() {
+            const response = await fetch('/api/news');
+            return await response.json();
+        }
+
+        // Helper to append news items to list
+        function appendNewsItems(container, articles) {
+            const existingHtml = container.innerHTML;
+            const newsHtml = articles.map(item => {
+                const imageStyle = item.image
+                    ? `background-image:url('${item.image}');background-size:cover;background-position:center;`
+                    : `background:${item.teamColor || 'var(--border-color)'};`;
+
+                return `
+                    <a href="/article.html?url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.headline || '')}&image=${encodeURIComponent(item.image || '')}&source=${encodeURIComponent(item.source || '')}" class="story-row" style="text-decoration:none;color:inherit;">
+                        <div class="story-thumb" style="${imageStyle}">
+                            ${!item.image ? getSourceLogo(item.source, sportEmoji[item.team]) : ''}
+                        </div>
+                        <div class="story-info">
+                            <div class="story-meta">
+                                <span class="article-tag ${item.tagClass || 'tag-eagles'}">${item.team || 'SPORTS'}</span>
+                                <span>${item.source || ''}</span>
+                                <span>·</span>
+                                <span>${timeAgo(item.published)}</span>
+                            </div>
+                            <div class="story-title">${item.headline || ''}</div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+
+            container.innerHTML = existingHtml + newsHtml;
         }
 
         // Helper to extract YouTube video ID from URL
@@ -2906,7 +2958,8 @@
 
                 // Check if this is a YouTube video
                 if (youtubeId) {
-                    // Render embedded YouTube player
+                    // Render thumbnail with Watch on YouTube button
+                    const thumbUrl = featured.thumbnail || `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
                     featuredContainer.innerHTML = `
                         <div class="featured-hero" style="position:relative;">
                             <div class="featured-vote">
@@ -2914,31 +2967,35 @@
                                 <span class="vote-score" id="score-${featured._id}">0</span>
                                 <button class="vote-btn downvote" data-article="${featured._id}" onclick="vote('${featured._id}', -1, event)">&#9660;</button>
                             </div>
-                            <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px 8px 0 0;">
-                                <iframe
-                                    src="https://www.youtube.com/embed/${youtubeId}?rel=0"
-                                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                            <div class="featured-hero-content">
-                                <div class="featured-hero-meta">
-                                    <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
-                                    <span>${featured.sourceName || 'YouTube'}</span>
-                                    <span>·</span>
-                                    <span>${timeAgo(featured.curatedAt || featured.publishedAt)}</span>
-                                </div>
-                                <h2 class="featured-hero-title">${escapeHtml(featured.title)}</h2>
-                                <p class="featured-hero-excerpt">${escapeHtml(featured.description || '')}</p>
-                                ${featured.curatorReview ? `
-                                    <div class="curator-review">
-                                        <div class="curator-review-label">&#128172; Curator's Take</div>
-                                        <div class="curator-review-text">"${escapeHtml(featured.curatorReview)}"</div>
-                                        <div class="curator-review-author">— ${featured.curatorUsername || 'PhillySports'}</div>
+                            <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+                                <div class="featured-hero-image" style="background-image:url('${thumbUrl}');position:relative;">
+                                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:48px;background:rgba(255,0,0,0.9);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                                        <div style="width:0;height:0;border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:4px;"></div>
                                     </div>
-                                ` : ''}
-                            </div>
+                                </div>
+                                <div class="featured-hero-content">
+                                    <div class="featured-hero-meta">
+                                        <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
+                                        <span>${featured.sourceName || 'YouTube'}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(featured.curatedAt || featured.publishedAt)}</span>
+                                    </div>
+                                    <h2 class="featured-hero-title">${escapeHtml(featured.title)}</h2>
+                                    <p class="featured-hero-excerpt">${escapeHtml(featured.description || '')}</p>
+                                    ${featured.curatorReview ? `
+                                        <div class="curator-review">
+                                            <div class="curator-review-label">&#128172; Curator's Take</div>
+                                            <div class="curator-review-text">"${escapeHtml(featured.curatorReview)}"</div>
+                                            <div class="curator-review-author">— ${featured.curatorUsername || 'PhillySports'}</div>
+                                        </div>
+                                    ` : ''}
+                                    <div class="featured-hero-actions">
+                                        <div class="featured-hero-cta" style="background:#ff0000;color:#fff;padding:0.5rem 1rem;border-radius:6px;display:inline-flex;align-items:center;gap:0.5rem;">
+                                            <span style="font-size:1.2rem;">&#9658;</span> Watch on YouTube
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                             <a href="/article.html?url=${encodeURIComponent(featured.sourceUrl)}&title=${encodeURIComponent(featured.title || '')}&image=${encodeURIComponent(featured.thumbnail || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
                                 <span class="comment-link-icon">&#128172;</span>
                                 <span>Discuss</span>
