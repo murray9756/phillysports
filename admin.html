@@ -397,6 +397,14 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Debug: All Published Items -->
+                    <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; border: 1px solid #ffc107;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; color: #856404;">DEBUG: All Published Items in Database</h4>
+                        <div id="debugPublishedItems" style="font-size: 0.8rem; font-family: monospace; max-height: 300px; overflow-y: auto;">
+                            <p style="color: #856404;">Loading...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1535,6 +1543,25 @@
                     `).join('');
                 } else {
                     publishedContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No published content yet</p>';
+                }
+
+                // Render debug info
+                const debugContainer = document.getElementById('debugPublishedItems');
+                if (data.debug && data.debug.allPublishedItems) {
+                    if (data.debug.allPublishedItems.length > 0) {
+                        debugContainer.innerHTML = data.debug.allPublishedItems.map(item => `
+                            <div style="padding: 0.5rem; border-bottom: 1px solid #ffc107; color: #856404;">
+                                <strong>Source:</strong> ${escapeHtml(item.sourceName || 'UNKNOWN')}<br>
+                                <strong>Title:</strong> ${escapeHtml(item.title || 'No title')}<br>
+                                <strong>ID:</strong> ${item.id}<br>
+                                <strong>Curated:</strong> ${item.curatedAt ? new Date(item.curatedAt).toLocaleString() : 'N/A'}
+                            </div>
+                        `).join('');
+                    } else {
+                        debugContainer.innerHTML = '<p style="color: #856404;">No published items found in database.</p>';
+                    }
+                } else {
+                    debugContainer.innerHTML = '<p style="color: #856404;">Debug data not available.</p>';
                 }
             } catch (e) {
                 console.error('Load leaderboard error:', e);

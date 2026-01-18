@@ -33,6 +33,10 @@ export default async function handler(req, res) {
 
         const curated = await getCollection('curated_content');
 
+        // Debug: Log all published items
+        const allPublished = await curated.find({ status: 'published' }).toArray();
+        console.log('All published items:', allPublished.map(i => ({ id: i._id, sourceName: i.sourceName, title: i.title?.substring(0, 30) })));
+
         // Aggregate published content by source
         const stats = await curated.aggregate([
             {
@@ -65,7 +69,17 @@ export default async function handler(req, res) {
                 publishedCount: s.count,
                 lastPublished: s.lastPublished,
                 percentage: totalPublished > 0 ? ((s.count / totalPublished) * 100).toFixed(1) : 0
-            }))
+            })),
+            // Debug: include all published items for troubleshooting
+            debug: {
+                allPublishedItems: allPublished.map(i => ({
+                    id: i._id.toString(),
+                    sourceName: i.sourceName,
+                    title: i.title?.substring(0, 50),
+                    curatedAt: i.curatedAt,
+                    status: i.status
+                }))
+            }
         });
     } catch (error) {
         console.error('Source stats error:', error);
