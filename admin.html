@@ -489,6 +489,7 @@
                 const tabName = tab.dataset.tab;
                 document.getElementById('postsTab').classList.toggle('hidden', tabName !== 'posts');
                 document.getElementById('newTab').classList.toggle('hidden', tabName !== 'new');
+                document.getElementById('curationTab').classList.toggle('hidden', tabName !== 'curation');
                 document.getElementById('feedbackTab').classList.toggle('hidden', tabName !== 'feedback');
                 document.getElementById('coinsTab').classList.toggle('hidden', tabName !== 'coins');
                 document.getElementById('systemTab').classList.toggle('hidden', tabName !== 'system');
@@ -498,6 +499,9 @@
                 }
                 if (tabName === 'feedback') {
                     loadFeedback();
+                }
+                if (tabName === 'curation') {
+                    loadContentQueue();
                 }
             });
         });
