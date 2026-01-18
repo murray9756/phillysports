@@ -169,6 +169,19 @@
         /* Feedback Modal */
         .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .feedback-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .feedback-nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            transition: color 0.2s;
+        }
+        .feedback-nav-btn:hover {
+            color: var(--accent-color);
+        }
         .feedback-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
         .feedback-modal-overlay.active { display: flex; }
         .feedback-modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -413,7 +426,6 @@
                 <span class="tagline">Where the Diehards, Play Hard</span>
             </a>
             <div class="header-auth" id="headerAuth">
-                <button class="feedback-btn" onclick="openFeedbackModal()">Report Issue</button>
                 <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                     <span class="theme-icon-light">&#9790;</span>
                     <span class="theme-icon-dark">&#9728;</span>
@@ -489,6 +501,7 @@
                 <a href="/esports" class="nav-item">eSports</a>
                 <a href="/youth" class="nav-item">Youth</a>
                 <a href="/game-threads.html" class="nav-item">Live</a>
+                <button class="nav-item feedback-nav-btn" onclick="openFeedbackModal()">Report Issue</button>
             </div>
         </nav>
     </header>
@@ -1042,7 +1055,6 @@
                         ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
                         : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
                     headerAuth.innerHTML = `
-                        <button class="feedback-btn" onclick="openFeedbackModal()">Report Issue</button>
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>

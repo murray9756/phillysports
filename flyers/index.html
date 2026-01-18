@@ -129,6 +129,19 @@
         /* Feedback Modal */
         .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .feedback-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .feedback-nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            transition: color 0.2s;
+        }
+        .feedback-nav-btn:hover {
+            color: var(--accent-color);
+        }
         .feedback-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
         .feedback-modal-overlay.active { display: flex; }
         .feedback-modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -378,7 +391,7 @@
                     <button type="submit">Go</button>
                 </form>
             </div>
-            <a href="/" class="header-logo"><img src="/logo-weathered.png" alt="PhillySports.com"><span class="tagline">Where the Diehards, Play Hard</span></a><div class="header-auth" id="headerAuth"><button class="feedback-btn" onclick="openFeedbackModal()">Report Issue</button><button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
+            <a href="/" class="header-logo"><img src="/logo-weathered.png" alt="PhillySports.com"><span class="tagline">Where the Diehards, Play Hard</span></a><div class="header-auth" id="headerAuth"><button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><a href="/login.html">Login</a><a href="/register.html" class="auth-btn">Sign Up</a></div></div>
         <nav class="main-nav">
             <div class="nav-inner">
                 <a href="/" class="nav-item">Home</a>
@@ -446,6 +459,7 @@
                 <a href="/esports" class="nav-item">eSports</a>
                 <a href="/youth" class="nav-item">Youth</a>
                 <a href="/game-threads.html" class="nav-item">Live</a>
+                <button class="nav-item feedback-nav-btn" onclick="openFeedbackModal()">Report Issue</button>
             </div>
         </nav>
     </header>
@@ -823,7 +837,7 @@
         });
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/nhl');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.points}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">CAR</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NYR</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NJD</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">WSH</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">PIT</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NYI</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">CBJ</span></td><td class="record">--</td><td class="pct">--</td></tr>`;}}
         loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStats();loadStandings();
-        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="feedback-btn" onclick="openFeedbackModal()">Report Issue</button><button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars">
+        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars">
                             <span class="coin-icon">&#129689;</span>
                             <span class="coin-balance">${Math.round(d.user.coinBalance || 0)}</span>
                             <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
