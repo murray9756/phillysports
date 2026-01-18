@@ -80,6 +80,18 @@
             background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem;
             border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #8b0000;
         }
+        .buy-coins-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-left: 0.25rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .buy-coins-link:hover {
+            opacity: 1;
+        }
         .btn-leave {
             background: var(--red);
             color: white;
@@ -1062,6 +1074,7 @@
             <div class="coin-display" title="Your Diehard Dollar Balance">
                 <span>&#129689;</span>
                 <span id="accountBalance">0</span>
+                <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
             </div>
             <a href="#" class="btn-leave" onclick="leaveTable(); return false;">Cash Out</a>
             <a href="/badges.html" class="btn-leave" style="background: #444;">Badges</a>

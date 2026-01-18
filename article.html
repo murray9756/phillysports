@@ -59,6 +59,18 @@
         .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
         .header-auth a:hover { background: rgba(0,0,0,0.05); }
         .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+        .buy-coins-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-left: 0.25rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .buy-coins-link:hover {
+            opacity: 1;
+        }
 
         .theme-toggle { background: none; border: 1px solid var(--border-color); border-radius: 20px; padding: 0.4rem 0.6rem; cursor: pointer; font-size: 1rem; line-height: 1; transition: all 0.2s; display: flex; align-items: center; gap: 0.25rem; }
         .theme-toggle:hover { background: rgba(0,0,0,0.05); }
@@ -406,6 +418,7 @@
                         <div class="coin-display">
                             <span>🪙</span>
                             <span id="coinBalance">${Math.round(currentUser.coinBalance || 0)}</span>
+                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
                         </div>
                         <a href="/profile.html">${currentUser.displayName || currentUser.username}</a>
                         <a href="#" onclick="logout(); return false;">Logout</a>

@@ -114,6 +114,18 @@
         .header-auth .auth-btn { background: var(--accent-color); color: #ffffff; padding: 0.5rem 1rem; }
         .header-auth .auth-btn:hover { opacity: 0.9; }
         .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(139,0,0,0.1); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: var(--accent-color); }
+        .buy-coins-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-left: 0.25rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .buy-coins-link:hover {
+            opacity: 1;
+        }
 
         /* Dark Mode Toggle */
         .theme-toggle {
@@ -788,7 +800,11 @@
         });
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/nba');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.pct.toFixed(3)}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">BOS</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">NYK</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">BKN</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">TOR</span></td><td class="record">--</td><td class="pct">---</td></tr>`;}}
         loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStats();loadStandings();
-        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars"><span>&#129689;</span><span>${Math.round(d.user.coinBalance || 0)}</span></div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('themeToggle').addEventListener('click',toggleTheme);document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
+        async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars">
+                            <span class="coin-icon">&#129689;</span>
+                            <span class="coin-balance">${Math.round(d.user.coinBalance || 0)}</span>
+                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
+                        </div><a href="/profile.html">${d.user.username}</a><a href="#" id="logoutBtn">Logout</a>`;document.getElementById('themeToggle').addEventListener('click',toggleTheme);document.getElementById('logoutBtn').addEventListener('click',async(e)=>{e.preventDefault();await fetch('/api/auth/logout',{method:'POST'});localStorage.removeItem('auth_token');window.location.reload();});}}catch(e){}}checkAuth();
     </script>
     <!-- Live Ticker -->
     <script src="/js/live-ticker.js"></script>
