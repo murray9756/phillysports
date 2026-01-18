@@ -1190,7 +1190,8 @@
             try {
                 const res = await fetch('/api/admin/content/clear-queue', {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
                 });
 
                 const data = await res.json();
@@ -1476,7 +1477,8 @@
             try {
                 const res = await fetch('/api/admin/content/update-source-teams', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
                 });
 
                 const data = await res.json();
