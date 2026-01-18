@@ -214,6 +214,7 @@
                     <button class="btn btn-secondary curation-subtab active" data-subtab="queue">Queue</button>
                     <button class="btn btn-secondary curation-subtab" data-subtab="published">Published</button>
                     <button class="btn btn-secondary curation-subtab" data-subtab="sources">Sources</button>
+                    <button class="btn btn-secondary curation-subtab" data-subtab="leaderboard">Leaderboard</button>
                 </div>
 
                 <!-- Queue Section -->
@@ -342,6 +343,58 @@
                         <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
                             <button class="btn btn-primary" id="saveSourceBtn">Save Source</button>
                             <button class="btn btn-secondary" id="cancelSourceBtn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Section -->
+                <div id="leaderboardSection" class="hidden">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1.1rem; margin: 0;">Source Performance</h3>
+                        <button class="btn btn-secondary" id="refreshLeaderboardBtn" style="font-size: 0.8rem;">Refresh</button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <!-- Most Published -->
+                        <div style="background: var(--widget-header-bg); border-radius: 8px; padding: 1rem;">
+                            <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.2rem;">📰</span> Most Published
+                            </h4>
+                            <div id="publishedLeaderboard" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <p style="color: var(--text-muted); font-size: 0.85rem;">Loading...</p>
+                            </div>
+                        </div>
+
+                        <!-- Most Clicked -->
+                        <div style="background: var(--widget-header-bg); border-radius: 8px; padding: 1rem;">
+                            <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.2rem;">🔥</span> Most Clicked
+                            </h4>
+                            <div id="clickedLeaderboard" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <p style="color: var(--text-muted); font-size: 0.85rem;">Coming soon...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Summary -->
+                    <div style="margin-top: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color);">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-color);" id="statTotalPublished">0</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Total Published</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);" id="statTotalClicks">0</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Total Clicks</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700;" id="statActiveSources">0</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Active Sources</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700;" id="statTopSource">-</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Top Source</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -967,10 +1020,12 @@
                 document.getElementById('queueSection').classList.toggle('hidden', currentCurationSubtab !== 'queue');
                 document.getElementById('publishedSection').classList.toggle('hidden', currentCurationSubtab !== 'published');
                 document.getElementById('sourcesSection').classList.toggle('hidden', currentCurationSubtab !== 'sources');
+                document.getElementById('leaderboardSection').classList.toggle('hidden', currentCurationSubtab !== 'leaderboard');
 
                 if (currentCurationSubtab === 'queue') loadContentQueue();
                 else if (currentCurationSubtab === 'published') loadPublishedContent();
                 else if (currentCurationSubtab === 'sources') loadSources();
+                else if (currentCurationSubtab === 'leaderboard') loadSourceLeaderboard();
             });
         });
 
@@ -1421,6 +1476,63 @@
                 container.innerHTML = '<p style="color: #dc2626;">Failed to load sources</p>';
             }
         }
+
+        // Load source leaderboard
+        async function loadSourceLeaderboard() {
+            const publishedContainer = document.getElementById('publishedLeaderboard');
+            publishedContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Loading...</p>';
+
+            try {
+                // Get leaderboard stats
+                const res = await fetch('/api/admin/content/source-stats', {
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    publishedContainer.innerHTML = `<p style="color: #dc2626; font-size: 0.85rem;">Error loading stats</p>`;
+                    return;
+                }
+
+                // Update stats summary
+                document.getElementById('statTotalPublished').textContent = data.totalPublished || 0;
+
+                // Get sources count
+                const sourcesRes = await fetch('/api/admin/content/sources', { credentials: 'include' });
+                const sourcesData = await sourcesRes.json();
+                const activeSources = sourcesData.sources?.filter(s => s.active).length || 0;
+                document.getElementById('statActiveSources').textContent = activeSources;
+
+                // Top source
+                if (data.leaderboard && data.leaderboard.length > 0) {
+                    document.getElementById('statTopSource').textContent = data.leaderboard[0].sourceName || '-';
+                }
+
+                // Render published leaderboard
+                if (data.leaderboard && data.leaderboard.length > 0) {
+                    publishedContainer.innerHTML = data.leaderboard.slice(0, 10).map((item, i) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0.5rem; background: ${i < 3 ? 'var(--card-bg)' : 'transparent'}; border-radius: 4px; ${i < 3 ? 'border: 1px solid var(--border-color);' : ''}">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.8rem; font-weight: 600; color: ${i === 0 ? '#fbbf24' : i === 1 ? '#9ca3af' : i === 2 ? '#b45309' : 'var(--text-muted)'}; width: 20px;">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1)}</span>
+                                <span style="font-size: 0.85rem;">${escapeHtml(item.sourceName)}</span>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="font-weight: 600; font-size: 0.85rem;">${item.publishedCount}</span>
+                                <span style="font-size: 0.7rem; color: var(--text-muted); margin-left: 0.25rem;">(${item.percentage}%)</span>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    publishedContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No published content yet</p>';
+                }
+            } catch (e) {
+                console.error('Load leaderboard error:', e);
+                publishedContainer.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Failed to load leaderboard</p>';
+            }
+        }
+
+        // Refresh leaderboard button
+        document.getElementById('refreshLeaderboardBtn')?.addEventListener('click', loadSourceLeaderboard);
 
         // Sources cache for editing
         let sourcesCache = [];
