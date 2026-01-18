@@ -961,19 +961,28 @@
                     container.innerHTML = data.items.map(item => `
                         <div class="queue-item" id="queue-${item._id}" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
                             <div style="display: flex; gap: 1rem;">
-                                ${item.thumbnail ? `<img src="${item.thumbnail}" style="width: 100px; height: 70px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">` : '<div style="width: 100px; height: 70px; background: var(--border-color); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-muted);">No image</div>'}
+                                <div style="flex-shrink: 0;">
+                                    ${item.thumbnail ? `<img src="${item.thumbnail}" id="thumb-preview-${item._id}" style="width: 100px; height: 70px; object-fit: cover; border-radius: 4px;">` : `<div id="thumb-preview-${item._id}" style="width: 100px; height: 70px; background: var(--border-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-muted);">No image</div>`}
+                                </div>
                                 <div style="flex: 1; min-width: 0;">
                                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">
                                         <span style="text-transform: uppercase; font-weight: 600;">${item.type || 'news'}</span> &middot; ${item.sourceName || 'Unknown'} &middot; ${formatDate(item.publishedAt || item.fetchedAt)}
                                     </div>
-                                    <div style="font-weight: 600; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.title)}</div>
+                                    <a href="${item.sourceUrl}" target="_blank" style="font-weight: 600; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; color: var(--accent-color); text-decoration: none;" title="Click to view source">${escapeHtml(item.title)}</a>
                                     <div style="font-size: 0.85rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(item.description || '')}</div>
                                 </div>
                             </div>
                             <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
-                                <div style="margin-bottom: 0.5rem;">
-                                    <label style="font-size: 0.8rem; font-weight: 500;">Curator Review (optional)</label>
-                                    <textarea id="review-${item._id}" placeholder="Add your take on this content..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; min-height: 60px; resize: vertical; margin-top: 0.25rem;"></textarea>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                    <div>
+                                        <label style="font-size: 0.8rem; font-weight: 500;">Curator Review (optional)</label>
+                                        <textarea id="review-${item._id}" placeholder="Add your take on this content..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; min-height: 60px; resize: vertical; margin-top: 0.25rem; background: var(--card-bg); color: var(--text-primary);"></textarea>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 0.8rem; font-weight: 500;">Thumbnail URL (optional)</label>
+                                        <input type="url" id="thumb-${item._id}" value="${item.thumbnail || ''}" placeholder="https://..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; margin-top: 0.25rem; background: var(--card-bg); color: var(--text-primary);" onchange="updateThumbPreview('${item._id}')">
+                                        <button type="button" onclick="updateThumbPreview('${item._id}')" style="font-size: 0.75rem; margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: var(--border-color); border: none; border-radius: 4px; cursor: pointer;">Preview</button>
+                                    </div>
                                 </div>
                                 <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
                                     <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="eagles" checked> Eagles</label>
@@ -985,7 +994,6 @@
                                 <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
                                     <button class="btn btn-success" onclick="publishQueueItem('${item._id}')" style="font-size: 0.85rem;">Publish</button>
                                     <button class="btn btn-secondary" onclick="skipQueueItem('${item._id}')" style="font-size: 0.85rem;">Skip</button>
-                                    <a href="${item.sourceUrl}" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; text-decoration: none;">View Source</a>
                                 </div>
                             </div>
                         </div>
@@ -999,15 +1007,37 @@
             }
         }
 
+        // Update thumbnail preview
+        function updateThumbPreview(itemId) {
+            const thumbInput = document.getElementById(`thumb-${itemId}`);
+            const previewEl = document.getElementById(`thumb-preview-${itemId}`);
+            const url = thumbInput?.value?.trim();
+
+            if (url && previewEl) {
+                // Replace with image
+                const img = document.createElement('img');
+                img.src = url;
+                img.id = `thumb-preview-${itemId}`;
+                img.style.cssText = 'width: 100px; height: 70px; object-fit: cover; border-radius: 4px;';
+                img.onerror = () => {
+                    img.style.display = 'none';
+                    showMessage('Invalid image URL', 'error');
+                };
+                previewEl.replaceWith(img);
+            }
+        }
+
         // Publish a queue item
         async function publishQueueItem(itemId) {
             const reviewEl = document.getElementById(`review-${itemId}`);
             const featuredEl = document.getElementById(`featured-${itemId}`);
+            const thumbEl = document.getElementById(`thumb-${itemId}`);
             const teamCheckboxes = document.querySelectorAll(`.team-check[data-id="${itemId}"]:checked`);
 
             const teams = Array.from(teamCheckboxes).map(cb => cb.value);
             const curatorReview = reviewEl?.value || '';
             const featured = featuredEl?.checked || false;
+            const thumbnail = thumbEl?.value?.trim() || null;
 
             try {
                 const res = await fetch('/api/admin/content/queue', {
@@ -1019,7 +1049,8 @@
                         curatorReview,
                         teams,
                         featured,
-                        featuredOnPages: featured ? ['home'] : []
+                        featuredOnPages: featured ? ['home'] : [],
+                        thumbnail
                     })
                 });
 

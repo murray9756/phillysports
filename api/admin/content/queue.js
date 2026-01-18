@@ -125,7 +125,8 @@ export default async function handler(req, res) {
                 teams,
                 featured,
                 featuredOnPages,
-                imageUrl
+                imageUrl,
+                thumbnail  // Accept both imageUrl and thumbnail
             } = req.body;
 
             if (!itemId) {
@@ -167,7 +168,7 @@ export default async function handler(req, res) {
                 sourceName: item.sourceName,
                 title: item.title,
                 description: item.description,
-                thumbnail: imageUrl || item.thumbnail,
+                thumbnail: thumbnail || imageUrl || item.thumbnail,
                 author: item.author,
                 publishedAt: item.publishedAt,
                 curatedAt: new Date(),
