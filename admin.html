@@ -1470,9 +1470,11 @@
 
         // Fix Categories - update existing sources with correct teams
         document.getElementById('updateTeamsBtn')?.addEventListener('click', async () => {
+            console.log('Fix Categories clicked');
             const btn = document.getElementById('updateTeamsBtn');
             btn.disabled = true;
             btn.textContent = 'Fixing...';
+            console.log('Calling API...');
 
             try {
                 const res = await fetch('/api/admin/content/update-source-teams', {
@@ -1480,8 +1482,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include'
                 });
+                console.log('Response status:', res.status);
 
                 const data = await res.json();
+                console.log('Response data:', data);
 
                 if (res.ok && data.success) {
                     showMessage(`Fixed categories for ${data.updated} sources`, 'success');
