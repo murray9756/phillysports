@@ -772,9 +772,10 @@
         .featured-hero-image {
             width: 100%;
             height: 220px;
-            background-size: cover;
+            background-size: contain;
             background-position: center;
-            background-color: var(--border-color);
+            background-repeat: no-repeat;
+            background-color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2878,6 +2879,20 @@
             }
         }
 
+        // Helper to extract YouTube video ID from URL
+        function getYouTubeVideoId(url) {
+            if (!url) return null;
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\s?]+)/,
+                /youtube\.com\/shorts\/([^&\s?]+)/
+            ];
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
+            }
+            return null;
+        }
+
         // Render curated content
         function renderCuratedContent(data, featuredContainer, listContainer) {
             const featured = data.featured;
@@ -2885,27 +2900,32 @@
 
             // Render featured story
             if (featured) {
-                const imageStyle = featured.thumbnail
-                    ? `background-image:url('${featured.thumbnail}');`
-                    : `background:var(--border-color);`;
                 const teamTag = featured.teams?.[0] || 'eagles';
                 const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+                const youtubeId = getYouTubeVideoId(featured.sourceUrl);
 
-                featuredContainer.innerHTML = `
-                    <div class="featured-hero" style="position:relative;">
-                        <div class="featured-vote">
-                            <button class="vote-btn upvote" data-article="${featured._id}" onclick="vote('${featured._id}', 1, event)">&#9650;</button>
-                            <span class="vote-score" id="score-${featured._id}">0</span>
-                            <button class="vote-btn downvote" data-article="${featured._id}" onclick="vote('${featured._id}', -1, event)">&#9660;</button>
-                        </div>
-                        <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
-                            <div class="featured-hero-image" style="${imageStyle}">
-                                ${!featured.thumbnail ? '&#128240;' : ''}
+                // Check if this is a YouTube video
+                if (youtubeId) {
+                    // Render embedded YouTube player
+                    featuredContainer.innerHTML = `
+                        <div class="featured-hero" style="position:relative;">
+                            <div class="featured-vote">
+                                <button class="vote-btn upvote" data-article="${featured._id}" onclick="vote('${featured._id}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${featured._id}">0</span>
+                                <button class="vote-btn downvote" data-article="${featured._id}" onclick="vote('${featured._id}', -1, event)">&#9660;</button>
+                            </div>
+                            <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px 8px 0 0;">
+                                <iframe
+                                    src="https://www.youtube.com/embed/${youtubeId}?rel=0"
+                                    style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
                             </div>
                             <div class="featured-hero-content">
                                 <div class="featured-hero-meta">
                                     <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
-                                    <span>${featured.sourceName || 'PhillySports'}</span>
+                                    <span>${featured.sourceName || 'YouTube'}</span>
                                     <span>·</span>
                                     <span>${timeAgo(featured.curatedAt || featured.publishedAt)}</span>
                                 </div>
@@ -2918,17 +2938,58 @@
                                         <div class="curator-review-author">— ${featured.curatorUsername || 'PhillySports'}</div>
                                     </div>
                                 ` : ''}
-                                <div class="featured-hero-actions">
-                                    <div class="featured-hero-cta">Read Full Article &#8594;</div>
-                                </div>
                             </div>
-                        </a>
-                        <a href="/article.html?url=${encodeURIComponent(featured.sourceUrl)}&title=${encodeURIComponent(featured.title || '')}&image=${encodeURIComponent(featured.thumbnail || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
-                            <span class="comment-link-icon">&#128172;</span>
-                            <span>Discuss</span>
-                        </a>
-                    </div>
-                `;
+                            <a href="/article.html?url=${encodeURIComponent(featured.sourceUrl)}&title=${encodeURIComponent(featured.title || '')}&image=${encodeURIComponent(featured.thumbnail || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
+                                <span class="comment-link-icon">&#128172;</span>
+                                <span>Discuss</span>
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    // Render regular article
+                    const imageStyle = featured.thumbnail
+                        ? `background-image:url('${featured.thumbnail}');`
+                        : `background:var(--border-color);`;
+
+                    featuredContainer.innerHTML = `
+                        <div class="featured-hero" style="position:relative;">
+                            <div class="featured-vote">
+                                <button class="vote-btn upvote" data-article="${featured._id}" onclick="vote('${featured._id}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${featured._id}">0</span>
+                                <button class="vote-btn downvote" data-article="${featured._id}" onclick="vote('${featured._id}', -1, event)">&#9660;</button>
+                            </div>
+                            <a href="${featured.sourceUrl}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
+                                <div class="featured-hero-image" style="${imageStyle}">
+                                    ${!featured.thumbnail ? '&#128240;' : ''}
+                                </div>
+                                <div class="featured-hero-content">
+                                    <div class="featured-hero-meta">
+                                        <span class="article-tag ${tagClass}">${teamTag.toUpperCase()}</span>
+                                        <span>${featured.sourceName || 'PhillySports'}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(featured.curatedAt || featured.publishedAt)}</span>
+                                    </div>
+                                    <h2 class="featured-hero-title">${escapeHtml(featured.title)}</h2>
+                                    <p class="featured-hero-excerpt">${escapeHtml(featured.description || '')}</p>
+                                    ${featured.curatorReview ? `
+                                        <div class="curator-review">
+                                            <div class="curator-review-label">&#128172; Curator's Take</div>
+                                            <div class="curator-review-text">"${escapeHtml(featured.curatorReview)}"</div>
+                                            <div class="curator-review-author">— ${featured.curatorUsername || 'PhillySports'}</div>
+                                        </div>
+                                    ` : ''}
+                                    <div class="featured-hero-actions">
+                                        <div class="featured-hero-cta">Read Full Article &#8594;</div>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="/article.html?url=${encodeURIComponent(featured.sourceUrl)}&title=${encodeURIComponent(featured.title || '')}&image=${encodeURIComponent(featured.thumbnail || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
+                                <span class="comment-link-icon">&#128172;</span>
+                                <span>Discuss</span>
+                            </a>
+                        </div>
+                    `;
+                }
             } else if (items.length > 0) {
                 // Use first item as featured if no explicit featured
                 const first = items.shift();
