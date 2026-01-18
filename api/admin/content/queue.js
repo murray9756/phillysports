@@ -126,7 +126,8 @@ export default async function handler(req, res) {
                 featured,
                 featuredOnPages,
                 imageUrl,
-                thumbnail  // Accept both imageUrl and thumbnail
+                thumbnail,  // Accept both imageUrl and thumbnail
+                contentType  // article, podcast, video, tweet, picture
             } = req.body;
 
             if (!itemId) {
@@ -163,7 +164,7 @@ export default async function handler(req, res) {
 
             // Publish the item
             const curatedItem = {
-                type: item.type,
+                type: contentType || item.type || 'article',
                 sourceUrl: item.sourceUrl,
                 sourceName: item.sourceName,
                 title: item.title,

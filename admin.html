@@ -290,12 +290,18 @@
                             <input type="url" id="sourceFeedUrl" placeholder="https://..." style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-primary);">
                         </div>
                         <div class="form-group" style="margin-top: 0.75rem;">
-                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Teams</label>
-                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem;">Categories</label>
+                            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">Teams:</span>
                                 <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="eagles" checked> Eagles</label>
                                 <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="phillies" checked> Phillies</label>
                                 <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="sixers" checked> Sixers</label>
                                 <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="flyers" checked> Flyers</label>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); border-left: 1px solid var(--border-color); padding-left: 0.75rem;">Other:</span>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="college"> College</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="esports"> Esports</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="youth"> Youth</label>
+                                <label style="font-size: 0.85rem;"><input type="checkbox" class="sourceTeam" value="general"> General</label>
                             </div>
                         </div>
                         <div class="form-group" style="margin-top: 0.75rem; padding: 0.75rem; background: var(--card-bg); border-radius: 6px; border: 1px solid var(--border-color);">
@@ -973,7 +979,7 @@
                                 </div>
                             </div>
                             <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem;">
                                     <div>
                                         <label style="font-size: 0.8rem; font-weight: 500;">Curator Review (optional)</label>
                                         <textarea id="review-${item._id}" placeholder="Add your take on this content..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; min-height: 60px; resize: vertical; margin-top: 0.25rem; background: var(--card-bg); color: var(--text-primary);"></textarea>
@@ -983,17 +989,36 @@
                                         <input type="url" id="thumb-${item._id}" value="${item.thumbnail || ''}" placeholder="https://..." style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; margin-top: 0.25rem; background: var(--card-bg); color: var(--text-primary);" onchange="updateThumbPreview('${item._id}')">
                                         <button type="button" onclick="updateThumbPreview('${item._id}')" style="font-size: 0.75rem; margin-top: 0.25rem; padding: 0.25rem 0.5rem; background: var(--border-color); border: none; border-radius: 4px; cursor: pointer;">Preview</button>
                                     </div>
+                                    <div>
+                                        <label style="font-size: 0.8rem; font-weight: 500;">Content Type</label>
+                                        <select id="type-${item._id}" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.85rem; margin-top: 0.25rem; background: var(--card-bg); color: var(--text-primary);">
+                                            <option value="article" ${item.type === 'article' || item.type === 'news' ? 'selected' : ''}>Article</option>
+                                            <option value="podcast" ${item.type === 'podcast' ? 'selected' : ''}>Podcast</option>
+                                            <option value="video" ${item.type === 'video' ? 'selected' : ''}>Video</option>
+                                            <option value="tweet" ${item.type === 'tweet' || item.type === 'social' ? 'selected' : ''}>Tweet</option>
+                                            <option value="picture" ${item.type === 'picture' ? 'selected' : ''}>Picture</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
-                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="eagles" checked> Eagles</label>
-                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="phillies" checked> Phillies</label>
-                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="sixers" checked> Sixers</label>
-                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="flyers" checked> Flyers</label>
-                                    <label style="font-size: 0.8rem; margin-left: auto;"><input type="checkbox" id="featured-${item._id}"> Featured</label>
+                                <div style="margin-bottom: 0.75rem;">
+                                    <label style="font-size: 0.8rem; font-weight: 500; display: block; margin-bottom: 0.5rem;">Categories</label>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <span style="font-size: 0.75rem; color: var(--text-muted); padding-right: 0.5rem;">Teams:</span>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="eagles" checked> Eagles</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="phillies" checked> Phillies</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="sixers" checked> Sixers</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="flyers" checked> Flyers</label>
+                                        <span style="font-size: 0.75rem; color: var(--text-muted); padding: 0 0.5rem; border-left: 1px solid var(--border-color);">Other:</span>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="college"> College</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="esports"> Esports</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="youth"> Youth</label>
+                                        <label style="font-size: 0.8rem;"><input type="checkbox" class="team-check" data-id="${item._id}" value="general"> General</label>
+                                    </div>
                                 </div>
-                                <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
                                     <button class="btn btn-success" onclick="publishQueueItem('${item._id}')" style="font-size: 0.85rem;">Publish</button>
                                     <button class="btn btn-secondary" onclick="skipQueueItem('${item._id}')" style="font-size: 0.85rem;">Skip</button>
+                                    <label style="font-size: 0.8rem; margin-left: auto;"><input type="checkbox" id="featured-${item._id}"> Featured</label>
                                 </div>
                             </div>
                         </div>
@@ -1032,12 +1057,14 @@
             const reviewEl = document.getElementById(`review-${itemId}`);
             const featuredEl = document.getElementById(`featured-${itemId}`);
             const thumbEl = document.getElementById(`thumb-${itemId}`);
+            const typeEl = document.getElementById(`type-${itemId}`);
             const teamCheckboxes = document.querySelectorAll(`.team-check[data-id="${itemId}"]:checked`);
 
             const teams = Array.from(teamCheckboxes).map(cb => cb.value);
             const curatorReview = reviewEl?.value || '';
             const featured = featuredEl?.checked || false;
             const thumbnail = thumbEl?.value?.trim() || null;
+            const contentType = typeEl?.value || 'article';
 
             try {
                 const res = await fetch('/api/admin/content/queue', {
@@ -1050,7 +1077,8 @@
                         teams,
                         featured,
                         featuredOnPages: featured ? ['home'] : [],
-                        thumbnail
+                        thumbnail,
+                        contentType
                     })
                 });
 
