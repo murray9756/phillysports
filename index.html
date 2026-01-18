@@ -1041,7 +1041,11 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .story-item-wrapper:last-child {
+            border-bottom: none;
         }
         .story-item-wrapper .vote-buttons {
             flex-shrink: 0;
@@ -1050,6 +1054,12 @@
             flex-shrink: 0;
             padding: 0.5rem;
             font-size: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .story-item-wrapper .story-comment-link:hover {
+            color: var(--accent-color);
         }
 
         .load-more-btn {
@@ -2902,29 +2912,40 @@
             return await response.json();
         }
 
-        // Helper to append news items to list
+        // Helper to append news items to list (same format as curated items)
         function appendNewsItems(container, articles) {
             const existingHtml = container.innerHTML;
             const newsHtml = articles.map(item => {
                 const imageStyle = item.image
                     ? `background-image:url('${item.image}');background-size:cover;background-position:center;`
                     : `background:${item.teamColor || 'var(--border-color)'};`;
+                const itemId = 'news-' + btoa(item.link || '').slice(0, 12);
 
                 return `
-                    <a href="/article.html?url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.headline || '')}&image=${encodeURIComponent(item.image || '')}&source=${encodeURIComponent(item.source || '')}" class="story-row" style="text-decoration:none;color:inherit;">
-                        <div class="story-thumb" style="${imageStyle}">
-                            ${!item.image ? getSourceLogo(item.source, sportEmoji[item.team]) : ''}
+                    <div class="story-item-wrapper">
+                        <div class="vote-buttons">
+                            <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${itemId}">0</span>
+                            <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
                         </div>
-                        <div class="story-info">
-                            <div class="story-meta">
-                                <span class="article-tag ${item.tagClass || 'tag-eagles'}">${item.team || 'SPORTS'}</span>
-                                <span>${item.source || ''}</span>
-                                <span>·</span>
-                                <span>${timeAgo(item.published)}</span>
+                        <a href="${item.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                            <div class="story-thumb" style="${imageStyle}">
+                                ${!item.image ? getSourceLogo(item.source, sportEmoji[item.team]) : ''}
                             </div>
-                            <div class="story-title">${item.headline || ''}</div>
-                        </div>
-                    </a>
+                            <div class="story-info">
+                                <div class="story-meta">
+                                    <span class="article-tag ${item.tagClass || 'tag-eagles'}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${(item.team || 'SPORTS').toUpperCase()}</span>
+                                    <span>${item.source || ''}</span>
+                                    <span>·</span>
+                                    <span>${timeAgo(item.published)}</span>
+                                </div>
+                                <div class="story-title">${item.headline || ''}</div>
+                            </div>
+                        </a>
+                        <a href="/article.html?url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.headline || '')}&image=${encodeURIComponent(item.image || '')}&source=${encodeURIComponent(item.source || '')}" class="story-comment-link" title="Discuss this story">
+                            &#128172;
+                        </a>
+                    </div>
                 `;
             }).join('');
 
@@ -3202,56 +3223,78 @@
             if (data.articles && data.articles.length > 0) {
                 const featured = data.articles[0];
                 const remaining = data.articles.slice(1, 10);
+                const featuredId = 'news-' + btoa(featured.link || '').slice(0, 12);
 
-                // Render featured
+                // Render featured (same format as curated)
                 const imageStyle = featured.image
                     ? `background-image:url('${featured.image}');`
                     : `background:${featured.teamColor || 'var(--border-color)'};`;
 
                 featuredContainer.innerHTML = `
-                    <a href="/article.html?url=${encodeURIComponent(featured.link)}&title=${encodeURIComponent(featured.headline || '')}&image=${encodeURIComponent(featured.image || '')}&source=${encodeURIComponent(featured.source || '')}" style="text-decoration:none;color:inherit;display:block;">
-                        <div class="featured-hero">
+                    <div class="featured-hero" style="position:relative;">
+                        <div class="featured-vote">
+                            <button class="vote-btn upvote" data-article="${featuredId}" onclick="vote('${featuredId}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${featuredId}">0</span>
+                            <button class="vote-btn downvote" data-article="${featuredId}" onclick="vote('${featuredId}', -1, event)">&#9660;</button>
+                        </div>
+                        <a href="${featured.link}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
                             <div class="featured-hero-image" style="${imageStyle}">
                                 ${!featured.image ? getSourceLogo(featured.source, sportEmoji[featured.team]) : ''}
                             </div>
                             <div class="featured-hero-content">
                                 <div class="featured-hero-meta">
-                                    <span class="article-tag ${featured.tagClass}">${featured.team}</span>
+                                    <span class="article-tag ${featured.tagClass}">${(featured.team || 'SPORTS').toUpperCase()}</span>
                                     <span>${featured.source || ''}</span>
                                     <span>·</span>
                                     <span>${timeAgo(featured.published)}</span>
                                 </div>
                                 <h2 class="featured-hero-title">${featured.headline}</h2>
                                 <p class="featured-hero-excerpt">${featured.description || ''}</p>
-                                <div class="featured-hero-cta">Read Full Article &#8594;</div>
+                                <div class="featured-hero-actions">
+                                    <div class="featured-hero-cta">Read Full Article &#8594;</div>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                        <a href="/article.html?url=${encodeURIComponent(featured.link)}&title=${encodeURIComponent(featured.headline || '')}&image=${encodeURIComponent(featured.image || '')}&source=${encodeURIComponent(featured.source || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
+                            <span class="comment-link-icon">&#128172;</span>
+                            <span>Discuss</span>
+                        </a>
+                    </div>
                 `;
 
-                // Render list
+                // Render list (same format as curated items)
                 if (remaining.length > 0) {
                     listContainer.innerHTML = remaining.map(article => {
                         const thumbStyle = article.image
-                            ? `background-image:url('${article.image}');`
+                            ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
                             : `background:${article.teamColor || 'var(--border-color)'};`;
-                        const articleUrl = `/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}`;
+                        const itemId = 'news-' + btoa(article.link || '').slice(0, 12);
 
                         return `
-                            <a href="${articleUrl}" class="story-item" style="text-decoration:none;">
-                                <div class="story-thumb" style="${thumbStyle}">
-                                    ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                            <div class="story-item-wrapper">
+                                <div class="vote-buttons">
+                                    <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
+                                    <span class="vote-score" id="score-${itemId}">0</span>
+                                    <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
                                 </div>
-                                <div class="story-info">
-                                    <div class="story-meta">
-                                        <span class="article-tag ${article.tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${article.team}</span>
-                                        <span>${article.source || ''}</span>
-                                        <span>·</span>
-                                        <span>${timeAgo(article.published)}</span>
+                                <a href="${article.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                                    <div class="story-thumb" style="${thumbStyle}">
+                                        ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
                                     </div>
-                                    <div class="story-title">${article.headline}</div>
-                                </div>
-                            </a>
+                                    <div class="story-info">
+                                        <div class="story-meta">
+                                            <span class="article-tag ${article.tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${(article.team || 'SPORTS').toUpperCase()}</span>
+                                            <span>${article.source || ''}</span>
+                                            <span>·</span>
+                                            <span>${timeAgo(article.published)}</span>
+                                        </div>
+                                        <div class="story-title">${article.headline}</div>
+                                    </div>
+                                </a>
+                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="story-comment-link" title="Discuss this story">
+                                    &#128172;
+                                </a>
+                            </div>
                         `;
                     }).join('');
                 } else {
