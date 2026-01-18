@@ -57,6 +57,21 @@
         .header-auth { display: flex; align-items: center; gap: 1rem; }
         .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
         .header-auth a:hover { background: rgba(255,255,255,0.1); }
+        /* Admin Link */
+        .admin-link {
+            background: var(--accent-color);
+            color: #fff !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            padding: 0.3rem 0.6rem !important;
+            border-radius: 4px;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+        .admin-link:hover {
+            background: #a00000 !important;
+            transform: scale(1.05);
+        }
         .coin-display { display: flex; align-items: center; gap: 0.35rem; background: rgba(255,215,0,0.15); padding: 0.35rem 0.75rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #ffd700; }
         .buy-coins-link {
             color: var(--accent-color);
@@ -482,6 +497,9 @@
                     const premiumBadge = data.user.isSubscribed
                         ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
                         : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
+                    const adminLink = data.user.isAdmin
+                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                        : '';
                     document.getElementById('headerAuth').innerHTML = `
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
@@ -493,6 +511,7 @@
                             <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
                         </div>
                         ${premiumBadge}
+                        ${adminLink}
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;

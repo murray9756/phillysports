@@ -280,6 +280,8 @@
         .header-auth { display: flex; align-items: center; gap: 1rem; }
         .header-auth a { color: var(--nav-text); font-size: 0.85rem; font-weight: 600; }
         .header-auth a:hover { color: var(--accent-color); }
+        .admin-link { background: var(--accent-color); color: #fff !important; font-size: 0.7rem !important; font-weight: 700 !important; padding: 0.3rem 0.6rem !important; border-radius: 4px; text-decoration: none; letter-spacing: 0.3px; margin-right: 0.5rem; }
+        .admin-link:hover { background: #a00000 !important; transform: scale(1.05); }
 
         /* Subscription Section */
         .subscription-section { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; margin-bottom: 1.5rem; }
@@ -719,9 +721,34 @@
                 const data = await response.json();
                 if (data.user) {
                     currentUser = data.user;
+                    updateHeaderAuth();
                 }
             } catch (error) {
                 console.error('Auth check error:', error);
+            }
+        }
+
+        function updateHeaderAuth() {
+            const authDiv = document.getElementById('headerAuth');
+            if (currentUser) {
+                const adminLink = currentUser.isAdmin
+                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                    : '';
+                authDiv.innerHTML = `
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                    </button>
+                    ${adminLink}
+                    <a href="/profile.html">${currentUser.username}</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                `;
+                document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+                document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    window.location.href = '/';
+                });
             }
         }
 

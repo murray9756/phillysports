@@ -53,6 +53,8 @@
         .header-nav { display: flex; gap: 1rem; align-items: center; }
         .header-nav a { color: #ffffff; font-size: 0.9rem; font-weight: 500; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
         .header-nav a:hover { background: rgba(255,255,255,0.1); }
+        .admin-link { background: var(--accent-color); color: #fff !important; font-size: 0.7rem !important; font-weight: 700 !important; padding: 0.3rem 0.6rem !important; border-radius: 4px; text-decoration: none; letter-spacing: 0.3px; }
+        .admin-link:hover { background: #a00000 !important; transform: scale(1.05); }
 
         .main-container { flex: 1; max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
 
@@ -573,12 +575,34 @@
                 const data = await response.json();
                 if (data.user) {
                     currentUser = data.user;
+                    updateHeaderAuth();
                     loadSettings();
                 } else {
                     window.location.href = '/login.html';
                 }
             } catch (error) {
                 window.location.href = '/login.html';
+            }
+        }
+
+        function updateHeaderAuth() {
+            const authDiv = document.getElementById('headerNav');
+            if (currentUser) {
+                const adminLink = currentUser.isAdmin
+                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                    : '';
+                authDiv.innerHTML = `
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                    </button>
+                    ${adminLink}
+                    <a href="/profile.html">Profile</a>
+                    <a href="/badges.html">Badges</a>
+                    <a href="#" id="logoutLink">Logout</a>
+                `;
+                document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+                document.getElementById('logoutLink')?.addEventListener('click', handleLogout);
             }
         }
 

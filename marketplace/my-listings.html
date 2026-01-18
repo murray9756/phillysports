@@ -274,6 +274,8 @@
         .header-auth a { color: #ffffff; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 4px; transition: background 0.2s; }
         .header-auth a:hover { background: rgba(255,255,255,0.1); }
         .auth-btn { background: var(--accent-color) !important; }
+        .admin-link { background: var(--accent-color); color: #fff !important; font-size: 0.7rem !important; font-weight: 700 !important; padding: 0.3rem 0.6rem !important; border-radius: 4px; text-decoration: none; letter-spacing: 0.3px; margin-right: 0.5rem; }
+        .admin-link:hover { background: #a00000 !important; transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -543,6 +545,7 @@
                     const data = await res.json();
                     if (data.authenticated) {
                         currentUser = data.user;
+                        updateHeaderAuth();
                         document.getElementById('loginRequired').style.display = 'none';
                         document.getElementById('dashboardContent').style.display = 'block';
                         setupTabs();
@@ -555,6 +558,30 @@
             }
             document.getElementById('loginRequired').style.display = 'block';
             document.getElementById('dashboardContent').style.display = 'none';
+        }
+
+        function updateHeaderAuth() {
+            const authDiv = document.getElementById('headerAuth');
+            if (currentUser) {
+                const adminLink = currentUser.isAdmin
+                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                    : '';
+                authDiv.innerHTML = `
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                    </button>
+                    ${adminLink}
+                    <a href="/profile.html">${currentUser.username}</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                `;
+                document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+            }
+        }
+
+        async function logout() {
+            await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
+            window.location.reload();
         }
 
         function setupTabs() {

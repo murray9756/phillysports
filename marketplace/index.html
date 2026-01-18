@@ -88,6 +88,8 @@
         .buy-coins-link:hover {
             opacity: 1;
         }
+        .admin-link { background: var(--accent-color); color: #fff !important; font-size: 0.7rem !important; font-weight: 700 !important; padding: 0.3rem 0.6rem !important; border-radius: 4px; text-decoration: none; letter-spacing: 0.3px; margin-right: 0.5rem; }
+        .admin-link:hover { background: #a00000 !important; transform: scale(1.05); }
 
         /* Feedback Modal */
         .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
@@ -644,6 +646,9 @@
         function updateHeaderAuth() {
             const authDiv = document.getElementById('headerAuth');
             if (currentUser) {
+                const adminLink = currentUser.isAdmin
+                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                    : '';
                 authDiv.innerHTML = `
                     <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                         <span class="theme-icon-light">&#9790;</span>
@@ -654,6 +659,7 @@
                         <span>${(currentUser.coinBalance || 0).toLocaleString()}</span>
                         <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
                     </div>
+                    ${adminLink}
                     <a href="/profile.html">${currentUser.username}</a>
                     <a href="#" onclick="logout()">Logout</a>
                 `;

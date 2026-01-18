@@ -205,6 +205,8 @@
 
         .premium-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.5rem; text-decoration: none; }
         .go-premium-link { color: #ffd700; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
+        .admin-link { background: var(--accent-color); color: #fff !important; font-size: 0.7rem !important; font-weight: 700 !important; padding: 0.3rem 0.6rem !important; border-radius: 4px; text-decoration: none; letter-spacing: 0.3px; margin-right: 0.5rem; }
+        .admin-link:hover { background: #a00000 !important; transform: scale(1.05); }
 
         /* Main Navigation with Dropdowns */
         .main-nav {
@@ -748,6 +750,9 @@
                     const premiumBadge = data.user.isSubscribed
                         ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
                         : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
+                    const adminLink = data.user.isAdmin
+                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                        : '';
                     h.innerHTML = `
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
@@ -755,6 +760,7 @@
                         </button>
                         <div class="coin-display" title="Diehard Dollars"><span>DD</span><span>${data.user.coinBalance || 0}</span><a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a></div>
                         ${premiumBadge}
+                        ${adminLink}
                         <a href="/profile.html">${data.user.username}</a>
                     `;
                     document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);

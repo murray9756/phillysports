@@ -458,6 +458,21 @@
             .contest-meta { justify-content: center; }
             .contest-details { flex-direction: row; gap: 1rem; }
         }
+        /* Admin Link */
+        .admin-link {
+            background: var(--accent-color);
+            color: #fff !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            padding: 0.3rem 0.6rem !important;
+            border-radius: 4px;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+        .admin-link:hover {
+            background: #a00000 !important;
+            transform: scale(1.05);
+        }
     </style>
     <link rel="stylesheet" href="/css/mobile-menu.css">
 </head>
@@ -731,6 +746,9 @@
                     const premiumBadge = data.user.isSubscribed
                         ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
                         : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
+                    const adminLink = data.user.isAdmin
+                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                        : '';
                     document.getElementById('authSection').innerHTML = `
                         <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
@@ -742,6 +760,7 @@
                             <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
                         </div>
                         ${premiumBadge}
+                        ${adminLink}
                         <a href="/profile.html">${data.user.displayName || data.user.username}</a>
                         <a href="#" onclick="logout(); return false;">Logout</a>
                     `;

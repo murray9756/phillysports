@@ -84,6 +84,8 @@
 
         .premium-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.5rem; text-decoration: none; }
         .go-premium-link { color: #ffd700; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; }
+        .admin-link { background: var(--accent-color); color: #fff !important; font-size: 0.7rem !important; font-weight: 700 !important; padding: 0.3rem 0.6rem !important; border-radius: 4px; text-decoration: none; letter-spacing: 0.3px; margin-right: 0.5rem; }
+        .admin-link:hover { background: #a00000 !important; transform: scale(1.05); }
 
         /* Main Navigation */
         .main-nav { background: var(--header-bg); border-bottom: 1px solid var(--border-color); }
@@ -484,12 +486,16 @@
                 const premiumBadge = currentUser.isSubscribed
                     ? `<a href="/membership.html" class="premium-badge">${currentUser.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
                     : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
+                const adminLink = currentUser.isAdmin
+                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                    : '';
                 headerAuth.innerHTML = `
                     <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" onclick="toggleTheme()">
                         <span class="theme-icon-light">&#9790;</span>
                         <span class="theme-icon-dark">&#9728;</span>
                     </button>
                     ${premiumBadge}
+                    ${adminLink}
                     <a href="/profile.html">${currentUser.username}</a>
                     <a href="#" onclick="logout()">Logout</a>
                 `;
