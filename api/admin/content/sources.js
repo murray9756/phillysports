@@ -105,6 +105,14 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'sourceId required' });
             }
 
+            // Validate ObjectId format
+            let objectId;
+            try {
+                objectId = new ObjectId(sourceId);
+            } catch (e) {
+                return res.status(400).json({ error: 'Invalid sourceId format' });
+            }
+
             const update = { updatedAt: new Date() };
             if (name !== undefined) update.name = name;
             if (type !== undefined) update.type = type;
@@ -115,28 +123,34 @@ export default async function handler(req, res) {
             if (active !== undefined) update.active = active;
             if (autoPublish !== undefined) update.autoPublish = autoPublish;
 
+            console.log('PATCH sources - updating:', sourceId, 'with:', update);
+
             const result = await sources.findOneAndUpdate(
-                { _id: new ObjectId(sourceId) },
+                { _id: objectId },
                 { $set: update },
                 { returnDocument: 'after' }
             );
 
-            if (!result) {
+            console.log('PATCH sources - result:', result);
+
+            // Handle both old and new MongoDB driver return formats
+            const doc = result?.value || result;
+            if (!doc) {
                 return res.status(404).json({ error: 'Source not found' });
             }
 
             res.status(200).json({
                 success: true,
                 source: {
-                    _id: result._id.toString(),
-                    name: result.name,
-                    type: result.type,
-                    feedUrl: result.feedUrl,
-                    logoUrl: result.logoUrl,
-                    category: result.category,
-                    teams: result.teams,
-                    active: result.active,
-                    autoPublish: result.autoPublish || false
+                    _id: doc._id.toString(),
+                    name: doc.name,
+                    type: doc.type,
+                    feedUrl: doc.feedUrl,
+                    logoUrl: doc.logoUrl,
+                    category: doc.category,
+                    teams: doc.teams,
+                    active: doc.active,
+                    autoPublish: doc.autoPublish || false
                 }
             });
         } else if (req.method === 'DELETE') {
