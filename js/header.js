@@ -216,12 +216,12 @@
         </nav>
     `;
 
-    // Header CSS
+    // Header CSS - Always dark background with light text
     const headerCSS = `
-        /* Header */
+        /* Header - Fixed dark theme */
         .header {
-            background: var(--header-bg, #faf9f6);
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -255,7 +255,7 @@
         .header-logo .tagline {
             font-size: 0.9rem;
             font-weight: 500;
-            color: var(--text-secondary, #444);
+            color: #b0b0b0;
             font-style: italic;
             text-align: center;
         }
@@ -282,22 +282,22 @@
 
         .header-search input {
             padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color, #e0e0e0);
+            border: 1px solid #333;
             border-radius: 4px;
-            background: #ffffff;
-            color: var(--text-primary, #1a1a1a);
+            background: #2a2a2a;
+            color: #e8e8e8;
             font-size: 0.8rem;
             width: 280px;
             font-family: inherit;
         }
 
         .header-search input::placeholder {
-            color: var(--text-muted, #777);
+            color: #888;
         }
 
         .header-search button {
             padding: 0.5rem 0.75rem;
-            background: var(--accent-color, #8b0000);
+            background: #8b0000;
             border: none;
             border-radius: 4px;
             color: white;
@@ -323,7 +323,7 @@
         }
 
         .header-auth a {
-            color: var(--nav-text, #333);
+            color: #d0d0d0;
             font-size: 0.8rem;
             font-weight: 600;
             padding: 0.5rem 0.75rem;
@@ -335,18 +335,19 @@
         }
 
         .header-auth a:hover {
-            background: rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
         }
 
         .header-auth .auth-btn {
-            background: var(--accent-color, #8b0000);
+            background: #8b0000;
             color: #ffffff;
             padding: 0.5rem 1rem;
         }
 
         .header-auth .auth-btn:hover {
             opacity: 0.9;
-            background: var(--accent-color, #8b0000);
+            background: #8b0000;
         }
 
         /* Coin Display */
@@ -354,12 +355,12 @@
             display: flex;
             align-items: center;
             gap: 0.35rem;
-            background: rgba(139, 0, 0, 0.1);
+            background: rgba(255, 215, 0, 0.15);
             padding: 0.35rem 0.75rem;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.85rem;
-            color: var(--accent-color, #8b0000);
+            color: #ffd700;
             cursor: default;
         }
 
@@ -367,7 +368,7 @@
         .coin-balance { font-variant-numeric: tabular-nums; }
 
         .buy-coins-link {
-            color: var(--accent-color, #8b0000);
+            color: #ffd700;
             text-decoration: none;
             font-weight: bold;
             font-size: 1rem;
@@ -437,7 +438,7 @@
         /* Theme Toggle */
         .theme-toggle {
             background: none;
-            border: 1px solid var(--border-color, #e0e0e0);
+            border: 1px solid #444;
             border-radius: 20px;
             padding: 0.4rem 0.6rem;
             cursor: pointer;
@@ -447,13 +448,10 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
+            color: #d0d0d0;
         }
 
         .theme-toggle:hover {
-            background: rgba(0,0,0,0.05);
-        }
-
-        [data-theme="dark"] .theme-toggle:hover {
             background: rgba(255,255,255,0.1);
         }
 
@@ -466,10 +464,10 @@
         [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
         [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
 
-        /* Main Navigation */
+        /* Main Navigation - Fixed dark theme */
         .main-nav {
-            background: var(--header-bg, #faf9f6);
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
         }
 
         .nav-inner {
@@ -486,7 +484,7 @@
             padding: 0.75rem 1rem;
             font-size: 0.75rem;
             font-weight: 600;
-            color: var(--nav-text, #333);
+            color: #d0d0d0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
@@ -495,7 +493,7 @@
             text-decoration: none;
         }
 
-        .nav-item:hover { color: var(--accent-color, #8b0000); }
+        .nav-item:hover { color: #8b0000; }
 
         .nav-dropdown { position: relative; }
 
@@ -514,10 +512,10 @@
             position: absolute;
             top: 100%;
             left: 0;
-            background: var(--header-bg, #faf9f6);
-            border: 1px solid var(--border-color, #e0e0e0);
+            background: #1a1a1a;
+            border: 1px solid #333;
             border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             min-width: 150px;
             opacity: 0;
             visibility: hidden;
@@ -539,7 +537,7 @@
         .dropdown-menu a {
             display: block;
             padding: 0.6rem 1rem;
-            color: var(--nav-text, #333);
+            color: #d0d0d0;
             font-size: 0.8rem;
             font-weight: 500;
             text-decoration: none;
@@ -547,12 +545,8 @@
         }
 
         .dropdown-menu a:hover {
-            background: rgba(0,0,0,0.05);
-            color: var(--accent-color, #8b0000);
-        }
-
-        [data-theme="dark"] .dropdown-menu a:hover {
             background: rgba(255,255,255,0.1);
+            color: #fff;
         }
 
         /* Mobile Menu Button */
@@ -560,7 +554,7 @@
             display: none;
             background: none;
             border: none;
-            color: var(--text-primary, #1a1a1a);
+            color: #d0d0d0;
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.25rem;
