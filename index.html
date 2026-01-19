@@ -2760,22 +2760,39 @@
             const container = document.getElementById('sourceLeaderboardWidget');
             if (!container) return;
             try {
-                const response = await fetch('/api/articles/source-stats?limit=5');
+                // Use curated content source stats
+                const response = await fetch('/api/content?limit=100');
                 const data = await response.json();
 
-                if (data.success && data.sources && data.sources.length > 0) {
-                    container.innerHTML = data.sources.map((source, i) => {
-                        const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
-                        return `
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
-                                <span style="display:flex;align-items:center;gap:0.4rem;">
-                                    <span style="width:1.5rem;text-align:center;">${medal}</span>
-                                    <span style="font-weight:500;">${source.source}</span>
-                                </span>
-                                <span style="color:var(--text-muted);font-size:0.75rem;">${source.totalClicks.toLocaleString()}</span>
-                            </div>
-                        `;
-                    }).join('');
+                if (data.success && data.items && data.items.length > 0) {
+                    // Aggregate by sourceName
+                    const sourceCounts = {};
+                    data.items.forEach(item => {
+                        const source = item.sourceName || 'Unknown';
+                        sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+                    });
+
+                    // Sort by count and take top 5
+                    const sortedSources = Object.entries(sourceCounts)
+                        .sort((a, b) => b[1] - a[1])
+                        .slice(0, 5);
+
+                    if (sortedSources.length > 0) {
+                        container.innerHTML = sortedSources.map(([source, count], i) => {
+                            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+                            return `
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
+                                    <span style="display:flex;align-items:center;gap:0.4rem;">
+                                        <span style="width:1.5rem;text-align:center;">${medal}</span>
+                                        <span style="font-weight:500;">${source}</span>
+                                    </span>
+                                    <span style="color:var(--text-muted);font-size:0.75rem;">${count} published</span>
+                                </div>
+                            `;
+                        }).join('');
+                    } else {
+                        container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">No sources yet</div>';
+                    }
                 } else {
                     container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">No data yet</div>';
                 }
