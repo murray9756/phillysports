@@ -16,32 +16,30 @@
         styles.id = 'live-ticker-styles';
         styles.textContent = `
             .live-ticker {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 9999;
+                position: relative;
+                z-index: 998;
                 background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
                 border-bottom: 2px solid #e94560;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                transition: transform 0.3s ease;
+                transition: transform 0.3s ease, max-height 0.3s ease, opacity 0.3s ease;
             }
 
             .live-ticker.minimized {
-                transform: translateY(-100%);
+                max-height: 0;
+                overflow: hidden;
+                border-bottom: none;
             }
 
             .live-ticker.minimized .ticker-expand {
-                transform: translateY(100%);
-                opacity: 1;
-                pointer-events: auto;
+                display: flex;
             }
 
             .ticker-expand {
+                display: none;
                 position: absolute;
-                bottom: -32px;
+                bottom: -28px;
                 left: 50%;
-                transform: translateX(-50%) translateY(0);
+                transform: translateX(-50%);
                 background: #e94560;
                 color: white;
                 border: none;
@@ -50,12 +48,9 @@
                 cursor: pointer;
                 font-size: 12px;
                 font-weight: 600;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.3s ease;
-                display: flex;
                 align-items: center;
                 gap: 6px;
+                z-index: 999;
             }
 
             .ticker-expand:hover {
@@ -270,13 +265,9 @@
                 width: 100%;
             }
 
-            /* Adjust body padding when ticker is visible */
-            body.has-live-ticker {
-                padding-top: 76px;
-            }
-
-            body.has-live-ticker.ticker-minimized {
-                padding-top: 0;
+            /* Ticker wrapper for positioning */
+            .live-ticker-wrapper {
+                position: relative;
             }
 
             /* Mobile adjustments */
@@ -297,10 +288,6 @@
                 .team-score-value {
                     font-size: 20px;
                 }
-
-                body.has-live-ticker {
-                    padding-top: 66px;
-                }
             }
         `;
         document.head.appendChild(styles);
@@ -309,6 +296,10 @@
     // Create ticker HTML
     function createTicker() {
         if (document.getElementById('live-ticker')) return;
+
+        // Create wrapper for positioning the expand button
+        const wrapper = document.createElement('div');
+        wrapper.className = 'live-ticker-wrapper';
 
         tickerContainer = document.createElement('div');
         tickerContainer.id = 'live-ticker';
@@ -332,10 +323,21 @@
             </button>
         `;
 
-        document.body.insertBefore(tickerContainer, document.body.firstChild);
-        document.body.classList.add('has-live-ticker');
-        if (isMinimized) {
-            document.body.classList.add('ticker-minimized');
+        wrapper.appendChild(tickerContainer);
+
+        // Insert after the header/navigation
+        const header = document.querySelector('.header');
+        const mainNav = document.querySelector('.main-nav');
+
+        if (mainNav && mainNav.parentNode) {
+            // Insert after the main navigation
+            mainNav.parentNode.insertBefore(wrapper, mainNav.nextSibling);
+        } else if (header && header.parentNode) {
+            // Insert after the header
+            header.parentNode.insertBefore(wrapper, header.nextSibling);
+        } else {
+            // Fallback: insert at beginning of body
+            document.body.insertBefore(wrapper, document.body.firstChild);
         }
     }
 
@@ -438,14 +440,12 @@
             isMinimized = true;
             localStorage.setItem('tickerMinimized', 'true');
             tickerContainer.classList.add('minimized');
-            document.body.classList.add('ticker-minimized');
         },
 
         expand: function() {
             isMinimized = false;
             localStorage.setItem('tickerMinimized', 'false');
             tickerContainer.classList.remove('minimized');
-            document.body.classList.remove('ticker-minimized');
             fetchGames();
         },
 
@@ -456,8 +456,8 @@
 
         destroy: function() {
             if (refreshTimer) clearInterval(refreshTimer);
-            if (tickerContainer) tickerContainer.remove();
-            document.body.classList.remove('has-live-ticker', 'ticker-minimized');
+            const wrapper = document.querySelector('.live-ticker-wrapper');
+            if (wrapper) wrapper.remove();
         }
     };
 
