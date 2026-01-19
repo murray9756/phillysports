@@ -350,34 +350,94 @@
             background: #8b0000;
         }
 
-        /* Coin Display */
+        /* Coin Display - Prominent Square */
         .coin-display {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 0.35rem;
-            background: rgba(255, 215, 0, 0.15);
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #ffd700;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 140, 0, 0.15));
+            border: 3px solid #ffd700;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
             cursor: default;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            min-width: 140px;
         }
 
-        .coin-icon { font-size: 1rem; }
-        .coin-balance { font-variant-numeric: tabular-nums; }
+        .coin-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .coin-amount-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .coin-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            border-radius: 50%;
+            font-size: 1rem;
+            font-weight: 800;
+            color: #000;
+            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2);
+            border: 2px solid #ffaa00;
+        }
+
+        .coin-balance {
+            font-variant-numeric: tabular-nums;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
 
         .buy-coins-link {
-            color: #ffd700;
+            color: #000;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 1rem;
-            margin-left: 0.25rem;
-            opacity: 0.7;
-            transition: opacity 0.2s;
+            font-weight: 700;
+            font-size: 0.65rem;
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            transition: all 0.2s;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            border-radius: 4px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
         }
 
-        .buy-coins-link:hover { opacity: 1; }
+        .buy-coins-link:hover {
+            background: linear-gradient(135deg, #ffe44d, #ffbb33);
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* User Actions Stack */
+        .user-actions-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.35rem;
+        }
+
+        .user-actions-stack a {
+            text-align: center;
+            padding: 0.35rem 0.75rem !important;
+            font-size: 0.7rem !important;
+        }
 
         /* Premium Badge */
         .premium-badge {
@@ -654,9 +714,55 @@
 
         .mobile-menu-auth {
             display: flex;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 0.75rem;
             padding: 1rem;
             border-bottom: 1px solid var(--border-color, #e0e0e0);
+        }
+
+        .mobile-coin-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 140, 0, 0.2));
+            border: 2px solid #ffd700;
+            padding: 0.75rem;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .mobile-coin-display .coin-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #ffc800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mobile-coin-display .coin-amount-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-coin-display .coin-icon {
+            font-size: 1.25rem;
+        }
+
+        .mobile-coin-display .coin-balance {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1a1a1a;
+        }
+
+        [data-theme="dark"] .mobile-coin-display .coin-balance {
+            color: #ffffff;
+        }
+
+        .mobile-user-buttons {
+            display: flex;
+            gap: 0.5rem;
         }
 
         .mobile-menu-auth a {
@@ -860,15 +966,20 @@
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>
                         </button>
-                        <div class="coin-display" title="Diehard Dollars">
-                            <span class="coin-icon">&#129689;</span>
-                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
+                        <div class="coin-display">
+                            <span class="coin-label">Diehard Dollars</span>
+                            <div class="coin-amount-row">
+                                <span class="coin-icon">DD</span>
+                                <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
+                            </div>
+                            <a href="/shop.html#coin-packs" class="buy-coins-link">Buy More</a>
                         </div>
-                        ${premiumBadge}
-                        ${adminLink}
-                        <a href="/profile.html">${data.user.username}</a>
-                        <a href="#" id="logoutBtn">Logout</a>
+                        <div class="user-actions-stack">
+                            <a href="/profile.html">${data.user.username}</a>
+                            ${premiumBadge}
+                            ${adminLink}
+                            <a href="#" id="logoutBtn">Logout</a>
+                        </div>
                     `;
 
                     // Re-init theme toggle after updating header
@@ -886,12 +997,17 @@
                 // Update mobile menu auth
                 if (mobileMenuAuth) {
                     mobileMenuAuth.innerHTML = `
-                        <div class="coin-display" style="flex:1;justify-content:center;" title="Diehard Dollars">
-                            <span class="coin-icon">&#129689;</span>
-                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
+                        <div class="mobile-coin-display">
+                            <span class="coin-label">Diehard Dollars</span>
+                            <div class="coin-amount-row">
+                                <span class="coin-icon">DD</span>
+                                <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
+                            </div>
                         </div>
-                        <a href="/profile.html" class="login-btn">${data.user.username}</a>
-                        <a href="#" class="signup-btn" id="mobileLogoutBtn">Logout</a>
+                        <div class="mobile-user-buttons">
+                            <a href="/profile.html" class="login-btn">${data.user.username}</a>
+                            <a href="#" class="signup-btn" id="mobileLogoutBtn">Logout</a>
+                        </div>
                     `;
 
                     document.getElementById('mobileLogoutBtn')?.addEventListener('click', async (e) => {
