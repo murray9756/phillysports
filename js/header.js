@@ -17,7 +17,7 @@
                     </form>
                 </div>
                 <a href="/" class="header-logo">
-                    <img src="/logo-weathered.png" alt="PhillySports.com">
+                    <img src="/logo.png" alt="PhillySports.com">
                     <span class="tagline">Where the Diehards, Play Hard</span>
                 </a>
                 <div class="header-auth" id="headerAuth">
@@ -247,8 +247,8 @@
         }
 
         .header-logo img {
-            width: 136px;
-            height: 136px;
+            width: 204px;
+            height: 204px;
             border-radius: 12px;
         }
 
@@ -404,7 +404,7 @@
         }
 
         .buy-coins-link {
-            color: #000;
+            color: #000 !important;
             text-decoration: none;
             font-weight: 700;
             font-size: 0.65rem;
@@ -860,7 +860,7 @@
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
             .header-logo { margin-top: 0; }
-            .header-logo img { width: 80px; height: 80px; }
+            .header-logo img { width: 120px; height: 120px; }
             .header-logo .tagline { font-size: 0.75rem; }
         }
     `;
