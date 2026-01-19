@@ -1,4 +1,5 @@
 // Shared Header Component for PhillySports.com
+// Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
 
 (function() {
@@ -7,227 +8,375 @@
     // Header HTML template
     const headerHTML = `
         <header class="header">
-            <div class="header-left">
-                <button class="mobile-menu-btn" aria-label="Open menu">&#9776;</button>
-                <a href="/" class="logo">PhillySports</a>
+            <div class="header-top">
+                <div class="header-search">
+                    <form action="https://www.google.com/search" method="GET" target="_blank">
+                        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
+                        <input type="text" name="q" placeholder="Search the web..." required>
+                        <button type="submit">Go</button>
+                    </form>
+                </div>
+                <a href="/" class="header-logo">
+                    <img src="/logo-weathered.png" alt="PhillySports.com">
+                    <span class="tagline">Where the Diehards, Play Hard</span>
+                </a>
+                <div class="header-auth" id="headerAuth">
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                    </button>
+                    <a href="/login.html">Login</a>
+                    <a href="/register.html" class="auth-btn">Sign Up</a>
+                </div>
+                <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
             </div>
-            <div class="header-right" id="headerAuth">
-                <button class="theme-toggle" id="themeToggleDefault" title="Toggle dark mode">
-                    <span class="theme-icon-light">&#9790;</span>
-                    <span class="theme-icon-dark">&#9728;</span>
-                </button>
-                <a href="/login.html">Login</a>
-                <a href="/register.html">Sign Up</a>
-            </div>
+            <nav class="main-nav">
+                <div class="nav-inner">
+                    <a href="/" class="nav-item">Home</a>
+
+                    <div class="nav-dropdown">
+                        <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
+                        <div class="dropdown-menu">
+                            <a href="/eagles/">Eagles</a>
+                            <a href="/phillies/">Phillies</a>
+                            <a href="/sixers/">76ers</a>
+                            <a href="/flyers/">Flyers</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-dropdown">
+                        <span class="nav-item dropdown-trigger">College <span class="dropdown-arrow">&#9660;</span></span>
+                        <div class="dropdown-menu">
+                            <a href="/villanova/">Villanova</a>
+                            <a href="/penn/">Penn</a>
+                            <a href="/lasalle/">La Salle</a>
+                            <a href="/drexel/">Drexel</a>
+                            <a href="/stjosephs/">St. Joseph's</a>
+                            <a href="/temple/">Temple</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-dropdown">
+                        <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
+                        <div class="dropdown-menu">
+                            <a href="/fantasy.html">Fantasy</a>
+                            <a href="/pools.html">Pools</a>
+                            <a href="/poker.html">Poker</a>
+                            <a href="/trivia.html">Trivia</a>
+                            <a href="/predictions.html">Predictions</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-dropdown">
+                        <span class="nav-item dropdown-trigger">Betting <span class="dropdown-arrow">&#9660;</span></span>
+                        <div class="dropdown-menu">
+                            <a href="/odds.html">Odds</a>
+                            <a href="/bets.html">Bets</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-dropdown">
+                        <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
+                        <div class="dropdown-menu">
+                            <a href="/community/">Hub</a>
+                            <a href="/community/forums.html">Forums</a>
+                            <a href="/community/chat.html">Chat</a>
+                            <a href="/community/clubs/">Clubs</a>
+                            <a href="/community/tailgates/">Tailgates</a>
+                            <a href="/community/watch-parties/">Watch Parties</a>
+                            <a href="/leaderboard.html">Leaderboard</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-dropdown">
+                        <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
+                        <div class="dropdown-menu">
+                            <a href="/shop.html">Shop</a>
+                            <a href="/marketplace/">Marketplace</a>
+                            <a href="/raffles/">Raffles</a>
+                            <a href="/membership.html">Membership</a>
+                        </div>
+                    </div>
+
+                    <a href="/esports/" class="nav-item">eSports</a>
+                    <a href="/youth/" class="nav-item">Youth</a>
+                    <a href="/game-threads.html" class="nav-item">Live</a>
+                </div>
+            </nav>
         </header>
-        <nav class="main-nav">
-            <div class="nav-inner">
-                <div class="nav-dropdown">
-                    <span class="nav-item dropdown-trigger">Pro Teams <span class="dropdown-arrow">&#9660;</span></span>
-                    <div class="dropdown-menu">
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+        <!-- Mobile Menu Panel -->
+        <nav class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-header">
+                <span>Menu</span>
+                <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">&times;</button>
+            </div>
+            <div class="mobile-menu-search">
+                <form action="https://www.google.com/search" method="GET" target="_blank">
+                    <input type="text" name="q" placeholder="Search the web..." required>
+                    <button type="submit">Go</button>
+                </form>
+            </div>
+            <div class="mobile-menu-auth" id="mobileMenuAuth">
+                <a href="/login.html" class="login-btn">Login</a>
+                <a href="/register.html" class="signup-btn">Sign Up</a>
+            </div>
+            <div class="mobile-nav-items">
+                <a href="/" class="mobile-nav-item">Home</a>
+
+                <div class="mobile-nav-dropdown">
+                    <div class="mobile-nav-dropdown-trigger">
+                        <span>Pro Teams</span>
+                        <span class="arrow">&#9660;</span>
+                    </div>
+                    <div class="mobile-nav-dropdown-menu">
                         <a href="/eagles/">Eagles</a>
                         <a href="/phillies/">Phillies</a>
-                        <a href="/sixers/">Sixers</a>
+                        <a href="/sixers/">76ers</a>
                         <a href="/flyers/">Flyers</a>
                     </div>
                 </div>
-                <div class="nav-dropdown">
-                    <span class="nav-item dropdown-trigger">College <span class="dropdown-arrow">&#9660;</span></span>
-                    <div class="dropdown-menu">
-                        <a href="/temple/">Temple</a>
+
+                <div class="mobile-nav-dropdown">
+                    <div class="mobile-nav-dropdown-trigger">
+                        <span>College</span>
+                        <span class="arrow">&#9660;</span>
+                    </div>
+                    <div class="mobile-nav-dropdown-menu">
                         <a href="/villanova/">Villanova</a>
                         <a href="/penn/">Penn</a>
-                        <a href="/drexel/">Drexel</a>
-                        <a href="/stjosephs/">St. Joe's</a>
                         <a href="/lasalle/">La Salle</a>
+                        <a href="/drexel/">Drexel</a>
+                        <a href="/stjosephs/">St. Joseph's</a>
+                        <a href="/temple/">Temple</a>
                     </div>
                 </div>
-                <div class="nav-dropdown">
-                    <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
-                    <div class="dropdown-menu">
-                        <a href="/poker.html">Poker</a>
+
+                <div class="mobile-nav-dropdown">
+                    <div class="mobile-nav-dropdown-trigger">
+                        <span>Gaming</span>
+                        <span class="arrow">&#9660;</span>
+                    </div>
+                    <div class="mobile-nav-dropdown-menu">
                         <a href="/fantasy.html">Fantasy</a>
                         <a href="/pools.html">Pools</a>
+                        <a href="/poker.html">Poker</a>
                         <a href="/trivia.html">Trivia</a>
                         <a href="/predictions.html">Predictions</a>
-                        <a href="/esports/">Esports</a>
                     </div>
                 </div>
-                <div class="nav-dropdown">
-                    <span class="nav-item dropdown-trigger">Community <span class="dropdown-arrow">&#9660;</span></span>
-                    <div class="dropdown-menu">
+
+                <div class="mobile-nav-dropdown">
+                    <div class="mobile-nav-dropdown-trigger">
+                        <span>Betting</span>
+                        <span class="arrow">&#9660;</span>
+                    </div>
+                    <div class="mobile-nav-dropdown-menu">
+                        <a href="/odds.html">Odds</a>
+                        <a href="/bets.html">Bets</a>
+                    </div>
+                </div>
+
+                <div class="mobile-nav-dropdown">
+                    <div class="mobile-nav-dropdown-trigger">
+                        <span>Community</span>
+                        <span class="arrow">&#9660;</span>
+                    </div>
+                    <div class="mobile-nav-dropdown-menu">
                         <a href="/community/">Hub</a>
                         <a href="/community/forums.html">Forums</a>
                         <a href="/community/chat.html">Chat</a>
                         <a href="/community/clubs/">Clubs</a>
                         <a href="/community/tailgates/">Tailgates</a>
                         <a href="/community/watch-parties/">Watch Parties</a>
+                        <a href="/leaderboard.html">Leaderboard</a>
                     </div>
                 </div>
-                <a href="/game-threads.html" class="nav-item">Live</a>
-                <a href="/report-issue.html" class="nav-item">Report Issue</a>
-                <div class="nav-dropdown">
-                    <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
-                    <div class="dropdown-menu">
+
+                <div class="mobile-nav-dropdown">
+                    <div class="mobile-nav-dropdown-trigger">
+                        <span>Shop</span>
+                        <span class="arrow">&#9660;</span>
+                    </div>
+                    <div class="mobile-nav-dropdown-menu">
                         <a href="/shop.html">Shop</a>
                         <a href="/marketplace/">Marketplace</a>
                         <a href="/raffles/">Raffles</a>
+                        <a href="/membership.html">Membership</a>
                     </div>
                 </div>
-                <div class="nav-search">
-                    <form action="/search.html" method="GET">
-                        <input type="search" name="q" placeholder="Search..." class="nav-search-input">
-                    </form>
-                </div>
+
+                <a href="/esports/" class="mobile-nav-item">eSports</a>
+                <a href="/youth/" class="mobile-nav-item">Youth</a>
+                <a href="/game-threads.html" class="mobile-nav-item">Live</a>
             </div>
         </nav>
     `;
 
     // Header CSS
     const headerCSS = `
+        /* Header */
         .header {
-            background: var(--header-bg, #2c2c2c);
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: var(--header-bg, #faf9f6);
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
             position: sticky;
             top: 0;
-            z-index: 100;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .logo {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-decoration: none;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .header-right a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-        .header-right a:hover {
-            color: #fff;
-        }
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0.25rem;
-        }
-        @media (max-width: 768px) {
-            .mobile-menu-btn { display: block; }
-            .main-nav { display: none; }
-        }
-
-        /* Navigation */
-        .main-nav {
-            background: var(--header-bg, #2c2c2c);
-            border-bottom: 1px solid var(--border-color, #333);
-        }
-        .nav-inner {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            align-items: center;
-        }
-        .nav-item {
-            padding: 0.75rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--nav-text, #d0d0d0);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: color 0.2s;
-            white-space: nowrap;
-            text-decoration: none;
-        }
-        .nav-item:hover { color: var(--accent-color, #8b0000); }
-        .nav-dropdown { position: relative; }
-        .dropdown-trigger { display: flex; align-items: center; gap: 0.25rem; }
-        .dropdown-arrow { font-size: 0.5rem; transition: transform 0.2s; }
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--header-bg, #2c2c2c);
-            border: 1px solid var(--border-color, #333);
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: 150px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s;
             z-index: 1000;
         }
-        .nav-dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
         }
-        .nav-dropdown:hover .dropdown-arrow { transform: rotate(180deg); }
-        .dropdown-menu a {
-            display: block;
-            padding: 0.6rem 1rem;
-            color: var(--nav-text, #d0d0d0);
+
+        .header-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 60px;
             text-decoration: none;
-            font-size: 0.8rem;
-            transition: background 0.2s;
         }
-        .dropdown-menu a:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
+
+        .header-logo img {
+            width: 136px;
+            height: 136px;
+            border-radius: 12px;
         }
-        .nav-search { margin-left: auto; }
-        .nav-search-input {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border-color, #333);
+
+        .header-logo .tagline {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary, #444);
+            font-style: italic;
+            text-align: center;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header-search form {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-search .google-logo {
+            height: 20px;
+            width: auto;
+        }
+
+        .header-search input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color, #e0e0e0);
             border-radius: 4px;
-            padding: 0.4rem 0.75rem;
-            color: #fff;
+            background: #ffffff;
+            color: var(--text-primary, #1a1a1a);
             font-size: 0.8rem;
-            width: 150px;
+            width: 280px;
+            font-family: inherit;
         }
-        .nav-search-input::placeholder { color: #888; }
-        .nav-search-input:focus {
-            outline: none;
-            border-color: var(--accent-color, #8b0000);
-            width: 200px;
+
+        .header-search input::placeholder {
+            color: var(--text-muted, #777);
+        }
+
+        .header-search button {
+            padding: 0.5rem 0.75rem;
+            background: var(--accent-color, #8b0000);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s;
+        }
+
+        .header-search button:hover {
+            opacity: 0.9;
+        }
+
+        .header-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .header-auth a {
+            color: var(--nav-text, #333);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+
+        .header-auth a:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .header-auth .auth-btn {
+            background: var(--accent-color, #8b0000);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+        }
+
+        .header-auth .auth-btn:hover {
+            opacity: 0.9;
+            background: var(--accent-color, #8b0000);
         }
 
         /* Coin Display */
         .coin-display {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
-            background: rgba(255,255,255,0.1);
-            padding: 0.3rem 0.6rem;
+            gap: 0.35rem;
+            background: rgba(139, 0, 0, 0.1);
+            padding: 0.35rem 0.75rem;
             border-radius: 20px;
+            font-weight: 600;
             font-size: 0.85rem;
-            color: #ffd700;
+            color: var(--accent-color, #8b0000);
+            cursor: default;
         }
+
         .coin-icon { font-size: 1rem; }
+        .coin-balance { font-variant-numeric: tabular-nums; }
+
         .buy-coins-link {
-            color: #ffd700 !important;
+            color: var(--accent-color, #8b0000);
+            text-decoration: none;
             font-weight: bold;
+            font-size: 1rem;
             margin-left: 0.25rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
+
+        .buy-coins-link:hover { opacity: 1; }
 
         /* Premium Badge */
         .premium-badge {
@@ -238,11 +387,14 @@
             padding: 0.2rem 0.5rem !important;
             border-radius: 4px;
             text-decoration: none;
+            margin-left: -0.5rem;
             letter-spacing: 0.5px;
         }
+
         .premium-badge:hover {
             background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
         }
+
         .go-premium-link {
             background: linear-gradient(135deg, #ffd700, #ff8c00);
             color: #000 !important;
@@ -254,10 +406,12 @@
             letter-spacing: 0.3px;
             animation: pulse-glow 2s infinite;
         }
+
         .go-premium-link:hover {
             background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
             transform: scale(1.05);
         }
+
         @keyframes pulse-glow {
             0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
             50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
@@ -274,6 +428,7 @@
             text-decoration: none;
             letter-spacing: 0.3px;
         }
+
         .admin-link:hover {
             background: #a00000 !important;
             transform: scale(1.05);
@@ -282,7 +437,7 @@
         /* Theme Toggle */
         .theme-toggle {
             background: none;
-            border: 1px solid var(--border-color, #333);
+            border: 1px solid var(--border-color, #e0e0e0);
             border-radius: 20px;
             padding: 0.4rem 0.6rem;
             cursor: pointer;
@@ -292,20 +447,329 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
-            color: inherit;
         }
-        .theme-toggle:hover { background: rgba(255,255,255,0.1); }
-        .theme-icon-light, .theme-icon-dark { display: none; }
-        .theme-icon-light { display: inline; }
-        [data-theme="dark"] .theme-icon-light { display: none; }
-        [data-theme="dark"] .theme-icon-dark { display: inline; }
+
+        .theme-toggle:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .theme-toggle .theme-icon-light,
+        .theme-toggle .theme-icon-dark {
+            display: none;
+        }
+
+        .theme-toggle .theme-icon-light { display: inline; }
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        /* Main Navigation */
+        .main-nav {
+            background: var(--header-bg, #faf9f6);
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+        }
+
+        .nav-inner {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--nav-text, #333);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: color 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .nav-item:hover { color: var(--accent-color, #8b0000); }
+
+        .nav-dropdown { position: relative; }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--header-bg, #faf9f6);
+            border: 1px solid var(--border-color, #e0e0e0);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--nav-text, #333);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background: rgba(0,0,0,0.05);
+            color: var(--accent-color, #8b0000);
+        }
+
+        [data-theme="dark"] .dropdown-menu a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary, #1a1a1a);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            z-index: 1001;
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Mobile Menu Panel */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background: var(--card-bg, #fff);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-menu.active { right: 0; }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            background: linear-gradient(135deg, #004C54, #8b0000);
+        }
+
+        .mobile-menu-header span {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .mobile-menu-search {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+        }
+
+        .mobile-menu-search form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mobile-menu-search input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color, #e0e0e0);
+            border-radius: 4px;
+            background: var(--card-bg, #fff);
+            color: var(--text-primary, #1a1a1a);
+        }
+
+        .mobile-menu-search button {
+            padding: 0.5rem 1rem;
+            background: #004C54;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-auth {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+        }
+
+        .mobile-menu-auth a {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .mobile-menu-auth .login-btn {
+            background: var(--card-bg, #fff);
+            color: var(--text-primary, #1a1a1a);
+            border: 1px solid var(--border-color, #e0e0e0);
+        }
+
+        .mobile-menu-auth .signup-btn {
+            background: linear-gradient(135deg, #004C54, #8b0000);
+            color: #ffffff;
+        }
+
+        .mobile-nav-items { padding: 0.5rem 0; }
+
+        .mobile-nav-item {
+            display: block;
+            padding: 0.875rem 1rem;
+            color: var(--text-primary, #1a1a1a);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+            transition: background 0.2s;
+        }
+
+        .mobile-nav-item:hover {
+            background: var(--card-bg-hover, #f5f5f5);
+        }
+
+        .mobile-nav-dropdown {
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
+        }
+
+        .mobile-nav-dropdown-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            color: var(--text-primary, #1a1a1a);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mobile-nav-dropdown-trigger:hover {
+            background: var(--card-bg-hover, #f5f5f5);
+        }
+
+        .mobile-nav-dropdown-trigger .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-nav-dropdown.open .mobile-nav-dropdown-trigger .arrow {
+            transform: rotate(180deg);
+        }
+
+        .mobile-nav-dropdown-menu {
+            display: none;
+            background: var(--card-bg-hover, #f5f5f5);
+        }
+
+        .mobile-nav-dropdown.open .mobile-nav-dropdown-menu {
+            display: block;
+        }
+
+        .mobile-nav-dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1rem 0.75rem 2rem;
+            color: var(--text-secondary, #444);
+            text-decoration: none;
+            border-top: 1px solid var(--border-color, #e0e0e0);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .mobile-nav-dropdown-menu a:hover {
+            background: var(--card-bg, #fff);
+            color: var(--text-primary, #1a1a1a);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .header-search input { width: 200px; }
+        }
+
+        @media (max-width: 768px) {
+            .header-search { display: none; }
+            .header-auth { display: none; }
+            .main-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            .header-logo { margin-top: 0; }
+            .header-logo img { width: 80px; height: 80px; }
+            .header-logo .tagline { font-size: 0.75rem; }
+        }
     `;
 
     // Inject CSS
     function injectCSS() {
-        if (document.getElementById('header-styles')) return;
+        if (document.getElementById('shared-header-styles')) return;
         const style = document.createElement('style');
-        style.id = 'header-styles';
+        style.id = 'shared-header-styles';
         style.textContent = headerCSS;
         document.head.appendChild(style);
     }
@@ -323,7 +787,7 @@
 
     // Theme toggle functionality
     function initThemeToggle() {
-        const toggle = document.getElementById('themeToggle') || document.getElementById('themeToggleDefault');
+        const toggle = document.getElementById('themeToggle');
         if (!toggle) return;
 
         const savedTheme = localStorage.getItem('theme');
@@ -339,6 +803,45 @@
         });
     }
 
+    // Mobile menu functionality
+    function initMobileMenu() {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const dropdownTriggers = document.querySelectorAll('.mobile-nav-dropdown-trigger');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.add('active');
+                mobileMenuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+        }
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Mobile dropdown toggles
+        dropdownTriggers.forEach(trigger => {
+            trigger.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.classList.toggle('open');
+            });
+        });
+    }
+
     // Check authentication and update header
     async function checkAuth() {
         try {
@@ -347,6 +850,7 @@
 
             if (data.user) {
                 const headerAuth = document.getElementById('headerAuth');
+                const mobileMenuAuth = document.getElementById('mobileMenuAuth');
 
                 const premiumBadge = data.user.isSubscribed
                     ? `<a href="/membership.html" class="premium-badge" title="${data.user.subscriptionTierName || 'Premium'}">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
@@ -356,32 +860,53 @@
                     ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
                     : '';
 
-                headerAuth.innerHTML = `
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                    </button>
-                    <div class="coin-display" title="Diehard Dollars">
-                        <span class="coin-icon">&#129689;</span>
-                        <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
-                        <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
-                    </div>
-                    ${premiumBadge}
-                    ${adminLink}
-                    <a href="/profile.html">${data.user.username}</a>
-                    <a href="#" id="logoutBtn">Logout</a>
-                `;
+                if (headerAuth) {
+                    headerAuth.innerHTML = `
+                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                        </button>
+                        <div class="coin-display" title="Diehard Dollars">
+                            <span class="coin-icon">&#129689;</span>
+                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
+                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
+                        </div>
+                        ${premiumBadge}
+                        ${adminLink}
+                        <a href="/profile.html">${data.user.username}</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    `;
 
-                // Re-init theme toggle after updating header
-                initThemeToggle();
+                    // Re-init theme toggle after updating header
+                    initThemeToggle();
 
-                // Add logout handler
-                document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-                    localStorage.removeItem('auth_token');
-                    window.location.reload();
-                });
+                    // Add logout handler
+                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+                        localStorage.removeItem('auth_token');
+                        window.location.reload();
+                    });
+                }
+
+                // Update mobile menu auth
+                if (mobileMenuAuth) {
+                    mobileMenuAuth.innerHTML = `
+                        <div class="coin-display" style="flex:1;justify-content:center;" title="Diehard Dollars">
+                            <span class="coin-icon">&#129689;</span>
+                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
+                        </div>
+                        <a href="/profile.html" class="login-btn">${data.user.username}</a>
+                        <a href="#" class="signup-btn" id="mobileLogoutBtn">Logout</a>
+                    `;
+
+                    document.getElementById('mobileLogoutBtn')?.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+                        localStorage.removeItem('auth_token');
+                        window.location.reload();
+                    });
+                }
             }
         } catch (error) {
             // Not logged in, keep default header
@@ -393,6 +918,7 @@
         injectCSS();
         injectHeader();
         initThemeToggle();
+        initMobileMenu();
         checkAuth();
     }
 
@@ -406,6 +932,7 @@
     // Export for external use if needed
     window.PhillySportsHeader = {
         checkAuth,
-        initThemeToggle
+        initThemeToggle,
+        initMobileMenu
     };
 })();
