@@ -782,6 +782,13 @@
             transform: translateY(-1px);
         }
 
+        /* Buy More button - keep readable in dark mode */
+        [data-theme="dark"] .buy-coins-link {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            color: #1A2744 !important;
+            border: 1px solid #8B1A28 !important;
+        }
+
         /* User Actions Stack */
         .user-actions-stack {
             display: flex;
