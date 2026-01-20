@@ -1122,9 +1122,12 @@
             padding: 0.75rem 1rem;
             background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
             border-bottom: 2px solid #1A2744;
+        }
+
+        .widget-header-content {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 0.15rem;
         }
 
         .widget-title {
@@ -1136,6 +1139,13 @@
             color: #1A2744;
         }
 
+        .widget-subtitle {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #1A2744;
+            opacity: 0.8;
+        }
+
         /* Keep widget header consistent in dark mode */
         [data-theme="dark"] .widget-header {
             background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
@@ -1143,6 +1153,10 @@
         }
 
         [data-theme="dark"] .widget-title {
+            color: #1A2744;
+        }
+
+        [data-theme="dark"] .widget-subtitle {
             color: #1A2744;
         }
 
@@ -1951,7 +1965,10 @@
             <!-- Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <h3 class="widget-title">Recent Scores</h3>
+                    <div class="widget-header-content">
+                        <h3 class="widget-title">Recent Scores</h3>
+                        <span class="widget-subtitle">click game for boxscore</span>
+                    </div>
                 </div>
                 <div class="widget-content" id="scoresContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
