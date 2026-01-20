@@ -1440,20 +1440,68 @@
             padding: 1rem;
         }
 
-        .trivia-team-badge {
-            display: inline-block;
-            font-size: 0.65rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
+        .trivia-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
             margin-bottom: 0.5rem;
         }
 
-        .trivia-team-badge.Eagles { background: rgba(0,76,84,0.15); color: #004C54; }
-        .trivia-team-badge.Phillies { background: rgba(232,24,40,0.15); color: #E81828; }
-        .trivia-team-badge.t76ers { background: rgba(0,107,182,0.15); color: #006BB6; }
-        .trivia-team-badge.Flyers { background: rgba(247,73,2,0.15); color: #F74902; }
+        .trivia-team-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 2px;
+            background: var(--ps-cream-dark, #e8e4d9);
+        }
+
+        .trivia-team-badge strong {
+            font-weight: 600;
+            color: #1A2744;
+        }
+
+        .trivia-team-badge.Eagles { color: #004C54; }
+        .trivia-team-badge.Phillies { color: #E81828; }
+        .trivia-team-badge.t76ers { color: #006BB6; }
+        .trivia-team-badge.Flyers { color: #F74902; }
+
+        .trivia-difficulty {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 2px;
+            background: var(--ps-cream-dark, #e8e4d9);
+        }
+
+        .trivia-difficulty strong {
+            font-weight: 600;
+            color: #1A2744;
+        }
+
+        .trivia-difficulty.easy { color: #4caf50; }
+        .trivia-difficulty.medium { color: #ff9800; }
+        .trivia-difficulty.hard { color: #f44336; }
+
+        .trivia-dd-info {
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .trivia-dd-stake {
+            color: #b8860b;
+            font-weight: 600;
+        }
+
+        .trivia-dd-login {
+            color: var(--ps-red, #8B0000);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .trivia-dd-login:hover {
+            text-decoration: underline;
+        }
 
         .trivia-question-text {
             font-size: 0.9rem;
@@ -1462,17 +1510,6 @@
             margin-bottom: 0.75rem;
             line-height: 1.4;
         }
-
-        .trivia-difficulty {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .trivia-difficulty.easy { color: #4caf50; }
-        .trivia-difficulty.medium { color: #ff9800; }
-        .trivia-difficulty.hard { color: #f44336; }
 
         .trivia-options {
             display: flex;
@@ -3106,10 +3143,23 @@
         function renderTriviaQuestion(q) {
             const widget = document.getElementById('triviaWidget');
             const teamClass = q.team === '76ers' ? 't76ers' : q.team;
+            const isLoggedIn = !!localStorage.getItem('token');
+
+            // DD values by difficulty
+            const ddValues = { easy: 5, medium: 10, hard: 20 };
+            const ddAtStake = ddValues[q.difficulty] || 10;
 
             widget.innerHTML = `
-                <span class="trivia-team-badge ${teamClass}">${q.team}</span>
-                <span class="trivia-difficulty ${q.difficulty}">${q.difficulty}</span>
+                <div class="trivia-meta">
+                    <span class="trivia-team-badge ${teamClass}"><strong>Category:</strong> ${q.team}</span>
+                    <span class="trivia-difficulty ${q.difficulty}"><strong>Difficulty:</strong> ${q.difficulty}</span>
+                </div>
+                <div class="trivia-dd-info">
+                    ${isLoggedIn
+                        ? `<span class="trivia-dd-stake">&#129689; ${ddAtStake} DD at stake</span>`
+                        : `<a href="/login.html" class="trivia-dd-login">Login to earn Diehard Dollars</a>`
+                    }
+                </div>
                 <p class="trivia-question-text">${q.question}</p>
                 <div class="trivia-options">
                     ${q.options.map((opt, i) => `
