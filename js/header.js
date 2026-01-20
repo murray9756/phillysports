@@ -374,100 +374,107 @@
         .header-auth {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .header-auth a {
-            color: var(--nav-text, #d0d0d0);
-            font-size: 0.8rem;
+            font-family: Georgia, serif;
+            color: #F5F0E1;
+            font-size: 0.85rem;
             font-weight: 600;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            transition: background 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 0.5rem 1rem;
             text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
         }
 
         .header-auth a:hover {
-            background: var(--card-bg-hover, rgba(255,255,255,0.1));
-            color: var(--text-primary, #fff);
+            color: #ffd700;
         }
 
         .header-auth .auth-btn {
-            background: #8b0000;
-            color: #ffffff;
-            padding: 0.5rem 1rem;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            color: #1A2744;
+            border: 3px solid #1A2744;
+            box-shadow: inset 0 0 0 2px #8B1A28;
+            padding: 0.5rem 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
         }
 
         .header-auth .auth-btn:hover {
-            opacity: 0.9;
-            background: #8b0000;
+            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
+            transform: translateY(-1px);
+            box-shadow: inset 0 0 0 2px #8B1A28, 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Coin Display - Prominent Square */
+        /* Coin Display - Americana Style */
         .coin-display {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.35rem;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 140, 0, 0.15));
-            border: 3px solid #ffd700;
-            padding: 1rem 1.5rem;
-            border-radius: 4px;
+            gap: 0.25rem;
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            border: 4px solid #F5F0E1;
+            box-shadow: inset 0 0 0 2px #8B1A28;
+            padding: 0.75rem 1rem;
             cursor: default;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-            min-width: 140px;
+            min-width: 120px;
         }
 
         .coin-label {
-            font-size: 0.7rem;
+            font-family: Georgia, serif;
+            font-size: 0.6rem;
             font-weight: 700;
-            color: #ffd700;
+            font-style: italic;
+            color: #F5F0E1;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
 
         .coin-amount-row {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .coin-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, #ffd700, #c9a000);
             border-radius: 50%;
-            font-size: 1rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            color: #000;
-            box-shadow: inset 0 -2px 4px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2);
-            border: 2px solid #ffaa00;
+            color: #1A2744;
+            border: 2px solid #F5F0E1;
+            font-family: Georgia, serif;
         }
 
         .coin-balance {
+            font-family: Georgia, serif;
             font-variant-numeric: tabular-nums;
-            font-size: 2rem;
-            font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd700;
         }
 
         .buy-coins-link {
-            color: #000 !important;
+            font-family: Georgia, serif;
+            color: #1A2744 !important;
             text-decoration: none;
             font-weight: 700;
-            font-size: 0.65rem;
-            margin-top: 0.5rem;
-            padding: 0.4rem 0.75rem;
+            font-size: 0.6rem;
+            margin-top: 0.35rem;
+            padding: 0.3rem 0.6rem;
             transition: all 0.2s;
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
-            border-radius: 4px;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 2px solid #8B1A28;
             display: block;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -475,9 +482,8 @@
         }
 
         .buy-coins-link:hover {
-            background: linear-gradient(135deg, #ffe44d, #ffbb33);
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
+            transform: translateY(-1px);
         }
 
         /* User Actions Stack */
@@ -485,69 +491,75 @@
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            gap: 0.35rem;
+            gap: 0.3rem;
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            border: 3px solid #F5F0E1;
+            box-shadow: inset 0 0 0 2px #8B1A28;
+            padding: 0.5rem;
         }
 
         .user-actions-stack a {
+            font-family: Georgia, serif;
             text-align: center;
-            padding: 0.35rem 0.75rem !important;
+            padding: 0.3rem 0.5rem !important;
             font-size: 0.7rem !important;
+            color: #F5F0E1 !important;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .user-actions-stack a:hover {
+            color: #ffd700 !important;
         }
 
         /* Premium Badge */
         .premium-badge {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            color: #000 !important;
-            font-size: 0.65rem !important;
+            background: linear-gradient(180deg, #ffd700 0%, #c9a000 100%) !important;
+            color: #1A2744 !important;
+            font-family: Georgia, serif !important;
+            font-size: 0.6rem !important;
             font-weight: 700 !important;
-            padding: 0.2rem 0.5rem !important;
-            border-radius: 4px;
+            padding: 0.25rem 0.5rem !important;
             text-decoration: none;
-            margin-left: -0.5rem;
             letter-spacing: 0.5px;
+            border: 2px solid #F5F0E1;
         }
 
         .premium-badge:hover {
-            background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
+            background: linear-gradient(180deg, #ffe44d 0%, #ffd700 100%) !important;
         }
 
         .go-premium-link {
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            color: #000 !important;
-            font-size: 0.7rem !important;
+            background: linear-gradient(180deg, #ffd700 0%, #c9a000 100%) !important;
+            color: #1A2744 !important;
+            font-family: Georgia, serif !important;
+            font-size: 0.65rem !important;
             font-weight: 700 !important;
-            padding: 0.4rem 0.75rem !important;
-            border-radius: 4px;
+            padding: 0.3rem 0.6rem !important;
             text-decoration: none;
-            letter-spacing: 0.3px;
-            animation: pulse-glow 2s infinite;
+            letter-spacing: 0.5px;
+            border: 2px solid #F5F0E1;
         }
 
         .go-premium-link:hover {
-            background: linear-gradient(135deg, #ffdf00, #ffa500) !important;
-            transform: scale(1.05);
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-            50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+            background: linear-gradient(180deg, #ffe44d 0%, #ffd700 100%) !important;
         }
 
         /* Admin Link */
         .admin-link {
-            background: var(--accent-color, #8b0000);
-            color: #fff !important;
-            font-size: 0.7rem !important;
+            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
+            color: #F5F0E1 !important;
+            font-family: Georgia, serif !important;
+            font-size: 0.65rem !important;
             font-weight: 700 !important;
             padding: 0.3rem 0.6rem !important;
-            border-radius: 4px;
             text-decoration: none;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            border: 2px solid #F5F0E1;
         }
 
         .admin-link:hover {
-            background: #a00000 !important;
-            transform: scale(1.05);
+            background: linear-gradient(180deg, #a01f30 0%, #8B1A28 100%) !important;
         }
 
         /* Theme Toggle */
