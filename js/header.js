@@ -22,8 +22,51 @@
                     <span class="theme-label">Dark Mode</span>
                 </button>
                 <a href="/" class="header-logo">
-                    <img src="/logo.png" alt="PhillySports.com">
-                    <span class="tagline">Where the Diehards Play Hard</span>
+                    <!-- Light Mode Logo (F5 Vignette) -->
+                    <div class="logo-light" style="position: relative; width: 480px; height: 280px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 8px solid #1A2744; overflow: hidden;">
+                        <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 3px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%); z-index: 8; pointer-events: none;"></div>
+                        <img src="/ben.jpeg" alt="" style="position: absolute; top: 50%; left: -20px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.5; z-index: 1;">
+                        <div style="position: absolute; top: 12px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5;">
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="rsL" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#rsL)"/>
+                            </svg>
+                            <span style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #1A2744; letter-spacing: 4px;">Est. 2026</span>
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="bsL" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3a5a8c"/><stop offset="50%" style="stop-color:#1A2744"/><stop offset="100%" style="stop-color:#0d1520"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#bsL)"/>
+                            </svg>
+                        </div>
+                        <div style="position: absolute; top: 90px; right: 25px; text-align: right; z-index: 5;">
+                            <div style="font-family: 'Brush Script MT', cursive; font-size: 58px; color: #1A2744; line-height: 0.9;">Philly</div>
+                            <div style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 52px; color: #8B1A28; line-height: 0.85; letter-spacing: -1px;">SPORTS</div>
+                            <div style="font-family: Georgia, serif; font-size: 14px; color: #1A2744; letter-spacing: 2px;">.COM</div>
+                        </div>
+                        <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                    </div>
+                    <!-- Dark Mode Logo (F2) -->
+                    <div class="logo-dark" style="position: relative; width: 480px; height: 280px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 8px solid #F5F0E1; overflow: hidden;">
+                        <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 3px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
+                        <img src="/ben.jpeg" alt="" style="position: absolute; top: 50%; left: -20px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
+                        <div style="position: absolute; top: 12px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5;">
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="rsD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#rsD)"/>
+                            </svg>
+                            <span style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #F5F0E1; letter-spacing: 4px;">Est. 2026</span>
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="bsD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6a8fc4"/><stop offset="50%" style="stop-color:#4a6fa0"/><stop offset="100%" style="stop-color:#3a5a8c"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#bsD)"/>
+                            </svg>
+                        </div>
+                        <div style="position: absolute; top: 90px; right: 25px; text-align: right; z-index: 5;">
+                            <div style="font-family: 'Brush Script MT', cursive; font-size: 58px; color: #F5F0E1; line-height: 0.9;">Philly</div>
+                            <div style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 52px; color: #8B1A28; line-height: 0.85; letter-spacing: -1px;">SPORTS</div>
+                            <div style="font-family: Georgia, serif; font-size: 14px; color: #F5F0E1; letter-spacing: 2px;">.COM</div>
+                        </div>
+                        <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                    </div>
                 </a>
                 <div class="header-auth" id="headerAuth">
                     <a href="/login.html">Login</a>
@@ -247,19 +290,13 @@
             text-decoration: none;
         }
 
-        .header-logo img {
-            width: 160px;
-            height: 160px;
-            border-radius: 12px;
-        }
+        /* Logo theme switching - light mode default */
+        .header-logo .logo-light { display: block; }
+        .header-logo .logo-dark { display: none; }
 
-        .header-logo .tagline {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #b0b0b0;
-            font-style: italic;
-            text-align: center;
-        }
+        /* Dark mode - swap logos */
+        [data-theme="dark"] .header-logo .logo-light { display: none; }
+        [data-theme="dark"] .header-logo .logo-dark { display: block; }
 
         .header-search {
             display: flex;
@@ -873,8 +910,11 @@
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
             .header-logo { margin-top: 0; }
-            .header-logo img { width: 120px; height: 120px; }
-            .header-logo .tagline { font-size: 0.75rem; }
+            .header-logo .logo-light,
+            .header-logo .logo-dark {
+                width: 320px !important;
+                height: 187px !important;
+            }
         }
     `;
 
