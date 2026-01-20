@@ -494,12 +494,12 @@
             transform: scale(1.05);
         }
 
-        /* Theme Toggle - Positioned independently in top-right */
+        /* Theme Toggle - Positioned independently in top-left near search */
         .theme-toggle {
             position: absolute;
             top: 0.75rem;
-            right: 1.5rem;
-            background: none;
+            left: 1.5rem;
+            background: #2a2a2a;
             border: 1px solid #444;
             border-radius: 20px;
             padding: 0.4rem 0.6rem;
