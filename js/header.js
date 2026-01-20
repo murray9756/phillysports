@@ -1,7 +1,7 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
-// Version: 2.1 - Fixed right column stacking
+// Version: 2.4 - Added global dark mode styles for entire page
 
 (function() {
     'use strict';
@@ -10,7 +10,7 @@
     const headerHTML = `
         <header class="header">
             <div class="header-top">
-                <!-- Left Column: Google Search -->
+                <!-- Left Column: Google Search + Theme Toggle -->
                 <div class="header-left">
                     <div class="header-search">
                         <form action="https://www.google.com/search" method="GET" target="_blank">
@@ -19,6 +19,11 @@
                             <button type="submit">Go</button>
                         </form>
                     </div>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                        <span class="theme-label">Dark Mode</span>
+                    </button>
                 </div>
                 <!-- Center Column: Logo -->
                 <a href="/" class="header-logo">
@@ -68,13 +73,8 @@
                         <div style="position: absolute; bottom: 8px; left: 70px; right: 20px; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
                     </div>
                 </a>
-                <!-- Right Column: Theme Toggle + Auth -->
+                <!-- Right Column: Auth -->
                 <div class="header-right">
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                        <span class="theme-label">Dark Mode</span>
-                    </button>
                     <div class="header-auth" id="headerAuth">
                         <a href="/login.html">Login</a>
                         <a href="/register.html" class="auth-btn">Sign Up</a>
@@ -279,6 +279,24 @@
             --text-primary: #ffffff;
             --text-secondary: #d0d0d0;
             --nav-text: #d0d0d0;
+
+            /* Global Page Variables - Light Mode */
+            --page-bg: #f5f5f5;
+            --page-bg-alt: #ffffff;
+            --page-text: #1a1a1a;
+            --page-text-secondary: #666666;
+            --page-text-muted: #888888;
+            --page-border: #e0e0e0;
+            --page-card-bg: #ffffff;
+            --page-card-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --page-link: #1A2744;
+            --page-link-hover: #8B1A28;
+            --page-accent: #8B1A28;
+            --page-accent-light: rgba(139, 26, 40, 0.1);
+            --page-input-bg: #ffffff;
+            --page-input-border: #ccc;
+            --page-button-bg: #1A2744;
+            --page-button-text: #ffffff;
         }
 
         /* Theme Variables - Dark Mode */
@@ -290,6 +308,236 @@
             --text-primary: #ffffff;
             --text-secondary: #b0b0b0;
             --nav-text: #b0b0b0;
+
+            /* Global Page Variables - Dark Mode */
+            --page-bg: #121212;
+            --page-bg-alt: #1a1a1a;
+            --page-text: #e0e0e0;
+            --page-text-secondary: #b0b0b0;
+            --page-text-muted: #888888;
+            --page-border: #333333;
+            --page-card-bg: #1e1e1e;
+            --page-card-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            --page-link: #6a9fd4;
+            --page-link-hover: #ff6b6b;
+            --page-accent: #ff6b6b;
+            --page-accent-light: rgba(255, 107, 107, 0.15);
+            --page-input-bg: #2a2a2a;
+            --page-input-border: #444;
+            --page-button-bg: #3a5a8c;
+            --page-button-text: #ffffff;
+        }
+
+        /* ========== GLOBAL DARK MODE STYLES ========== */
+
+        /* Page Background */
+        [data-theme="dark"] body {
+            background-color: var(--page-bg) !important;
+            color: var(--page-text) !important;
+        }
+
+        [data-theme="dark"] main,
+        [data-theme="dark"] .main-content,
+        [data-theme="dark"] .content,
+        [data-theme="dark"] .container {
+            background-color: transparent;
+            color: var(--page-text);
+        }
+
+        /* Headings */
+        [data-theme="dark"] h1,
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3,
+        [data-theme="dark"] h4,
+        [data-theme="dark"] h5,
+        [data-theme="dark"] h6 {
+            color: var(--page-text) !important;
+        }
+
+        /* Paragraphs and Text */
+        [data-theme="dark"] p,
+        [data-theme="dark"] span,
+        [data-theme="dark"] li,
+        [data-theme="dark"] td,
+        [data-theme="dark"] th,
+        [data-theme="dark"] label {
+            color: var(--page-text-secondary);
+        }
+
+        /* Links */
+        [data-theme="dark"] a:not(.header a):not(.main-nav a):not(.mobile-menu a) {
+            color: var(--page-link);
+        }
+
+        [data-theme="dark"] a:not(.header a):not(.main-nav a):not(.mobile-menu a):hover {
+            color: var(--page-link-hover);
+        }
+
+        /* Cards and Sections */
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .panel,
+        [data-theme="dark"] .box,
+        [data-theme="dark"] .section,
+        [data-theme="dark"] .widget,
+        [data-theme="dark"] article,
+        [data-theme="dark"] .post,
+        [data-theme="dark"] .item {
+            background-color: var(--page-card-bg) !important;
+            border-color: var(--page-border) !important;
+            box-shadow: var(--page-card-shadow);
+        }
+
+        /* Forms and Inputs */
+        [data-theme="dark"] input:not([type="submit"]):not([type="button"]),
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] select {
+            background-color: var(--page-input-bg) !important;
+            border-color: var(--page-input-border) !important;
+            color: var(--page-text) !important;
+        }
+
+        [data-theme="dark"] input::placeholder,
+        [data-theme="dark"] textarea::placeholder {
+            color: var(--page-text-muted) !important;
+        }
+
+        /* Buttons */
+        [data-theme="dark"] button:not(.theme-toggle):not(.mobile-menu-btn):not(.mobile-menu-close),
+        [data-theme="dark"] .btn,
+        [data-theme="dark"] input[type="submit"],
+        [data-theme="dark"] input[type="button"] {
+            background-color: var(--page-button-bg);
+            color: var(--page-button-text);
+            border-color: var(--page-border);
+        }
+
+        /* Tables */
+        [data-theme="dark"] table {
+            border-color: var(--page-border);
+        }
+
+        [data-theme="dark"] th {
+            background-color: var(--page-bg-alt) !important;
+            color: var(--page-text) !important;
+            border-color: var(--page-border) !important;
+        }
+
+        [data-theme="dark"] td {
+            background-color: var(--page-card-bg);
+            border-color: var(--page-border) !important;
+        }
+
+        [data-theme="dark"] tr:nth-child(even) td {
+            background-color: var(--page-bg-alt);
+        }
+
+        /* Borders */
+        [data-theme="dark"] hr {
+            border-color: var(--page-border);
+        }
+
+        [data-theme="dark"] [style*="border"],
+        [data-theme="dark"] .border {
+            border-color: var(--page-border) !important;
+        }
+
+        /* Specific Site Elements */
+        [data-theme="dark"] .hero,
+        [data-theme="dark"] .banner,
+        [data-theme="dark"] .jumbotron {
+            background-color: var(--page-bg-alt) !important;
+        }
+
+        [data-theme="dark"] .sidebar,
+        [data-theme="dark"] aside {
+            background-color: var(--page-card-bg) !important;
+        }
+
+        [data-theme="dark"] footer {
+            background-color: var(--page-bg-alt) !important;
+            color: var(--page-text-secondary) !important;
+        }
+
+        /* Modal/Dialog Dark Mode */
+        [data-theme="dark"] .modal,
+        [data-theme="dark"] .dialog,
+        [data-theme="dark"] .popup {
+            background-color: var(--page-card-bg) !important;
+            border-color: var(--page-border) !important;
+        }
+
+        [data-theme="dark"] .modal-overlay,
+        [data-theme="dark"] .backdrop {
+            background-color: rgba(0, 0, 0, 0.8) !important;
+        }
+
+        /* Code blocks */
+        [data-theme="dark"] pre,
+        [data-theme="dark"] code {
+            background-color: #2d2d2d !important;
+            color: #f8f8f2 !important;
+            border-color: var(--page-border) !important;
+        }
+
+        /* Scrollbar Dark Mode */
+        [data-theme="dark"] ::-webkit-scrollbar {
+            background-color: var(--page-bg);
+        }
+
+        [data-theme="dark"] ::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 4px;
+        }
+
+        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        /* Team Colors - Keep vibrant in dark mode */
+        [data-theme="dark"] .eagles,
+        [data-theme="dark"] .eagles-bg {
+            background-color: #004C54 !important;
+        }
+
+        [data-theme="dark"] .phillies,
+        [data-theme="dark"] .phillies-bg {
+            background-color: #8b0000 !important;
+        }
+
+        [data-theme="dark"] .sixers,
+        [data-theme="dark"] .sixers-bg {
+            background-color: #006bb6 !important;
+        }
+
+        [data-theme="dark"] .flyers,
+        [data-theme="dark"] .flyers-bg {
+            background-color: #f74902 !important;
+        }
+
+        /* Utility Classes for Dark Mode */
+        [data-theme="dark"] .bg-white {
+            background-color: var(--page-card-bg) !important;
+        }
+
+        [data-theme="dark"] .bg-light {
+            background-color: var(--page-bg-alt) !important;
+        }
+
+        [data-theme="dark"] .text-dark {
+            color: var(--page-text) !important;
+        }
+
+        [data-theme="dark"] .text-muted {
+            color: var(--page-text-muted) !important;
+        }
+
+        /* Images - slight dim in dark mode for eye comfort */
+        [data-theme="dark"] img:not(.header-logo img):not(.logo) {
+            opacity: 0.9;
+        }
+
+        [data-theme="dark"] img:not(.header-logo img):not(.logo):hover {
+            opacity: 1;
         }
 
         /* Header - Uses CSS variables for theme support */
@@ -313,9 +561,9 @@
 
         .header-left {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
         }
 
         .header-right {
@@ -324,6 +572,8 @@
             justify-content: center !important;
             align-items: flex-end !important;
             gap: 0.5rem !important;
+            position: static !important;
+            transform: none !important;
         }
 
         .header-logo {
@@ -343,13 +593,13 @@
             transform: scale(1.02);
         }
 
-        /* Logo theme switching - light mode default shows F2 (dark bg) */
-        .header-logo .logo-for-light { display: block !important; }
-        .header-logo .logo-for-dark { display: none !important; }
+        /* Logo theme switching - light mode shows F5 (light/cream bg) */
+        .header-logo .logo-for-light { display: none !important; }
+        .header-logo .logo-for-dark { display: block !important; }
 
-        /* Dark mode - show F5 (light bg) */
-        [data-theme="dark"] .header-logo .logo-for-light { display: none !important; }
-        [data-theme="dark"] .header-logo .logo-for-dark { display: block !important; }
+        /* Dark mode - show F2 (dark/navy bg) */
+        [data-theme="dark"] .header-logo .logo-for-light { display: block !important; }
+        [data-theme="dark"] .header-logo .logo-for-dark { display: none !important; }
 
         .header-search {
             display: flex;
@@ -407,6 +657,10 @@
             flex-direction: row !important;
             align-items: center !important;
             gap: 0.75rem !important;
+            position: static !important;
+            transform: none !important;
+            top: auto !important;
+            right: auto !important;
         }
 
         .header-auth a {
@@ -501,15 +755,15 @@
             color: #1A2744 !important;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.5rem;
-            margin-top: 0.25rem;
-            padding: 0.2rem 0.5rem;
+            font-size: 0.4rem;
+            margin-top: 0.15rem;
+            padding: 0.1rem 0.3rem;
             transition: all 0.2s;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            border: 2px solid #8B1A28;
+            border: 1px solid #8B1A28;
             display: block;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.25px;
             text-align: center;
         }
 
@@ -1028,18 +1282,42 @@
     // Theme toggle functionality
     function initThemeToggle() {
         const toggle = document.getElementById('themeToggle');
-        if (!toggle) return;
+        if (!toggle) {
+            console.warn('Theme toggle button not found');
+            return;
+        }
 
+        // Apply saved theme on load
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.documentElement.setAttribute('data-theme', savedTheme);
+            document.body.setAttribute('data-theme', savedTheme);
         }
 
-        toggle.addEventListener('click', function() {
+        // Update toggle label based on current theme
+        function updateToggleLabel() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const label = toggle.querySelector('.theme-label');
+            if (label) {
+                label.textContent = current === 'dark' ? 'Light Mode' : 'Dark Mode';
+            }
+        }
+        updateToggleLabel();
+
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             const current = document.documentElement.getAttribute('data-theme');
             const newTheme = current === 'dark' ? 'light' : 'dark';
+
+            // Apply to both html and body for broader compatibility
             document.documentElement.setAttribute('data-theme', newTheme);
+            document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+
+            updateToggleLabel();
+            console.log('Theme changed to:', newTheme);
         });
     }
 
