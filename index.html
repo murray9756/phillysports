@@ -2121,23 +2121,6 @@
                 <h2 class="section-title">Carefully Curated Content</h2>
             </div>
 
-            <!-- Featured Story -->
-            <div id="featuredStory">
-                <div class="featured-hero">
-                    <div class="featured-hero-image" style="background:var(--border-color);">
-                        <span>&#128240;</span>
-                    </div>
-                    <div class="featured-hero-content">
-                        <div class="featured-hero-meta">
-                            <span class="article-tag tag-eagles">Loading</span>
-                            <span>Loading...</span>
-                        </div>
-                        <h2 class="featured-hero-title">Loading latest news...</h2>
-                        <p class="featured-hero-excerpt">Fetching the latest Philly sports stories...</p>
-                    </div>
-                </div>
-            </div>
-
             <!-- Content Filters -->
             <div class="content-filters" id="contentFilters">
                 <div class="filter-group">
@@ -2406,7 +2389,7 @@
                                     <span style="width:1.5rem;text-align:center;">${medal}</span>
                                     <a href="/profile.html?username=${user.username}" style="font-weight:500;color:var(--text-primary);">${user.username}</a>
                                 </span>
-                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
+                                <span style="color:#ff9800;font-size:1rem;font-weight:900;font-family:var(--ps-font-headline,'Arial Black',sans-serif);">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
                             </div>
                         `;
                     }).join('');
@@ -2427,10 +2410,15 @@
                 const response = await fetch('/api/content?limit=100');
                 const data = await response.json();
 
-                if (data.success && data.items && data.items.length > 0) {
+                // Combine featured and items into one list
+                let allItems = [];
+                if (data.featured) allItems.push(data.featured);
+                if (data.items && data.items.length > 0) allItems = allItems.concat(data.items);
+
+                if (allItems.length > 0) {
                     // Aggregate by sourceName
                     const sourceCounts = {};
-                    data.items.forEach(item => {
+                    allItems.forEach(item => {
                         const source = item.sourceName || 'Unknown';
                         sourceCounts[source] = (sourceCounts[source] || 0) + 1;
                     });
@@ -2517,7 +2505,6 @@
 
         // Load curated content (with fallback to news API)
         async function loadNews(filters = {}) {
-            const featuredContainer = document.getElementById('featuredStory');
             const listContainer = document.getElementById('articleList');
 
             // Update filter state
@@ -2525,7 +2512,7 @@
             if (filters.category) currentFilters.category = filters.category;
 
             // Build query params
-            let queryParams = 'page=home&limit=10';
+            let queryParams = 'page=home&limit=15';
             if (currentFilters.type !== 'all') {
                 queryParams += `&type=${currentFilters.type}`;
             }
@@ -2541,47 +2528,30 @@
                 const curatedRes = await fetch(`/api/content?${queryParams}`);
                 const curatedData = await curatedRes.json();
 
-                // Check if we have enough curated content (at least 5 items)
-                const hasFeatured = curatedData && curatedData.featured;
-                const curatedItems = curatedData?.items || [];
-                const hasEnoughCurated = curatedItems.length >= 5;
+                // Combine featured and items into one list
+                let allItems = [];
+                if (curatedData && curatedData.featured) {
+                    allItems.push(curatedData.featured);
+                }
+                if (curatedData && curatedData.items) {
+                    allItems = allItems.concat(curatedData.items);
+                }
 
-                if (hasFeatured || hasEnoughCurated) {
-                    // Render curated content
-                    renderCuratedContent(curatedData, featuredContainer, listContainer);
-
-                    // If we have featured but not enough items, supplement with news API
-                    if (hasFeatured && !hasEnoughCurated) {
-                        try {
-                            const newsData = await fetchNewsAPI();
-                            if (newsData && newsData.articles) {
-                                appendNewsItems(listContainer, newsData.articles.slice(0, 10 - curatedItems.length));
-                            }
-                        } catch (e) {
-                            console.log('Could not supplement with news API:', e);
-                        }
-                    }
+                if (allItems.length > 0) {
+                    // Render all items in a unified list
+                    renderAllItems(listContainer, allItems, curatedData.hasMore);
                     return;
                 }
 
                 // Fall back entirely to news API
-                await loadNewsFromAPI(featuredContainer, listContainer);
+                await loadNewsFromAPI(listContainer);
             } catch (error) {
                 console.error('Failed to load curated content, trying news API:', error);
                 try {
-                    await loadNewsFromAPI(featuredContainer, listContainer);
+                    await loadNewsFromAPI(listContainer);
                 } catch (e) {
                     console.error('Failed to load news:', e);
-                    featuredContainer.innerHTML = `
-                        <div class="featured-hero">
-                            <div class="featured-hero-image" style="background:var(--border-color);">&#128240;</div>
-                            <div class="featured-hero-content">
-                                <h2 class="featured-hero-title">Unable to load news</h2>
-                                <p class="featured-hero-excerpt">Please try again later.</p>
-                            </div>
-                        </div>
-                    `;
-                    listContainer.innerHTML = '';
+                    listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Unable to load news. Please try again later.</div>';
                 }
             }
         }
@@ -2652,7 +2622,67 @@
             return url.includes('tiktok.com');
         }
 
-        // Render curated content
+        // Render all items in unified list (no separate featured)
+        function renderAllItems(listContainer, items, hasMore) {
+            if (items.length === 0) {
+                listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No stories available.</div>';
+                return;
+            }
+
+            listContainer.innerHTML = items.map(item => {
+                const thumbStyle = item.thumbnail
+                    ? `background-image:url('${item.thumbnail}');`
+                    : `background:var(--border-color);`;
+                const teamTag = item.teams?.[0] || 'eagles';
+                const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+                const youtubeId = getYouTubeVideoId(item.sourceUrl);
+                const isTikTok = isTikTokUrl(item.sourceUrl);
+
+                // Add video indicator for YouTube/TikTok
+                let videoOverlay = '';
+                if (youtubeId) {
+                    videoOverlay = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:22px;background:rgba(255,0,0,0.9);border-radius:4px;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px;"></div></div>';
+                } else if (isTikTok) {
+                    videoOverlay = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;background:linear-gradient(135deg,#25F4EE,#FE2C55);border-radius:4px;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px;"></div></div>';
+                }
+
+                return `
+                    <div class="story-item-wrapper">
+                        <div class="vote-buttons">
+                            <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${item._id}">0</span>
+                            <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
+                        </div>
+                        <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                            <div class="story-thumb" style="${thumbStyle};position:relative;">
+                                ${!item.thumbnail ? '&#128240;' : ''}
+                                ${videoOverlay}
+                            </div>
+                            <div class="story-info">
+                                <div class="story-meta">
+                                    <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
+                                    <span>${item.sourceName || 'PhillySports'}</span>
+                                    <span>·</span>
+                                    <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                                </div>
+                                <div class="story-title">${escapeHtml(item.title)}</div>
+                                ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                            </div>
+                        </a>
+                        <a href="/article.html?url=${encodeURIComponent(item.sourceUrl)}&title=${encodeURIComponent(item.title || '')}&image=${encodeURIComponent(item.thumbnail || '')}" class="story-comment-link" title="Discuss this story">
+                            &#128172;
+                        </a>
+                    </div>
+                `;
+            }).join('');
+
+            // Add load more if there are more items
+            if (hasMore) {
+                listContainer.innerHTML += `<button class="load-more-btn" onclick="loadMoreStories()">Load More Stories</button>`;
+            }
+        }
+
+        // Render curated content (legacy - kept for compatibility)
         function renderCuratedContent(data, featuredContainer, listContainer) {
             const featured = data.featured;
             const items = data.items || [];
@@ -2896,90 +2926,47 @@
         }
 
         // Fallback: Load from news API
-        async function loadNewsFromAPI(featuredContainer, listContainer) {
+        async function loadNewsFromAPI(listContainer) {
             const response = await fetch('/api/news');
             const data = await response.json();
 
             if (data.articles && data.articles.length > 0) {
-                const featured = data.articles[0];
-                const remaining = data.articles.slice(1, 10);
-                const featuredId = 'news-' + btoa(featured.link || '').slice(0, 12);
+                // Render all articles as list items (no featured)
+                listContainer.innerHTML = data.articles.slice(0, 15).map(article => {
+                    const thumbStyle = article.image
+                        ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
+                        : `background:${article.teamColor || 'var(--border-color)'};`;
+                    const itemId = 'news-' + btoa(article.link || '').slice(0, 12);
 
-                // Render featured (same format as curated)
-                const imageStyle = featured.image
-                    ? `background-image:url('${featured.image}');`
-                    : `background:${featured.teamColor || 'var(--border-color)'};`;
-
-                featuredContainer.innerHTML = `
-                    <div class="featured-hero" style="position:relative;">
-                        <div class="featured-vote">
-                            <button class="vote-btn upvote" data-article="${featuredId}" onclick="vote('${featuredId}', 1, event)">&#9650;</button>
-                            <span class="vote-score" id="score-${featuredId}">0</span>
-                            <button class="vote-btn downvote" data-article="${featuredId}" onclick="vote('${featuredId}', -1, event)">&#9660;</button>
+                    return `
+                        <div class="story-item-wrapper">
+                            <div class="vote-buttons">
+                                <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${itemId}">0</span>
+                                <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
+                            </div>
+                            <a href="${article.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                                <div class="story-thumb" style="${thumbStyle}">
+                                    ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                </div>
+                                <div class="story-info">
+                                    <div class="story-meta">
+                                        <span class="article-tag ${article.tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${(article.team || 'SPORTS').toUpperCase()}</span>
+                                        <span>${article.source || ''}</span>
+                                        <span>·</span>
+                                        <span>${timeAgo(article.published)}</span>
+                                    </div>
+                                    <div class="story-title">${article.headline}</div>
+                                </div>
+                            </a>
+                            <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="story-comment-link" title="Discuss this story">
+                                &#128172;
+                            </a>
                         </div>
-                        <a href="${featured.link}" target="_blank" style="text-decoration:none;color:inherit;display:block;">
-                            <div class="featured-hero-image" style="${imageStyle}">
-                                ${!featured.image ? getSourceLogo(featured.source, sportEmoji[featured.team]) : ''}
-                            </div>
-                            <div class="featured-hero-content">
-                                <div class="featured-hero-meta">
-                                    <span class="article-tag ${featured.tagClass}">${(featured.team || 'SPORTS').toUpperCase()}</span>
-                                    <span>${featured.source || ''}</span>
-                                    <span>·</span>
-                                    <span>${timeAgo(featured.published)}</span>
-                                </div>
-                                <h2 class="featured-hero-title">${featured.headline}</h2>
-                                <p class="featured-hero-excerpt">${featured.description || ''}</p>
-                                <div class="featured-hero-actions">
-                                    <div class="featured-hero-cta">Read Full Article &#8594;</div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="/article.html?url=${encodeURIComponent(featured.link)}&title=${encodeURIComponent(featured.headline || '')}&image=${encodeURIComponent(featured.image || '')}&source=${encodeURIComponent(featured.source || '')}" class="comment-link" style="position:absolute;bottom:1rem;right:1rem;">
-                            <span class="comment-link-icon">&#128172;</span>
-                            <span>Discuss</span>
-                        </a>
-                    </div>
-                `;
-
-                // Render list (same format as curated items)
-                if (remaining.length > 0) {
-                    listContainer.innerHTML = remaining.map(article => {
-                        const thumbStyle = article.image
-                            ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
-                            : `background:${article.teamColor || 'var(--border-color)'};`;
-                        const itemId = 'news-' + btoa(article.link || '').slice(0, 12);
-
-                        return `
-                            <div class="story-item-wrapper">
-                                <div class="vote-buttons">
-                                    <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
-                                    <span class="vote-score" id="score-${itemId}">0</span>
-                                    <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
-                                </div>
-                                <a href="${article.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
-                                    <div class="story-thumb" style="${thumbStyle}">
-                                        ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
-                                    </div>
-                                    <div class="story-info">
-                                        <div class="story-meta">
-                                            <span class="article-tag ${article.tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${(article.team || 'SPORTS').toUpperCase()}</span>
-                                            <span>${article.source || ''}</span>
-                                            <span>·</span>
-                                            <span>${timeAgo(article.published)}</span>
-                                        </div>
-                                        <div class="story-title">${article.headline}</div>
-                                    </div>
-                                </a>
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="story-comment-link" title="Discuss this story">
-                                    &#128172;
-                                </a>
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    listContainer.innerHTML = '';
-                }
+                    `;
+                }).join('');
+            } else {
+                listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No stories available.</div>';
             }
         }
 
@@ -2992,7 +2979,7 @@
         }
 
         // Load more stories (pagination)
-        let storyOffset = 10;
+        let storyOffset = 15;
         async function loadMoreStories() {
             const listContainer = document.getElementById('articleList');
             const btn = listContainer.querySelector('.load-more-btn');
