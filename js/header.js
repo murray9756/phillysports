@@ -18,11 +18,6 @@
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                        <span class="theme-label">Dark Mode</span>
-                    </button>
                 </div>
                 <!-- Center Column: Logo -->
                 <a href="/" class="header-logo">
@@ -72,8 +67,13 @@
                         <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
                     </div>
                 </a>
-                <!-- Right Column: Auth -->
+                <!-- Right Column: Theme Toggle + Auth -->
                 <div class="header-right">
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                        <span class="theme-label">Dark Mode</span>
+                    </button>
                     <div class="header-auth" id="headerAuth">
                         <a href="/login.html">Login</a>
                         <a href="/register.html" class="auth-btn">Sign Up</a>
@@ -321,6 +321,7 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
+            gap: 1rem;
         }
 
         .header-logo {
@@ -626,10 +627,12 @@
             letter-spacing: 0.5px;
         }
 
-        /* Main Navigation - Uses CSS variables for theme support */
+        /* Main Navigation - Darker cream background for contrast */
         .main-nav {
-            background: var(--header-bg, #1a1a1a);
-            border-bottom: 1px solid var(--border-color, #333);
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
+            border-top: 3px solid #1A2744;
+            border-bottom: 3px solid #1A2744;
+            box-shadow: inset 0 2px 0 #8B1A28, inset 0 -2px 0 #8B1A28;
         }
 
         .nav-inner {
@@ -645,17 +648,25 @@
         .nav-item {
             padding: 0.75rem 1rem;
             font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--nav-text, #d0d0d0);
+            font-weight: 700;
+            font-family: Georgia, serif;
+            color: #1A2744;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s;
             white-space: nowrap;
             text-decoration: none;
         }
 
-        .nav-item:hover { color: var(--accent-color, #8b0000); }
+        .nav-item:hover {
+            color: #8B1A28;
+        }
+
+        .nav-item.active {
+            color: #8B1A28;
+            border-bottom: 3px solid #8B1A28;
+        }
 
         .nav-dropdown { position: relative; }
 
@@ -674,11 +685,10 @@
             position: absolute;
             top: 100%;
             left: 0;
-            background: var(--header-bg, #1a1a1a);
-            border: 1px solid var(--border-color, #333);
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            min-width: 150px;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+            box-shadow: inset 0 0 0 2px #8B1A28, 0 4px 12px rgba(0,0,0,0.3);
+            min-width: 180px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
@@ -699,16 +709,27 @@
         .dropdown-menu a {
             display: block;
             padding: 0.6rem 1rem;
-            color: var(--nav-text, #d0d0d0);
-            font-size: 1.2rem;
-            font-weight: 500;
+            color: #1A2744;
+            font-family: Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 600;
             text-decoration: none;
-            transition: background 0.2s, color 0.2s;
+            transition: all 0.2s;
+            border-bottom: 1px solid rgba(26, 39, 68, 0.2);
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
         }
 
         .dropdown-menu a:hover {
-            background: var(--card-bg-hover, rgba(255,255,255,0.1));
-            color: var(--text-primary, #fff);
+            background: #1A2744;
+            color: #F5F0E1;
+        }
+
+        .dropdown-menu a.active {
+            background: #8B1A28;
+            color: #F5F0E1;
         }
 
         /* Mobile Menu Button */
@@ -1122,12 +1143,37 @@
         }
     }
 
+    // Highlight current page in navigation
+    function highlightCurrentPage() {
+        const currentPath = window.location.pathname;
+
+        // Check all nav links
+        document.querySelectorAll('.main-nav a, .dropdown-menu a').forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            // Check if current path matches or starts with the link href
+            if (currentPath === href ||
+                (href !== '/' && currentPath.startsWith(href.replace(/\/$/, '')))) {
+                link.classList.add('active');
+
+                // If it's a dropdown item, also highlight the parent trigger
+                const dropdown = link.closest('.nav-dropdown');
+                if (dropdown) {
+                    const trigger = dropdown.querySelector('.dropdown-trigger');
+                    if (trigger) trigger.classList.add('active');
+                }
+            }
+        });
+    }
+
     // Initialize
     function init() {
         injectCSS();
         injectHeader();
         initThemeToggle();
         initMobileMenu();
+        highlightCurrentPage();
         checkAuth();
     }
 
