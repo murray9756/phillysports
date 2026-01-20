@@ -319,9 +319,10 @@
 
         .header-right {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 1rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 0.5rem;
         }
 
         .header-logo {
@@ -730,13 +731,14 @@
         }
 
         .dropdown-menu a:hover {
-            background: #1A2744;
+            background: #8B1A28;
             color: #F5F0E1;
         }
 
         .dropdown-menu a.active {
-            background: #8B1A28;
+            background: #1A2744;
             color: #F5F0E1;
+            font-weight: 700;
         }
 
         /* Mobile Menu Button */
