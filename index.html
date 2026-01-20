@@ -132,7 +132,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--ps-font-body, 'Helvetica Neue', Arial, sans-serif);
             line-height: 1.6;
         }
 
@@ -487,31 +487,43 @@
         .section-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
+            justify-content: center;
+            padding: 1rem;
+            background: #e8e4d9;
+            border: 2px solid #1a1a1a;
+            border-radius: 2px;
+            margin-bottom: 1rem;
         }
 
         .section-title {
-            font-size: 0.9rem;
-            font-weight: 700;
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-size: 1.1rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+            color: #1a1a1a;
+        }
+
+        /* Keep section header consistent in dark mode */
+        [data-theme="dark"] .section-header {
+            background: #e8e4d9;
+            border-color: #1a1a1a;
+        }
+
+        [data-theme="dark"] .section-title {
+            color: #1a1a1a;
         }
 
         .featured-article {
-            background: var(--card-bg);
-            border-radius: 8px;
+            background: var(--ps-cream, #f5f2eb);
+            border-radius: 2px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            transition: box-shadow 0.2s, border-color 0.2s;
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            transition: border-color 0.2s;
         }
 
         .featured-article:hover {
-            border-color: var(--text-muted);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-color: var(--ps-red, #8B0000);
         }
 
         .featured-image {
@@ -560,10 +572,10 @@
 
         /* Featured Story (replaces carousel) */
         .featured-hero {
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            border: 2px solid var(--ps-navy, #1a1a1a);
             overflow: hidden;
-            background: var(--card-bg);
+            background: var(--ps-cream, #f5f2eb);
             margin-bottom: 1rem;
         }
 
@@ -675,9 +687,9 @@
             gap: 0.5rem;
             margin-bottom: 1rem;
             padding: 0.75rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            background: var(--ps-cream, #f5f2eb);
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            border-radius: 2px;
         }
         .filter-group {
             display: flex;
@@ -695,22 +707,24 @@
         .filter-btn {
             padding: 0.35rem 0.65rem;
             font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
+            font-weight: 600;
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            border-radius: 2px;
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--ps-navy, #1a1a1a);
             cursor: pointer;
             transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .filter-btn:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
+            border-color: var(--ps-red, #8B0000);
+            color: var(--ps-red, #8B0000);
         }
         .filter-btn.active {
-            background: var(--accent-color);
-            border-color: var(--accent-color);
-            color: #fff;
+            background: var(--ps-navy, #1a1a1a);
+            border-color: var(--ps-navy, #1a1a1a);
+            color: var(--ps-cream, #f5f2eb);
         }
         @media (max-width: 600px) {
             .content-filters { padding: 0.5rem; }
@@ -722,14 +736,14 @@
             display: flex;
             gap: 0.75rem;
             padding: 0.75rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            transition: background 0.2s;
+            background: var(--ps-cream, #f5f2eb);
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            border-radius: 2px;
+            transition: border-color 0.2s;
         }
 
         .story-item:hover {
-            background: var(--card-bg-hover);
+            border-color: var(--ps-red, #8B0000);
         }
 
         .story-thumb {
@@ -863,20 +877,22 @@
         .load-more-btn {
             width: 100%;
             padding: 0.75rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-secondary);
+            background: var(--ps-cream, #f5f2eb);
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            border-radius: 2px;
+            color: var(--ps-navy, #1a1a1a);
             font-weight: 600;
             font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             cursor: pointer;
             transition: all 0.2s;
             margin-top: 0.75rem;
         }
 
         .load-more-btn:hover {
-            background: var(--card-bg-hover);
-            color: var(--accent-color);
+            background: var(--ps-navy, #1a1a1a);
+            color: var(--ps-cream, #f5f2eb);
         }
 
         .article-meta {
@@ -896,16 +912,14 @@
             display: flex;
             gap: 1rem;
             padding: 1rem;
-            background: var(--card-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            transition: box-shadow 0.2s, border-color 0.2s;
+            background: var(--ps-cream, #f5f2eb);
+            border-radius: 2px;
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            transition: border-color 0.2s;
         }
 
         .article-item:hover {
-            border-color: var(--text-muted);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-color: var(--ps-red, #8B0000);
         }
 
         .article-thumb {
@@ -989,15 +1003,13 @@
             display: flex;
             align-items: center;
             padding: 1rem;
-            background: var(--card-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            transition: box-shadow 0.2s, border-color 0.2s;
+            background: var(--ps-cream, #f5f2eb);
+            border-radius: 2px;
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            transition: border-color 0.2s;
         }
         .article-item-wrapper:hover {
-            border-color: var(--text-muted);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-color: var(--ps-red, #8B0000);
         }
         .article-item-wrapper .article-link {
             display: flex;
@@ -1100,31 +1112,38 @@
         .widget-footer a:hover { color: var(--text-primary); }
 
         .widget {
-            background: var(--card-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background: var(--ps-cream, #f5f2eb);
+            border-radius: 2px;
+            border: 2px solid var(--ps-navy, #1a1a1a);
             overflow: hidden;
         }
 
         .widget-header {
             padding: 0.75rem 1rem;
-            background: var(--widget-header-bg);
-            border-bottom: 1px solid var(--border-color);
+            background: #e8e4d9;
+            border-bottom: 2px solid #1a1a1a;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .widget-header span {
-            font-size: 1rem;
+        .widget-title {
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-size: 0.75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #1a1a1a;
         }
 
-        .widget-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        /* Keep widget header consistent in dark mode */
+        [data-theme="dark"] .widget-header {
+            background: #e8e4d9;
+            border-bottom-color: #1a1a1a;
+        }
+
+        [data-theme="dark"] .widget-title {
+            color: #1a1a1a;
         }
 
         .widget-content {
@@ -1383,19 +1402,17 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1rem;
-            background: linear-gradient(135deg, #8b0000, #006BB6);
-            color: #fff;
-        }
-
-        .trivia-promo-icon {
-            font-size: 1.25rem;
+            background: #e8e4d9;
+            border-bottom: 2px solid #1a1a1a;
         }
 
         .trivia-promo-title {
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-size: 0.75rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+            color: #1a1a1a;
         }
 
         .trivia-widget-body {
@@ -1553,8 +1570,8 @@
 
         /* Newsletter Widget */
         .newsletter-widget {
-            background: linear-gradient(135deg, var(--eagles-green), var(--sixers-blue));
-            border: none;
+            background: var(--ps-navy, #1a1a1a);
+            border: 2px solid var(--ps-navy, #1a1a1a);
         }
 
         .newsletter-content {
@@ -1628,8 +1645,8 @@
         .footer {
             margin-top: 2rem;
             padding: 1.5rem;
-            background: var(--card-bg);
-            border-top: 1px solid var(--border-color);
+            background: var(--ps-cream-dark, #e8e4d9);
+            border-top: 2px solid var(--ps-navy, #1a1a1a);
             text-align: center;
         }
 
@@ -1934,7 +1951,6 @@
             <!-- Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127942;</span>
                     <h3 class="widget-title">Recent Scores</h3>
                 </div>
                 <div class="widget-content" id="scoresContainer">
@@ -1945,7 +1961,6 @@
             <!-- Schedule Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#128197;</span>
                     <h3 class="widget-title">Upcoming Games</h3>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
@@ -1953,34 +1968,9 @@
                 </div>
             </div>
 
-            <!-- Diehard Dollar Leaderboard Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#129689;</span>
-                    <h3 class="widget-title">Top Diehards</h3>
-                </div>
-                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
-                </div>
-                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
-            </div>
-
-            <!-- Source Leaderboard Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128240;</span>
-                    <h3 class="widget-title">Top Sources</h3>
-                </div>
-                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
-                </div>
-                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
-            </div>
-
             <!-- Podcasts Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127911;</span>
                     <h3 class="widget-title">Podcasts</h3>
                 </div>
                 <div class="widget-content" style="padding:0.5rem;">
@@ -2019,7 +2009,7 @@
         <!-- News Feed (Center) -->
         <div class="news-section">
             <div class="section-header">
-                <h2 class="section-title">Latest News</h2>
+                <h2 class="section-title">Carefully Curated Content</h2>
             </div>
 
             <!-- Featured Story -->
@@ -2037,11 +2027,6 @@
                         <p class="featured-hero-excerpt">Fetching the latest Philly sports stories...</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Story List -->
-            <div class="story-list-header">
-                <span class="story-list-title">Carefully Curated Content</span>
             </div>
 
             <!-- Content Filters -->
@@ -2078,12 +2063,33 @@
             <!-- Trivia Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
-                    <span class="trivia-promo-icon">&#129504;</span>
                     <span class="trivia-promo-title">Quick Trivia</span>
                 </div>
                 <div class="trivia-widget-body" id="triviaWidget">
                     <div class="trivia-loading">Loading question...</div>
                 </div>
+            </div>
+
+            <!-- Top Diehards Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Diehards</h3>
+                </div>
+                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
+            </div>
+
+            <!-- Top Sources Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Sources</h3>
+                </div>
+                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
             </div>
 
             <!-- AdSense Sidebar Ad -->
@@ -2100,7 +2106,6 @@
             <!-- eBay Memorabilia Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127941;</span>
                     <h3 class="widget-title">Philly Memorabilia</h3>
                 </div>
                 <div class="widget-content" style="padding:0.75rem;">
@@ -2128,7 +2133,6 @@
             <!-- Quick Links -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#128279;</span>
                     <h3 class="widget-title">Quick Links</h3>
                 </div>
                 <div class="widget-content" style="padding:0.75rem;">
@@ -2219,8 +2223,15 @@
                 const response = await fetch('/api/scores');
                 const data = await response.json();
 
-                if (data.scores && data.scores.length > 0) {
-                    container.innerHTML = data.scores.map(score => {
+                // Filter out games older than 72 hours
+                const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
+                const recentScores = data.scores ? data.scores.filter(score => {
+                    const gameDate = new Date(score.date || score.gameDate).getTime();
+                    return gameDate > seventyTwoHoursAgo;
+                }) : [];
+
+                if (recentScores.length > 0) {
+                    container.innerHTML = recentScores.map(score => {
                         const content = `
                             <div class="score-teams">
                                 <div class="score-team">
