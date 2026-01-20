@@ -139,25 +139,26 @@ a {
 
 /* ===========================================
    SECTION HEADERS (Vintage Americana Style)
+   Using !important to override inline styles in team pages
    =========================================== */
 .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
-    border: 2px solid #1A2744;
-    border-radius: 2px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 1rem !important;
+    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+    border: 2px solid #1A2744 !important;
+    border-radius: 2px !important;
     margin-bottom: 1rem;
 }
 
 .section-title {
-    font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
-    font-size: 1.1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #1A2744;
+    font-family: var(--ps-font-headline, 'Arial Black', sans-serif) !important;
+    font-size: 1.1rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #1A2744 !important;
 }
 
 /* Keep section header consistent in dark mode */
@@ -175,48 +176,52 @@ a {
 
 /* ===========================================
    WIDGETS (Vintage Americana Style)
+   Using !important to override inline styles in team pages
    =========================================== */
 .widget {
-    background: var(--ps-cream, #f5f2eb);
-    border-radius: 2px;
-    border: 2px solid var(--ps-navy, #1a1a1a);
-    overflow: hidden;
+    background: var(--ps-cream, #f5f2eb) !important;
+    border-radius: 2px !important;
+    border: 2px solid var(--ps-navy, #1a1a1a) !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
 }
 
 .widget-header {
-    padding: 0.75rem 1rem;
-    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
-    border-bottom: 2px solid #1A2744;
-    text-align: center;
+    padding: 0.75rem 1rem !important;
+    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+    border-bottom: 2px solid #1A2744 !important;
+    text-align: center !important;
+    display: block !important;
 }
 
 .widget-header-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.15rem !important;
+    align-items: center !important;
 }
 
 .widget-title {
-    font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
-    font-size: 0.75rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #1A2744;
-    text-align: center;
+    font-family: var(--ps-font-headline, 'Arial Black', sans-serif) !important;
+    font-size: 0.75rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #1A2744 !important;
+    text-align: center !important;
 }
 
 .widget-subtitle {
-    font-size: 0.65rem;
-    font-weight: 400;
-    color: #1A2744;
-    opacity: 0.8;
-    text-align: center;
+    font-size: 0.65rem !important;
+    font-weight: 400 !important;
+    color: #1A2744 !important;
+    opacity: 0.8 !important;
+    text-align: center !important;
 }
 
 .widget-content {
-    padding: 0.75rem;
+    padding: 0.75rem !important;
+    background: var(--ps-cream, #f5f2eb) !important;
 }
 
 .widget-footer {
@@ -270,19 +275,21 @@ a {
 
 /* ===========================================
    STORY/ARTICLE ITEMS
+   Using !important to override inline styles in team pages
    =========================================== */
 .story-item {
-    display: flex;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    background: var(--ps-cream, #f5f2eb);
-    border: 2px solid var(--ps-navy, #1a1a1a);
-    border-radius: 2px;
-    transition: border-color 0.2s;
+    display: flex !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem !important;
+    background: var(--ps-cream, #f5f2eb) !important;
+    border: 2px solid var(--ps-navy, #1a1a1a) !important;
+    border-radius: 2px !important;
+    transition: border-color 0.2s !important;
+    box-shadow: none !important;
 }
 
 .story-item:hover {
-    border-color: var(--ps-red, #8B0000);
+    border-color: var(--ps-red, #8B0000) !important;
 }
 
 .story-thumb {
@@ -382,25 +389,27 @@ a {
 
 /* ===========================================
    ARTICLE ITEMS
+   Using !important to override inline styles in team pages
    =========================================== */
 .article-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
 }
 
 .article-item {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--ps-cream, #f5f2eb);
-    border-radius: 2px;
-    border: 2px solid var(--ps-navy, #1a1a1a);
-    transition: border-color 0.2s;
+    display: flex !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+    background: var(--ps-cream, #f5f2eb) !important;
+    border-radius: 2px !important;
+    border: 2px solid var(--ps-navy, #1a1a1a) !important;
+    transition: border-color 0.2s !important;
+    box-shadow: none !important;
 }
 
 .article-item:hover {
-    border-color: var(--ps-red, #8B0000);
+    border-color: var(--ps-red, #8B0000) !important;
 }
 
 .article-thumb {
@@ -770,24 +779,24 @@ a {
 }
 
 .trivia-promo-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.15rem;
-    padding: 0.75rem 1rem;
-    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
-    border-bottom: 2px solid #1A2744;
-    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.15rem !important;
+    padding: 0.75rem 1rem !important;
+    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+    border-bottom: 2px solid #1A2744 !important;
+    text-align: center !important;
 }
 
 .trivia-promo-title {
-    font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
-    font-size: 0.75rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #1A2744;
+    font-family: var(--ps-font-headline, 'Arial Black', sans-serif) !important;
+    font-size: 0.75rem !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #1A2744 !important;
 }
 
 [data-theme="dark"] .trivia-promo-header {
