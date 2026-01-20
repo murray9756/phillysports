@@ -3168,12 +3168,7 @@
                     <span class="trivia-team-badge ${teamClass}"><strong>Category:</strong> ${q.team}</span>
                     <span class="trivia-difficulty ${q.difficulty}"><strong>Difficulty:</strong> ${q.difficulty}</span>
                 </div>
-                <div class="trivia-dd-info">
-                    ${isLoggedIn
-                        ? `<span class="trivia-dd-stake">&#129689; ${ddAtStake} DD at stake</span>`
-                        : `<a href="/login.html" class="trivia-dd-login">Login to earn Diehard Dollars</a>`
-                    }
-                </div>
+                ${isLoggedIn ? `<div class="trivia-dd-info"><span class="trivia-dd-stake">&#129689; ${ddAtStake} DD at stake</span></div>` : ''}
                 <p class="trivia-question-text">${q.question}</p>
                 <div class="trivia-options">
                     ${q.options.map((opt, i) => `
