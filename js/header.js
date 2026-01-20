@@ -23,7 +23,7 @@
                 <!-- Center Column: Logo -->
                 <a href="/" class="header-logo">
                     <!-- Dark background logo (shows in light mode) -->
-                    <div class="logo-for-light" style="position: relative; width: 520px; height: 140px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 6px solid #F5F0E1; overflow: hidden;">
+                    <div class="logo-for-light" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 6px solid #F5F0E1; overflow: hidden;">
                         <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
                         <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
                         <div style="position: absolute; top: 8px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
@@ -37,15 +37,15 @@
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF2h)"/>
                             </svg>
                         </div>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5; margin-top: 5px;">
+                        <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
                             <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #F5F0E1; line-height: 1;">Philly</span>
                             <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
                             <span style="font-family: Georgia, serif; font-size: 16px; color: #F5F0E1; letter-spacing: 1px; font-weight: bold;">.COM</span>
                         </div>
-                        <div style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 11px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                        <div style="position: absolute; bottom: 8px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
                     </div>
                     <!-- Light background logo (shows in dark mode) -->
-                    <div class="logo-for-dark" style="position: relative; width: 520px; height: 140px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 6px solid #1A2744; overflow: hidden;">
+                    <div class="logo-for-dark" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 6px solid #1A2744; overflow: hidden;">
                         <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
                         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.2) 100%); z-index: 8; pointer-events: none;"></div>
                         <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.4; z-index: 1;">
@@ -60,12 +60,12 @@
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF5h)"/>
                             </svg>
                         </div>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5; margin-top: 5px;">
+                        <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
                             <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #1A2744; line-height: 1;">Philly</span>
                             <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
                             <span style="font-family: Georgia, serif; font-size: 16px; color: #1A2744; letter-spacing: 1px; font-weight: bold;">.COM</span>
                         </div>
-                        <div style="position: absolute; bottom: 10px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 11px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                        <div style="position: absolute; bottom: 8px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
                     </div>
                 </a>
                 <!-- Right Column: Theme Toggle + Auth -->
@@ -329,15 +329,15 @@
         .header-logo {
             display: block;
             text-decoration: none;
-            width: 520px;
+            width: 440px;
             height: 140px;
             overflow: visible;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7)) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
             transition: transform 0.2s, filter 0.2s;
         }
 
         .header-logo:hover {
-            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.6));
+            filter: drop-shadow(0 8px 25px rgba(0,0,0,0.8)) drop-shadow(0 3px 8px rgba(0,0,0,0.5));
             transform: scale(1.02);
         }
 
