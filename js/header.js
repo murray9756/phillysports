@@ -1,7 +1,7 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
-// Version: 2.6 - Fixed navigation bar colors in dark mode
+// Version: 2.7 - Added inline styles to prevent layout jumbling
 
 (function() {
     'use strict';
@@ -11,8 +11,8 @@
         <header class="header">
             <div class="header-top">
                 <!-- Left Column: Google Search + Theme Toggle -->
-                <div class="header-left">
-                    <div class="header-search">
+                <div class="header-left" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                    <div class="header-search" style="display: flex; align-items: center;">
                         <form action="https://www.google.com/search" method="GET" target="_blank">
                             <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
                             <input type="text" name="q" placeholder="Search the web..." required>
@@ -74,8 +74,8 @@
                     </div>
                 </a>
                 <!-- Right Column: Auth -->
-                <div class="header-right">
-                    <div class="header-auth" id="headerAuth">
+                <div class="header-right" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0.5rem; position: static; transform: none;">
+                    <div class="header-auth" id="headerAuth" style="display: flex; flex-direction: row; align-items: center; gap: 0.75rem; position: static; transform: none;">
                         <a href="/login.html">Login</a>
                         <a href="/register.html" class="auth-btn">Sign Up</a>
                     </div>
@@ -1474,15 +1474,15 @@
 
                 if (headerAuth) {
                     headerAuth.innerHTML = `
-                        <div class="coin-display">
+                        <div class="coin-display" style="display: flex; flex-direction: column; align-items: center;">
                             <span class="coin-label">Diehard Dollars</span>
-                            <div class="coin-amount-row">
+                            <div class="coin-amount-row" style="display: flex; align-items: center; gap: 0.4rem;">
                                 <span class="coin-icon">DD</span>
                                 <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
                             </div>
                             <a href="/shop.html#coin-packs" class="buy-coins-link">Buy More</a>
                         </div>
-                        <div class="user-actions-stack">
+                        <div class="user-actions-stack" style="display: flex; flex-direction: column; align-items: stretch;">
                             <a href="/profile.html">${data.user.username}</a>
                             ${premiumBadge}
                             ${adminLink}
