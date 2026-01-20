@@ -86,7 +86,7 @@
             --text-primary: #1a1a1a;
             --text-secondary: #444444;
             --text-muted: #777777;
-            --header-bg: #faf9f6;
+            --header-bg: #1a1a1a;
             --accent-color: #8b0000;
             --nav-text: #333333;
             --widget-header-bg: #e8e3db;
@@ -101,7 +101,7 @@
             --text-primary: #1a1a1a;
             --text-secondary: #4d4a47;
             --text-muted: #666360;
-            --header-bg: #f5f2eb;
+            --header-bg: #1a1a1a;
             --accent-color: #8B0000;
             --nav-text: #1a1a1a;
             --widget-header-bg: #e8e4d9;
@@ -142,138 +142,7 @@
             text-decoration: none;
         }
 
-        /* Header */
-        .header {
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-top {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem 1.5rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .header-logo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.25rem;
-            margin-top: 60px;
-        }
-
-        .header-logo img {
-            width: 136px;
-            height: 136px;
-            border-radius: 12px;
-        }
-
-        .header-logo .tagline {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            font-style: italic;
-            text-align: center;
-        }
-
-        .header-signup {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .header-signup input {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: #ffffff;
-            color: var(--text-primary);
-            font-size: 0.8rem;
-            width: 360px;
-            font-family: inherit;
-        }
-
-        .header-signup input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .header-signup button {
-            padding: 0.5rem 1rem;
-            background: var(--accent-color);
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .header-signup button:hover {
-            opacity: 0.9;
-        }
-
-        .header-search {
-            display: flex;
-            align-items: center;
-            position: absolute;
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .header-search form {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .header-search .google-logo {
-            height: 20px;
-            width: auto;
-        }
-
-        .header-search input {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: #ffffff;
-            color: var(--text-primary);
-            font-size: 0.8rem;
-            width: 360px;
-            font-family: inherit;
-        }
-
-        .header-search input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .header-search button {
-            padding: 0.5rem 0.75rem;
-            background: var(--accent-color);
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.2s;
-        }
-
-        .header-search button:hover {
-            opacity: 0.9;
-        }
+        /* Header styles handled by shared header.js */
 
         /* Header auth styles moved to shared header.js */
 
@@ -486,45 +355,7 @@
             transform: scale(1.05);
         }
 
-        /* Dark Mode Toggle */
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 0.4rem 0.6rem;
-            cursor: pointer;
-            font-size: 1rem;
-            line-height: 1;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(0,0,0,0.05);
-        }
-
-        [data-theme="dark"] .theme-toggle:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .theme-toggle .theme-icon-light,
-        .theme-toggle .theme-icon-dark {
-            display: none;
-        }
-
-        .theme-toggle .theme-icon-light {
-            display: inline;
-        }
-
-        [data-theme="dark"] .theme-toggle .theme-icon-light {
-            display: none;
-        }
-
-        [data-theme="dark"] .theme-toggle .theme-icon-dark {
-            display: inline;
-        }
+        /* Theme toggle styles handled by shared header.js */
 
         /* Main Navigation with Dropdowns */
         .main-nav {
@@ -2035,17 +1866,7 @@
         }
 
         @media (max-width: 768px) {
-            .header-signup {
-                display: none;
-            }
-
-            .header-search {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
+            /* Header responsive styles handled by shared header.js */
 
             .team-nav-inner {
                 padding: 0 1rem;
@@ -2083,13 +1904,7 @@
         }
 
         @media (max-width: 480px) {
-            .header-top {
-                padding: 0.5rem 1rem;
-            }
-
-            .header-logo span {
-                display: none;
-            }
+            /* Header responsive styles handled by shared header.js */
 
             .article-item {
                 flex-direction: column;
@@ -2355,28 +2170,11 @@
     </footer>
 
     <script>
-        // Dark Mode Toggle
-        function initTheme() {
+        // Initialize theme immediately to prevent flash (toggle handled by shared header.js)
+        (function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-
-        // Initialize theme immediately to prevent flash
-        initTheme();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', toggleTheme);
-            }
-        });
+        })();
 
         // Team tab switching
         const teamTabs = document.querySelectorAll('.team-tab');
@@ -3525,47 +3323,7 @@
             renderVideoWidget();
         }
 
-        // Auth check for header
-        async function checkAuth() {
-            try {
-                const response = await fetch('/api/auth/me');
-                const data = await response.json();
-                if (data.user) {
-                    const headerAuth = document.getElementById('headerAuth');
-                    const premiumBadge = data.user.isSubscribed
-                        ? `<a href="/membership.html" class="premium-badge" title="${data.user.subscriptionTierName}">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
-                    const adminLink = data.user.isAdmin
-                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
-                        : '';
-                    headerAuth.innerHTML = `
-                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                            <span class="theme-icon-light">&#9790;</span>
-                            <span class="theme-icon-dark">&#9728;</span>
-                        </button>
-                        <div class="coin-display" title="Diehard Dollars">
-                            <span class="coin-icon">&#129689;</span>
-                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
-                        </div>
-                        ${premiumBadge}
-                        ${adminLink}
-                        <a href="/profile.html">${data.user.username}</a>
-                        <a href="#" id="logoutBtn">Logout</a>
-                    `;
-                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-                    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-                        localStorage.removeItem('auth_token');
-                        window.location.reload();
-                    });
-                }
-            } catch (error) {
-                // Not logged in, keep default login/signup links
-            }
-        }
-        checkAuth();
+        // Auth check handled by shared header.js
     </script>
     <!-- Service Worker Registration -->
     <script>

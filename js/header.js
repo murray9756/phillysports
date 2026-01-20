@@ -76,8 +76,8 @@
                 <!-- Right Column: Auth -->
                 <div class="header-right" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0.5rem; position: static; transform: none;">
                     <div class="header-auth" id="headerAuth" style="display: flex; flex-direction: row; align-items: center; gap: 1rem; position: static; transform: none;">
-                        <a href="/login.html" style="color: #F5F0E1; text-decoration: none; font-family: Georgia, serif; font-weight: 600; padding: 0.5rem 1rem; border: 2px solid #F5F0E1;">Sign In</a>
-                        <a href="/register.html" class="auth-btn" style="background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); color: #1A2744; padding: 0.5rem 1rem; text-decoration: none; font-family: Georgia, serif; font-weight: 700; border: 3px solid #1A2744;">Sign Up</a>
+                        <a href="/login.html" class="sign-in-btn">Sign In</a>
+                        <a href="/register.html" class="auth-btn">Sign Up</a>
                     </div>
                 </div>
                 <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
@@ -268,17 +268,21 @@
         </nav>
     `;
 
-    // Header CSS - Always dark background with light text
+    // Header CSS - Follows global theme (light in light mode, dark in dark mode)
     const headerCSS = `
         /* Theme Variables - Light Mode (default) */
         :root {
-            --header-bg: #1a1a1a;
-            --card-bg: #2a2a2a;
-            --card-bg-hover: rgba(255,255,255,0.1);
-            --border-color: #333;
-            --text-primary: #ffffff;
-            --text-secondary: #d0d0d0;
-            --nav-text: #d0d0d0;
+            --header-bg: #f5f2eb;
+            --header-text: #1A2744;
+            --header-text-muted: #4d4a47;
+            --header-border: #1A2744;
+            --header-accent: #8B1A28;
+            --card-bg: #ffffff;
+            --card-bg-hover: rgba(0,0,0,0.05);
+            --border-color: #1A2744;
+            --text-primary: #1A2744;
+            --text-secondary: #4d4a47;
+            --nav-text: #1A2744;
 
             /* Global Page Variables - Light Mode */
             --page-bg: #f5f5f5;
@@ -301,13 +305,17 @@
 
         /* Theme Variables - Dark Mode */
         [data-theme="dark"] {
-            --header-bg: #0d0d0d;
-            --card-bg: #1a1a1a;
+            --header-bg: #1a1a1a;
+            --header-text: #F5F0E1;
+            --header-text-muted: #b0b0b0;
+            --header-border: #F5F0E1;
+            --header-accent: #8B1A28;
+            --card-bg: #2a2a2a;
             --card-bg-hover: rgba(255,255,255,0.05);
-            --border-color: #222;
-            --text-primary: #ffffff;
+            --border-color: #333;
+            --text-primary: #F5F0E1;
             --text-secondary: #b0b0b0;
-            --nav-text: #b0b0b0;
+            --nav-text: #F5F0E1;
 
             /* Global Page Variables - Dark Mode */
             --page-bg: #121212;
@@ -604,12 +612,13 @@
         }
 
         /* Logo theme switching - light mode shows F5 (light/cream bg) */
-        .header-logo .logo-for-light { display: none !important; }
-        .header-logo .logo-for-dark { display: block !important; }
+        /* Light mode - show dark navy logo (contrasts with light header) */
+        .header-logo .logo-for-light { display: block !important; }
+        .header-logo .logo-for-dark { display: none !important; }
 
-        /* Dark mode - show F2 (dark/navy bg) */
-        [data-theme="dark"] .header-logo .logo-for-light { display: block !important; }
-        [data-theme="dark"] .header-logo .logo-for-dark { display: none !important; }
+        /* Dark mode - show cream logo (contrasts with dark header) */
+        [data-theme="dark"] .header-logo .logo-for-light { display: none !important; }
+        [data-theme="dark"] .header-logo .logo-for-dark { display: block !important; }
 
         .header-search {
             display: flex;
@@ -675,7 +684,6 @@
 
         .header-auth a {
             font-family: Georgia, serif;
-            color: #F5F0E1;
             font-size: 0.85rem;
             font-weight: 600;
             padding: 0.5rem 1rem;
@@ -684,13 +692,32 @@
             transition: all 0.2s;
         }
 
-        .header-auth a:hover {
-            color: #ffd700;
+        /* Sign In Button - Light Mode (dark text on light header) */
+        .header-auth .sign-in-btn {
+            color: #1A2744;
+            border: 2px solid #1A2744;
         }
 
+        .header-auth .sign-in-btn:hover {
+            color: #8B1A28;
+            border-color: #8B1A28;
+        }
+
+        /* Sign In Button - Dark Mode (cream text on dark header) */
+        [data-theme="dark"] .header-auth .sign-in-btn {
+            color: #F5F0E1;
+            border: 2px solid #F5F0E1;
+        }
+
+        [data-theme="dark"] .header-auth .sign-in-btn:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+
+        /* Sign Up Button - Light Mode */
         .header-auth .auth-btn {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            color: #1A2744;
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            color: #F5F0E1;
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
             padding: 0.5rem 1.25rem;
@@ -701,9 +728,20 @@
         }
 
         .header-auth .auth-btn:hover {
-            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
+            background: linear-gradient(180deg, #2a3a5c 0%, #1A2744 100%);
             transform: translateY(-1px);
             box-shadow: inset 0 0 0 2px #8B1A28, 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Sign Up Button - Dark Mode */
+        [data-theme="dark"] .header-auth .auth-btn {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            color: #1A2744;
+            border: 3px solid #F5F0E1;
+        }
+
+        [data-theme="dark"] .header-auth .auth-btn:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
         }
 
         /* Coin Display - Americana Style */
@@ -880,7 +918,7 @@
             gap: 0.35rem;
             color: #1A2744;
             font-family: Georgia, serif;
-            margin-top: 3.5rem;
+            margin-top: 0.5rem;
         }
 
         .theme-toggle:hover {
@@ -942,14 +980,7 @@
             color: #F5F0E1 !important;
         }
 
-        [data-theme="dark"] .header-auth a {
-            color: #F5F0E1 !important;
-        }
-
-        [data-theme="dark"] .header-auth .auth-btn {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
-            color: #1A2744 !important;
-        }
+        /* Header auth dark mode styles defined earlier with .sign-in-btn and .auth-btn */
 
         /* Navigation bar - keep original styling in dark mode */
         [data-theme="dark"] .main-nav {
