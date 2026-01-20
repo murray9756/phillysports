@@ -1028,14 +1028,17 @@
 
         /* Header auth dark mode styles defined earlier with .sign-in-btn and .auth-btn */
 
-        /* Navigation bar - same styling in both light and dark mode (no overrides needed) */
-
-        /* Main Navigation - Darker cream background for contrast */
+        /* Main Navigation - Darker cream background (same in both light and dark mode) */
         .main-nav {
             background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
             border-top: 3px solid #1A2744;
             border-bottom: 3px solid #1A2744;
             box-shadow: inset 0 2px 0 #8B1A28, inset 0 -2px 0 #8B1A28;
+        }
+
+        /* Force nav to keep dark cream in dark mode */
+        [data-theme="dark"] .main-nav {
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
         }
 
         .nav-inner {
