@@ -305,7 +305,7 @@
 
         /* Theme Variables - Dark Mode */
         [data-theme="dark"] {
-            --header-bg: #1a1a1a;
+            --header-bg: #000000;
             --header-text: #F5F0E1;
             --header-text-muted: #b0b0b0;
             --header-border: #F5F0E1;
@@ -364,7 +364,7 @@
 
         /* Paragraphs and Text */
         [data-theme="dark"] p,
-        [data-theme="dark"] span,
+        [data-theme="dark"] span:not(.main-nav span):not(.dropdown-arrow):not(.nav-item),
         [data-theme="dark"] li,
         [data-theme="dark"] td,
         [data-theme="dark"] th,
@@ -612,13 +612,13 @@
         }
 
         /* Logo theme switching - light mode shows F5 (light/cream bg) */
-        /* Light mode - show dark navy logo (contrasts with light header) */
-        .header-logo .logo-for-light { display: block !important; }
-        .header-logo .logo-for-dark { display: none !important; }
+        /* Light mode - show cream background logo (matches cream header) */
+        .header-logo .logo-for-light { display: none !important; }
+        .header-logo .logo-for-dark { display: block !important; }
 
-        /* Dark mode - show cream logo (contrasts with dark header) */
-        [data-theme="dark"] .header-logo .logo-for-light { display: none !important; }
-        [data-theme="dark"] .header-logo .logo-for-dark { display: block !important; }
+        /* Dark mode - show navy/dark background logo (matches dark header) */
+        [data-theme="dark"] .header-logo .logo-for-light { display: block !important; }
+        [data-theme="dark"] .header-logo .logo-for-dark { display: none !important; }
 
         .header-search {
             display: flex;
@@ -982,42 +982,7 @@
 
         /* Header auth dark mode styles defined earlier with .sign-in-btn and .auth-btn */
 
-        /* Navigation bar - keep original styling in dark mode */
-        [data-theme="dark"] .main-nav {
-            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
-            border-top: 3px solid #1A2744 !important;
-            border-bottom: 3px solid #1A2744 !important;
-        }
-
-        [data-theme="dark"] .nav-item,
-        [data-theme="dark"] .nav-inner a,
-        [data-theme="dark"] .dropdown-trigger {
-            color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .nav-item:hover,
-        [data-theme="dark"] .dropdown-trigger:hover {
-            color: #8B1A28 !important;
-        }
-
-        [data-theme="dark"] .dropdown-menu {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
-            border: 3px solid #1A2744 !important;
-        }
-
-        [data-theme="dark"] .dropdown-menu a {
-            color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .dropdown-menu a:hover {
-            background: #1A2744 !important;
-            color: #F5F0E1 !important;
-        }
-
-        [data-theme="dark"] .dropdown-menu a.active {
-            background: #8B1A28 !important;
-            color: #F5F0E1 !important;
-        }
+        /* Navigation bar - same styling in both light and dark mode (no overrides needed) */
 
         /* Main Navigation - Darker cream background for contrast */
         .main-nav {
@@ -1071,6 +1036,7 @@
         .dropdown-arrow {
             font-size: 0.5rem;
             transition: transform 0.2s;
+            color: #1A2744;
         }
 
         .dropdown-menu {
