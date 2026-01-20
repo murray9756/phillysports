@@ -2138,6 +2138,7 @@
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Trivia</span>
+                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-widget-body" id="triviaWidget">
                     <div class="trivia-loading">Loading question...</div>
@@ -3153,6 +3154,10 @@
             const widget = document.getElementById('triviaWidget');
             const teamClass = q.team === '76ers' ? 't76ers' : q.team;
             const isLoggedIn = !!localStorage.getItem('token');
+
+            // Hide login hint in header if logged in
+            const loginHint = document.getElementById('triviaLoginHint');
+            if (loginHint) loginHint.style.display = isLoggedIn ? 'none' : 'block';
 
             // DD values by difficulty
             const ddValues = { easy: 5, medium: 10, hard: 20 };
