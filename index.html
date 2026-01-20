@@ -683,43 +683,38 @@
         /* Content Filters */
         .content-filters {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            background: var(--ps-cream, #f5f2eb);
-            border: 2px solid var(--ps-navy, #1a1a1a);
-            border-radius: 2px;
+            flex-direction: row;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-color, #e0e0e0);
         }
         .filter-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.25rem;
             flex-wrap: wrap;
         }
         .filter-label {
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.65rem;
+            font-weight: 500;
             color: var(--text-muted);
-            text-transform: uppercase;
-            min-width: 60px;
+            margin-right: 0.25rem;
         }
         .filter-btn {
-            padding: 0.35rem 0.65rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 2px solid var(--ps-navy, #1a1a1a);
-            border-radius: 2px;
+            padding: 0.2rem 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color, #ccc);
+            border-radius: 3px;
             background: transparent;
-            color: var(--ps-navy, #1a1a1a);
+            color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .filter-btn:hover {
-            border-color: var(--ps-red, #8B0000);
-            color: var(--ps-red, #8B0000);
+            border-color: var(--ps-navy, #1a1a1a);
+            color: var(--ps-navy, #1a1a1a);
         }
         .filter-btn.active {
             background: var(--ps-navy, #1a1a1a);
@@ -727,9 +722,8 @@
             color: var(--ps-cream, #f5f2eb);
         }
         @media (max-width: 600px) {
-            .content-filters { padding: 0.5rem; }
-            .filter-label { min-width: auto; width: 100%; margin-bottom: 0.25rem; }
-            .filter-btn { padding: 0.3rem 0.5rem; font-size: 0.7rem; }
+            .content-filters { flex-direction: column; gap: 0.35rem; }
+            .filter-btn { padding: 0.15rem 0.35rem; font-size: 0.6rem; }
         }
 
         .story-item {
@@ -2437,7 +2431,7 @@
                                         <span style="width:1.5rem;text-align:center;">${medal}</span>
                                         <span style="font-weight:500;">${source}</span>
                                     </span>
-                                    <span style="color:var(--text-muted);font-size:0.75rem;">${count} published</span>
+                                    <span style="color:var(--text-muted);font-size:0.75rem;">${count} curated</span>
                                 </div>
                             `;
                         }).join('');
