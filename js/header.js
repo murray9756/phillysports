@@ -269,10 +269,32 @@
 
     // Header CSS - Always dark background with light text
     const headerCSS = `
+        /* Theme Variables - Light Mode (default) */
+        :root {
+            --header-bg: #1a1a1a;
+            --card-bg: #2a2a2a;
+            --card-bg-hover: rgba(255,255,255,0.1);
+            --border-color: #333;
+            --text-primary: #ffffff;
+            --text-secondary: #d0d0d0;
+            --nav-text: #d0d0d0;
+        }
+
+        /* Theme Variables - Dark Mode */
+        [data-theme="dark"] {
+            --header-bg: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --card-bg-hover: rgba(255,255,255,0.05);
+            --border-color: #222;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --nav-text: #b0b0b0;
+        }
+
         /* Header - Uses CSS variables for theme support */
         .header {
-            background: var(--header-bg, #1a1a1a);
-            border-bottom: 1px solid var(--border-color, #333);
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -290,9 +312,9 @@
 
         .header-left {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
+            flex-direction: row;
+            align-items: center;
+            gap: 1rem;
         }
 
         .header-right {
@@ -341,34 +363,37 @@
 
         .header-search input {
             padding: 0.5rem 0.75rem;
-            border: 1px solid #333;
-            border-radius: 4px;
-            background: #2a2a2a;
-            color: #e8e8e8;
+            border: 3px solid #1A2744;
+            box-shadow: inset 0 0 0 2px #8B1A28;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            color: #1A2744;
             font-size: 0.8rem;
-            width: 280px;
-            font-family: inherit;
+            width: 220px;
+            font-family: Georgia, serif;
         }
 
         .header-search input::placeholder {
-            color: #888;
+            color: #666;
+            font-style: italic;
         }
 
         .header-search button {
             padding: 0.5rem 0.75rem;
-            background: #8b0000;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            font-weight: 600;
+            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%);
+            border: 2px solid #F5F0E1;
+            color: #F5F0E1;
+            font-weight: 700;
             font-size: 0.75rem;
             cursor: pointer;
-            font-family: inherit;
-            transition: opacity 0.2s;
+            font-family: Georgia, serif;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .header-search button:hover {
-            opacity: 0.9;
+            background: linear-gradient(180deg, #a01f30 0%, #8B1A28 100%);
+            transform: translateY(-1px);
         }
 
         .header-auth {
@@ -562,29 +587,32 @@
             background: linear-gradient(180deg, #a01f30 0%, #8B1A28 100%) !important;
         }
 
-        /* Theme Toggle */
+        /* Theme Toggle - Americana Style */
         .theme-toggle {
-            background: var(--card-bg, #2a2a2a);
-            border: 1px solid var(--border-color, #444);
-            border-radius: 20px;
-            padding: 0.4rem 0.6rem;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+            box-shadow: inset 0 0 0 2px #8B1A28;
+            padding: 0.4rem 0.75rem;
             cursor: pointer;
             font-size: 1rem;
             line-height: 1;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 0.25rem;
-            color: var(--nav-text, #d0d0d0);
+            gap: 0.35rem;
+            color: #1A2744;
+            font-family: Georgia, serif;
         }
 
         .theme-toggle:hover {
-            background: var(--card-bg-hover, rgba(255,255,255,0.1));
+            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
+            transform: translateY(-1px);
         }
 
         .theme-toggle .theme-icon-light,
         .theme-toggle .theme-icon-dark {
             display: none;
+            font-size: 1.1rem;
         }
 
         .theme-toggle .theme-icon-light { display: inline; }
@@ -593,7 +621,7 @@
 
         .theme-toggle .theme-label {
             font-size: 0.7rem;
-            font-weight: 600;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
