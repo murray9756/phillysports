@@ -684,29 +684,58 @@
         .content-filters {
             display: flex;
             align-items: center;
-            gap: 0.2rem;
-            margin-bottom: 0.4rem;
-            padding: 0.2rem 0;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: -0.25rem 0 0.5rem 0;
+            padding: 0.25rem 0;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .filter-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
         .filter-btn {
-            padding: 0.1rem 0.2rem;
-            font-size: 0.55rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            padding: 0.15rem 0.3rem;
+            font-size: 0.6rem;
             border: none;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
         }
+        .filter-btn::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--text-muted);
+            border-radius: 50%;
+            display: inline-block;
+        }
         .filter-btn:hover {
             color: var(--ps-navy, #1a1a1a);
         }
+        .filter-btn:hover::before {
+            border-color: var(--ps-navy, #1a1a1a);
+        }
         .filter-btn.active {
             color: var(--ps-navy, #1a1a1a);
-            font-weight: 600;
+            font-weight: 500;
+        }
+        .filter-btn.active::before {
+            background: var(--ps-navy, #1a1a1a);
+            border-color: var(--ps-navy, #1a1a1a);
         }
         .filter-sep {
             color: var(--border-color);
-            font-size: 0.5rem;
-            margin: 0 0.15rem;
+            font-size: 0.7rem;
+            margin: 0 0.25rem;
         }
 
         .story-item {
@@ -935,9 +964,22 @@
         [data-theme="dark"] .filter-btn {
             color: var(--text-muted, #808080);
         }
+        [data-theme="dark"] .filter-btn::before {
+            border-color: var(--text-muted, #808080);
+        }
         [data-theme="dark"] .filter-btn:hover,
         [data-theme="dark"] .filter-btn.active {
             color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .filter-btn:hover::before {
+            border-color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .filter-btn.active::before {
+            background: var(--text-primary, #e8e8e8);
+            border-color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .filter-label {
+            color: var(--text-muted, #808080);
         }
         [data-theme="dark"] .section-title {
             color: var(--text-primary, #e8e8e8);
@@ -2227,17 +2269,23 @@
 
             <!-- Content Filters -->
             <div class="content-filters" id="contentFilters">
-                <button class="filter-btn active" data-filter="type" data-value="all">All</button>
-                <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
-                <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
-                <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
+                <div class="filter-group">
+                    <span class="filter-label">Type:</span>
+                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
+                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
+                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
+                </div>
                 <span class="filter-sep">|</span>
-                <button class="filter-btn active" data-filter="category" data-value="all">All</button>
-                <button class="filter-btn" data-filter="category" data-value="eagles">Eagles</button>
-                <button class="filter-btn" data-filter="category" data-value="phillies">Phillies</button>
-                <button class="filter-btn" data-filter="category" data-value="sixers">Sixers</button>
-                <button class="filter-btn" data-filter="category" data-value="flyers">Flyers</button>
-                <button class="filter-btn" data-filter="category" data-value="college">College</button>
+                <div class="filter-group">
+                    <span class="filter-label">Team:</span>
+                    <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="category" data-value="eagles">Eagles</button>
+                    <button class="filter-btn" data-filter="category" data-value="phillies">Phillies</button>
+                    <button class="filter-btn" data-filter="category" data-value="sixers">Sixers</button>
+                    <button class="filter-btn" data-filter="category" data-value="flyers">Flyers</button>
+                    <button class="filter-btn" data-filter="category" data-value="college">College</button>
+                </div>
             </div>
 
             <div class="article-list" id="articleList">
