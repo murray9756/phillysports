@@ -314,34 +314,32 @@
                 <!-- Ben Franklin LEFT large -->
                 <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.5; z-index: 1;">
 
-                <!-- EST 1776 TOP -->
-                <div style="position: absolute; top: 15px; width: 100%; text-align: center; z-index: 5;">
+                <!-- EST 1776 TOP with stars flanking -->
+                <div style="position: absolute; top: 12px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5;">
+                    <!-- 3D Red Star left of text -->
+                    <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                        <defs>
+                            <linearGradient id="redStarF" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#c42030"/>
+                                <stop offset="50%" style="stop-color:#8B1A28"/>
+                                <stop offset="100%" style="stop-color:#5a0f15"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF)"/>
+                    </svg>
                     <span style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #1A2744; letter-spacing: 4px;">Est. 1776</span>
+                    <!-- 3D Blue Star right of text -->
+                    <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                        <defs>
+                            <linearGradient id="blueStarF" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3a5a8c"/>
+                                <stop offset="50%" style="stop-color:#1A2744"/>
+                                <stop offset="100%" style="stop-color:#0d1520"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF)"/>
+                    </svg>
                 </div>
-
-                <!-- 3D Red Star left -->
-                <svg style="position: absolute; top: 55px; left: 130px; width: 28px; height: 28px; z-index: 5; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
-                    <defs>
-                        <linearGradient id="redStarF" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#c42030"/>
-                            <stop offset="50%" style="stop-color:#8B1A28"/>
-                            <stop offset="100%" style="stop-color:#5a0f15"/>
-                        </linearGradient>
-                    </defs>
-                    <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF)"/>
-                </svg>
-
-                <!-- 3D Blue Star right -->
-                <svg style="position: absolute; top: 55px; right: 25px; width: 28px; height: 28px; z-index: 5; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
-                    <defs>
-                        <linearGradient id="blueStarF" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#3a5a8c"/>
-                            <stop offset="50%" style="stop-color:#1A2744"/>
-                            <stop offset="100%" style="stop-color:#0d1520"/>
-                        </linearGradient>
-                    </defs>
-                    <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF)"/>
-                </svg>
 
                 <!-- Text - MOVED DOWN, script + bold mix -->
                 <div style="position: absolute; top: 75px; right: 30px; text-align: right; z-index: 5;">
