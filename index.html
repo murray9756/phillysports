@@ -1339,8 +1339,8 @@
         /* Schedule Widget */
         .schedule-item {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            align-items: flex-start;
+            gap: 0.5rem;
             padding: 0.6rem 0.5rem;
             border-bottom: 1px solid var(--border-color);
         }
@@ -1351,51 +1351,59 @@
 
         .schedule-date {
             text-align: center;
-            min-width: 40px;
+            min-width: 32px;
+            flex-shrink: 0;
         }
 
         .schedule-day {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
 
         .schedule-month {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--text-muted);
             text-transform: uppercase;
         }
 
         .schedule-info {
             flex: 1;
+            min-width: 0;
+            text-align: left;
         }
 
         .schedule-matchup {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .schedule-time {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
         }
 
         .schedule-tickets {
             display: flex;
-            gap: 0.25rem;
+            flex-wrap: wrap;
+            gap: 0.2rem;
             margin-top: 0.25rem;
         }
 
         .ticket-link {
-            font-size: 0.6rem;
-            padding: 0.15rem 0.35rem;
-            background: var(--dark-bg);
-            border-radius: 3px;
-            color: var(--text-muted);
+            font-size: 0.55rem;
+            padding: 0.1rem 0.25rem;
+            background: var(--ps-cream-dark, #e8e4d9);
+            border-radius: 2px;
+            color: var(--ps-navy, #1a1a1a);
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .ticket-link:hover {
-            background: var(--accent-color);
+            background: var(--ps-red, #8B0000);
             color: #fff;
         }
 
