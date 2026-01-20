@@ -16,15 +16,15 @@
                         <button type="submit">Go</button>
                     </form>
                 </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span class="theme-icon-light">&#9790;</span>
+                    <span class="theme-icon-dark">&#9728;</span>
+                </button>
                 <a href="/" class="header-logo">
                     <img src="/logo.png" alt="PhillySports.com">
                     <span class="tagline">Where the Diehards, Play Hard</span>
                 </a>
                 <div class="header-auth" id="headerAuth">
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                    </button>
                     <a href="/login.html">Login</a>
                     <a href="/register.html" class="auth-btn">Sign Up</a>
                 </div>
@@ -318,8 +318,7 @@
             gap: 1rem;
             position: absolute;
             right: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 3.5rem;
         }
 
         .header-auth a {
@@ -495,8 +494,11 @@
             transform: scale(1.05);
         }
 
-        /* Theme Toggle */
+        /* Theme Toggle - Positioned independently in top-right */
         .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
             background: none;
             border: 1px solid #444;
             border-radius: 20px;
@@ -509,6 +511,7 @@
             align-items: center;
             gap: 0.25rem;
             color: #d0d0d0;
+            z-index: 10;
         }
 
         .theme-toggle:hover {
@@ -857,6 +860,7 @@
         @media (max-width: 768px) {
             .header-search { display: none; }
             .header-auth { display: none; }
+            .theme-toggle { display: none; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
             .header-logo { margin-top: 0; }
@@ -962,10 +966,6 @@
 
                 if (headerAuth) {
                     headerAuth.innerHTML = `
-                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                            <span class="theme-icon-light">&#9790;</span>
-                            <span class="theme-icon-dark">&#9728;</span>
-                        </button>
                         <div class="coin-display">
                             <span class="coin-label">Diehard Dollars</span>
                             <div class="coin-amount-row">
@@ -981,9 +981,6 @@
                             <a href="#" id="logoutBtn">Logout</a>
                         </div>
                     `;
-
-                    // Re-init theme toggle after updating header
-                    initThemeToggle();
 
                     // Add logout handler
                     document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
