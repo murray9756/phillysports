@@ -729,13 +729,13 @@
         }
 
         .dropdown-menu a:hover {
-            background: #8B1A28;
-            color: #F5F0E1;
+            background: #1A2744 !important;
+            color: #F5F0E1 !important;
         }
 
         .dropdown-menu a.active {
-            background: #1A2744;
-            color: #F5F0E1;
+            background: #8B1A28 !important;
+            color: #F5F0E1 !important;
             font-weight: 700;
         }
 
