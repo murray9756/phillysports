@@ -302,12 +302,17 @@
         }
 
         .header-logo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.25rem;
+            display: block;
             text-decoration: none;
-            max-width: 360px;
+            width: 360px;
+            height: 210px;
+            overflow: visible;
+        }
+
+        .header-logo .logo-for-light,
+        .header-logo .logo-for-dark {
+            transform: scale(0.75);
+            transform-origin: top left;
         }
 
         /* Logo theme switching - light mode default shows F2 (dark bg) */
