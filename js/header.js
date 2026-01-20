@@ -120,7 +120,7 @@
                     </div>
 
                     <div class="nav-dropdown">
-                        <span class="nav-item dropdown-trigger">Betting <span class="dropdown-arrow">&#9660;</span></span>
+                        <span class="nav-item dropdown-trigger">Odds <span class="dropdown-arrow">&#9660;</span></span>
                         <div class="dropdown-menu">
                             <a href="/odds.html">Odds</a>
                             <a href="/bets.html">Bets</a>
@@ -223,7 +223,7 @@
 
                 <div class="mobile-nav-dropdown">
                     <div class="mobile-nav-dropdown-trigger">
-                        <span>Betting</span>
+                        <span>Odds</span>
                         <span class="arrow">&#9660;</span>
                     </div>
                     <div class="mobile-nav-dropdown-menu">
