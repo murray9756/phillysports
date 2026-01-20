@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="nav-dropdown">
-                        <span class="nav-item dropdown-trigger">Gaming <span class="dropdown-arrow">&#9660;</span></span>
+                        <span class="nav-item dropdown-trigger">Games <span class="dropdown-arrow">&#9660;</span></span>
                         <div class="dropdown-menu">
                             <a href="/fantasy.html">Fantasy</a>
                             <a href="/pools.html">Pools</a>
@@ -209,7 +209,7 @@
 
                 <div class="mobile-nav-dropdown">
                     <div class="mobile-nav-dropdown-trigger">
-                        <span>Gaming</span>
+                        <span>Games</span>
                         <span class="arrow">&#9660;</span>
                     </div>
                     <div class="mobile-nav-dropdown-menu">
