@@ -453,7 +453,7 @@
 
         .coin-label {
             font-family: Georgia, serif;
-            font-size: 0.6rem;
+            font-size: 0.85rem;
             font-weight: 700;
             font-style: italic;
             color: #F5F0E1;
@@ -494,10 +494,10 @@
             font-family: Georgia, serif;
             color: #1A2744 !important;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 0.6rem;
-            margin-top: 0.35rem;
-            padding: 0.3rem 0.6rem;
+            font-weight: 600;
+            font-size: 0.5rem;
+            margin-top: 0.25rem;
+            padding: 0.2rem 0.5rem;
             transition: all 0.2s;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 2px solid #8B1A28;
