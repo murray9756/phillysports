@@ -1,7 +1,7 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
-// Version: 2.4 - Added global dark mode styles for entire page
+// Version: 2.5 - Fixed header layout in dark mode, protected header from global styles
 
 (function() {
     'use strict';
@@ -387,8 +387,8 @@
             box-shadow: var(--page-card-shadow);
         }
 
-        /* Forms and Inputs */
-        [data-theme="dark"] input:not([type="submit"]):not([type="button"]),
+        /* Forms and Inputs - exclude header */
+        [data-theme="dark"] input:not([type="submit"]):not([type="button"]):not(.header-search input),
         [data-theme="dark"] textarea,
         [data-theme="dark"] select {
             background-color: var(--page-input-bg) !important;
@@ -396,16 +396,26 @@
             color: var(--page-text) !important;
         }
 
+        /* Exclude header inputs from global dark styles */
+        [data-theme="dark"] .header input,
+        [data-theme="dark"] .header button,
+        [data-theme="dark"] .header-search input,
+        [data-theme="dark"] .header-search button {
+            background-color: unset;
+            border-color: unset;
+            color: unset;
+        }
+
         [data-theme="dark"] input::placeholder,
         [data-theme="dark"] textarea::placeholder {
             color: var(--page-text-muted) !important;
         }
 
-        /* Buttons */
-        [data-theme="dark"] button:not(.theme-toggle):not(.mobile-menu-btn):not(.mobile-menu-close),
-        [data-theme="dark"] .btn,
-        [data-theme="dark"] input[type="submit"],
-        [data-theme="dark"] input[type="button"] {
+        /* Buttons - exclude header buttons */
+        [data-theme="dark"] button:not(.theme-toggle):not(.mobile-menu-btn):not(.mobile-menu-close):not(.header-search button),
+        [data-theme="dark"] .btn:not(.header .btn),
+        [data-theme="dark"] input[type="submit"]:not(.header input),
+        [data-theme="dark"] input[type="button"]:not(.header input) {
             background-color: var(--page-button-bg);
             color: var(--page-button-text);
             border-color: var(--page-border);
@@ -885,6 +895,52 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
+        /* Dark mode toggle button styling - keep visible in dark mode */
+        [data-theme="dark"] .theme-toggle {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            border: 3px solid #1A2744 !important;
+            color: #1A2744 !important;
+            display: flex !important;
+        }
+
+        /* Protect header elements from global dark mode styles */
+        [data-theme="dark"] .header,
+        [data-theme="dark"] .header-top,
+        [data-theme="dark"] .header-left,
+        [data-theme="dark"] .header-right,
+        [data-theme="dark"] .header-logo,
+        [data-theme="dark"] .header-search,
+        [data-theme="dark"] .header-auth,
+        [data-theme="dark"] .main-nav,
+        [data-theme="dark"] .nav-inner {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        [data-theme="dark"] .header {
+            background: var(--header-bg) !important;
+        }
+
+        [data-theme="dark"] .header-search input {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            color: #1A2744 !important;
+            border: 3px solid #1A2744 !important;
+        }
+
+        [data-theme="dark"] .header-search button {
+            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
+            color: #F5F0E1 !important;
+        }
+
+        [data-theme="dark"] .header-auth a {
+            color: #F5F0E1 !important;
+        }
+
+        [data-theme="dark"] .header-auth .auth-btn {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            color: #1A2744 !important;
         }
 
         /* Main Navigation - Darker cream background for contrast */
