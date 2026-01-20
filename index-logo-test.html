@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhillySports.com - Logo Test with Americana Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme-vintage.css">
+    <style>
+        :root {
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', var(--ps-font-body), sans-serif;
+            background: var(--ps-cream, #f5f2eb);
+            color: var(--ps-navy, #1a1a1a);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--ps-cream, #f5f2eb);
+            border-bottom: 3px solid var(--ps-navy, #1a1a1a);
+            padding: 1rem 0;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Logo Container */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .logo-wrapper {
+            transform: scale(0.7);
+            transform-origin: center;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: var(--ps-navy, #1a1a1a);
+            padding: 0.75rem 0;
+        }
+
+        .nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 1.5rem;
+        }
+
+        .nav-item {
+            color: var(--ps-cream, #f5f2eb);
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .nav-item:hover {
+            border-color: var(--ps-red, #8B0000);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--ps-cream, #f5f2eb);
+            border: 3px solid var(--ps-navy, #1a1a1a);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px solid var(--ps-navy, #1a1a1a);
+            pointer-events: none;
+        }
+
+        .card h2 {
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: var(--ps-navy, #1a1a1a);
+        }
+
+        .card-dark {
+            background: var(--ps-navy, #1a1a1a);
+            color: var(--ps-cream, #f5f2eb);
+        }
+
+        .card-dark h2 {
+            color: var(--ps-cream, #f5f2eb);
+        }
+
+        /* Team Links */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .team-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .team-link:hover {
+            background: var(--ps-navy, #1a1a1a);
+            color: var(--ps-cream, #f5f2eb);
+        }
+
+        .team-link .team-name {
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Theme Toggle */
+        .theme-section {
+            text-align: center;
+            padding: 1rem;
+            background: var(--ps-gray-200, #e5e2db);
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            margin-bottom: 1rem;
+        }
+
+        .theme-btn {
+            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-size: 0.875rem;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--ps-navy, #1a1a1a);
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .theme-btn.active {
+            background: var(--ps-navy, #1a1a1a);
+            color: var(--ps-cream, #f5f2eb);
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #f5f2eb;
+        }
+
+        body.dark-mode .header {
+            background: #1a1a1a;
+            border-color: #f5f2eb;
+        }
+
+        body.dark-mode .card {
+            background: #1a1a1a;
+            border-color: #f5f2eb;
+            color: #f5f2eb;
+        }
+
+        body.dark-mode .card::after {
+            border-color: #f5f2eb;
+        }
+
+        body.dark-mode .card h2 {
+            color: #f5f2eb;
+        }
+
+        body.dark-mode .team-link {
+            border-color: #f5f2eb;
+            color: #f5f2eb;
+        }
+
+        body.dark-mode .team-link:hover {
+            background: #f5f2eb;
+            color: #1a1a1a;
+        }
+
+        body.dark-mode .theme-section {
+            background: #2a2a2a;
+            border-color: #f5f2eb;
+        }
+    </style>
+</head>
+<body class="ps-theme">
+
+    <header class="header">
+        <div class="header-inner">
+            <!-- Theme Toggle -->
+            <div class="theme-section">
+                <span style="font-weight: bold; margin-right: 1rem;">Theme:</span>
+                <button class="theme-btn active" onclick="setTheme('light')">Light Mode</button>
+                <button class="theme-btn" onclick="setTheme('dark')">Dark Mode</button>
+            </div>
+
+            <!-- Light Mode Logo (F5 Vignette) -->
+            <div class="logo-container" id="logo-light">
+                <div class="logo-wrapper">
+                    <div style="position: relative; width: 480px; height: 280px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 8px solid #1A2744; overflow: hidden;">
+                        <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 3px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%); z-index: 8; pointer-events: none;"></div>
+                        <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -20px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.5; z-index: 1;">
+                        <div style="position: absolute; top: 12px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5;">
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="redStarL" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarL)"/>
+                            </svg>
+                            <span style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #1A2744; letter-spacing: 4px;">Est. 2026</span>
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="blueStarL" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3a5a8c"/><stop offset="50%" style="stop-color:#1A2744"/><stop offset="100%" style="stop-color:#0d1520"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarL)"/>
+                            </svg>
+                        </div>
+                        <div style="position: absolute; top: 90px; right: 25px; text-align: right; z-index: 5;">
+                            <div style="font-family: 'Brush Script MT', cursive; font-size: 58px; color: #1A2744; line-height: 0.9;">Philly</div>
+                            <div style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 52px; color: #8B1A28; line-height: 0.85; letter-spacing: -1px;">SPORTS</div>
+                            <div style="font-family: Georgia, serif; font-size: 14px; color: #1A2744; letter-spacing: 2px;">.COM</div>
+                        </div>
+                        <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dark Mode Logo (F2) -->
+            <div class="logo-container" id="logo-dark" style="display: none;">
+                <div class="logo-wrapper">
+                    <div style="position: relative; width: 480px; height: 280px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 8px solid #F5F0E1; overflow: hidden;">
+                        <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 3px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
+                        <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -20px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
+                        <div style="position: absolute; top: 12px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5;">
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="redStarD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarD)"/>
+                            </svg>
+                            <span style="font-family: 'Brush Script MT', cursive; font-size: 16px; color: #F5F0E1; letter-spacing: 4px;">Est. 2026</span>
+                            <svg style="width: 22px; height: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
+                                <defs><linearGradient id="blueStarD" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6a8fc4"/><stop offset="50%" style="stop-color:#4a6fa0"/><stop offset="100%" style="stop-color:#3a5a8c"/></linearGradient></defs>
+                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarD)"/>
+                            </svg>
+                        </div>
+                        <div style="position: absolute; top: 90px; right: 25px; text-align: right; z-index: 5;">
+                            <div style="font-family: 'Brush Script MT', cursive; font-size: 58px; color: #F5F0E1; line-height: 0.9;">Philly</div>
+                            <div style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 52px; color: #8B1A28; line-height: 0.85; letter-spacing: -1px;">SPORTS</div>
+                            <div style="font-family: Georgia, serif; font-size: 14px; color: #F5F0E1; letter-spacing: 2px;">.COM</div>
+                        </div>
+                        <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="main-nav">
+            <div class="nav-inner">
+                <a href="/" class="nav-item">Home</a>
+                <a href="/eagles/" class="nav-item">Eagles</a>
+                <a href="/phillies/" class="nav-item">Phillies</a>
+                <a href="/sixers/" class="nav-item">76ers</a>
+                <a href="/flyers/" class="nav-item">Flyers</a>
+                <a href="/community/" class="nav-item">Community</a>
+                <a href="/shop.html" class="nav-item">Shop</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="content-area">
+            <div class="card">
+                <h2>Pro Teams</h2>
+                <div class="team-grid">
+                    <a href="/eagles/" class="team-link" style="border-left: 4px solid #004C54;">
+                        <span class="team-name">Eagles</span>
+                    </a>
+                    <a href="/phillies/" class="team-link" style="border-left: 4px solid #E81828;">
+                        <span class="team-name">Phillies</span>
+                    </a>
+                    <a href="/sixers/" class="team-link" style="border-left: 4px solid #006BB6;">
+                        <span class="team-name">76ers</span>
+                    </a>
+                    <a href="/flyers/" class="team-link" style="border-left: 4px solid #F74902;">
+                        <span class="team-name">Flyers</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h2>Latest News</h2>
+                <p style="padding: 1rem 0; border-bottom: 1px solid var(--ps-gray-300, #ccc);">Eagles prepare for playoff push with key defensive additions...</p>
+                <p style="padding: 1rem 0; border-bottom: 1px solid var(--ps-gray-300, #ccc);">Phillies announce spring training schedule for 2026...</p>
+                <p style="padding: 1rem 0; border-bottom: 1px solid var(--ps-gray-300, #ccc);">Sixers rookie continues to impress in January stretch...</p>
+                <p style="padding: 1rem 0;">Flyers trade deadline targets emerging as season heats up...</p>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="card card-dark">
+                <h2>Quick Links</h2>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-top: 0.5rem;">
+                    <a href="/fantasy.html" style="color: var(--ps-cream); padding: 0.5rem; border: 1px solid var(--ps-cream); text-align: center;">Fantasy</a>
+                    <a href="/poker.html" style="color: var(--ps-cream); padding: 0.5rem; border: 1px solid var(--ps-cream); text-align: center;">Poker</a>
+                    <a href="/trivia.html" style="color: var(--ps-cream); padding: 0.5rem; border: 1px solid var(--ps-cream); text-align: center;">Trivia</a>
+                    <a href="/predictions.html" style="color: var(--ps-cream); padding: 0.5rem; border: 1px solid var(--ps-cream); text-align: center;">Predictions</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Live Scores</h2>
+                <p style="text-align: center; padding: 2rem 0; color: var(--ps-gray-500, #666);">No games scheduled</p>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        function setTheme(theme) {
+            const body = document.body;
+            const lightLogo = document.getElementById('logo-light');
+            const darkLogo = document.getElementById('logo-dark');
+            const buttons = document.querySelectorAll('.theme-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                lightLogo.style.display = 'none';
+                darkLogo.style.display = 'flex';
+                buttons[1].classList.add('active');
+            } else {
+                body.classList.remove('dark-mode');
+                lightLogo.style.display = 'flex';
+                darkLogo.style.display = 'none';
+                buttons[0].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
