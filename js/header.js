@@ -780,7 +780,7 @@
         }
 
         [data-theme="dark"] .coin-label {
-            color: #1A2744;
+            color: #000000;
         }
 
         [data-theme="dark"] .coin-balance {
@@ -947,6 +947,11 @@
 
         .admin-link:hover {
             background: linear-gradient(180deg, #a01f30 0%, #8B1A28 100%) !important;
+        }
+
+        /* Admin link - keep cream text in dark mode (override user-actions-stack) */
+        [data-theme="dark"] .admin-link {
+            color: #F5F0E1 !important;
         }
 
         /* Theme Toggle - Americana Style */
