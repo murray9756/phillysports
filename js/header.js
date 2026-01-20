@@ -231,7 +231,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
@@ -242,13 +242,13 @@
             flex-direction: column;
             align-items: center;
             gap: 0.25rem;
-            margin-top: 60px;
+            margin-top: 20px;
             text-decoration: none;
         }
 
         .header-logo img {
-            width: 204px;
-            height: 204px;
+            width: 160px;
+            height: 160px;
             border-radius: 12px;
         }
 
@@ -318,7 +318,7 @@
             gap: 1rem;
             position: absolute;
             right: 1.5rem;
-            top: 3.5rem;
+            top: 2.75rem;
         }
 
         .header-auth a {
@@ -497,7 +497,7 @@
         /* Theme Toggle - Positioned independently in top-right */
         .theme-toggle {
             position: absolute;
-            top: 1rem;
+            top: 0.75rem;
             right: 1.5rem;
             background: none;
             border: 1px solid #444;
