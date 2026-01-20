@@ -683,47 +683,30 @@
         /* Content Filters */
         .content-filters {
             display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-            padding: 0.4rem 0;
-            border-bottom: 1px solid var(--border-color, #e0e0e0);
-        }
-        .filter-group {
-            display: flex;
             align-items: center;
-            gap: 0.25rem;
-            flex-wrap: wrap;
-        }
-        .filter-label {
-            font-size: 0.65rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-right: 0.25rem;
+            gap: 0.2rem;
+            margin-bottom: 0.4rem;
+            padding: 0.2rem 0;
         }
         .filter-btn {
-            padding: 0.2rem 0.4rem;
-            font-size: 0.65rem;
-            font-weight: 500;
-            border: 1px solid var(--border-color, #ccc);
-            border-radius: 3px;
+            padding: 0.1rem 0.2rem;
+            font-size: 0.55rem;
+            border: none;
             background: transparent;
             color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.2s;
         }
         .filter-btn:hover {
-            border-color: var(--ps-navy, #1a1a1a);
             color: var(--ps-navy, #1a1a1a);
         }
         .filter-btn.active {
-            background: var(--ps-navy, #1a1a1a);
-            border-color: var(--ps-navy, #1a1a1a);
-            color: var(--ps-cream, #f5f2eb);
+            color: var(--ps-navy, #1a1a1a);
+            font-weight: 600;
         }
-        @media (max-width: 600px) {
-            .content-filters { flex-direction: column; gap: 0.35rem; }
-            .filter-btn { padding: 0.15rem 0.35rem; font-size: 0.6rem; }
+        .filter-sep {
+            color: var(--border-color);
+            font-size: 0.5rem;
+            margin: 0 0.15rem;
         }
 
         .story-item {
@@ -2130,25 +2113,17 @@
 
             <!-- Content Filters -->
             <div class="content-filters" id="contentFilters">
-                <div class="filter-group">
-                    <span class="filter-label">Type:</span>
-                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
-                    <button class="filter-btn" data-filter="type" data-value="newsletter">Newsletters</button>
-                    <button class="filter-btn" data-filter="type" data-value="podcast">Podcasts</button>
-                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Category:</span>
-                    <button class="filter-btn active" data-filter="category" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="category" data-value="eagles">Eagles</button>
-                    <button class="filter-btn" data-filter="category" data-value="phillies">Phillies</button>
-                    <button class="filter-btn" data-filter="category" data-value="sixers">Sixers</button>
-                    <button class="filter-btn" data-filter="category" data-value="flyers">Flyers</button>
-                    <button class="filter-btn" data-filter="category" data-value="college">College</button>
-                    <button class="filter-btn" data-filter="category" data-value="esports">Esports</button>
-                    <button class="filter-btn" data-filter="category" data-value="general">General</button>
-                </div>
+                <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+                <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
+                <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
+                <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
+                <span class="filter-sep">|</span>
+                <button class="filter-btn active" data-filter="category" data-value="all">All</button>
+                <button class="filter-btn" data-filter="category" data-value="eagles">Eagles</button>
+                <button class="filter-btn" data-filter="category" data-value="phillies">Phillies</button>
+                <button class="filter-btn" data-filter="category" data-value="sixers">Sixers</button>
+                <button class="filter-btn" data-filter="category" data-value="flyers">Flyers</button>
+                <button class="filter-btn" data-filter="category" data-value="college">College</button>
             </div>
 
             <div class="article-list" id="articleList">
