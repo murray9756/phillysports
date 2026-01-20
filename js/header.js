@@ -1,7 +1,7 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
-// Version: 2.5 - Fixed header layout in dark mode, protected header from global styles
+// Version: 2.6 - Fixed navigation bar colors in dark mode
 
 (function() {
     'use strict';
@@ -364,12 +364,12 @@
             color: var(--page-text-secondary);
         }
 
-        /* Links */
-        [data-theme="dark"] a:not(.header a):not(.main-nav a):not(.mobile-menu a) {
+        /* Links - exclude header, nav, and mobile menu */
+        [data-theme="dark"] a:not(.header a):not(.header-logo):not(.main-nav a):not(.nav-item):not(.dropdown-menu a):not(.mobile-menu a) {
             color: var(--page-link);
         }
 
-        [data-theme="dark"] a:not(.header a):not(.main-nav a):not(.mobile-menu a):hover {
+        [data-theme="dark"] a:not(.header a):not(.header-logo):not(.main-nav a):not(.nav-item):not(.dropdown-menu a):not(.mobile-menu a):hover {
             color: var(--page-link-hover);
         }
 
@@ -941,6 +941,43 @@
         [data-theme="dark"] .header-auth .auth-btn {
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
             color: #1A2744 !important;
+        }
+
+        /* Navigation bar - keep original styling in dark mode */
+        [data-theme="dark"] .main-nav {
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+            border-top: 3px solid #1A2744 !important;
+            border-bottom: 3px solid #1A2744 !important;
+        }
+
+        [data-theme="dark"] .nav-item,
+        [data-theme="dark"] .nav-inner a,
+        [data-theme="dark"] .dropdown-trigger {
+            color: #1A2744 !important;
+        }
+
+        [data-theme="dark"] .nav-item:hover,
+        [data-theme="dark"] .dropdown-trigger:hover {
+            color: #8B1A28 !important;
+        }
+
+        [data-theme="dark"] .dropdown-menu {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            border: 3px solid #1A2744 !important;
+        }
+
+        [data-theme="dark"] .dropdown-menu a {
+            color: #1A2744 !important;
+        }
+
+        [data-theme="dark"] .dropdown-menu a:hover {
+            background: #1A2744 !important;
+            color: #F5F0E1 !important;
+        }
+
+        [data-theme="dark"] .dropdown-menu a.active {
+            background: #8B1A28 !important;
+            color: #F5F0E1 !important;
         }
 
         /* Main Navigation - Darker cream background for contrast */
