@@ -19,7 +19,7 @@
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;" onclick="console.log('Toggle clicked');">
+                    <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
                         <span class="theme-icon-light">&#9790;</span>
                         <span class="theme-icon-dark">&#9728;</span>
                         <span class="theme-label">Dark Mode</span>
@@ -1382,6 +1382,13 @@
             return;
         }
 
+        // Prevent duplicate event listeners
+        if (toggle.dataset.initialized) {
+            console.log('Theme toggle already initialized, skipping');
+            return;
+        }
+        toggle.dataset.initialized = 'true';
+
         // Apply saved theme on load
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
@@ -1565,6 +1572,13 @@
 
     // Initialize
     function init() {
+        // Prevent double initialization
+        if (window.PhillySportsHeaderInitialized) {
+            console.log('Header already initialized, skipping');
+            return;
+        }
+        window.PhillySportsHeaderInitialized = true;
+
         injectCSS();
         injectHeader();
         initThemeToggle();
