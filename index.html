@@ -780,6 +780,18 @@
             -webkit-box-orient: vertical;
         }
 
+        .story-teaser {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-top: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
         .story-curator-note {
             font-size: 0.75rem;
             color: var(--text-secondary);
@@ -2050,6 +2062,7 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3 class="widget-title">Upcoming Games</h3>
+                    <div style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
@@ -2616,6 +2629,14 @@
             return url.includes('tiktok.com');
         }
 
+        // Helper to truncate text for teaser preview
+        function truncateText(text, maxLength = 140) {
+            if (!text) return '';
+            text = text.trim();
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength).trim() + '...';
+        }
+
         // Render all items in unified list (no separate featured)
         function renderAllItems(listContainer, items, hasMore) {
             if (items.length === 0) {
@@ -2660,6 +2681,7 @@
                                     <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
                                 </div>
                                 <div class="story-title">${escapeHtml(item.title)}</div>
+                                ${item.description ? `<div class="story-teaser">${escapeHtml(truncateText(item.description, 140))}</div>` : ''}
                                 ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
                             </div>
                         </a>
@@ -2950,7 +2972,8 @@
                                         <span>·</span>
                                         <span>${timeAgo(article.published)}</span>
                                     </div>
-                                    <div class="story-title">${article.headline}</div>
+                                    <div class="story-title">${escapeHtml(article.headline)}</div>
+                                    ${article.description ? `<div class="story-teaser">${escapeHtml(truncateText(article.description, 140))}</div>` : ''}
                                 </div>
                             </a>
                             <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="story-comment-link" title="Discuss this story">
