@@ -506,12 +506,15 @@
 
         /* Keep section header consistent in dark mode */
         [data-theme="dark"] .section-header {
-            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
-            border-color: #1A2744;
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+            border-color: #1A2744 !important;
         }
 
-        [data-theme="dark"] .section-title {
-            color: #1A2744;
+        [data-theme="dark"] .section-title,
+        [data-theme="dark"] h2.section-title,
+        [data-theme="dark"] .section-header .section-title,
+        [data-theme="dark"] .section-header h2 {
+            color: #1A2744 !important;
         }
 
         .featured-article {

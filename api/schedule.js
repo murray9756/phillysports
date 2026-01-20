@@ -12,137 +12,160 @@ export default async function handler(req, res) {
     try {
         const schedule = [];
         const now = new Date();
+        const currentYear = now.getFullYear();
         const maxDate = new Date(now.getTime() + daysLimit * 24 * 60 * 60 * 1000);
 
-        // Fetch NFL (Eagles) schedule
-        try {
-            const nflRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule');
-            const nflData = await nflRes.json();
-            const upcomingEagles = nflData.events?.filter(e => {
-                const gameDate = new Date(e.date);
-                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
-            }).slice(0, 2) || [];
+        // Helper to validate game date is actually in the future and reasonable year
+        const isValidFutureGame = (dateStr, statusCompleted) => {
+            const gameDate = new Date(dateStr);
+            const gameYear = gameDate.getFullYear();
+            // Must be future, not completed, and within current or next year
+            return gameDate > now &&
+                   gameDate < maxDate &&
+                   !statusCompleted &&
+                   (gameYear === currentYear || gameYear === currentYear + 1);
+        };
 
-            upcomingEagles.forEach(game => {
-                const comp = game.competitions[0];
-                const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                schedule.push({
-                    sport: 'NFL',
-                    team: 'Eagles',
-                    teamColor: '#004C54',
-                    opponent: opponent?.team?.shortDisplayName || 'TBD',
-                    isHome,
-                    date: game.date,
-                    venue: comp.venue?.fullName || '',
-                    broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+        // Fetch NFL (Eagles) schedule - only during season (Sept-Feb)
+        const currentMonth = now.getMonth() + 1; // 1-12
+        const isNflSeason = currentMonth >= 9 || currentMonth <= 2;
+        if (isNflSeason) {
+            try {
+                const nflRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule');
+                const nflData = await nflRes.json();
+                const upcomingEagles = nflData.events?.filter(e => {
+                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
+                }).slice(0, 2) || [];
+
+                upcomingEagles.forEach(game => {
+                    const comp = game.competitions[0];
+                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
+                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
+                    schedule.push({
+                        sport: 'NFL',
+                        team: 'Eagles',
+                        teamColor: '#004C54',
+                        opponent: opponent?.team?.shortDisplayName || 'TBD',
+                        isHome,
+                        date: game.date,
+                        venue: comp.venue?.fullName || '',
+                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                    });
                 });
-            });
-        } catch (e) { console.error('NFL schedule error:', e); }
+            } catch (e) { console.error('NFL schedule error:', e); }
+        }
 
-        // Fetch NBA (76ers) schedule
-        try {
-            const nbaRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/phi/schedule');
-            const nbaData = await nbaRes.json();
-            const upcomingSixers = nbaData.events?.filter(e => {
-                const gameDate = new Date(e.date);
-                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
-            }).slice(0, 2) || [];
+        // Fetch NBA (76ers) schedule - season runs Oct-June
+        const isNbaSeason = currentMonth >= 10 || currentMonth <= 6;
+        if (isNbaSeason) {
+            try {
+                const nbaRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/phi/schedule');
+                const nbaData = await nbaRes.json();
+                const upcomingSixers = nbaData.events?.filter(e => {
+                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
+                }).slice(0, 2) || [];
 
-            upcomingSixers.forEach(game => {
-                const comp = game.competitions[0];
-                const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                schedule.push({
-                    sport: 'NBA',
-                    team: '76ers',
-                    teamColor: '#006BB6',
-                    opponent: opponent?.team?.shortDisplayName || 'TBD',
-                    isHome,
-                    date: game.date,
-                    venue: comp.venue?.fullName || '',
-                    broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                upcomingSixers.forEach(game => {
+                    const comp = game.competitions[0];
+                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
+                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
+                    schedule.push({
+                        sport: 'NBA',
+                        team: '76ers',
+                        teamColor: '#006BB6',
+                        opponent: opponent?.team?.shortDisplayName || 'TBD',
+                        isHome,
+                        date: game.date,
+                        venue: comp.venue?.fullName || '',
+                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                    });
                 });
-            });
-        } catch (e) { console.error('NBA schedule error:', e); }
+            } catch (e) { console.error('NBA schedule error:', e); }
+        }
 
-        // Fetch NHL (Flyers) schedule
-        try {
-            const nhlRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/phi/schedule');
-            const nhlData = await nhlRes.json();
-            const upcomingFlyers = nhlData.events?.filter(e => {
-                const gameDate = new Date(e.date);
-                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
-            }).slice(0, 2) || [];
+        // Fetch NHL (Flyers) schedule - season runs Oct-June
+        const isNhlSeason = currentMonth >= 10 || currentMonth <= 6;
+        if (isNhlSeason) {
+            try {
+                const nhlRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/phi/schedule');
+                const nhlData = await nhlRes.json();
+                const upcomingFlyers = nhlData.events?.filter(e => {
+                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
+                }).slice(0, 2) || [];
 
-            upcomingFlyers.forEach(game => {
-                const comp = game.competitions[0];
-                const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                schedule.push({
-                    sport: 'NHL',
-                    team: 'Flyers',
-                    teamColor: '#F74902',
-                    opponent: opponent?.team?.shortDisplayName || 'TBD',
-                    isHome,
-                    date: game.date,
-                    venue: comp.venue?.fullName || '',
-                    broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                upcomingFlyers.forEach(game => {
+                    const comp = game.competitions[0];
+                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
+                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
+                    schedule.push({
+                        sport: 'NHL',
+                        team: 'Flyers',
+                        teamColor: '#F74902',
+                        opponent: opponent?.team?.shortDisplayName || 'TBD',
+                        isHome,
+                        date: game.date,
+                        venue: comp.venue?.fullName || '',
+                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                    });
                 });
-            });
-        } catch (e) { console.error('NHL schedule error:', e); }
+            } catch (e) { console.error('NHL schedule error:', e); }
+        }
 
-        // Fetch MLB (Phillies) schedule
-        try {
-            const mlbRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/phi/schedule');
-            const mlbData = await mlbRes.json();
-            const upcomingPhillies = mlbData.events?.filter(e => {
-                const gameDate = new Date(e.date);
-                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
-            }).slice(0, 2) || [];
+        // Fetch MLB (Phillies) schedule - season runs March-October
+        const isMlbSeason = currentMonth >= 3 && currentMonth <= 10;
+        if (isMlbSeason) {
+            try {
+                const mlbRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/phi/schedule');
+                const mlbData = await mlbRes.json();
+                const upcomingPhillies = mlbData.events?.filter(e => {
+                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
+                }).slice(0, 2) || [];
 
-            upcomingPhillies.forEach(game => {
-                const comp = game.competitions[0];
-                const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                schedule.push({
-                    sport: 'MLB',
-                    team: 'Phillies',
-                    teamColor: '#E81828',
-                    opponent: opponent?.team?.shortDisplayName || 'TBD',
-                    isHome,
-                    date: game.date,
-                    venue: comp.venue?.fullName || '',
-                    broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                upcomingPhillies.forEach(game => {
+                    const comp = game.competitions[0];
+                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
+                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
+                    schedule.push({
+                        sport: 'MLB',
+                        team: 'Phillies',
+                        teamColor: '#E81828',
+                        opponent: opponent?.team?.shortDisplayName || 'TBD',
+                        isHome,
+                        date: game.date,
+                        venue: comp.venue?.fullName || '',
+                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                    });
                 });
-            });
-        } catch (e) { console.error('MLB schedule error:', e); }
+            } catch (e) { console.error('MLB schedule error:', e); }
+        }
 
-        // Fetch MLS (Union) schedule
-        try {
-            const mlsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/phi/schedule');
-            const mlsData = await mlsRes.json();
-            const upcomingUnion = mlsData.events?.filter(e => {
-                const gameDate = new Date(e.date);
-                return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
-            }).slice(0, 2) || [];
+        // Fetch MLS (Union) schedule - season runs Feb-Dec
+        const isMlsSeason = currentMonth >= 2 && currentMonth <= 12;
+        if (isMlsSeason) {
+            try {
+                const mlsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/phi/schedule');
+                const mlsData = await mlsRes.json();
+                const upcomingUnion = mlsData.events?.filter(e => {
+                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
+                }).slice(0, 2) || [];
 
-            upcomingUnion.forEach(game => {
-                const comp = game.competitions[0];
-                const opponent = comp.competitors.find(c => !c.team?.displayName?.includes('Philadelphia'));
-                const isHome = comp.competitors.find(c => c.team?.displayName?.includes('Philadelphia'))?.homeAway === 'home';
-                schedule.push({
-                    sport: 'MLS',
-                    team: 'Union',
-                    teamColor: '#B49759',
-                    opponent: opponent?.team?.shortDisplayName || 'TBD',
-                    isHome,
-                    date: game.date,
-                    venue: comp.venue?.fullName || '',
-                    broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                upcomingUnion.forEach(game => {
+                    const comp = game.competitions[0];
+                    const opponent = comp.competitors.find(c => !c.team?.displayName?.includes('Philadelphia'));
+                    const isHome = comp.competitors.find(c => c.team?.displayName?.includes('Philadelphia'))?.homeAway === 'home';
+                    schedule.push({
+                        sport: 'MLS',
+                        team: 'Union',
+                        teamColor: '#B49759',
+                        opponent: opponent?.team?.shortDisplayName || 'TBD',
+                        isHome,
+                        date: game.date,
+                        venue: comp.venue?.fullName || '',
+                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                    });
                 });
-            });
-        } catch (e) { console.error('MLS schedule error:', e); }
+            } catch (e) { console.error('MLS schedule error:', e); }
+        }
 
         // Sort by date
         schedule.sort((a, b) => new Date(a.date) - new Date(b.date));
