@@ -19,6 +19,7 @@
                 <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                     <span class="theme-icon-light">&#9790;</span>
                     <span class="theme-icon-dark">&#9728;</span>
+                    <span class="theme-label">Dark Mode</span>
                 </button>
                 <a href="/" class="header-logo">
                     <img src="/logo.png" alt="PhillySports.com">
@@ -526,6 +527,13 @@
         .theme-toggle .theme-icon-light { display: inline; }
         [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
         [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        .theme-toggle .theme-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
 
         /* Main Navigation - Fixed dark theme */
         .main-nav {
