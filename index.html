@@ -884,6 +884,120 @@
             color: var(--ps-cream, #f5f2eb);
         }
 
+        /* ===========================================
+           DARK MODE OVERRIDES - Comprehensive fixes
+           =========================================== */
+        [data-theme="dark"] .story-item {
+            background: var(--card-bg, #1e1e1e);
+            border-color: var(--border-color, #333);
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .story-item:hover {
+            border-color: var(--ps-red, #8B0000);
+        }
+        [data-theme="dark"] .story-title {
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .story-teaser {
+            color: var(--text-muted, #808080);
+        }
+        [data-theme="dark"] .story-meta {
+            color: var(--text-muted, #808080);
+        }
+        [data-theme="dark"] .load-more-btn {
+            background: var(--card-bg, #1e1e1e);
+            border-color: var(--border-color, #333);
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .load-more-btn:hover {
+            background: var(--border-color, #333);
+            color: #fff;
+        }
+        [data-theme="dark"] .vote-btn {
+            color: var(--text-muted, #808080);
+            border-color: var(--border-color, #333);
+        }
+        [data-theme="dark"] .vote-btn:hover {
+            background: var(--border-color, #333);
+        }
+        [data-theme="dark"] .vote-btn.upvote:hover,
+        [data-theme="dark"] .vote-btn.upvote.voted {
+            color: #4CAF50;
+        }
+        [data-theme="dark"] .vote-btn.downvote:hover,
+        [data-theme="dark"] .vote-btn.downvote.voted {
+            color: #f44336;
+        }
+        [data-theme="dark"] .article-tag {
+            background: var(--card-bg, #1e1e1e);
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .filter-btn {
+            color: var(--text-muted, #808080);
+        }
+        [data-theme="dark"] .filter-btn:hover,
+        [data-theme="dark"] .filter-btn.active {
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .section-title {
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .trivia-option {
+            background: var(--card-bg, #1e1e1e);
+            border-color: var(--border-color, #333);
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .trivia-option:hover {
+            border-color: var(--ps-red, #8B0000);
+        }
+        [data-theme="dark"] .trivia-btn-primary {
+            background: var(--ps-red, #8B0000);
+            color: #fff;
+        }
+        [data-theme="dark"] .trivia-btn-secondary {
+            background: var(--card-bg, #1e1e1e);
+            border-color: var(--border-color, #333);
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .trivia-question-text {
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .ps-btn-secondary {
+            background: var(--card-bg, #1e1e1e);
+            border-color: var(--border-color, #333);
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .widget {
+            background: var(--card-bg, #1e1e1e);
+            border-color: var(--border-color, #333);
+        }
+        [data-theme="dark"] .widget-content {
+            color: var(--text-primary, #e8e8e8);
+        }
+        [data-theme="dark"] .news-section {
+            background: var(--dark-bg, #121212);
+        }
+        [data-theme="dark"] .sidebar {
+            background: var(--dark-bg, #121212);
+        }
+        /* Trivia widget - keep header consistent in dark mode */
+        [data-theme="dark"] .trivia-promo-header {
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
+            border-bottom-color: #1A2744;
+        }
+        [data-theme="dark"] .trivia-promo-title {
+            color: #1A2744;
+        }
+        [data-theme="dark"] .trivia-widget-body {
+            background: var(--card-bg, #1e1e1e);
+        }
+        [data-theme="dark"] .trivia-meta {
+            color: var(--text-muted, #808080);
+        }
+        [data-theme="dark"] #triviaLoginHint {
+            color: #1A2744;
+        }
+
         .article-meta {
             margin-top: 0.75rem;
             font-size: 0.75rem;
