@@ -1584,7 +1584,7 @@
         .trivia-btn {
             flex: 1;
             padding: 0.6rem;
-            border: 2px solid #1A2744;
+            border: 2px solid var(--ps-navy, #1a1a1a);
             border-radius: 2px;
             font-size: 0.75rem;
             font-weight: 600;
@@ -1595,28 +1595,25 @@
             letter-spacing: 0.5px;
         }
 
-        .trivia-btn:hover {
-            opacity: 0.9;
-        }
-
         .trivia-btn-primary {
-            background: #1A2744;
-            color: #f5f2eb;
+            background: var(--ps-navy, #1a1a1a);
+            border-color: var(--ps-navy, #1a1a1a);
+            color: var(--ps-cream, #f5f2eb);
         }
 
         .trivia-btn-primary:hover {
-            background: #8B0000;
-            border-color: #8B0000;
+            border-color: var(--ps-red, #8B0000);
+            background: var(--ps-red, #8B0000);
         }
 
         .trivia-btn-secondary {
-            background: #f5f2eb;
-            color: #1A2744;
+            background: transparent;
+            color: var(--ps-navy, #1a1a1a);
         }
 
         .trivia-btn-secondary:hover {
-            background: #1A2744;
-            color: #f5f2eb;
+            border-color: var(--ps-red, #8B0000);
+            color: var(--ps-red, #8B0000);
         }
 
         .trivia-login-prompt {
