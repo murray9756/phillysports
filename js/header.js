@@ -690,6 +690,20 @@
             text-decoration: none;
             letter-spacing: 0.5px;
             transition: all 0.2s;
+            color: #1A2744;
+        }
+
+        .header-auth a:hover {
+            color: #8B1A28;
+        }
+
+        /* Header auth links - Dark Mode */
+        [data-theme="dark"] .header-auth a {
+            color: #F5F0E1;
+        }
+
+        [data-theme="dark"] .header-auth a:hover {
+            color: #ffd700;
         }
 
         /* Sign In Button - Light Mode (dark text on light header) */
@@ -744,7 +758,7 @@
             background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
         }
 
-        /* Coin Display - Americana Style */
+        /* Coin Display - Americana Style (Light Mode: dark box on cream header) */
         .coin-display {
             display: flex;
             flex-direction: column;
@@ -757,6 +771,24 @@
             padding: 0.4rem 0.75rem;
             cursor: default;
             min-width: 110px;
+        }
+
+        /* Coin Display - Dark Mode (cream box on black header) */
+        [data-theme="dark"] .coin-display {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+        }
+
+        [data-theme="dark"] .coin-label {
+            color: #1A2744;
+        }
+
+        [data-theme="dark"] .coin-balance {
+            color: #8B1A28;
+        }
+
+        [data-theme="dark"] .coin-icon {
+            border: 2px solid #1A2744;
         }
 
         .coin-label {
@@ -851,6 +883,20 @@
 
         .user-actions-stack a:hover {
             color: #ffd700 !important;
+        }
+
+        /* User Actions Stack - Dark Mode (cream box on black header) */
+        [data-theme="dark"] .user-actions-stack {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+        }
+
+        [data-theme="dark"] .user-actions-stack a {
+            color: #1A2744 !important;
+        }
+
+        [data-theme="dark"] .user-actions-stack a:hover {
+            color: #8B1A28 !important;
         }
 
         /* Premium Badge */
