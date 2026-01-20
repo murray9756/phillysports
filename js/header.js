@@ -23,7 +23,7 @@
                 </button>
                 <a href="/" class="header-logo">
                     <!-- F2: Dark Mode - EXACT copy from logo-preview.html -->
-                    <div class="logo-for-light" style="position: relative; width: 480px; height: 280px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 8px solid #F5F0E1; overflow: hidden;">
+                    <div class="logo-for-light" style="position: relative; width: 100%; max-width: 480px; height: 280px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 8px solid #F5F0E1; overflow: hidden; margin: 0 auto;">
                         <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 3px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
                         <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -20px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
                         <div style="position: absolute; top: 12px; width: 100%; display: flex; justify-content: center; align-items: center; gap: 12px; z-index: 5;">
@@ -45,7 +45,7 @@
                         <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
                     </div>
                     <!-- F5: Vignette - EXACT copy from logo-preview.html -->
-                    <div class="logo-for-dark" style="position: relative; width: 480px; height: 280px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 8px solid #1A2744; overflow: hidden;">
+                    <div class="logo-for-dark" style="position: relative; width: 100%; max-width: 480px; height: 280px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 8px solid #1A2744; overflow: hidden; margin: 0 auto;">
                         <div style="position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px; border: 3px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
                         <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%); z-index: 8; pointer-events: none;"></div>
                         <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -20px; transform: translateY(-50%); height: 220px; width: auto; opacity: 0.5; z-index: 1;">
