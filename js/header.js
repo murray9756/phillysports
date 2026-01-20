@@ -219,10 +219,10 @@
 
     // Header CSS - Always dark background with light text
     const headerCSS = `
-        /* Header - Fixed dark theme */
+        /* Header - Uses CSS variables for theme support */
         .header {
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
+            background: var(--header-bg, #1a1a1a);
+            border-bottom: 1px solid var(--border-color, #333);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -315,15 +315,16 @@
 
         .header-auth {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 1rem;
             position: absolute;
             right: 1.5rem;
-            top: 2.75rem;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .header-auth a {
-            color: #d0d0d0;
+            color: var(--nav-text, #d0d0d0);
             font-size: 0.8rem;
             font-weight: 600;
             padding: 0.5rem 0.75rem;
@@ -335,8 +336,8 @@
         }
 
         .header-auth a:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
+            background: var(--card-bg-hover, rgba(255,255,255,0.1));
+            color: var(--text-primary, #fff);
         }
 
         .header-auth .auth-btn {
@@ -500,8 +501,8 @@
             position: absolute;
             top: 0.75rem;
             left: 1.5rem;
-            background: #2a2a2a;
-            border: 1px solid #444;
+            background: var(--card-bg, #2a2a2a);
+            border: 1px solid var(--border-color, #444);
             border-radius: 20px;
             padding: 0.4rem 0.6rem;
             cursor: pointer;
@@ -511,12 +512,12 @@
             display: flex;
             align-items: center;
             gap: 0.25rem;
-            color: #d0d0d0;
+            color: var(--nav-text, #d0d0d0);
             z-index: 10;
         }
 
         .theme-toggle:hover {
-            background: rgba(255,255,255,0.1);
+            background: var(--card-bg-hover, rgba(255,255,255,0.1));
         }
 
         .theme-toggle .theme-icon-light,
@@ -535,10 +536,10 @@
             letter-spacing: 0.5px;
         }
 
-        /* Main Navigation - Fixed dark theme */
+        /* Main Navigation - Uses CSS variables for theme support */
         .main-nav {
-            background: #1a1a1a;
-            border-bottom: 1px solid #333;
+            background: var(--header-bg, #1a1a1a);
+            border-bottom: 1px solid var(--border-color, #333);
         }
 
         .nav-inner {
@@ -555,7 +556,7 @@
             padding: 0.75rem 1rem;
             font-size: 0.75rem;
             font-weight: 600;
-            color: #d0d0d0;
+            color: var(--nav-text, #d0d0d0);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
@@ -564,7 +565,7 @@
             text-decoration: none;
         }
 
-        .nav-item:hover { color: #8b0000; }
+        .nav-item:hover { color: var(--accent-color, #8b0000); }
 
         .nav-dropdown { position: relative; }
 
@@ -583,8 +584,8 @@
             position: absolute;
             top: 100%;
             left: 0;
-            background: #1a1a1a;
-            border: 1px solid #333;
+            background: var(--header-bg, #1a1a1a);
+            border: 1px solid var(--border-color, #333);
             border-radius: 4px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             min-width: 150px;
@@ -608,7 +609,7 @@
         .dropdown-menu a {
             display: block;
             padding: 0.6rem 1rem;
-            color: #d0d0d0;
+            color: var(--nav-text, #d0d0d0);
             font-size: 0.8rem;
             font-weight: 500;
             text-decoration: none;
@@ -616,8 +617,8 @@
         }
 
         .dropdown-menu a:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
+            background: var(--card-bg-hover, rgba(255,255,255,0.1));
+            color: var(--text-primary, #fff);
         }
 
         /* Mobile Menu Button */
