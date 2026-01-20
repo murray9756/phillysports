@@ -644,7 +644,7 @@
 
         .nav-item {
             padding: 0.75rem 1rem;
-            font-size: 0.75rem;
+            font-size: 1.125rem;
             font-weight: 600;
             color: var(--nav-text, #d0d0d0);
             text-transform: uppercase;
@@ -700,7 +700,7 @@
             display: block;
             padding: 0.6rem 1rem;
             color: var(--nav-text, #d0d0d0);
-            font-size: 0.8rem;
+            font-size: 1.2rem;
             font-weight: 500;
             text-decoration: none;
             transition: background 0.2s, color 0.2s;
