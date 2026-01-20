@@ -31,7 +31,7 @@
                                 <defs><linearGradient id="redStarF2h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF2h)"/>
                             </svg>
-                            <span style="font-family: 'Brush Script MT', cursive; font-size: 12px; color: #F5F0E1; letter-spacing: 3px;">Est. 2026</span>
+                            <span style="font-family: 'Brush Script MT', cursive; font-size: 18px; color: #F5F0E1; letter-spacing: 3px;">Est. 2026</span>
                             <svg style="width: 16px; height: 16px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
                                 <defs><linearGradient id="blueStarF2h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6a8fc4"/><stop offset="50%" style="stop-color:#4a6fa0"/><stop offset="100%" style="stop-color:#3a5a8c"/></linearGradient></defs>
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF2h)"/>
@@ -54,7 +54,7 @@
                                 <defs><linearGradient id="redStarF5h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF5h)"/>
                             </svg>
-                            <span style="font-family: 'Brush Script MT', cursive; font-size: 12px; color: #1A2744; letter-spacing: 3px;">Est. 2026</span>
+                            <span style="font-family: 'Brush Script MT', cursive; font-size: 18px; color: #1A2744; letter-spacing: 3px;">Est. 2026</span>
                             <svg style="width: 16px; height: 16px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
                                 <defs><linearGradient id="blueStarF5h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3a5a8c"/><stop offset="50%" style="stop-color:#1A2744"/><stop offset="100%" style="stop-color:#0d1520"/></linearGradient></defs>
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF5h)"/>
