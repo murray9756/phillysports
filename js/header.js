@@ -76,7 +76,7 @@
                 <!-- Right Column: Auth -->
                 <div class="header-right" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0.5rem; position: static; transform: none;">
                     <div class="header-auth" id="headerAuth" style="display: flex; flex-direction: row; align-items: center; gap: 1rem; position: static; transform: none;">
-                        <a href="/login.html" style="color: #F5F0E1; text-decoration: none; font-family: Georgia, serif; font-weight: 600;">Sign In</a>
+                        <a href="/login.html" style="color: #F5F0E1; text-decoration: none; font-family: Georgia, serif; font-weight: 600; padding: 0.5rem 1rem; border: 2px solid #F5F0E1;">Sign In</a>
                         <a href="/register.html" class="auth-btn" style="background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); color: #1A2744; padding: 0.5rem 1rem; text-decoration: none; font-family: Georgia, serif; font-weight: 700; border: 3px solid #1A2744;">Sign Up</a>
                     </div>
                 </div>
