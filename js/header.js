@@ -1,6 +1,7 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
+// Version: 2.1 - Fixed right column stacking
 
 (function() {
     'use strict';
@@ -318,11 +319,11 @@
         }
 
         .header-right {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 0.5rem;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: flex-end !important;
+            gap: 0.5rem !important;
         }
 
         .header-logo {
@@ -406,9 +407,10 @@
         }
 
         .header-auth {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
         }
 
         .header-auth a {
