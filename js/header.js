@@ -304,10 +304,10 @@
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            padding: 0.75rem 1.5rem;
+            padding: 0.35rem 1rem;
             max-width: 1400px;
             margin: 0 auto;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .header-left {
@@ -327,14 +327,21 @@
         .header-logo {
             display: block;
             text-decoration: none;
-            width: 360px;
-            height: 210px;
+            width: 336px;
+            height: 196px;
             overflow: visible;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        .header-logo:hover {
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.6));
+            transform: scale(1.02);
         }
 
         .header-logo .logo-for-light,
         .header-logo .logo-for-dark {
-            transform: scale(0.75);
+            transform: scale(0.7);
             transform-origin: top left;
         }
 
@@ -442,13 +449,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.25rem;
+            gap: 0.15rem;
             background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
-            border: 4px solid #F5F0E1;
+            border: 3px solid #F5F0E1;
             box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.75rem 1rem;
+            padding: 0.4rem 0.75rem;
             cursor: default;
-            min-width: 120px;
+            min-width: 110px;
         }
 
         .coin-label {
@@ -485,7 +492,7 @@
         .coin-balance {
             font-family: Georgia, serif;
             font-variant-numeric: tabular-nums;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: #ffd700;
         }
@@ -646,7 +653,7 @@
         }
 
         .nav-item {
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.85rem;
             font-size: 1.125rem;
             font-weight: 700;
             font-family: Georgia, serif;
