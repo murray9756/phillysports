@@ -270,8 +270,11 @@
 
     // Header CSS - Follows global theme (light in light mode, dark in dark mode)
     const headerCSS = `
-        /* Theme Variables - Light Mode (default) */
+        /* ==========================================================================
+           SECTION 1: CSS VARIABLES - LIGHT MODE (defaults)
+           ========================================================================== */
         :root {
+            /* Header-specific variables */
             --header-bg: #f5f2eb;
             --header-text: #1A2744;
             --header-text-muted: #4d4a47;
@@ -284,7 +287,7 @@
             --text-secondary: #4d4a47;
             --nav-text: #1A2744;
 
-            /* Global Page Variables - Light Mode */
+            /* Global page variables */
             --page-bg: #f5f5f5;
             --page-bg-alt: #ffffff;
             --page-text: #1a1a1a;
@@ -303,8 +306,11 @@
             --page-button-text: #ffffff;
         }
 
-        /* Theme Variables - Dark Mode */
+        /* ==========================================================================
+           SECTION 2: CSS VARIABLES - DARK MODE (overrides)
+           ========================================================================== */
         [data-theme="dark"] {
+            /* Header-specific variables */
             --header-bg: #000000;
             --header-text: #F5F0E1;
             --header-text-muted: #b0b0b0;
@@ -317,7 +323,7 @@
             --text-secondary: #b0b0b0;
             --nav-text: #F5F0E1;
 
-            /* Global Page Variables - Dark Mode */
+            /* Global page variables */
             --page-bg: #121212;
             --page-bg-alt: #1a1a1a;
             --page-text: #e0e0e0;
@@ -336,7 +342,10 @@
             --page-button-text: #ffffff;
         }
 
-        /* ========== GLOBAL DARK MODE STYLES ========== */
+        /* ==========================================================================
+           SECTION 3: GLOBAL DARK MODE PAGE STYLES (for page content, NOT header)
+           These styles apply to the main page content areas, excluding the header.
+           ========================================================================== */
 
         /* Page Background */
         [data-theme="dark"] body {
@@ -558,7 +567,9 @@
             opacity: 1;
         }
 
-        /* Header - Uses CSS variables for theme support */
+        /* ==========================================================================
+           SECTION 4: HEADER STRUCTURE STYLES (layout, positioning)
+           ========================================================================== */
         .header {
             background: var(--header-bg);
             border-bottom: 1px solid var(--border-color);
@@ -594,6 +605,11 @@
             transform: none !important;
         }
 
+        /* ==========================================================================
+           SECTION 5: HEADER COMPONENT STYLES (logo, search, auth, nav)
+           ========================================================================== */
+
+        /* ----- Logo ----- */
         .header-logo {
             display: block;
             text-decoration: none;
@@ -611,15 +627,11 @@
             transform: scale(1.02);
         }
 
-        /* Logo theme switching - light mode shows F5 (light/cream bg) */
-        /* Light mode - show cream background logo (matches cream header) */
+        /* Logo theme switching - light mode shows cream background logo */
         .header-logo .logo-for-light { display: none !important; }
         .header-logo .logo-for-dark { display: block !important; }
 
-        /* Dark mode - show navy/dark background logo (matches dark header) */
-        [data-theme="dark"] .header-logo .logo-for-light { display: block !important; }
-        [data-theme="dark"] .header-logo .logo-for-dark { display: none !important; }
-
+        /* ----- Search ----- */
         .header-search {
             display: flex;
             align-items: center;
@@ -671,6 +683,7 @@
             transform: translateY(-1px);
         }
 
+        /* ----- Auth ----- */
         .header-auth {
             display: flex !important;
             flex-direction: row !important;
@@ -697,16 +710,7 @@
             color: #8B1A28;
         }
 
-        /* Header auth links - Dark Mode */
-        [data-theme="dark"] .header-auth a {
-            color: #F5F0E1;
-        }
-
-        [data-theme="dark"] .header-auth a:hover {
-            color: #ffd700;
-        }
-
-        /* Sign In Button - Light Mode (dark text on light header) */
+        /* Sign In Button - Light Mode */
         .header-auth .sign-in-btn {
             color: #1A2744;
             border: 2px solid #1A2744;
@@ -715,17 +719,6 @@
         .header-auth .sign-in-btn:hover {
             color: #8B1A28;
             border-color: #8B1A28;
-        }
-
-        /* Sign In Button - Dark Mode (cream text on dark header) */
-        [data-theme="dark"] .header-auth .sign-in-btn {
-            color: #F5F0E1;
-            border: 2px solid #F5F0E1;
-        }
-
-        [data-theme="dark"] .header-auth .sign-in-btn:hover {
-            color: #ffd700;
-            border-color: #ffd700;
         }
 
         /* Sign Up Button - Light Mode */
@@ -747,18 +740,7 @@
             box-shadow: inset 0 0 0 2px #8B1A28, 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Sign Up Button - Dark Mode */
-        [data-theme="dark"] .header-auth .auth-btn {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            color: #1A2744;
-            border: 3px solid #F5F0E1;
-        }
-
-        [data-theme="dark"] .header-auth .auth-btn:hover {
-            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
-        }
-
-        /* Coin Display - Americana Style (Light Mode: dark box on cream header) */
+        /* ----- Coin Display ----- */
         .coin-display {
             display: flex;
             flex-direction: column;
@@ -771,24 +753,6 @@
             padding: 0.4rem 0.75rem;
             cursor: default;
             min-width: 110px;
-        }
-
-        /* Coin Display - Dark Mode (cream box on black header) */
-        [data-theme="dark"] .coin-display {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            border: 3px solid #1A2744;
-        }
-
-        [data-theme="dark"] .coin-label {
-            color: #000000;
-        }
-
-        [data-theme="dark"] .coin-balance {
-            color: #8B1A28;
-        }
-
-        [data-theme="dark"] .coin-icon {
-            border: 2px solid #1A2744;
         }
 
         .coin-label {
@@ -852,14 +816,7 @@
             transform: translateY(-1px);
         }
 
-        /* Buy More button - keep readable in dark mode */
-        [data-theme="dark"] .buy-coins-link {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
-            color: #1A2744 !important;
-            border: 1px solid #8B1A28 !important;
-        }
-
-        /* User Actions Stack */
+        /* ----- User Actions Stack ----- */
         .user-actions-stack {
             display: flex;
             flex-direction: column;
@@ -885,21 +842,7 @@
             color: #ffd700 !important;
         }
 
-        /* User Actions Stack - Dark Mode (cream box on black header) */
-        [data-theme="dark"] .user-actions-stack {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            border: 3px solid #1A2744;
-        }
-
-        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link) {
-            color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):hover {
-            color: #8B1A28 !important;
-        }
-
-        /* Premium Badge */
+        /* ----- Premium Badge ----- */
         .premium-badge {
             background: linear-gradient(180deg, #ffd700 0%, #c9a000 100%) !important;
             color: #1A2744 !important;
@@ -932,7 +875,7 @@
             background: linear-gradient(180deg, #ffe44d 0%, #ffd700 100%) !important;
         }
 
-        /* Admin Link */
+        /* ----- Admin Link ----- */
         .admin-link {
             background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
             color: #F5F0E1 !important;
@@ -949,12 +892,7 @@
             background: linear-gradient(180deg, #a01f30 0%, #8B1A28 100%) !important;
         }
 
-        /* Admin link - keep cream text in dark mode (override user-actions-stack) */
-        [data-theme="dark"] .admin-link {
-            color: #F5F0E1 !important;
-        }
-
-        /* Theme Toggle - Americana Style */
+        /* ----- Theme Toggle ----- */
         .theme-toggle {
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #1A2744;
@@ -984,8 +922,6 @@
         }
 
         .theme-toggle .theme-icon-light { display: inline; }
-        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
-        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
 
         .theme-toggle .theme-label {
             font-size: 0.7rem;
@@ -994,56 +930,12 @@
             letter-spacing: 0.5px;
         }
 
-        /* Dark mode toggle button styling - keep visible in dark mode */
-        [data-theme="dark"] .theme-toggle {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
-            border: 3px solid #1A2744 !important;
-            color: #1A2744 !important;
-            display: flex !important;
-        }
-
-        /* Protect header elements from global dark mode styles */
-        [data-theme="dark"] .header,
-        [data-theme="dark"] .header-top,
-        [data-theme="dark"] .header-left,
-        [data-theme="dark"] .header-right,
-        [data-theme="dark"] .header-logo,
-        [data-theme="dark"] .header-search,
-        [data-theme="dark"] .header-auth,
-        [data-theme="dark"] .main-nav,
-        [data-theme="dark"] .nav-inner {
-            background-color: inherit;
-            color: inherit;
-        }
-
-        [data-theme="dark"] .header {
-            background: var(--header-bg) !important;
-        }
-
-        [data-theme="dark"] .header-search input {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
-            color: #1A2744 !important;
-            border: 3px solid #1A2744 !important;
-        }
-
-        [data-theme="dark"] .header-search button {
-            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
-            color: #F5F0E1 !important;
-        }
-
-        /* Header auth dark mode styles defined earlier with .sign-in-btn and .auth-btn */
-
-        /* Main Navigation - Darker cream background (same in both light and dark mode) */
+        /* ----- Main Navigation ----- */
         .main-nav {
             background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
             border-top: 3px solid #1A2744;
             border-bottom: 3px solid #1A2744;
             box-shadow: inset 0 2px 0 #8B1A28, inset 0 -2px 0 #8B1A28;
-        }
-
-        /* Force nav to keep dark cream in dark mode */
-        [data-theme="dark"] .main-nav {
-            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
         }
 
         .nav-inner {
@@ -1145,7 +1037,7 @@
             font-weight: 700;
         }
 
-        /* Mobile Menu Button */
+        /* ----- Mobile Menu Button ----- */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -1161,7 +1053,7 @@
             transform: translateY(-50%);
         }
 
-        /* Mobile Menu Overlay */
+        /* ----- Mobile Menu Overlay ----- */
         .mobile-menu-overlay {
             display: none;
             position: fixed;
@@ -1180,7 +1072,7 @@
             opacity: 1;
         }
 
-        /* Mobile Menu Panel */
+        /* ----- Mobile Menu Panel ----- */
         .mobile-menu {
             position: fixed;
             top: 0;
@@ -1292,10 +1184,6 @@
             color: #1a1a1a;
         }
 
-        [data-theme="dark"] .mobile-coin-display .coin-balance {
-            color: #ffffff;
-        }
-
         .mobile-user-buttons {
             display: flex;
             gap: 0.5rem;
@@ -1385,7 +1273,146 @@
             color: var(--text-primary, #1a1a1a);
         }
 
-        /* Responsive */
+        /* ==========================================================================
+           SECTION 6: HEADER DARK MODE OVERRIDES
+           All header-specific dark mode rules consolidated in one place.
+           ========================================================================== */
+
+        /* Protect header elements from global dark mode styles */
+        [data-theme="dark"] .header,
+        [data-theme="dark"] .header-top,
+        [data-theme="dark"] .header-left,
+        [data-theme="dark"] .header-right,
+        [data-theme="dark"] .header-logo,
+        [data-theme="dark"] .header-search,
+        [data-theme="dark"] .header-auth,
+        [data-theme="dark"] .main-nav,
+        [data-theme="dark"] .nav-inner {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        /* Header background */
+        [data-theme="dark"] .header {
+            background: var(--header-bg) !important;
+        }
+
+        /* Logo - show navy/dark background logo in dark mode */
+        [data-theme="dark"] .header-logo .logo-for-light { display: block !important; }
+        [data-theme="dark"] .header-logo .logo-for-dark { display: none !important; }
+
+        /* Search input and button */
+        [data-theme="dark"] .header-search input {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            color: #1A2744 !important;
+            border: 3px solid #1A2744 !important;
+        }
+
+        [data-theme="dark"] .header-search button {
+            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
+            color: #F5F0E1 !important;
+        }
+
+        /* Auth links */
+        [data-theme="dark"] .header-auth a {
+            color: #F5F0E1;
+        }
+
+        [data-theme="dark"] .header-auth a:hover {
+            color: #ffd700;
+        }
+
+        /* Sign In Button - Dark Mode */
+        [data-theme="dark"] .header-auth .sign-in-btn {
+            color: #F5F0E1;
+            border: 2px solid #F5F0E1;
+        }
+
+        [data-theme="dark"] .header-auth .sign-in-btn:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+
+        /* Sign Up Button - Dark Mode */
+        [data-theme="dark"] .header-auth .auth-btn {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            color: #1A2744;
+            border: 3px solid #F5F0E1;
+        }
+
+        [data-theme="dark"] .header-auth .auth-btn:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
+        }
+
+        /* Coin Display - Dark Mode (cream box on black header) */
+        [data-theme="dark"] .coin-display {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+        }
+
+        [data-theme="dark"] .coin-label {
+            color: #000000;
+        }
+
+        [data-theme="dark"] .coin-balance {
+            color: #8B1A28;
+        }
+
+        [data-theme="dark"] .coin-icon {
+            border: 2px solid #1A2744;
+        }
+
+        /* Buy More button - keep readable in dark mode */
+        [data-theme="dark"] .buy-coins-link {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            color: #1A2744 !important;
+            border: 1px solid #8B1A28 !important;
+        }
+
+        /* User Actions Stack - Dark Mode (cream box on black header) */
+        [data-theme="dark"] .user-actions-stack {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+        }
+
+        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link) {
+            color: #1A2744 !important;
+        }
+
+        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):hover {
+            color: #8B1A28 !important;
+        }
+
+        /* Admin link - keep cream text in dark mode */
+        [data-theme="dark"] .admin-link {
+            color: #F5F0E1 !important;
+        }
+
+        /* Theme toggle - dark mode icon visibility */
+        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
+        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
+
+        /* Dark mode toggle button styling - keep visible in dark mode */
+        [data-theme="dark"] .theme-toggle {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            border: 3px solid #1A2744 !important;
+            color: #1A2744 !important;
+            display: flex !important;
+        }
+
+        /* Force nav to keep dark cream in dark mode */
+        [data-theme="dark"] .main-nav {
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+        }
+
+        /* Mobile coin balance in dark mode */
+        [data-theme="dark"] .mobile-coin-display .coin-balance {
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           SECTION 7: MOBILE/RESPONSIVE STYLES
+           ========================================================================== */
         @media (max-width: 1024px) {
             .header-search input { width: 200px; }
         }
