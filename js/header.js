@@ -37,7 +37,7 @@
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF2h)"/>
                             </svg>
                         </div>
-                        <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
                             <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #F5F0E1; line-height: 1;">Philly</span>
                             <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
                             <span style="font-family: Georgia, serif; font-size: 16px; color: #F5F0E1; letter-spacing: 1px; font-weight: bold;">.COM</span>
@@ -60,7 +60,7 @@
                                 <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF5h)"/>
                             </svg>
                         </div>
-                        <div style="position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
                             <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #1A2744; line-height: 1;">Philly</span>
                             <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
                             <span style="font-family: Georgia, serif; font-size: 16px; color: #1A2744; letter-spacing: 1px; font-weight: bold;">.COM</span>
@@ -334,6 +334,8 @@
             overflow: visible;
             filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7)) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
             transition: transform 0.2s, filter 0.2s;
+            align-self: center;
+            margin: 0 auto;
         }
 
         .header-logo:hover {
