@@ -42,7 +42,7 @@
                             <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
                             <span style="font-family: Georgia, serif; font-size: 16px; color: #F5F0E1; letter-spacing: 1px; font-weight: bold;">.COM</span>
                         </div>
-                        <div style="position: absolute; bottom: 8px; left: 50px; right: 0; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                        <div style="position: absolute; bottom: 8px; left: 50px; right: 0; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
                     </div>
                     <!-- Light background logo (shows in dark mode) -->
                     <div class="logo-for-dark" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 6px solid #1A2744; overflow: hidden;">
@@ -65,7 +65,7 @@
                             <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
                             <span style="font-family: Georgia, serif; font-size: 16px; color: #1A2744; letter-spacing: 1px; font-weight: bold;">.COM</span>
                         </div>
-                        <div style="position: absolute; bottom: 8px; left: 50px; right: 0; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
+                        <div style="position: absolute; bottom: 8px; left: 50px; right: 0; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
                     </div>
                 </a>
                 <!-- Right Column: Theme Toggle + Auth -->
