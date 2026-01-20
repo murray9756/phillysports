@@ -9,18 +9,22 @@
     const headerHTML = `
         <header class="header">
             <div class="header-top">
-                <div class="header-search">
-                    <form action="https://www.google.com/search" method="GET" target="_blank">
-                        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
-                        <input type="text" name="q" placeholder="Search the web..." required>
-                        <button type="submit">Go</button>
-                    </form>
+                <!-- Left Column: Google Search -->
+                <div class="header-left">
+                    <div class="header-search">
+                        <form action="https://www.google.com/search" method="GET" target="_blank">
+                            <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
+                            <input type="text" name="q" placeholder="Search the web..." required>
+                            <button type="submit">Go</button>
+                        </form>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                        <span class="theme-icon-light">&#9790;</span>
+                        <span class="theme-icon-dark">&#9728;</span>
+                        <span class="theme-label">Dark Mode</span>
+                    </button>
                 </div>
-                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                    <span class="theme-icon-light">&#9790;</span>
-                    <span class="theme-icon-dark">&#9728;</span>
-                    <span class="theme-label">Dark Mode</span>
-                </button>
+                <!-- Center Column: Logo -->
                 <a href="/" class="header-logo">
                     <!-- F2: Dark Mode - EXACT copy from logo-preview.html -->
                     <div class="logo-for-light" style="position: relative; width: 100%; max-width: 480px; height: 280px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 8px solid #F5F0E1; overflow: hidden; margin: 0 auto;">
@@ -68,9 +72,12 @@
                         <div style="position: absolute; bottom: 22px; width: 100%; text-align: center; font-family: Georgia, serif; font-size: 13px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards Play Hard</div>
                     </div>
                 </a>
-                <div class="header-auth" id="headerAuth">
-                    <a href="/login.html">Login</a>
-                    <a href="/register.html" class="auth-btn">Sign Up</a>
+                <!-- Right Column: Auth -->
+                <div class="header-right">
+                    <div class="header-auth" id="headerAuth">
+                        <a href="/login.html">Login</a>
+                        <a href="/register.html" class="auth-btn">Sign Up</a>
+                    </div>
                 </div>
                 <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
             </div>
@@ -272,13 +279,26 @@
         }
 
         .header-top {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: center;
             padding: 0.75rem 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
-            position: relative;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .header-logo {
@@ -286,7 +306,6 @@
             flex-direction: column;
             align-items: center;
             gap: 0.25rem;
-            margin-top: 20px;
             text-decoration: none;
             max-width: 360px;
         }
@@ -302,10 +321,6 @@
         .header-search {
             display: flex;
             align-items: center;
-            position: absolute;
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
         }
 
         .header-search form {
@@ -353,12 +368,8 @@
 
         .header-auth {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 1rem;
-            position: absolute;
-            right: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
         }
 
         .header-auth a {
@@ -534,11 +545,8 @@
             transform: scale(1.05);
         }
 
-        /* Theme Toggle - Positioned independently in top-left near search */
+        /* Theme Toggle */
         .theme-toggle {
-            position: absolute;
-            top: 0.75rem;
-            left: 1.5rem;
             background: var(--card-bg, #2a2a2a);
             border: 1px solid var(--border-color, #444);
             border-radius: 20px;
@@ -551,7 +559,6 @@
             align-items: center;
             gap: 0.25rem;
             color: var(--nav-text, #d0d0d0);
-            z-index: 10;
         }
 
         .theme-toggle:hover {
