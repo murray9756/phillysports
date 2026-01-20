@@ -19,7 +19,7 @@
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
+                    <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;" onclick="console.log('Toggle clicked');">
                         <span class="theme-icon-light">&#9790;</span>
                         <span class="theme-icon-dark">&#9728;</span>
                         <span class="theme-label">Dark Mode</span>
@@ -1376,6 +1376,7 @@
     // Theme toggle functionality
     function initThemeToggle() {
         const toggle = document.getElementById('themeToggle');
+        console.log('initThemeToggle called, toggle element:', toggle);
         if (!toggle) {
             console.warn('Theme toggle button not found');
             return;
@@ -1399,11 +1400,14 @@
         updateToggleLabel();
 
         toggle.addEventListener('click', function(e) {
+            console.log('Theme toggle clicked!');
             e.preventDefault();
             e.stopPropagation();
 
             const current = document.documentElement.getAttribute('data-theme');
             const newTheme = current === 'dark' ? 'light' : 'dark';
+
+            console.log('Changing theme from', current, 'to', newTheme);
 
             // Apply to both html and body for broader compatibility
             document.documentElement.setAttribute('data-theme', newTheme);
@@ -1413,6 +1417,8 @@
             updateToggleLabel();
             console.log('Theme changed to:', newTheme);
         });
+
+        console.log('Theme toggle event listener attached');
     }
 
     // Mobile menu functionality
