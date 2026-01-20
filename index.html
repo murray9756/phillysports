@@ -1052,7 +1052,71 @@
             color: #808080 !important;
         }
         [data-theme="dark"] #triviaLoginHint {
-            color: #1A2744;
+            color: #1A2744 !important;
+        }
+        /* Leaderboard dark mode */
+        [data-theme="dark"] .leaderboard-row {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] .leaderboard-rank {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] .leaderboard-username {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] .leaderboard-coins {
+            color: #ff9800 !important;
+        }
+        [data-theme="dark"] #diehardLeaderboardWidget,
+        [data-theme="dark"] #sourceLeaderboardWidget {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] #diehardLeaderboardWidget a,
+        [data-theme="dark"] #sourceLeaderboardWidget a {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] #diehardLeaderboardWidget div,
+        [data-theme="dark"] #sourceLeaderboardWidget div {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] #diehardLeaderboardWidget span,
+        [data-theme="dark"] #sourceLeaderboardWidget span {
+            color: #e8e8e8 !important;
+        }
+        /* Ticket links dark mode */
+        [data-theme="dark"] .ticket-link {
+            background: #2a2a2a !important;
+            color: #e8e8e8 !important;
+            border: 1px solid #444 !important;
+        }
+        [data-theme="dark"] .ticket-link:hover {
+            background: #8B0000 !important;
+            color: #fff !important;
+        }
+        /* Schedule widget dark mode */
+        [data-theme="dark"] .schedule-item {
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] .schedule-time,
+        [data-theme="dark"] .schedule-teams,
+        [data-theme="dark"] .schedule-location {
+            color: #e8e8e8 !important;
+        }
+        /* Filter buttons - no background */
+        [data-theme="dark"] .filter-btn {
+            background: transparent !important;
+            color: #808080 !important;
+        }
+        [data-theme="dark"] .filter-btn:hover,
+        [data-theme="dark"] .filter-btn.active {
+            background: transparent !important;
+            color: #e8e8e8 !important;
+        }
+        [data-theme="dark"] .filter-group {
+            background: transparent !important;
+        }
+        [data-theme="dark"] .content-filters {
+            background: transparent !important;
         }
 
         .article-meta {
@@ -1310,18 +1374,27 @@
             text-align: center;
         }
 
-        /* Keep widget header consistent in dark mode */
+        /* Keep widget header consistent in dark mode - must override header.js h3 rule */
         [data-theme="dark"] .widget-header {
-            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
-            border-bottom-color: #1A2744;
+            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
+            border-bottom-color: #1A2744 !important;
         }
 
-        [data-theme="dark"] .widget-title {
-            color: #1A2744;
+        [data-theme="dark"] .widget-header .widget-title,
+        [data-theme="dark"] .widget-header h3.widget-title,
+        [data-theme="dark"] h3.widget-title,
+        [data-theme="dark"] .widget .widget-header .widget-title {
+            color: #1A2744 !important;
         }
 
+        [data-theme="dark"] .widget-header .widget-subtitle,
         [data-theme="dark"] .widget-subtitle {
-            color: #1A2744;
+            color: #1A2744 !important;
+        }
+
+        [data-theme="dark"] .widget-header div,
+        [data-theme="dark"] .widget-header span {
+            color: #1A2744 !important;
         }
 
         .widget-content {
@@ -2544,12 +2617,12 @@
                     container.innerHTML = top5.map((user, i) => {
                         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
                         return `
-                            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
+                            <div class="leaderboard-row" style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
                                 <span style="display:flex;align-items:center;gap:0.4rem;">
-                                    <span style="width:1.5rem;text-align:center;">${medal}</span>
-                                    <a href="/profile.html?username=${user.username}" style="font-weight:500;color:var(--text-primary);">${user.username}</a>
+                                    <span class="leaderboard-rank" style="width:1.5rem;text-align:center;">${medal}</span>
+                                    <a href="/profile.html?username=${user.username}" class="leaderboard-username" style="font-weight:500;">${user.username}</a>
                                 </span>
-                                <span style="color:#ff9800;font-size:1rem;font-weight:900;font-family:var(--ps-font-headline,'Arial Black',sans-serif);">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
+                                <span class="leaderboard-coins" style="color:#ff9800;font-size:1rem;font-weight:900;font-family:var(--ps-font-headline,'Arial Black',sans-serif);">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
                             </div>
                         `;
                     }).join('');
