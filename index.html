@@ -120,6 +120,11 @@
             --widget-header-bg: #2a2a2a;
         }
 
+        /* Dark mode override for ps-theme (higher specificity) */
+        [data-theme="dark"] body.ps-theme {
+            --header-bg: #000000;
+        }
+
         * {
             margin: 0;
             padding: 0;
