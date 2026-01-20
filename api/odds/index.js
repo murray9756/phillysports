@@ -311,99 +311,121 @@ async function trackAPIUsage(remaining) {
 }
 
 // Mock data for development/demo when API key not configured
+// Returns empty array since we can't provide accurate odds without the API
+// This prevents showing misleading matchup data that doesn't match the actual schedule
 function getMockOddsData(sportFilter) {
-    const mockGames = [
-        {
-            id: 'mock-nfl-1',
+    // Determine which sports are currently in season
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1; // 1-12
+
+    const isNflSeason = currentMonth >= 9 || currentMonth <= 2;
+    const isNbaSeason = currentMonth >= 10 || currentMonth <= 6;
+    const isNhlSeason = currentMonth >= 10 || currentMonth <= 6;
+    const isMlbSeason = currentMonth >= 3 && currentMonth <= 10;
+    const isNcaafSeason = currentMonth >= 8 && currentMonth <= 1;
+    const isNcaabSeason = currentMonth >= 11 || currentMonth <= 3;
+
+    // Return empty array - without real API data we can't show accurate odds
+    // The UI should handle this gracefully and indicate odds are unavailable
+    const mockGames = [];
+
+    // Only add placeholder message games for in-season sports
+    // These indicate that odds API is not configured rather than showing fake matchups
+    if (isNflSeason) {
+        mockGames.push({
+            id: 'demo-nfl',
             sport: 'NFL',
             sportKey: 'americanfootball_nfl',
             commenceTime: new Date(Date.now() + 86400000).toISOString(),
             homeTeam: 'Philadelphia Eagles',
-            awayTeam: 'Dallas Cowboys',
-            bookmaker: 'DraftKings',
-            odds: {
-                spread: { home: { point: -3.5, price: -110 }, away: { point: 3.5, price: -110 } },
-                moneyline: { home: -175, away: 150 },
-                total: { over: { point: 45.5, price: -110 }, under: { point: 45.5, price: -110 } }
-            },
+            awayTeam: 'Opponent TBD',
+            bookmaker: 'Demo',
+            odds: null,
+            demo: true,
+            message: 'Configure ODDS_API_KEY for live odds',
             lastUpdate: new Date().toISOString()
-        },
-        {
-            id: 'mock-nba-1',
+        });
+    }
+
+    if (isNbaSeason) {
+        mockGames.push({
+            id: 'demo-nba',
             sport: 'NBA',
             sportKey: 'basketball_nba',
             commenceTime: new Date(Date.now() + 43200000).toISOString(),
             homeTeam: 'Philadelphia 76ers',
-            awayTeam: 'Boston Celtics',
-            bookmaker: 'DraftKings',
-            odds: {
-                spread: { home: { point: 2.5, price: -110 }, away: { point: -2.5, price: -110 } },
-                moneyline: { home: 115, away: -135 },
-                total: { over: { point: 218.5, price: -110 }, under: { point: 218.5, price: -110 } }
-            },
+            awayTeam: 'Opponent TBD',
+            bookmaker: 'Demo',
+            odds: null,
+            demo: true,
+            message: 'Configure ODDS_API_KEY for live odds',
             lastUpdate: new Date().toISOString()
-        },
-        {
-            id: 'mock-nhl-1',
+        });
+    }
+
+    if (isNhlSeason) {
+        mockGames.push({
+            id: 'demo-nhl',
             sport: 'NHL',
             sportKey: 'icehockey_nhl',
             commenceTime: new Date(Date.now() + 72000000).toISOString(),
             homeTeam: 'Philadelphia Flyers',
-            awayTeam: 'New York Rangers',
-            bookmaker: 'FanDuel',
-            odds: {
-                spread: { home: { point: 1.5, price: -180 }, away: { point: -1.5, price: 155 } },
-                moneyline: { home: 145, away: -170 },
-                total: { over: { point: 6.5, price: -115 }, under: { point: 6.5, price: -105 } }
-            },
+            awayTeam: 'Opponent TBD',
+            bookmaker: 'Demo',
+            odds: null,
+            demo: true,
+            message: 'Configure ODDS_API_KEY for live odds',
             lastUpdate: new Date().toISOString()
-        },
-        {
-            id: 'mock-mlb-1',
+        });
+    }
+
+    if (isMlbSeason) {
+        mockGames.push({
+            id: 'demo-mlb',
             sport: 'MLB',
             sportKey: 'baseball_mlb',
             commenceTime: new Date(Date.now() + 100000000).toISOString(),
             homeTeam: 'Philadelphia Phillies',
-            awayTeam: 'New York Mets',
-            bookmaker: 'DraftKings',
-            odds: {
-                spread: { home: { point: -1.5, price: 130 }, away: { point: 1.5, price: -150 } },
-                moneyline: { home: -145, away: 125 },
-                total: { over: { point: 8.5, price: -110 }, under: { point: 8.5, price: -110 } }
-            },
+            awayTeam: 'Opponent TBD',
+            bookmaker: 'Demo',
+            odds: null,
+            demo: true,
+            message: 'Configure ODDS_API_KEY for live odds',
             lastUpdate: new Date().toISOString()
-        },
-        {
-            id: 'mock-ncaaf-1',
+        });
+    }
+
+    if (isNcaafSeason) {
+        mockGames.push({
+            id: 'demo-ncaaf',
             sport: 'NCAAF',
             sportKey: 'americanfootball_ncaaf',
             commenceTime: new Date(Date.now() + 150000000).toISOString(),
             homeTeam: 'Penn State Nittany Lions',
-            awayTeam: 'Ohio State Buckeyes',
-            bookmaker: 'BetMGM',
-            odds: {
-                spread: { home: { point: 7.5, price: -110 }, away: { point: -7.5, price: -110 } },
-                moneyline: { home: 250, away: -310 },
-                total: { over: { point: 52.5, price: -110 }, under: { point: 52.5, price: -110 } }
-            },
+            awayTeam: 'Opponent TBD',
+            bookmaker: 'Demo',
+            odds: null,
+            demo: true,
+            message: 'Configure ODDS_API_KEY for live odds',
             lastUpdate: new Date().toISOString()
-        },
-        {
-            id: 'mock-ncaab-1',
+        });
+    }
+
+    if (isNcaabSeason) {
+        mockGames.push({
+            id: 'demo-ncaab',
             sport: 'NCAAB',
             sportKey: 'basketball_ncaab',
             commenceTime: new Date(Date.now() + 60000000).toISOString(),
             homeTeam: 'Villanova Wildcats',
-            awayTeam: 'Duke Blue Devils',
-            bookmaker: 'Caesars',
-            odds: {
-                spread: { home: { point: 4.5, price: -110 }, away: { point: -4.5, price: -110 } },
-                moneyline: { home: 165, away: -195 },
-                total: { over: { point: 142.5, price: -110 }, under: { point: 142.5, price: -110 } }
-            },
+            awayTeam: 'Opponent TBD',
+            bookmaker: 'Demo',
+            odds: null,
+            demo: true,
+            message: 'Configure ODDS_API_KEY for live odds',
             lastUpdate: new Date().toISOString()
-        }
-    ];
+        });
+    }
 
     if (sportFilter) {
         return mockGames.filter(g => g.sport === sportFilter.toUpperCase());
