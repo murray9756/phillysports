@@ -11,15 +11,15 @@
         <header class="header">
             <div class="header-top">
                 <!-- Left Column: Google Search + Theme Toggle -->
-                <div class="header-left" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                <div class="header-left" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; position: relative; z-index: 10;">
                     <div class="header-search" style="display: flex; align-items: center;">
-                        <form action="https://www.google.com/search" method="GET" target="_blank">
+                        <form action="https://www.google.com/search" method="GET" target="_blank" style="display: flex; align-items: center; gap: 0.5rem;">
                             <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
                             <input type="text" name="q" placeholder="Search the web..." required>
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
                         <span class="theme-icon-light">&#9790;</span>
                         <span class="theme-icon-dark">&#9728;</span>
                         <span class="theme-label">Dark Mode</span>
@@ -75,9 +75,9 @@
                 </a>
                 <!-- Right Column: Auth -->
                 <div class="header-right" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0.5rem; position: static; transform: none;">
-                    <div class="header-auth" id="headerAuth" style="display: flex; flex-direction: row; align-items: center; gap: 0.75rem; position: static; transform: none;">
-                        <a href="/login.html">Login</a>
-                        <a href="/register.html" class="auth-btn">Sign Up</a>
+                    <div class="header-auth" id="headerAuth" style="display: flex; flex-direction: row; align-items: center; gap: 1rem; position: static; transform: none;">
+                        <a href="/login.html" style="color: #F5F0E1; text-decoration: none; font-family: Georgia, serif; font-weight: 600;">Sign In</a>
+                        <a href="/register.html" class="auth-btn" style="background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); color: #1A2744; padding: 0.5rem 1rem; text-decoration: none; font-family: Georgia, serif; font-weight: 700; border: 3px solid #1A2744;">Sign Up</a>
                     </div>
                 </div>
                 <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
@@ -1473,6 +1473,11 @@
                     : '';
 
                 if (headerAuth) {
+                    // Change to column layout for logged-in state
+                    headerAuth.style.flexDirection = 'column';
+                    headerAuth.style.alignItems = 'flex-end';
+                    headerAuth.style.gap = '0.5rem';
+
                     headerAuth.innerHTML = `
                         <div class="coin-display" style="display: flex; flex-direction: column; align-items: center;">
                             <span class="coin-label">Diehard Dollars</span>
