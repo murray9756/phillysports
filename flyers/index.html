@@ -124,6 +124,23 @@
         .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
         .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4); }
+        .trivia-widget-body { padding: 1rem; }
+        .trivia-loading { text-align: center; color: var(--text-muted); padding: 1rem; font-size: 0.85rem; }
+        .trivia-question { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-primary); line-height: 1.4; }
+        .trivia-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .trivia-option-btn { width: 100%; padding: 0.6rem 0.75rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: left; cursor: pointer; transition: all 0.2s; color: var(--text-primary); }
+        .trivia-option-btn:hover:not(:disabled) { border-color: #673ab7; background: rgba(103, 58, 183, 0.1); }
+        .trivia-option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+        .trivia-option-btn.correct { background: rgba(40, 167, 69, 0.2); border-color: #28a745; color: #28a745; }
+        .trivia-option-btn.incorrect { background: rgba(220, 53, 69, 0.2); border-color: #dc3545; color: #dc3545; }
+        .trivia-result { margin-top: 0.75rem; padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; text-align: center; }
+        .trivia-result.correct { background: rgba(40, 167, 69, 0.15); color: #28a745; }
+        .trivia-result.incorrect { background: rgba(220, 53, 69, 0.15); color: #dc3545; }
+        .trivia-next-btn { display: block; width: 100%; margin-top: 0.75rem; padding: 0.5rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .trivia-next-btn:hover { opacity: 0.9; }
+        .trivia-footer { margin-top: 0.75rem; text-align: center; }
+        .trivia-footer a { color: #673ab7; font-size: 0.75rem; font-weight: 600; text-decoration: none; }
+        .trivia-footer a:hover { text-decoration: underline; }
         .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
         .article-item:hover { border-color: var(--team-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -335,13 +352,8 @@
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Flyers Trivia</span>
                 </div>
-                <div class="trivia-promo-body">
-                    <p class="trivia-promo-tagline">Test Your Flyers Knowledge!</p>
-                    <div class="trivia-promo-stats">
-                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
-                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
-                    </div>
-                    <a href="/trivia.html?team=Flyers" class="trivia-promo-btn">Play Now</a>
+                <div class="trivia-widget-body" id="triviaWidget">
+                    <div class="trivia-loading">Loading question...</div>
                 </div>
             </div>
 
@@ -683,7 +695,95 @@
         }
         setupSorting();
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/nhl');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.points}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">CAR</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NYR</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NJD</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">WSH</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">PIT</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NYI</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">CBJ</span></td><td class="record">--</td><td class="pct">--</td></tr>`;}}
-        loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStandings();setupShowMore();loadStats();
+        // Trivia Widget
+        const TRIVIA_TEAM = 'Flyers';
+        let currentTriviaQuestion = null;
+
+        async function loadTriviaQuestion() {
+            const container = document.getElementById('triviaWidget');
+            if (!container) return;
+            container.innerHTML = '<div class="trivia-loading">Loading question...</div>';
+            try {
+                const response = await fetch(`/api/trivia?team=${TRIVIA_TEAM}`);
+                const data = await response.json();
+                if (data.success && data.question) {
+                    currentTriviaQuestion = data.question;
+                    renderTriviaQuestion(data.question);
+                } else {
+                    container.innerHTML = '<div class="trivia-loading">No questions available</div><div class="trivia-footer"><a href="/trivia.html?team=Flyers">Play Full Trivia Game &rarr;</a></div>';
+                }
+            } catch (error) {
+                console.error('Failed to load trivia:', error);
+                container.innerHTML = '<div class="trivia-loading">Unable to load trivia</div><div class="trivia-footer"><a href="/trivia.html?team=Flyers">Play Full Trivia Game &rarr;</a></div>';
+            }
+        }
+
+        function renderTriviaQuestion(q) {
+            const container = document.getElementById('triviaWidget');
+            if (!container || !q) return;
+            const options = q.options || [q.option_a, q.option_b, q.option_c, q.option_d].filter(Boolean);
+            container.innerHTML = `
+                <div class="trivia-question">${q.question}</div>
+                <div class="trivia-options">
+                    ${options.map((opt, i) => `<button class="trivia-option-btn" data-answer="${opt}" onclick="submitTriviaAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</button>`).join('')}
+                </div>
+                <div class="trivia-footer"><a href="/trivia.html?team=Flyers">Play Full Trivia Game &rarr;</a></div>
+            `;
+        }
+
+        async function submitTriviaAnswer(answer, btn) {
+            if (!currentTriviaQuestion) return;
+            const container = document.getElementById('triviaWidget');
+            const buttons = container.querySelectorAll('.trivia-option-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            try {
+                const response = await fetch('/api/trivia/answer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        questionId: currentTriviaQuestion.id || currentTriviaQuestion._id,
+                        answer: answer,
+                        team: TRIVIA_TEAM
+                    })
+                });
+                const data = await response.json();
+                const isCorrect = data.correct;
+                const correctAnswer = data.correctAnswer || currentTriviaQuestion.correct_answer;
+
+                buttons.forEach(b => {
+                    if (b.dataset.answer === correctAnswer) {
+                        b.classList.add('correct');
+                    } else if (b.dataset.answer === answer && !isCorrect) {
+                        b.classList.add('incorrect');
+                    }
+                });
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `trivia-result ${isCorrect ? 'correct' : 'incorrect'}`;
+                resultDiv.innerHTML = isCorrect
+                    ? `Correct! ${data.coinsAwarded ? '+' + data.coinsAwarded + ' coins' : ''}`
+                    : `Incorrect! The answer was: ${correctAnswer}`;
+                container.querySelector('.trivia-options').after(resultDiv);
+
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'trivia-next-btn';
+                nextBtn.textContent = 'Next Question';
+                nextBtn.onclick = loadTriviaQuestion;
+                resultDiv.after(nextBtn);
+
+            } catch (error) {
+                console.error('Failed to submit answer:', error);
+                btn.classList.add('incorrect');
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'trivia-result incorrect';
+                resultDiv.textContent = 'Error submitting answer. Try again.';
+                container.querySelector('.trivia-options').after(resultDiv);
+            }
+        }
+
+        loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStandings();setupShowMore();loadStats();loadTriviaQuestion();
         async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');const premiumBadge = d.user.isSubscribed ? `<a href="/membership.html" class="premium-badge">${d.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>` : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;const adminLink = d.user.isAdmin ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>` : '';h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars">
                             <span class="coin-icon">&#129689;</span>
                             <span class="coin-balance">${Math.round(d.user.coinBalance || 0)}</span>

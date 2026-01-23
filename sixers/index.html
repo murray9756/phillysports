@@ -124,6 +124,37 @@
         .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
         .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4); }
+        /* Interactive Trivia Widget Styles */
+        .trivia-widget-body { padding: 1rem; }
+        .trivia-loading { text-align: center; color: var(--text-muted); padding: 1rem; font-size: 0.85rem; }
+        .trivia-meta { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+        .trivia-team-badge { font-size: 0.7rem; padding: 0.25rem 0.5rem; background: var(--team-color); color: #fff; border-radius: 4px; }
+        .trivia-team-badge.t76ers { background: #006BB6; }
+        .trivia-difficulty { font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: #e0e0e0; color: #333; }
+        .trivia-difficulty.easy { background: #c8e6c9; color: #2e7d32; }
+        .trivia-difficulty.medium { background: #fff3e0; color: #ef6c00; }
+        .trivia-difficulty.hard { background: #ffcdd2; color: #c62828; }
+        .trivia-dd-info { margin-bottom: 0.75rem; font-size: 0.8rem; }
+        .trivia-dd-stake { color: #b8860b; font-weight: 600; }
+        .trivia-question-text { font-size: 0.9rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.4; color: var(--text-primary); }
+        .trivia-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .trivia-option { padding: 0.6rem 0.75rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.85rem; cursor: pointer; text-align: left; transition: all 0.2s; color: var(--text-primary); }
+        .trivia-option:hover:not(:disabled) { border-color: var(--team-color); background: rgba(0, 107, 182, 0.05); }
+        .trivia-option:disabled { cursor: not-allowed; opacity: 0.8; }
+        .trivia-option.correct { background: #c8e6c9; border-color: #4caf50; color: #2e7d32; }
+        .trivia-option.incorrect { background: #ffcdd2; border-color: #f44336; color: #c62828; }
+        .trivia-option.reveal-correct { background: #c8e6c9; border-color: #4caf50; }
+        .trivia-result { padding: 0.75rem; margin-top: 0.75rem; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9rem; }
+        .trivia-result.correct { background: #c8e6c9; color: #2e7d32; }
+        .trivia-result.incorrect { background: #ffcdd2; color: #c62828; }
+        .trivia-login-prompt { text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted); }
+        .trivia-login-prompt a { color: var(--accent-color); font-weight: 600; }
+        .trivia-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        .trivia-btn { flex: 1; padding: 0.5rem 0.75rem; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .trivia-btn-primary { background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; }
+        .trivia-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(103, 58, 183, 0.3); }
+        .trivia-btn-secondary { background: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-primary); }
+        .trivia-btn-secondary:hover { border-color: var(--team-color); }
         .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
         .article-item:hover { border-color: var(--team-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -693,6 +724,7 @@
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/nba');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.pct.toFixed(3)}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">BOS</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">NYK</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">BKN</span></td><td class="record">--</td><td class="pct">---</td></tr><tr><td><span class="team-name">TOR</span></td><td class="record">--</td><td class="pct">---</td></tr>`;}}
 
         // Trivia Widget
+        const TRIVIA_TEAM = '76ers';
         let currentTriviaQuestion = null;
         let triviaAnswered = false;
 
@@ -702,7 +734,7 @@
             widget.innerHTML = '<div class="trivia-loading">Loading question...</div>';
 
             try {
-                const response = await fetch('/api/trivia?team=76ers');
+                const response = await fetch(`/api/trivia?team=${TRIVIA_TEAM}`);
                 const data = await response.json();
 
                 if (!data.success || !data.question) {
@@ -711,7 +743,7 @@
                             <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">
                                 ${data.message || 'No questions available'}
                             </p>
-                            <a href="/trivia.html?team=76ers" class="trivia-btn trivia-btn-primary" style="display:inline-block;padding:0.5rem 1rem;text-decoration:none;">
+                            <a href="/trivia.html?team=${TRIVIA_TEAM}" class="trivia-btn trivia-btn-primary" style="display:inline-block;padding:0.5rem 1rem;text-decoration:none;">
                                 Play Full Trivia
                             </a>
                         </div>
@@ -802,7 +834,7 @@
                         </div>
                         <div class="trivia-actions">
                             <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Next Question</button>
-                            <a href="/trivia.html?team=76ers" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
+                            <a href="/trivia.html?team=${TRIVIA_TEAM}" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
                         </div>
                     `;
                     return;
@@ -838,7 +870,7 @@
                     ${resultHtml}
                     <div class="trivia-actions">
                         <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Next Question</button>
-                        <a href="/trivia.html?team=76ers" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
+                        <a href="/trivia.html?team=${TRIVIA_TEAM}" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
                     </div>
                 `;
             } catch (error) {
