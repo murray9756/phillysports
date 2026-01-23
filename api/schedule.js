@@ -1,13 +1,45 @@
 // Vercel Serverless Function - Fetch Philly Sports Schedule
+// Uses SportsDataIO for all sports data
+
+import {
+    fetchTeamSchedule,
+    getCurrentSeason,
+    COLLEGE_TEAMS
+} from './lib/sportsdata.js';
+
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+
+// Team configurations
+const TEAM_CONFIG = {
+    eagles: { sport: 'NFL', abbr: 'PHI', name: 'Eagles', color: '#004C54' },
+    sixers: { sport: 'NBA', abbr: 'PHI', name: '76ers', color: '#006BB6' },
+    '76ers': { sport: 'NBA', abbr: 'PHI', name: '76ers', color: '#006BB6' },
+    phillies: { sport: 'MLB', abbr: 'PHI', name: 'Phillies', color: '#E81828' },
+    flyers: { sport: 'NHL', abbr: 'PHI', name: 'Flyers', color: '#F74902' },
+    union: { sport: 'MLS', abbr: 'PHI', name: 'Union', color: '#B49759' }
+};
+
+// College team configurations
+const COLLEGE_CONFIG = {
+    villanova: { name: 'Villanova', color: '#003366', sport: 'NCAAB' },
+    penn: { name: 'Penn', color: '#011F5B', sport: 'NCAAB' },
+    lasalle: { name: 'La Salle', color: '#00833E', sport: 'NCAAB' },
+    drexel: { name: 'Drexel', color: '#07294D', sport: 'NCAAB' },
+    stjosephs: { name: 'St. Josephs', color: '#9E1B32', sport: 'NCAAB' },
+    temple: { name: 'Temple', color: '#9D2235', sport: 'NCAAB' }
+};
+
 export default async function handler(req, res) {
-    // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-    // Get team filter and days limit from query params
     const { team, days } = req.query;
     const teamFilter = team ? team.toLowerCase() : null;
-    const daysLimit = parseInt(days) || 10; // Default to 10 days
+    const daysLimit = parseInt(days) || 10;
+
+    if (!SPORTSDATA_API_KEY) {
+        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
+    }
 
     try {
         const schedule = [];
@@ -15,138 +47,73 @@ export default async function handler(req, res) {
         const currentYear = now.getFullYear();
         const maxDate = new Date(now.getTime() + daysLimit * 24 * 60 * 60 * 1000);
 
-        // Helper to validate game date is actually in the future and reasonable year
-        const isValidFutureGame = (dateStr, statusCompleted) => {
+        // Helper to validate game date
+        const isValidFutureGame = (dateStr, status) => {
             const gameDate = new Date(dateStr);
             const gameYear = gameDate.getFullYear();
-            // Must be future, not completed, and within current or next year
+            const isCompleted = status === 'Final' || status === 'F/OT';
             return gameDate > now &&
                    gameDate < maxDate &&
-                   !statusCompleted &&
+                   !isCompleted &&
                    (gameYear === currentYear || gameYear === currentYear + 1);
         };
 
-        // Fetch NFL (Eagles) schedule - only during season (Sept-Feb)
-        const currentMonth = now.getMonth() + 1; // 1-12
-        const isNflSeason = currentMonth >= 9 || currentMonth <= 2;
-        if (isNflSeason) {
-            try {
-                const nflRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule');
-                const nflData = await nflRes.json();
-                const upcomingEagles = nflData.events?.filter(e => {
-                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
-                }).slice(0, 2) || [];
+        // Fetch schedules for each major sport
+        const sportsToFetch = [
+            { sport: 'NFL', config: TEAM_CONFIG.eagles, season: () => isNflSeason() },
+            { sport: 'NBA', config: TEAM_CONFIG.sixers, season: () => isNbaSeason() },
+            { sport: 'NHL', config: TEAM_CONFIG.flyers, season: () => isNhlSeason() },
+            { sport: 'MLB', config: TEAM_CONFIG.phillies, season: () => isMlbSeason() }
+        ];
 
-                upcomingEagles.forEach(game => {
-                    const comp = game.competitions[0];
-                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
+        // Check if in season
+        const currentMonth = now.getMonth() + 1;
+        function isNflSeason() { return currentMonth >= 9 || currentMonth <= 2; }
+        function isNbaSeason() { return currentMonth >= 10 || currentMonth <= 6; }
+        function isNhlSeason() { return currentMonth >= 10 || currentMonth <= 6; }
+        function isMlbSeason() { return currentMonth >= 3 && currentMonth <= 10; }
+
+        await Promise.all(sportsToFetch.map(async ({ sport, config, season }) => {
+            if (!season()) return;
+
+            try {
+                const seasonYear = getCurrentSeason(sport);
+                const games = await fetchTeamSchedule(sport, 'PHI', seasonYear);
+
+                const upcomingGames = games
+                    .filter(g => isValidFutureGame(g.DateTime || g.Day, g.Status))
+                    .slice(0, 2);
+
+                upcomingGames.forEach(game => {
+                    const isHome = game.HomeTeam === 'PHI';
+                    const opponent = isHome ? game.AwayTeam : game.HomeTeam;
+
                     schedule.push({
-                        sport: 'NFL',
-                        team: 'Eagles',
-                        teamColor: '#004C54',
-                        opponent: opponent?.team?.shortDisplayName || 'TBD',
+                        sport,
+                        team: config.name,
+                        teamColor: config.color,
+                        opponent,
                         isHome,
-                        date: game.date,
-                        venue: comp.venue?.fullName || '',
-                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                        date: game.DateTime || game.Day,
+                        venue: game.StadiumDetails?.Name || game.Stadium || '',
+                        broadcast: game.Channel || '',
+                        gameId: (game.GameID || game.ScoreID)?.toString()
                     });
                 });
-            } catch (e) { console.error('NFL schedule error:', e); }
-        }
+            } catch (e) {
+                console.error(`${sport} schedule error:`, e.message);
+            }
+        }));
 
-        // Fetch NBA (76ers) schedule - season runs Oct-June
-        const isNbaSeason = currentMonth >= 10 || currentMonth <= 6;
-        if (isNbaSeason) {
-            try {
-                const nbaRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/phi/schedule');
-                const nbaData = await nbaRes.json();
-                const upcomingSixers = nbaData.events?.filter(e => {
-                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
-                }).slice(0, 2) || [];
-
-                upcomingSixers.forEach(game => {
-                    const comp = game.competitions[0];
-                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                    schedule.push({
-                        sport: 'NBA',
-                        team: '76ers',
-                        teamColor: '#006BB6',
-                        opponent: opponent?.team?.shortDisplayName || 'TBD',
-                        isHome,
-                        date: game.date,
-                        venue: comp.venue?.fullName || '',
-                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
-                    });
-                });
-            } catch (e) { console.error('NBA schedule error:', e); }
-        }
-
-        // Fetch NHL (Flyers) schedule - season runs Oct-June
-        const isNhlSeason = currentMonth >= 10 || currentMonth <= 6;
-        if (isNhlSeason) {
-            try {
-                const nhlRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/phi/schedule');
-                const nhlData = await nhlRes.json();
-                const upcomingFlyers = nhlData.events?.filter(e => {
-                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
-                }).slice(0, 2) || [];
-
-                upcomingFlyers.forEach(game => {
-                    const comp = game.competitions[0];
-                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                    schedule.push({
-                        sport: 'NHL',
-                        team: 'Flyers',
-                        teamColor: '#F74902',
-                        opponent: opponent?.team?.shortDisplayName || 'TBD',
-                        isHome,
-                        date: game.date,
-                        venue: comp.venue?.fullName || '',
-                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
-                    });
-                });
-            } catch (e) { console.error('NHL schedule error:', e); }
-        }
-
-        // Fetch MLB (Phillies) schedule - season runs March-October
-        const isMlbSeason = currentMonth >= 3 && currentMonth <= 10;
-        if (isMlbSeason) {
-            try {
-                const mlbRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/phi/schedule');
-                const mlbData = await mlbRes.json();
-                const upcomingPhillies = mlbData.events?.filter(e => {
-                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
-                }).slice(0, 2) || [];
-
-                upcomingPhillies.forEach(game => {
-                    const comp = game.competitions[0];
-                    const opponent = comp.competitors.find(c => c.team?.abbreviation !== 'PHI');
-                    const isHome = comp.competitors.find(c => c.team?.abbreviation === 'PHI')?.homeAway === 'home';
-                    schedule.push({
-                        sport: 'MLB',
-                        team: 'Phillies',
-                        teamColor: '#E81828',
-                        opponent: opponent?.team?.shortDisplayName || 'TBD',
-                        isHome,
-                        date: game.date,
-                        venue: comp.venue?.fullName || '',
-                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
-                    });
-                });
-            } catch (e) { console.error('MLB schedule error:', e); }
-        }
-
-        // Fetch MLS (Union) schedule - season runs Feb-Dec
+        // Fetch MLS (Union) - keep ESPN fallback for MLS
         const isMlsSeason = currentMonth >= 2 && currentMonth <= 12;
         if (isMlsSeason) {
             try {
                 const mlsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/phi/schedule');
                 const mlsData = await mlsRes.json();
                 const upcomingUnion = mlsData.events?.filter(e => {
-                    return isValidFutureGame(e.date, e.competitions?.[0]?.status?.type?.completed);
+                    const gameDate = new Date(e.date);
+                    return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
                 }).slice(0, 2) || [];
 
                 upcomingUnion.forEach(game => {
@@ -170,43 +137,41 @@ export default async function handler(req, res) {
         // Sort by date
         schedule.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        // College Basketball team configs
-        const collegeTeams = {
-            'villanova': { id: '2678', name: 'Villanova', color: '#003366', abbr: 'VILL' },
-            'penn': { id: '219', name: 'Penn', color: '#011F5B', abbr: 'PENN' },
-            'lasalle': { id: '2325', name: 'La Salle', color: '#00833E', abbr: 'LAS' },
-            'drexel': { id: '2182', name: 'Drexel', color: '#07294D', abbr: 'DREX' },
-            'stjosephs': { id: '2603', name: 'St. Josephs', color: '#9E1B32', abbr: 'SJU' },
-            'temple': { id: '218', name: 'Temple', color: '#9D2235', abbr: 'TEM' }
-        };
-
         // Fetch college basketball schedule if requested
-        if (teamFilter && collegeTeams[teamFilter]) {
-            const college = collegeTeams[teamFilter];
+        if (teamFilter && COLLEGE_CONFIG[teamFilter]) {
+            const college = COLLEGE_CONFIG[teamFilter];
             try {
-                const cbRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${college.id}/schedule`);
-                const cbData = await cbRes.json();
-                const upcomingGames = cbData.events?.filter(e => {
-                    const gameDate = new Date(e.date);
-                    return gameDate > now && gameDate < maxDate && !e.competitions?.[0]?.status?.type?.completed;
-                }).slice(0, 5) || [];
+                const season = getCurrentSeason('NCAAB');
+                const teamId = COLLEGE_TEAMS[teamFilter]?.id || teamFilter.toUpperCase();
+                const url = `https://api.sportsdata.io/v3/cbb/scores/json/TeamSchedule/${season}/${teamId}?key=${SPORTSDATA_API_KEY}`;
+                const response = await fetch(url);
 
-                upcomingGames.forEach(game => {
-                    const comp = game.competitions[0];
-                    const opponent = comp.competitors.find(c => c.team?.id !== college.id);
-                    const isHome = comp.competitors.find(c => c.team?.id === college.id)?.homeAway === 'home';
-                    schedule.push({
-                        sport: 'NCAAB',
-                        team: college.name,
-                        teamColor: college.color,
-                        opponent: opponent?.team?.shortDisplayName || 'TBD',
-                        isHome,
-                        date: game.date,
-                        venue: comp.venue?.fullName || '',
-                        broadcast: comp.broadcasts?.[0]?.names?.[0] || ''
+                if (response.ok) {
+                    const games = await response.json();
+                    const upcomingGames = games
+                        .filter(g => isValidFutureGame(g.DateTime || g.Day, g.Status))
+                        .slice(0, 5);
+
+                    upcomingGames.forEach(game => {
+                        const isHome = game.HomeTeam === teamId;
+                        const opponent = isHome ? game.AwayTeam : game.HomeTeam;
+
+                        schedule.push({
+                            sport: 'NCAAB',
+                            team: college.name,
+                            teamColor: college.color,
+                            opponent,
+                            isHome,
+                            date: game.DateTime || game.Day,
+                            venue: game.Stadium || '',
+                            broadcast: game.Channel || '',
+                            gameId: game.GameID?.toString()
+                        });
                     });
-                });
-            } catch (e) { console.error('College basketball schedule error:', e); }
+                }
+            } catch (e) {
+                console.error('College basketball schedule error:', e);
+            }
         }
 
         // Filter by team if specified
@@ -219,13 +184,9 @@ export default async function handler(req, res) {
                 '76ers': '76ers',
                 'flyers': 'Flyers',
                 'union': 'Union',
-                // College teams
-                'villanova': 'Villanova',
-                'penn': 'Penn',
-                'lasalle': 'La Salle',
-                'drexel': 'Drexel',
-                'stjosephs': 'St. Josephs',
-                'temple': 'Temple'
+                ...Object.fromEntries(
+                    Object.entries(COLLEGE_CONFIG).map(([key, val]) => [key, val.name])
+                )
             };
             const targetTeam = teamMap[teamFilter];
             if (targetTeam) {
@@ -233,8 +194,13 @@ export default async function handler(req, res) {
             }
         }
 
-        res.status(200).json({ schedule: filteredSchedule.slice(0, 8), updated: new Date().toISOString() });
+        res.status(200).json({
+            schedule: filteredSchedule.slice(0, 8),
+            updated: new Date().toISOString(),
+            source: 'sportsdata'
+        });
     } catch (error) {
+        console.error('Schedule fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch schedule', message: error.message });
     }
 }

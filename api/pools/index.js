@@ -1,6 +1,11 @@
 // Block Pools API - List and Create Pools
+// Uses SportsDataIO for game data
+
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
+import { fetchGamesByDate, getCurrentSeason } from '../lib/sportsdata.js';
+
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 // Default payout structures by sport
 const DEFAULT_PAYOUTS = {
@@ -10,33 +15,18 @@ const DEFAULT_PAYOUTS = {
     MLB: { i3: 15, i6: 15, i9: 35, final: 35 }
 };
 
-const SCOREBOARD_URLS = {
-    NFL: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
-    NBA: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
-    MLB: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
-    NHL: 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
-};
-
 // Philly teams config
 const PHILLY_TEAMS = {
-    NFL: ['eagles', 'philadelphia eagles'],
-    NBA: ['76ers', 'sixers', 'philadelphia 76ers'],
-    MLB: ['phillies', 'philadelphia phillies'],
-    NHL: ['flyers', 'philadelphia flyers']
+    NFL: ['PHI'],
+    NBA: ['PHI'],
+    MLB: ['PHI'],
+    NHL: ['PHI']
 };
 
-function isPhillyTeam(teamName, sport) {
-    const normalized = teamName.toLowerCase();
+function isPhillyTeam(teamAbbr, sport) {
+    if (!teamAbbr) return false;
     const patterns = PHILLY_TEAMS[sport] || [];
-    return patterns.some(p => normalized.includes(p));
-}
-
-function formatDateForESPN(date) {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}${month}${day}`;
+    return patterns.includes(teamAbbr.toUpperCase());
 }
 
 export default async function handler(req, res) {
@@ -132,22 +122,19 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid sport' });
             }
 
-            // If gameId provided, fetch game details from ESPN
+            // If gameId provided, fetch game details from SportsDataIO
             let gameDetails = { homeTeam, awayTeam, gameTime };
-            if (gameId) {
+            if (gameId && SPORTSDATA_API_KEY) {
                 try {
-                    const url = `${SCOREBOARD_URLS[sport]}`;
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    const event = (data.events || []).find(e => e.id === gameId);
-                    if (event) {
-                        const competition = event.competitions?.[0];
-                        const home = competition?.competitors?.find(c => c.homeAway === 'home');
-                        const away = competition?.competitors?.find(c => c.homeAway === 'away');
+                    const today = new Date().toISOString().split('T')[0];
+                    const games = await fetchGamesByDate(sport, today);
+                    const game = games.find(g => (g.GameID || g.ScoreID)?.toString() === gameId);
+
+                    if (game) {
                         gameDetails = {
-                            homeTeam: home?.team?.displayName || homeTeam,
-                            awayTeam: away?.team?.displayName || awayTeam,
-                            gameTime: new Date(event.date)
+                            homeTeam: game.HomeTeam || homeTeam,
+                            awayTeam: game.AwayTeam || awayTeam,
+                            gameTime: new Date(game.DateTime || game.Day)
                         };
                     }
                 } catch (e) {

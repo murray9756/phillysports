@@ -1,147 +1,90 @@
 // Vercel Serverless Function - Fetch Philly Sports Scores
+// Uses SportsDataIO for all sports data
+
+import {
+    fetchTeamSchedule,
+    fetchScoresByDate,
+    isPhillyTeam,
+    getCurrentSeason,
+    getTeamLogo,
+    COLLEGE_TEAMS
+} from './lib/sportsdata.js';
+
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+
+// Team configurations
+const TEAM_CONFIG = {
+    eagles: { sport: 'NFL', abbr: 'PHI', name: 'Eagles', color: '#004C54' },
+    sixers: { sport: 'NBA', abbr: 'PHI', name: '76ers', color: '#006BB6' },
+    '76ers': { sport: 'NBA', abbr: 'PHI', name: '76ers', color: '#006BB6' },
+    phillies: { sport: 'MLB', abbr: 'PHI', name: 'Phillies', color: '#E81828' },
+    flyers: { sport: 'NHL', abbr: 'PHI', name: 'Flyers', color: '#F74902' },
+    union: { sport: 'MLS', abbr: 'PHI', name: 'Union', color: '#B49759' }
+};
+
+// College team configurations
+const COLLEGE_CONFIG = {
+    villanova: { name: 'Villanova', color: '#003366', sport: 'NCAAB' },
+    penn: { name: 'Penn', color: '#011F5B', sport: 'NCAAB' },
+    lasalle: { name: 'La Salle', color: '#00833E', sport: 'NCAAB' },
+    drexel: { name: 'Drexel', color: '#07294D', sport: 'NCAAB' },
+    stjosephs: { name: 'St. Josephs', color: '#9E1B32', sport: 'NCAAB' },
+    temple: { name: 'Temple', color: '#9D2235', sport: 'NCAAB' }
+};
+
 export default async function handler(req, res) {
-    // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-    // Get team filter from query params
     const { team } = req.query;
     const teamFilter = team ? team.toLowerCase() : null;
 
-    // Helper to extract score value (ESPN API sometimes returns objects)
-    const getScore = (score) => {
-        if (typeof score === 'object' && score !== null) {
-            return String(score.displayValue || score.value || '0');
-        }
-        return String(score || '0');
-    };
-
-    // Helper to extract game link from event
-    const getGameLink = (event) => {
-        const summaryLink = event.links?.find(l => l.rel?.includes('summary') && l.rel?.includes('desktop'));
-        return summaryLink?.href || null;
-    };
+    if (!SPORTSDATA_API_KEY) {
+        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
+    }
 
     try {
         const scores = [];
 
-        // Fetch NFL (Eagles) scores - check both regular season and playoffs
-        try {
-            // Try playoff schedule first, then regular season
-            let recentEaglesGame = null;
+        // Fetch scores for each major sport
+        const sportsToFetch = ['NFL', 'NBA', 'MLB', 'NHL'];
 
-            // Check playoff games (seasontype=3)
-            const playoffRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule?seasontype=3');
-            const playoffData = await playoffRes.json();
-            const playoffGames = playoffData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-            if (playoffGames.length > 0) {
-                recentEaglesGame = playoffGames[playoffGames.length - 1];
-            }
+        await Promise.all(sportsToFetch.map(async (sport) => {
+            try {
+                // Get recent games for Philly team
+                const season = getCurrentSeason(sport);
+                const games = await fetchTeamSchedule(sport, 'PHI', season);
 
-            // If no playoff games, check regular season (seasontype=2)
-            if (!recentEaglesGame) {
-                const regRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule?seasontype=2');
-                const regData = await regRes.json();
-                const regGames = regData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-                if (regGames.length > 0) {
-                    recentEaglesGame = regGames[regGames.length - 1];
+                // Find the most recent completed game
+                const completedGames = games
+                    .filter(g => g.Status === 'Final' || g.Status === 'F/OT')
+                    .sort((a, b) => new Date(b.DateTime || b.Day) - new Date(a.DateTime || a.Day));
+
+                const recentGame = completedGames[0];
+                if (recentGame) {
+                    const isHome = recentGame.HomeTeam === 'PHI';
+                    const config = Object.values(TEAM_CONFIG).find(c => c.sport === sport);
+
+                    scores.push({
+                        sport,
+                        team: config?.name || sport,
+                        teamColor: config?.color || '#666666',
+                        homeTeam: recentGame.HomeTeam,
+                        homeScore: String(recentGame.HomeScore || recentGame.HomeTeamScore || 0),
+                        awayTeam: recentGame.AwayTeam,
+                        awayScore: String(recentGame.AwayScore || recentGame.AwayTeamScore || 0),
+                        isHome,
+                        date: recentGame.DateTime || recentGame.Day,
+                        gameId: (recentGame.GameID || recentGame.ScoreID)?.toString(),
+                        status: recentGame.Status
+                    });
                 }
+            } catch (e) {
+                console.error(`${sport} fetch error:`, e.message);
             }
-            if (recentEaglesGame) {
-                const comp = recentEaglesGame.competitions[0];
-                const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
-                const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
-                scores.push({
-                    sport: 'NFL',
-                    team: 'Eagles',
-                    teamColor: '#004C54',
-                    homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: getScore(homeTeam?.score),
-                    awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: getScore(awayTeam?.score),
-                    isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentEaglesGame.date,
-                    link: getGameLink(recentEaglesGame)
-                });
-            }
-        } catch (e) { console.error('NFL fetch error:', e); }
+        }));
 
-        // Fetch NBA (76ers) scores
-        try {
-            const nbaRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/phi/schedule');
-            const nbaData = await nbaRes.json();
-            const sixersGames = nbaData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-            const recentSixersGame = sixersGames[sixersGames.length - 1];
-            if (recentSixersGame) {
-                const comp = recentSixersGame.competitions[0];
-                const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
-                const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
-                scores.push({
-                    sport: 'NBA',
-                    team: '76ers',
-                    teamColor: '#006BB6',
-                    homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: getScore(homeTeam?.score),
-                    awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: getScore(awayTeam?.score),
-                    isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentSixersGame.date,
-                    link: getGameLink(recentSixersGame)
-                });
-            }
-        } catch (e) { console.error('NBA fetch error:', e); }
-
-        // Fetch NHL (Flyers) scores
-        try {
-            const nhlRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/phi/schedule');
-            const nhlData = await nhlRes.json();
-            const flyersGames = nhlData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-            const recentFlyersGame = flyersGames[flyersGames.length - 1];
-            if (recentFlyersGame) {
-                const comp = recentFlyersGame.competitions[0];
-                const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
-                const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
-                scores.push({
-                    sport: 'NHL',
-                    team: 'Flyers',
-                    teamColor: '#F74902',
-                    homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: getScore(homeTeam?.score),
-                    awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: getScore(awayTeam?.score),
-                    isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentFlyersGame.date,
-                    link: getGameLink(recentFlyersGame)
-                });
-            }
-        } catch (e) { console.error('NHL fetch error:', e); }
-
-        // Fetch MLB (Phillies) scores
-        try {
-            const mlbRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/phi/schedule');
-            const mlbData = await mlbRes.json();
-            const philliesGames = mlbData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-            const recentPhilliesGame = philliesGames[philliesGames.length - 1];
-            if (recentPhilliesGame) {
-                const comp = recentPhilliesGame.competitions[0];
-                const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
-                const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
-                scores.push({
-                    sport: 'MLB',
-                    team: 'Phillies',
-                    teamColor: '#E81828',
-                    homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: getScore(homeTeam?.score),
-                    awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: getScore(awayTeam?.score),
-                    isHome: homeTeam?.team?.abbreviation === 'PHI',
-                    date: recentPhilliesGame.date,
-                    link: getGameLink(recentPhilliesGame)
-                });
-            }
-        } catch (e) { console.error('MLB fetch error:', e); }
-
-        // Fetch MLS (Union) scores
+        // Fetch MLS (Union) - SportsDataIO may not have MLS, keep ESPN fallback
         try {
             const mlsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/phi/schedule');
             const mlsData = await mlsRes.json();
@@ -156,52 +99,52 @@ export default async function handler(req, res) {
                     team: 'Union',
                     teamColor: '#B49759',
                     homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: getScore(homeTeam?.score),
+                    homeScore: String(homeTeam?.score?.displayValue || homeTeam?.score || '0'),
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: getScore(awayTeam?.score),
+                    awayScore: String(awayTeam?.score?.displayValue || awayTeam?.score || '0'),
                     isHome: homeTeam?.team?.displayName?.includes('Philadelphia'),
-                    date: recentUnionGame.date,
-                    link: getGameLink(recentUnionGame)
+                    date: recentUnionGame.date
                 });
             }
         } catch (e) { console.error('MLS fetch error:', e); }
 
-        // College Basketball team configs
-        const collegeTeams = {
-            'villanova': { id: '2678', name: 'Villanova', color: '#003366', abbr: 'VILL' },
-            'penn': { id: '219', name: 'Penn', color: '#011F5B', abbr: 'PENN' },
-            'lasalle': { id: '2325', name: 'La Salle', color: '#00833E', abbr: 'LAS' },
-            'drexel': { id: '2182', name: 'Drexel', color: '#07294D', abbr: 'DREX' },
-            'stjosephs': { id: '2603', name: 'St. Josephs', color: '#9E1B32', abbr: 'SJU' },
-            'temple': { id: '218', name: 'Temple', color: '#9D2235', abbr: 'TEM' }
-        };
-
         // Fetch college basketball scores if requested
-        if (teamFilter && collegeTeams[teamFilter]) {
-            const college = collegeTeams[teamFilter];
+        if (teamFilter && COLLEGE_CONFIG[teamFilter]) {
+            const college = COLLEGE_CONFIG[teamFilter];
             try {
-                const cbRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${college.id}/schedule`);
-                const cbData = await cbRes.json();
-                const completedGames = cbData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-                const recentGame = completedGames[completedGames.length - 1];
-                if (recentGame) {
-                    const comp = recentGame.competitions[0];
-                    const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
-                    const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
-                    scores.push({
-                        sport: 'NCAAB',
-                        team: college.name,
-                        teamColor: college.color,
-                        homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                        homeScore: getScore(homeTeam?.score),
-                        awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                        awayScore: getScore(awayTeam?.score),
-                        isHome: homeTeam?.team?.id === college.id,
-                        date: recentGame.date,
-                        link: getGameLink(recentGame)
-                    });
+                // Use SportsDataIO for college basketball
+                const season = getCurrentSeason('NCAAB');
+                const url = `https://api.sportsdata.io/v3/cbb/scores/json/TeamSchedule/${season}/${COLLEGE_TEAMS[teamFilter]?.id || teamFilter.toUpperCase()}?key=${SPORTSDATA_API_KEY}`;
+                const response = await fetch(url);
+
+                if (response.ok) {
+                    const games = await response.json();
+                    const completedGames = games
+                        .filter(g => g.Status === 'Final' || g.Status === 'F/OT')
+                        .sort((a, b) => new Date(b.DateTime || b.Day) - new Date(a.DateTime || a.Day));
+
+                    const recentGame = completedGames[0];
+                    if (recentGame) {
+                        const teamAbbr = COLLEGE_TEAMS[teamFilter]?.id || teamFilter.toUpperCase();
+                        const isHome = recentGame.HomeTeam === teamAbbr;
+
+                        scores.push({
+                            sport: 'NCAAB',
+                            team: college.name,
+                            teamColor: college.color,
+                            homeTeam: recentGame.HomeTeam,
+                            homeScore: String(recentGame.HomeTeamScore || 0),
+                            awayTeam: recentGame.AwayTeam,
+                            awayScore: String(recentGame.AwayTeamScore || 0),
+                            isHome,
+                            date: recentGame.DateTime || recentGame.Day,
+                            gameId: recentGame.GameID?.toString()
+                        });
+                    }
                 }
-            } catch (e) { console.error('College basketball fetch error:', e); }
+            } catch (e) {
+                console.error('College basketball fetch error:', e);
+            }
         }
 
         // Filter by team if specified
@@ -214,13 +157,9 @@ export default async function handler(req, res) {
                 '76ers': '76ers',
                 'flyers': 'Flyers',
                 'union': 'Union',
-                // College teams
-                'villanova': 'Villanova',
-                'penn': 'Penn',
-                'lasalle': 'La Salle',
-                'drexel': 'Drexel',
-                'stjosephs': 'St. Josephs',
-                'temple': 'Temple'
+                ...Object.fromEntries(
+                    Object.entries(COLLEGE_CONFIG).map(([key, val]) => [key, val.name])
+                )
             };
             const targetTeam = teamMap[teamFilter];
             if (targetTeam) {
@@ -228,8 +167,13 @@ export default async function handler(req, res) {
             }
         }
 
-        res.status(200).json({ scores: filteredScores, updated: new Date().toISOString() });
+        res.status(200).json({
+            scores: filteredScores,
+            updated: new Date().toISOString(),
+            source: 'sportsdata'
+        });
     } catch (error) {
+        console.error('Scores fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch scores', message: error.message });
     }
 }
