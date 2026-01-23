@@ -399,7 +399,7 @@
 
         <div class="tab-buttons">
             <button class="tab-btn active" data-tab="lineup">Build Lineup</button>
-            <button class="tab-btn" data-tab="myentry" id="myEntryTab" style="display: none;">My Entry</button>
+            <button class="tab-btn" data-tab="myentry" id="myEntryTab">My Entry</button>
             <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
         </div>
 
@@ -530,6 +530,8 @@
                 contest = data.contest;
                 console.log('Contest data:', data);
                 console.log('User entry:', data.userEntry);
+                // DEBUG: Show on page
+                document.getElementById('messageArea').innerHTML = `<div class="message" style="background:#ffe;color:#333;border:1px solid #cc0;">DEBUG: userEntry = ${data.userEntry ? 'EXISTS' : 'NULL'}, status = ${contest.status}</div>`;
                 document.getElementById('contestTitle').textContent = contest.title;
 
                 const locksAt = new Date(contest.locksAt);
