@@ -88,8 +88,9 @@ export async function authenticate(req) {
             userId: user._id.toString(),
             email: user.email,
             username: user.username,
+            displayName: user.displayName || user.username,
             isAdmin: user.isAdmin || false,
-            coins: user.coins || 0
+            coinBalance: user.coinBalance || 0
         };
     } catch (error) {
         console.error('Auth database lookup error:', error);
