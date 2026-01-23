@@ -117,66 +117,6 @@
         .feedback-success { text-align: center; padding: 1rem; }
         .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
 
-        /* Main Navigation with Dropdowns */
-        .main-nav {
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--border-color);
-        }
-        .nav-inner {
-            display: flex;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            align-items: center;
-        }
-        .nav-item {
-            padding: 0.75rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #aaaaaa;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: color 0.2s;
-            white-space: nowrap;
-            text-decoration: none;
-        }
-        .nav-item:hover { color: #ffffff; }
-        .nav-dropdown { position: relative; }
-        .dropdown-trigger { display: flex; align-items: center; gap: 0.25rem; }
-        .dropdown-arrow { font-size: 0.5rem; transition: transform 0.2s; }
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: var(--header-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            min-width: 150px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s;
-            z-index: 1000;
-        }
-        .nav-dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
-        .nav-dropdown:hover .dropdown-arrow { transform: rotate(180deg); }
-        .dropdown-menu a {
-            display: block;
-            padding: 0.6rem 1rem;
-            color: #aaaaaa;
-            font-size: 0.8rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: background 0.2s, color 0.2s;
-        }
-        .dropdown-menu a:hover { background: rgba(255,255,255,0.05); color: #ffffff; }
-        .dropdown-menu a[href*="/eagles"]:hover { color: var(--eagles-green); }
-        .dropdown-menu a[href*="/phillies"]:hover { color: var(--phillies-red); }
-        .dropdown-menu a[href*="/sixers"]:hover { color: var(--sixers-blue); }
-        .dropdown-menu a[href*="/flyers"]:hover { color: var(--flyers-orange); }
-
         /* Page Hero */
         .page-hero { background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%); padding: 2rem 1.5rem; border-bottom: 3px solid var(--accent-color); }
         .page-hero-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
@@ -212,7 +152,8 @@
         .listing-card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.2s; cursor: pointer; }
         .listing-card:hover { border-color: var(--text-muted); box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); }
         .listing-image { position: relative; width: 100%; padding-top: 75%; background: #f5f5f5; overflow: hidden; }
-        .listing-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .listing-image img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #f5f5f5; }
+        [data-theme="dark"] .listing-image img { background: #222; }
         .listing-image .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: #ccc; }
         .listing-badges { position: absolute; top: 0.5rem; left: 0.5rem; right: 0.5rem; display: flex; justify-content: space-between; }
         .condition-badge { padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; background: rgba(0,0,0,0.7); color: white; }
@@ -247,7 +188,7 @@
         .raffle-info .prize-value { color: var(--success-color); font-weight: 600; }
         .listing-info { padding: 1rem; }
         .listing-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .listing-seller { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .listing-seller { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
         .listing-prices { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
         .price-usd { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
         .price-dd { font-size: 0.85rem; color: #b8860b; font-weight: 600; }
@@ -269,26 +210,6 @@
             .page-hero-inner { flex-direction: column; align-items: flex-start; }
             .listings-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        /* Dark Mode Toggle */
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 0.4rem 0.6rem;
-            cursor: pointer;
-            font-size: 1rem;
-            line-height: 1;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        .theme-toggle:hover { background: rgba(0,0,0,0.05); }
-        [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.1); }
-        .theme-toggle .theme-icon-light, .theme-toggle .theme-icon-dark { display: none; }
-        .theme-toggle .theme-icon-light { display: inline; }
-        [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
-        [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
     </style>
 </head>
 <body class="ps-theme">
@@ -457,29 +378,11 @@
     </main>
 
     <script>
-        // Dark Mode Toggle
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-        initTheme();
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-        });
-
+        // Theme is handled by header.js
         const API_URL = '/api';
         let items = [];
-        let currentUser = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            await checkAuth();
             // Check for source filter in URL params
             const urlParams = new URLSearchParams(window.location.search);
             const sourceParam = urlParams.get('source');
@@ -494,50 +397,6 @@
             await loadItems();
             setupFilters();
         });
-
-        async function checkAuth() {
-            try {
-                const res = await fetch(`${API_URL}/auth/session`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.authenticated) {
-                        currentUser = data.user;
-                        updateHeaderAuth();
-                    }
-                }
-            } catch (e) {
-                console.log('Not authenticated');
-            }
-        }
-
-        function updateHeaderAuth() {
-            const authDiv = document.getElementById('headerAuth');
-            if (currentUser) {
-                const adminLink = currentUser.isAdmin
-                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
-                    : '';
-                authDiv.innerHTML = `
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                    </button>
-                    <div class="coin-display">
-                        <span>&#128176;</span>
-                        <span>${(currentUser.coinBalance || 0).toLocaleString()}</span>
-                        <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
-                    </div>
-                    ${adminLink}
-                    <a href="/profile.html">${currentUser.username}</a>
-                    <a href="#" onclick="logout()">Logout</a>
-                `;
-                document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-            }
-        }
-
-        async function logout() {
-            await fetch(`${API_URL}/auth/logout`, { method: 'POST' });
-            window.location.reload();
-        }
 
         async function loadItems() {
             const grid = document.getElementById('listingsGrid');
@@ -644,7 +503,7 @@
                         <div class="listing-title">${escapeHtml(item.title)}</div>
                         <div class="listing-seller">via ${escapeHtml(item.seller?.username || 'eBay')}</div>
                         <div class="listing-prices">
-                            <span class="price-usd">$${(item.priceUSD / 100).toFixed(2)}</span>
+                            <span class="price-usd">$${(item.priceUSD || 0).toFixed(2)}</span>
                         </div>
                         <div class="listing-action">
                             <span class="btn-ebay">Shop on eBay &rarr;</span>
