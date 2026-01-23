@@ -1,5 +1,5 @@
 // Vercel Serverless Function - Fetch Philly Sports Scores
-// Uses SportsDataIO for all sports data
+// Uses ESPN API for reliable score data
 
 import {
     fetchTeamSchedule,
