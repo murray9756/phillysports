@@ -106,11 +106,40 @@
         .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 1rem 2rem; border-radius: 8px; z-index: 9999; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .toast.success { background: #4caf50; }
         .toast.error { background: #f44336; }
+
+        /* Gear & Memorabilia Section */
+        .gear-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.25rem; }
+        .gear-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .gear-card:hover { border-color: var(--accent-color); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .gear-image { width: 100%; height: 180px; object-fit: contain; background: #f5f5f5; }
+        [data-theme="dark"] .gear-image { background: #111; }
+        .gear-info { padding: 1rem; }
+        .gear-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
+        .gear-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .gear-price { font-size: 1.2rem; font-weight: 700; color: #4caf50; }
+        .gear-condition { font-size: 0.7rem; padding: 0.2rem 0.4rem; background: var(--dark-bg); border-radius: 4px; color: var(--text-muted); }
+        .gear-team { display: inline-block; font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .gear-team.eagles { background: #004C54; color: white; }
+        .gear-team.phillies { background: #E81828; color: white; }
+        .gear-team.sixers { background: #006BB6; color: white; }
+        .gear-team.flyers { background: #F74902; color: white; }
+        .gear-buy-btn { width: 100%; padding: 0.65rem; background: var(--accent-color); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; }
+        .gear-buy-btn:hover { opacity: 0.9; }
+        .gear-source { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.5rem; text-align: center; }
+        .category-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .category-tab { padding: 0.5rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: var(--text-primary); }
+        .category-tab:hover { border-color: var(--accent-color); }
+        .category-tab.active { background: var(--accent-color); border-color: var(--accent-color); color: white; }
+        .affiliate-disclosure { font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem; padding: 0.75rem; background: var(--dark-bg); border-radius: 8px; }
+
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
         @media (max-width: 768px) {
             .page-hero h1 { font-size: 1.75rem; }
             .badge-grid { grid-template-columns: 1fr; }
+            .gear-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+            .gear-image { height: 140px; }
+            .gear-title { font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -138,6 +167,26 @@
             <div class="coin-packs-grid" id="coinPacksGrid">
                 Loading packs...
             </div>
+        </div>
+
+        <!-- Gear & Memorabilia Section -->
+        <div class="shop-section" id="gearSection" style="display: none;">
+            <div class="section-header">
+                <span class="section-title">Gear & Memorabilia</span>
+            </div>
+            <div class="category-tabs" id="categoryTabs">
+                <button class="category-tab active" data-category="all">All</button>
+                <button class="category-tab" data-category="apparel">Apparel</button>
+                <button class="category-tab" data-category="memorabilia">Memorabilia</button>
+                <button class="category-tab" data-category="cards">Cards</button>
+                <button class="category-tab" data-category="collectibles">Collectibles</button>
+            </div>
+            <div class="gear-grid" id="gearGrid">
+                Loading gear...
+            </div>
+            <p class="affiliate-disclosure">
+                As an eBay Partner, we may earn from qualifying purchases. Prices and availability subject to change.
+            </p>
         </div>
 
         <!-- Spend Diehard Dollars Section -->
@@ -445,9 +494,108 @@
             }
         }
 
+        // ========== GEAR & MEMORABILIA ==========
+        let currentCategory = 'all';
+        let gearProducts = [];
+
+        async function loadGear() {
+            try {
+                const params = new URLSearchParams({ limit: 50 });
+                if (currentCategory !== 'all') {
+                    params.set('category', currentCategory);
+                }
+
+                const response = await fetch('/api/shop/products?' + params);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load gear');
+                }
+
+                // Filter to only affiliate products
+                gearProducts = data.products.filter(p => p.isAffiliate);
+
+                if (gearProducts.length > 0) {
+                    document.getElementById('gearSection').style.display = 'block';
+                    renderGear();
+                } else {
+                    document.getElementById('gearSection').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Load gear error:', error);
+                document.getElementById('gearSection').style.display = 'none';
+            }
+        }
+
+        function renderGear() {
+            const grid = document.getElementById('gearGrid');
+
+            let filtered = gearProducts;
+            if (currentCategory !== 'all') {
+                filtered = gearProducts.filter(p => p.category === currentCategory);
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">No products in this category yet.</p>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(product => {
+                const teamClass = product.team ? `gear-team ${product.team}` : '';
+                const teamLabel = product.team ? product.team.charAt(0).toUpperCase() + product.team.slice(1) : '';
+
+                return `
+                    <div class="gear-card" onclick="openAffiliateLink('${product._id}', '${encodeURIComponent(product.affiliateLink || '')}')">
+                        <img src="${product.images?.[0] || '/logo.png'}" alt="${product.name}" class="gear-image" onerror="this.src='/logo.png'" loading="lazy">
+                        <div class="gear-info">
+                            ${teamLabel ? `<span class="${teamClass}">${teamLabel}</span>` : ''}
+                            <h3 class="gear-title">${product.name}</h3>
+                            <div class="gear-meta">
+                                <span class="gear-price">$${(product.priceUSD || 0).toFixed(2)}</span>
+                            </div>
+                            <button class="gear-buy-btn">
+                                <span>Shop on eBay</span>
+                                <span>→</span>
+                            </button>
+                            <p class="gear-source">via eBay Partner</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function openAffiliateLink(productId, affiliateLink) {
+            try {
+                // Track the click
+                await fetch('/api/shop/affiliate-click', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId })
+                });
+            } catch (error) {
+                console.error('Failed to track click:', error);
+            }
+
+            // Open affiliate link
+            if (affiliateLink) {
+                window.open(decodeURIComponent(affiliateLink), '_blank');
+            }
+        }
+
+        // Category tab handlers
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentCategory = tab.dataset.category;
+                renderGear();
+            });
+        });
+
         // Initialize
         checkAuth().then(() => {
             loadCoinPacks();
+            loadGear();
             loadShop();
         });
     </script>

@@ -110,7 +110,13 @@ export default async function handler(req, res) {
         const estimatedRevenue = periodClicks * estimatedConversionRate * avgOrderValue * avgCommissionRate;
 
         res.status(200).json({
+            success: true,
             period,
+            stats: {
+                totalProducts: affiliateProducts.length,
+                totalClicks: periodClicks,
+                estimatedRevenue: estimatedRevenue
+            },
             summary: {
                 totalAffiliateProducts: affiliateProducts.length,
                 totalClicks: periodClicks,

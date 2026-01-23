@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBay Product Curation | Admin | PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #8b0000; --dark-bg: #0a0a0a; --card-bg: #1a1a1a; --border-color: #333; --text-primary: #e8e8e8; --text-muted: #888; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+        a { color: var(--accent-color); text-decoration: none; }
+
+        .admin-header { background: var(--card-bg); padding: 1rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .admin-header h1 { font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        .admin-nav { display: flex; gap: 1rem; }
+        .admin-nav a { color: var(--text-muted); padding: 0.5rem 1rem; border-radius: 6px; transition: all 0.2s; }
+        .admin-nav a:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        .search-section { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border-color); }
+        .search-header { margin-bottom: 1rem; }
+        .search-header h2 { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+        .team-presets { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .preset-btn { padding: 0.5rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .preset-btn:hover { border-color: var(--accent-color); }
+        .preset-btn.active { background: var(--accent-color); border-color: var(--accent-color); }
+        .preset-btn.eagles { --team-color: #004C54; }
+        .preset-btn.phillies { --team-color: #E81828; }
+        .preset-btn.sixers { --team-color: #006BB6; }
+        .preset-btn.flyers { --team-color: #F74902; }
+        .preset-btn.eagles.active { background: #004C54; border-color: #004C54; }
+        .preset-btn.phillies.active { background: #E81828; border-color: #E81828; }
+        .preset-btn.sixers.active { background: #006BB6; border-color: #006BB6; }
+        .preset-btn.flyers.active { background: #F74902; border-color: #F74902; }
+
+        .search-form { display: flex; gap: 1rem; align-items: stretch; }
+        .search-input { flex: 1; padding: 0.75rem 1rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 1rem; }
+        .search-input:focus { outline: none; border-color: var(--accent-color); }
+        .search-btn { padding: 0.75rem 2rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .search-btn:hover { opacity: 0.9; }
+        .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .results-count { color: var(--text-muted); font-size: 0.9rem; }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+        .product-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.2s; }
+        .product-card:hover { border-color: var(--accent-color); transform: translateY(-2px); }
+        .product-card.imported { opacity: 0.6; border-color: #4caf50; }
+        .product-card.imported::after { content: 'IMPORTED'; position: absolute; top: 10px; right: 10px; background: #4caf50; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+
+        .product-image { width: 100%; height: 200px; object-fit: contain; background: #111; }
+        .product-info { padding: 1rem; }
+        .product-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .product-price { font-size: 1.25rem; font-weight: 700; color: #4caf50; }
+        .product-condition { font-size: 0.75rem; padding: 0.25rem 0.5rem; background: var(--dark-bg); border-radius: 4px; color: var(--text-muted); }
+
+        .product-seller { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .product-seller strong { color: var(--text-primary); }
+
+        .product-actions { display: flex; gap: 0.5rem; }
+        .import-btn { flex: 1; padding: 0.6rem; background: var(--accent-color); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .import-btn:hover { opacity: 0.9; }
+        .import-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .import-btn.imported { background: #4caf50; }
+        .view-btn { padding: 0.6rem 1rem; background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .view-btn:hover { border-color: var(--text-primary); }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state p { margin-bottom: 1rem; }
+
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 8px; color: white; font-weight: 500; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: #4caf50; }
+        .toast.error { background: #f44336; }
+
+        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; }
+        .page-btn { padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); cursor: pointer; }
+        .page-btn:hover { border-color: var(--accent-color); }
+        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .stats-bar { display: flex; gap: 2rem; padding: 1rem 1.5rem; background: var(--card-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+        @media (max-width: 768px) {
+            .search-form { flex-direction: column; }
+            .products-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>🛒 eBay Product Curation</h1>
+        <nav class="admin-nav">
+            <a href="/admin.html">Dashboard</a>
+            <a href="/shop.html">View Shop</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat">
+                <div class="stat-value" id="totalProducts">-</div>
+                <div class="stat-label">Products in Shop</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="totalClicks">-</div>
+                <div class="stat-label">Affiliate Clicks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="estRevenue">-</div>
+                <div class="stat-label">Est. Revenue</div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-header">
+                <h2>Search eBay for Philly Sports Products</h2>
+            </div>
+
+            <div class="team-presets">
+                <button class="preset-btn eagles" data-team="eagles" data-query="philadelphia eagles jersey">🦅 Eagles</button>
+                <button class="preset-btn phillies" data-team="phillies" data-query="philadelphia phillies jersey">⚾ Phillies</button>
+                <button class="preset-btn sixers" data-team="sixers" data-query="philadelphia 76ers jersey">🏀 Sixers</button>
+                <button class="preset-btn flyers" data-team="flyers" data-query="philadelphia flyers jersey">🏒 Flyers</button>
+                <button class="preset-btn" data-query="philadelphia sports autograph">✍️ Autographs</button>
+                <button class="preset-btn" data-query="philadelphia sports memorabilia">🏆 Memorabilia</button>
+                <button class="preset-btn" data-query="philadelphia sports cards">🃏 Cards</button>
+            </div>
+
+            <div class="search-form">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search eBay (e.g., 'Eagles Super Bowl jersey', 'Phillies autograph')...">
+                <button class="search-btn" id="searchBtn">Search eBay</button>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <div id="resultsSection" style="display: none;">
+            <div class="results-header">
+                <span class="results-count" id="resultsCount"></span>
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+            <div class="pagination" id="pagination"></div>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <p>Search eBay to find products to add to your shop.</p>
+            <p>Use the team presets above or enter a custom search.</p>
+        </div>
+
+        <div class="loading" id="loadingState" style="display: none;">
+            <div class="spinner"></div>
+            <p>Searching eBay...</p>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentQuery = '';
+        let currentOffset = 0;
+        const LIMIT = 20;
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/admin/shop/affiliate-stats');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('totalProducts').textContent = data.stats.totalProducts || 0;
+                    document.getElementById('totalClicks').textContent = data.stats.totalClicks || 0;
+                    document.getElementById('estRevenue').textContent = '$' + (data.stats.estimatedRevenue || 0).toFixed(2);
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        // Search eBay
+        async function searchEbay(query, offset = 0) {
+            currentQuery = query;
+            currentOffset = offset;
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+
+            try {
+                const params = new URLSearchParams({
+                    query,
+                    limit: LIMIT,
+                    offset
+                });
+
+                const response = await fetch('/api/admin/ebay/search?' + params);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Search failed');
+                }
+
+                renderResults(data);
+            } catch (error) {
+                console.error('Search error:', error);
+                showToast(error.message, 'error');
+                document.getElementById('emptyState').style.display = 'block';
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        // Render search results
+        function renderResults(data) {
+            const grid = document.getElementById('productsGrid');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsCount = document.getElementById('resultsCount');
+
+            if (!data.items || data.items.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('emptyState').innerHTML = '<p>No results found. Try a different search.</p>';
+                return;
+            }
+
+            resultsCount.textContent = `Showing ${data.offset + 1}-${data.offset + data.items.length} of ${data.total.toLocaleString()} results for "${data.query}"`;
+
+            grid.innerHTML = data.items.map(item => `
+                <div class="product-card ${item.alreadyImported ? 'imported' : ''}" data-item-id="${item.itemId}" data-legacy-id="${item.legacyItemId || ''}">
+                    <img src="${item.images[0] || '/logo.png'}" alt="${item.title}" class="product-image" onerror="this.src='/logo.png'">
+                    <div class="product-info">
+                        <h3 class="product-title">${item.title}</h3>
+                        <div class="product-meta">
+                            <span class="product-price">$${(item.price || 0).toFixed(2)}</span>
+                            <span class="product-condition">${item.condition || 'N/A'}</span>
+                        </div>
+                        <div class="product-seller">
+                            Seller: <strong>${item.seller?.username || 'Unknown'}</strong>
+                            ${item.seller?.feedbackPercentage ? `(${item.seller.feedbackPercentage}% positive)` : ''}
+                            ${item.freeShipping ? ' • Free Shipping' : ''}
+                        </div>
+                        <div class="product-actions">
+                            <button class="import-btn ${item.alreadyImported ? 'imported' : ''}"
+                                    onclick="importItem('${item.legacyItemId || item.itemId}')"
+                                    ${item.alreadyImported ? 'disabled' : ''}>
+                                ${item.alreadyImported ? '✓ Imported' : 'Add to Shop'}
+                            </button>
+                            <button class="view-btn" onclick="window.open('${item.itemWebUrl}', '_blank')">View on eBay</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Pagination
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(data.total / LIMIT);
+            const currentPage = Math.floor(data.offset / LIMIT) + 1;
+
+            let paginationHtml = '';
+            if (currentPage > 1) {
+                paginationHtml += `<button class="page-btn" onclick="searchEbay('${currentQuery}', ${(currentPage - 2) * LIMIT})">← Previous</button>`;
+            }
+            paginationHtml += `<span style="padding: 0.5rem 1rem; color: var(--text-muted);">Page ${currentPage} of ${totalPages}</span>`;
+            if (currentPage < totalPages) {
+                paginationHtml += `<button class="page-btn" onclick="searchEbay('${currentQuery}', ${currentPage * LIMIT})">Next →</button>`;
+            }
+            pagination.innerHTML = paginationHtml;
+
+            resultsSection.style.display = 'block';
+        }
+
+        // Import item to shop
+        async function importItem(itemId) {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Importing...';
+
+            try {
+                const response = await fetch('/api/admin/ebay/import', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ legacyId: itemId })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Import failed');
+                }
+
+                btn.textContent = '✓ Imported';
+                btn.classList.add('imported');
+                btn.closest('.product-card').classList.add('imported');
+                showToast(`Imported: ${data.product.name}`);
+                loadStats();
+            } catch (error) {
+                console.error('Import error:', error);
+                showToast(error.message, 'error');
+                btn.disabled = false;
+                btn.textContent = 'Add to Shop';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                searchEbay(query);
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value.trim();
+                if (query) {
+                    searchEbay(query);
+                }
+            }
+        });
+
+        // Team preset buttons
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const query = btn.dataset.query;
+                document.getElementById('searchInput').value = query;
+                searchEbay(query);
+            });
+        });
+
+        // Initialize
+        loadStats();
+    </script>
+</body>
+</html>
