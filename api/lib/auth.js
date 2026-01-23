@@ -1,4 +1,7 @@
 import { createRequire } from 'module';
+import { getCollection } from './mongodb.js';
+import { ObjectId } from 'mongodb';
+
 const require = createRequire(import.meta.url);
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -73,8 +76,6 @@ export async function authenticate(req) {
 
     // Fetch full user from database to get isAdmin and other fields
     try {
-        const { getCollection } = await import('./mongodb.js');
-        const { ObjectId } = await import('mongodb');
         const usersCollection = await getCollection('users');
         const user = await usersCollection.findOne({ _id: new ObjectId(decoded.userId) });
 
