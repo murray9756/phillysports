@@ -140,8 +140,7 @@
                         </div>
                     </div>
 
-                    <a href="/marketplace/" class="nav-item">Shop</a>
-                    <a href="/membership.html" class="nav-item">Membership</a>
+                    <a href="/marketplace/" class="nav-item">Marketplace</a>
 
                     <a href="/esports/" class="nav-item">eSports</a>
                     <a href="/youth/" class="nav-item">Youth</a>
@@ -241,8 +240,7 @@
                     </div>
                 </div>
 
-                <a href="/marketplace/" class="mobile-nav-item">Shop</a>
-                <a href="/membership.html" class="mobile-nav-item">Membership</a>
+                <a href="/marketplace/" class="mobile-nav-item">Marketplace</a>
 
                 <a href="/esports/" class="mobile-nav-item">eSports</a>
                 <a href="/youth/" class="mobile-nav-item">Youth</a>
