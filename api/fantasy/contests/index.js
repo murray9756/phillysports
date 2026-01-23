@@ -40,20 +40,15 @@ const ROSTER_POSITIONS = {
     ]
 };
 
-const SCOREBOARD_URLS = {
-    NFL: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
-    NBA: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
-    MLB: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
-    NHL: 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
-};
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
-function formatDateForESPN(date) {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}${month}${day}`;
-}
+// SportsDataIO endpoints for game data
+const SPORTSDATA_ENDPOINTS = {
+    NFL: 'nfl',
+    NBA: 'nba',
+    MLB: 'mlb',
+    NHL: 'nhl'
+};
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -127,24 +122,35 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid sport' });
             }
 
-            // Get games for the date
+            if (!SPORTSDATA_API_KEY) {
+                return res.status(500).json({ error: 'SportsDataIO API key not configured' });
+            }
+
+            // Get games for the date from SportsDataIO
             const targetDate = date || new Date().toISOString().split('T')[0];
-            const formattedDate = formatDateForESPN(targetDate);
-            const scoreboardUrl = `${SCOREBOARD_URLS[sport]}?dates=${formattedDate}`;
+            const endpoint = SPORTSDATA_ENDPOINTS[sport];
+            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
 
-            const scoreboardResponse = await fetch(scoreboardUrl);
-            const scoreboardData = await scoreboardResponse.json();
-            const events = scoreboardData.events || [];
+            const gamesResponse = await fetch(gamesUrl);
+            if (!gamesResponse.ok) {
+                console.error('SportsDataIO games fetch failed:', gamesResponse.status);
+                return res.status(400).json({ error: 'Failed to fetch games from SportsDataIO' });
+            }
 
-            if (events.length === 0) {
+            const gamesData = await gamesResponse.json();
+
+            if (!gamesData || gamesData.length === 0) {
                 return res.status(400).json({ error: 'No games found for this date' });
             }
 
-            // Get game IDs and earliest game time
-            const gameIds = events.map(e => e.id);
-            const gameTimes = events.map(e => new Date(e.date)).sort((a, b) => a - b);
-            const earliestGame = gameTimes[0];
-            const latestGame = gameTimes[gameTimes.length - 1];
+            // Get game IDs and game times from SportsDataIO
+            const gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
+            const gameTimes = gamesData
+                .map(g => new Date(g.DateTime || g.Day))
+                .filter(d => !isNaN(d.getTime()))
+                .sort((a, b) => a - b);
+            const earliestGame = gameTimes[0] || new Date(targetDate + 'T18:00:00-05:00');
+            const latestGame = gameTimes[gameTimes.length - 1] || earliestGame;
 
             // Generate title if not provided
             const contestTitle = title || `${sport} ${targetDate} - ${entryFee === 0 ? 'Free' : `$${entryFee}`} Contest`;
