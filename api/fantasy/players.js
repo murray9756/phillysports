@@ -95,10 +95,15 @@ async function fetchPlayersFromSportsDataIO(sport, targetDate) {
         throw new Error(`Unsupported sport: ${sport}`);
     }
 
+    console.log(`fetchPlayersFromSportsDataIO: sport=${sport}, date=${targetDate}, season=${config.season}`);
+    console.log(`API Key present: ${!!SPORTSDATA_API_KEY}, length: ${SPORTSDATA_API_KEY?.length || 0}`);
+
     // First try to get DFS slates (best for salaries)
     try {
         const slatesUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+        console.log(`Trying DFS slates: ${slatesUrl.replace(SPORTSDATA_API_KEY, 'XXX')}`);
         const slatesResponse = await fetch(slatesUrl);
+        console.log(`DFS slates response: ${slatesResponse.status}`);
 
         if (slatesResponse.ok) {
             const slates = await slatesResponse.json();
@@ -243,14 +248,23 @@ async function fetchFromScheduleAndRosters(sport, config, targetDate) {
 
 // Fetch all active players (when no games found for date)
 async function fetchAllActivePlayers(sport, config) {
+    console.log(`fetchAllActivePlayers called for ${sport}, endpoint: ${config.endpoint}`);
+    console.log(`API Key present: ${!!SPORTSDATA_API_KEY}`);
+
     const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/Players?key=${SPORTSDATA_API_KEY}`;
+    console.log(`Fetching players from: ${playersUrl.replace(SPORTSDATA_API_KEY, 'XXX')}`);
+
     const response = await fetch(playersUrl);
+    console.log(`Players response status: ${response.status}`);
 
     if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Players fetch failed: ${response.status}`, errorText);
         throw new Error(`Players fetch failed: ${response.status}`);
     }
 
     const allPlayers = await response.json();
+    console.log(`Total players returned: ${allPlayers?.length || 0}`);
 
     const players = allPlayers
         .filter(p => p.Status === 'Active')
