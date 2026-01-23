@@ -51,32 +51,48 @@ export default async function handler(req, res) {
 
         await Promise.all(sportsToFetch.map(async (sport) => {
             try {
-                // Get recent games for Philly team
-                const season = getCurrentSeason(sport);
-                const games = await fetchTeamSchedule(sport, 'PHI', season);
+                // Get scores from the last few days to find most recent Philly game
+                const today = new Date();
+                let foundGame = null;
 
-                // Find the most recent completed game
-                const completedGames = games
-                    .filter(g => g.Status === 'Final' || g.Status === 'F/OT')
-                    .sort((a, b) => new Date(b.DateTime || b.Day) - new Date(a.DateTime || a.Day));
+                // Check the last 7 days for completed Philly games
+                for (let daysAgo = 0; daysAgo <= 7 && !foundGame; daysAgo++) {
+                    const checkDate = new Date(today);
+                    checkDate.setDate(checkDate.getDate() - daysAgo);
+                    const dateStr = checkDate.toISOString().split('T')[0];
 
-                const recentGame = completedGames[0];
-                if (recentGame) {
-                    const isHome = recentGame.HomeTeam === 'PHI';
+                    try {
+                        const dayScores = await fetchScoresByDate(sport, dateStr);
+                        // Find completed Philly games from this day
+                        const phillyGames = dayScores.filter(g =>
+                            (g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI') &&
+                            (g.Status === 'Final' || g.Status === 'F/OT' || g.IsClosed)
+                        );
+
+                        if (phillyGames.length > 0) {
+                            foundGame = phillyGames[0];
+                        }
+                    } catch (e) {
+                        // Day might not have games, continue
+                    }
+                }
+
+                if (foundGame) {
+                    const isHome = foundGame.HomeTeam === 'PHI';
                     const config = Object.values(TEAM_CONFIG).find(c => c.sport === sport);
 
                     scores.push({
                         sport,
                         team: config?.name || sport,
                         teamColor: config?.color || '#666666',
-                        homeTeam: recentGame.HomeTeam,
-                        homeScore: String(recentGame.HomeScore || recentGame.HomeTeamScore || 0),
-                        awayTeam: recentGame.AwayTeam,
-                        awayScore: String(recentGame.AwayScore || recentGame.AwayTeamScore || 0),
+                        homeTeam: foundGame.HomeTeam,
+                        homeScore: String(foundGame.HomeScore ?? foundGame.HomeTeamScore ?? 0),
+                        awayTeam: foundGame.AwayTeam,
+                        awayScore: String(foundGame.AwayScore ?? foundGame.AwayTeamScore ?? 0),
                         isHome,
-                        date: recentGame.DateTime || recentGame.Day,
-                        gameId: (recentGame.GameID || recentGame.ScoreID)?.toString(),
-                        status: recentGame.Status
+                        date: foundGame.DateTime || foundGame.Day,
+                        gameId: (foundGame.GameID || foundGame.ScoreID)?.toString(),
+                        status: foundGame.Status
                     });
                 }
             } catch (e) {
