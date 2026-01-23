@@ -528,6 +528,8 @@
                 }
 
                 contest = data.contest;
+                console.log('Contest data:', data);
+                console.log('User entry:', data.userEntry);
                 document.getElementById('contestTitle').textContent = contest.title;
 
                 const locksAt = new Date(contest.locksAt);
