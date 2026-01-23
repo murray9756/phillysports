@@ -159,15 +159,15 @@
 
         /* Team Rows */
         .odds-matchup { }
-        .team-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); }
+        .team-row { display: flex; align-items: center; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); gap: 1rem; }
         .team-row:last-child { border-bottom: none; }
-        .team-info { display: flex; align-items: center; gap: 0.5rem; flex: 1; min-width: 0; }
+        .team-info { display: flex; align-items: center; gap: 0.5rem; min-width: 180px; max-width: 250px; }
         .team-name { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .home-indicator { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); background: #f0f0f0; padding: 0.15rem 0.35rem; border-radius: 3px; flex-shrink: 0; }
 
         /* Odds Cells */
-        .odds-cells { display: flex; gap: 0.5rem; flex-shrink: 0; }
-        .odds-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 70px; padding: 0.5rem; background: var(--widget-header-bg); border-radius: 6px; cursor: default; transition: background 0.2s; }
+        .odds-cells { display: flex; gap: 0.5rem; flex: 1; justify-content: flex-end; }
+        .odds-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 80px; min-width: 70px; padding: 0.5rem; background: var(--widget-header-bg); border-radius: 6px; cursor: default; transition: background 0.2s; }
         .odds-cell:hover { background: var(--card-bg-hover, #e8e5e0); }
         .odds-value { font-weight: 700; font-size: 0.9rem; }
         .odds-value.positive { color: var(--positive-odds); }
@@ -249,9 +249,9 @@
             .main-container { padding: 1rem; }
             .odds-legend { display: none; }
             .team-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-            .team-info { width: 100%; }
+            .team-info { width: 100%; min-width: unset; max-width: unset; }
             .odds-cells { width: 100%; justify-content: space-between; }
-            .odds-cell { min-width: 60px; flex: 1; }
+            .odds-cell { min-width: 60px; width: auto; flex: 1; }
             .team-name { font-size: 0.9rem; }
         }
 
