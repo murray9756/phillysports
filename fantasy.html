@@ -389,19 +389,11 @@
     </main>
 
     <script>
-        // Dark Mode
-        function initTheme() {
+        // Dark Mode - init only, toggle handled by header.js
+        (function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-        initTheme();
-        // Theme toggle is handled by header.js
+        })();
 
         const sportEmojis = {
             NFL: '🏈',
@@ -440,37 +432,11 @@
                 if (response.ok) {
                     const data = await response.json();
                     currentUser = data.user;
-                    const premiumBadge = data.user.isSubscribed
-                        ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
-                    const adminLink = data.user.isAdmin
-                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
-                        : '';
-                    document.getElementById('authSection').innerHTML = `
-                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                            <span class="theme-icon-light">&#9790;</span>
-                            <span class="theme-icon-dark">&#9728;</span>
-                        </button>
-                        <div class="coin-display">
-                            <span>🪙</span>
-                            <span>${Math.round(data.user.coinBalance || 0)}</span>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
-                        </div>
-                        ${premiumBadge}
-                        ${adminLink}
-                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
-                        <a href="#" onclick="logout(); return false;">Logout</a>
-                    `;
-                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    // Header is handled by header.js - just load user entries here
                     document.getElementById('userContests').style.display = 'block';
                     loadUserEntries();
                 }
             } catch (e) {}
-        }
-
-        async function logout() {
-            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
-            window.location.reload();
         }
 
         async function loadContests() {
