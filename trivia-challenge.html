@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics (excludes admin users) -->
+    <script>
+    if (localStorage.getItem('isAdmin') !== 'true') {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97';
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Challenge | PhillySports.com</title>
+    <meta name="description" content="Challenge friends to head-to-head trivia battles!">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; --nav-text: #333333; --success-color: #22c55e; --warning-color: #f59e0b; }
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --nav-text: #d0d0d0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+        a { color: inherit; text-decoration: none; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 1rem; }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, var(--accent-color), #5a0000);
+            color: white;
+            border-radius: 12px;
+        }
+        .page-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .page-header p { opacity: 0.9; }
+
+        .balance-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--card-bg);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .action-btn:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        .action-btn h3 { color: var(--accent-color); margin-bottom: 0.5rem; }
+        .action-btn p { font-size: 0.85rem; color: var(--text-muted); }
+
+        .wager-selector {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .wager-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .wager-btn.selected {
+            border-color: var(--accent-color);
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+        .section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .challenge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+        .challenge-item:last-child { margin-bottom: 0; }
+
+        .challenge-info h4 { margin-bottom: 0.25rem; }
+        .challenge-info p { font-size: 0.85rem; color: var(--text-muted); }
+
+        .challenge-actions { display: flex; gap: 0.5rem; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-success { background: var(--success-color); color: white; }
+        .btn-secondary { background: var(--border-color); color: var(--text-primary); }
+        .btn-outline { background: transparent; border: 2px solid var(--accent-color); color: var(--accent-color); }
+
+        .your-turn-badge {
+            background: var(--warning-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pie-preview {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+        .pie-slice {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+        }
+        .pie-slice.filled { background: var(--success-color); }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        /* Search modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal h3 { margin-bottom: 1rem; }
+        .modal input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+        }
+        .search-results {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .search-result {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .search-result:hover { background: var(--border-color); }
+
+        /* Matchmaking status */
+        .matchmaking-status {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .history-item:last-child { border-bottom: none; }
+        .history-result { font-weight: 600; }
+        .history-result.won { color: var(--success-color); }
+        .history-result.lost { color: var(--accent-color); }
+
+        .login-prompt {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        .login-prompt h2 { margin-bottom: 1rem; }
+        .login-prompt a { color: var(--accent-color); text-decoration: underline; }
+    </style>
+</head>
+<body class="ps-theme">
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <!-- Login required -->
+        <div id="loginPrompt" class="login-prompt" style="display: none;">
+            <h2>Login Required</h2>
+            <p>You need to <a href="/login.html">sign in</a> to challenge other players.</p>
+        </div>
+
+        <!-- Main content (hidden until logged in) -->
+        <div id="mainContent" style="display: none;">
+            <div class="page-header">
+                <h1>Trivia Challenge</h1>
+                <p>Battle head-to-head for Diehard Dollars!</p>
+                <div class="balance-display">
+                    <span>DD</span>
+                    <span id="coinBalance">0</span>
+                </div>
+            </div>
+
+            <!-- Wager Selection -->
+            <div class="section">
+                <h2>Select Your Wager</h2>
+                <div class="wager-selector">
+                    <button class="wager-btn" data-wager="10">10 DD</button>
+                    <button class="wager-btn selected" data-wager="25">25 DD</button>
+                    <button class="wager-btn" data-wager="50">50 DD</button>
+                    <button class="wager-btn" data-wager="100">100 DD</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <div class="action-btn" id="randomMatchBtn">
+                    <h3>Random Match</h3>
+                    <p>Find an opponent automatically</p>
+                </div>
+                <div class="action-btn" id="challengeFriendBtn">
+                    <h3>Challenge Friend</h3>
+                    <p>Search for a specific user</p>
+                </div>
+            </div>
+
+            <!-- Matchmaking Status -->
+            <div id="matchmakingSection" class="section" style="display: none;">
+                <div class="matchmaking-status">
+                    <div class="spinner"></div>
+                    <h3>Finding opponent...</h3>
+                    <p id="matchmakingTime">Searching for <span id="wagerDisplay">25</span> DD matches</p>
+                    <button class="btn btn-secondary" id="cancelMatchmaking" style="margin-top: 1rem;">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Pending Challenges -->
+            <div class="section" id="pendingSection">
+                <h2>
+                    Incoming Challenges
+                    <span class="section-badge" id="pendingCount">0</span>
+                </h2>
+                <div id="pendingList">
+                    <div class="empty-state">No pending challenges</div>
+                </div>
+            </div>
+
+            <!-- Active Matches -->
+            <div class="section" id="activeSection">
+                <h2>
+                    Active Matches
+                    <span class="section-badge" id="activeCount">0</span>
+                </h2>
+                <div id="activeList">
+                    <div class="empty-state">No active matches</div>
+                </div>
+            </div>
+
+            <!-- Match History -->
+            <div class="section">
+                <h2>Recent Matches</h2>
+                <div id="historyList">
+                    <div class="empty-state">No match history yet</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Challenge Friend Modal -->
+    <div class="modal-overlay" id="challengeModal">
+        <div class="modal">
+            <h3>Challenge a Friend</h3>
+            <input type="text" id="usernameSearch" placeholder="Search username...">
+            <div class="search-results" id="searchResults"></div>
+            <button class="btn btn-secondary" onclick="closeModal()" style="width: 100%;">Cancel</button>
+        </div>
+    </div>
+
+    <script src="/js/header.js"></script>
+    <script>
+        let currentWager = 25;
+        let currentUser = null;
+        let matchmakingInterval = null;
+
+        // Check auth
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/auth/me', { credentials: 'include' });
+                const data = await res.json();
+                if (data.user) {
+                    currentUser = data.user;
+                    document.getElementById('loginPrompt').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('coinBalance').textContent = Math.round(data.user.coinBalance || 0).toLocaleString();
+                    loadChallenges();
+                } else {
+                    document.getElementById('loginPrompt').style.display = 'block';
+                }
+            } catch (e) {
+                document.getElementById('loginPrompt').style.display = 'block';
+            }
+        }
+
+        // Wager selection
+        document.querySelectorAll('.wager-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.wager-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                currentWager = parseInt(btn.dataset.wager);
+                document.getElementById('wagerDisplay').textContent = currentWager;
+            });
+        });
+
+        // Random match
+        document.getElementById('randomMatchBtn').addEventListener('click', async () => {
+            if (!currentUser) return;
+            if ((currentUser.coinBalance || 0) < currentWager) {
+                alert('Insufficient coins for this wager');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/trivia/matchmaking/join', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ wagerAmount: currentWager })
+                });
+                const data = await res.json();
+
+                if (data.matched) {
+                    window.location.href = `/trivia-match.html?id=${data.challengeId}`;
+                } else if (data.inQueue) {
+                    document.getElementById('matchmakingSection').style.display = 'block';
+                    startMatchmakingPoll();
+                } else {
+                    alert(data.error || 'Failed to join matchmaking');
+                }
+            } catch (e) {
+                alert('Error joining matchmaking');
+            }
+        });
+
+        // Poll for match
+        function startMatchmakingPoll() {
+            matchmakingInterval = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/trivia/matchmaking/status', { credentials: 'include' });
+                    const data = await res.json();
+
+                    if (data.matched) {
+                        clearInterval(matchmakingInterval);
+                        window.location.href = `/trivia-match.html?id=${data.challengeId}`;
+                    } else if (!data.inQueue) {
+                        clearInterval(matchmakingInterval);
+                        document.getElementById('matchmakingSection').style.display = 'none';
+                    }
+                } catch (e) {
+                    console.error('Matchmaking poll error:', e);
+                }
+            }, 3000);
+        }
+
+        // Cancel matchmaking
+        document.getElementById('cancelMatchmaking').addEventListener('click', async () => {
+            clearInterval(matchmakingInterval);
+            try {
+                await fetch('/api/trivia/matchmaking/leave', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+            } catch (e) {}
+            document.getElementById('matchmakingSection').style.display = 'none';
+            checkAuth(); // Refresh balance
+        });
+
+        // Challenge friend
+        document.getElementById('challengeFriendBtn').addEventListener('click', () => {
+            document.getElementById('challengeModal').classList.add('active');
+            document.getElementById('usernameSearch').focus();
+        });
+
+        function closeModal() {
+            document.getElementById('challengeModal').classList.remove('active');
+            document.getElementById('usernameSearch').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        // Search users
+        let searchTimeout;
+        document.getElementById('usernameSearch').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            if (query.length < 2) {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`/api/users/search?q=${encodeURIComponent(query)}`, { credentials: 'include' });
+                    const data = await res.json();
+                    const results = document.getElementById('searchResults');
+
+                    if (data.users && data.users.length > 0) {
+                        results.innerHTML = data.users
+                            .filter(u => u._id !== currentUser._id)
+                            .map(u => `
+                                <div class="search-result" onclick="challengeUser('${u._id}', '${u.username}')">
+                                    <strong>@${u.username}</strong>
+                                </div>
+                            `).join('');
+                    } else {
+                        results.innerHTML = '<p style="color: var(--text-muted);">No users found</p>';
+                    }
+                } catch (e) {
+                    console.error('Search error:', e);
+                }
+            }, 300);
+        });
+
+        async function challengeUser(userId, username) {
+            if ((currentUser.coinBalance || 0) < currentWager) {
+                alert('Insufficient coins for this wager');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/trivia/challenge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        challengedUserId: userId,
+                        wagerAmount: currentWager
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    closeModal();
+                    alert(`Challenge sent to @${username}!`);
+                    checkAuth(); // Refresh balance
+                    loadChallenges();
+                } else {
+                    alert(data.error || 'Failed to create challenge');
+                }
+            } catch (e) {
+                alert('Error creating challenge');
+            }
+        }
+
+        // Load challenges
+        async function loadChallenges() {
+            try {
+                const res = await fetch('/api/trivia/challenge?type=all', { credentials: 'include' });
+                const data = await res.json();
+
+                // Pending challenges
+                const pendingList = document.getElementById('pendingList');
+                const pendingCount = document.getElementById('pendingCount');
+                if (data.pending && data.pending.length > 0) {
+                    pendingCount.textContent = data.pending.length;
+                    pendingList.innerHTML = data.pending.map(c => `
+                        <div class="challenge-item">
+                            <div class="challenge-info">
+                                <h4>@${c.challenger.username}</h4>
+                                <p>${c.wagerAmount} DD wager</p>
+                            </div>
+                            <div class="challenge-actions">
+                                <button class="btn btn-success" onclick="acceptChallenge('${c._id}')">Accept</button>
+                                <button class="btn btn-secondary" onclick="declineChallenge('${c._id}')">Decline</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    pendingCount.textContent = '0';
+                    pendingList.innerHTML = '<div class="empty-state">No pending challenges</div>';
+                }
+
+                // Active matches
+                const activeList = document.getElementById('activeList');
+                const activeCount = document.getElementById('activeCount');
+                if (data.active && data.active.length > 0) {
+                    activeCount.textContent = data.active.length;
+                    activeList.innerHTML = data.active.map(c => {
+                        const opponent = c.challenger.userId === currentUser._id ? c.challenged : c.challenger;
+                        const myPieces = c.challenger.userId === currentUser._id ? c.player1Pieces : c.player2Pieces;
+                        const piecesWon = Object.values(myPieces).filter(Boolean).length;
+                        return `
+                            <div class="challenge-item">
+                                <div class="challenge-info">
+                                    <h4>vs @${opponent?.username || 'Unknown'}</h4>
+                                    <p>${c.wagerAmount} DD pot</p>
+                                    <div class="pie-preview">
+                                        ${['Eagles','Phillies','76ers','Flyers','College','General'].map(cat =>
+                                            `<div class="pie-slice ${myPieces[cat] ? 'filled' : ''}"></div>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                                <div class="challenge-actions">
+                                    ${c.isYourTurn ? '<span class="your-turn-badge">Your Turn!</span>' : ''}
+                                    <a href="/trivia-match.html?id=${c._id}" class="btn btn-primary">Play</a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    activeCount.textContent = '0';
+                    activeList.innerHTML = '<div class="empty-state">No active matches</div>';
+                }
+
+                // History
+                const historyList = document.getElementById('historyList');
+                if (data.history && data.history.length > 0) {
+                    historyList.innerHTML = data.history.slice(0, 10).map(c => {
+                        const opponent = c.challenger.userId === currentUser._id ? c.challenged : c.challenger;
+                        const won = c.winner?.userId === currentUser._id;
+                        return `
+                            <div class="history-item">
+                                <div>
+                                    <strong>vs @${opponent?.username || 'Unknown'}</strong>
+                                    <span style="color: var(--text-muted); margin-left: 0.5rem;">${c.wagerAmount} DD</span>
+                                </div>
+                                <span class="history-result ${won ? 'won' : 'lost'}">
+                                    ${c.status === 'complete' ? (won ? '+' + c.wagerAmount + ' DD' : '-' + c.wagerAmount + ' DD') : c.status}
+                                </span>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    historyList.innerHTML = '<div class="empty-state">No match history yet</div>';
+                }
+
+            } catch (e) {
+                console.error('Load challenges error:', e);
+            }
+        }
+
+        async function acceptChallenge(id) {
+            try {
+                const res = await fetch(`/api/trivia/challenge/${id}/accept`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.href = `/trivia-match.html?id=${id}`;
+                } else {
+                    alert(data.error || 'Failed to accept challenge');
+                }
+            } catch (e) {
+                alert('Error accepting challenge');
+            }
+        }
+
+        async function declineChallenge(id) {
+            if (!confirm('Decline this challenge?')) return;
+            try {
+                await fetch(`/api/trivia/challenge/${id}/decline`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                loadChallenges();
+            } catch (e) {
+                alert('Error declining challenge');
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('challengeModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) closeModal();
+        });
+
+        // Init
+        checkAuth();
+    </script>
+
+    <script src="/js/live-ticker.js"></script>
+</body>
+</html>

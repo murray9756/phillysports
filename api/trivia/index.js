@@ -24,8 +24,8 @@ const PENALTIES_BY_DIFFICULTY = {
 
 const DAILY_TRIVIA_LIMIT = 20; // Max correct answers per day
 
-// Philly sports trivia questions
-const TRIVIA_QUESTIONS = [
+// Philly sports trivia questions (exported for challenge engine)
+export const TRIVIA_QUESTIONS = [
     // ==================== EAGLES ====================
     { _id: 'e1', team: 'Eagles', question: 'In what year did the Eagles win Super Bowl LII?', options: ['2017', '2018', '2019', '2020'], answer: '2018', difficulty: 'easy' },
     { _id: 'e2', team: 'Eagles', question: 'Who caught the famous "Philly Special" touchdown pass in Super Bowl LII?', options: ['Nick Foles', 'Zach Ertz', 'Alshon Jeffery', 'Trey Burton'], answer: 'Nick Foles', difficulty: 'medium' },
@@ -112,7 +112,51 @@ const TRIVIA_QUESTIONS = [
     { _id: 'f17', team: 'Flyers', question: 'Who scored the Cup-winning goal in 1975?', options: ['Bobby Clarke', 'Bill Barber', 'Bob Kelly', 'Reggie Leach'], answer: 'Bob Kelly', difficulty: 'hard' },
     { _id: 'f18', team: 'Flyers', question: 'How many Hart Trophies did Bobby Clarke win?', options: ['1', '2', '3', '4'], answer: '3', difficulty: 'hard' },
     { _id: 'f19', team: 'Flyers', question: 'Which Flyers player wore #27 and was known as "The Hammer"?', options: ['Dave Schultz', 'Bob Kelly', 'Don Saleski', 'Andre Dupont'], answer: 'Dave Schultz', difficulty: 'hard' },
-    { _id: 'f20', team: 'Flyers', question: 'What year did the Flyers lose to the Blackhawks in the Stanley Cup Finals?', options: ['2008', '2010', '2012', '2014'], answer: '2010', difficulty: 'medium' }
+    { _id: 'f20', team: 'Flyers', question: 'What year did the Flyers lose to the Blackhawks in the Stanley Cup Finals?', options: ['2008', '2010', '2012', '2014'], answer: '2010', difficulty: 'medium' },
+
+    // ==================== COLLEGE ====================
+    { _id: 'col1', team: 'College', question: 'How many NCAA basketball championships has Villanova won?', options: ['1', '2', '3', '4'], answer: '3', difficulty: 'medium' },
+    { _id: 'col2', team: 'College', question: 'Which Big 5 school did Jameer Nelson play for?', options: ['Villanova', 'Temple', 'Saint Joseph\'s', 'Penn'], answer: 'Saint Joseph\'s', difficulty: 'medium' },
+    { _id: 'col3', team: 'College', question: 'Who hit the buzzer-beater to win Villanova\'s 2016 NCAA Championship?', options: ['Jalen Brunson', 'Kris Jenkins', 'Josh Hart', 'Ryan Arcidiacono'], answer: 'Kris Jenkins', difficulty: 'easy' },
+    { _id: 'col4', team: 'College', question: 'Which Temple coach has the most wins in program history?', options: ['John Chaney', 'Fran Dunphy', 'Harry Litwack', 'Don Casey'], answer: 'John Chaney', difficulty: 'medium' },
+    { _id: 'col5', team: 'College', question: 'What is the name of the Big 5 trophy awarded to the best team?', options: ['City Series Trophy', 'Big 5 Classic Trophy', 'Philadelphia Trophy', 'Palestra Cup'], answer: 'City Series Trophy', difficulty: 'hard' },
+    { _id: 'col6', team: 'College', question: 'What arena is known as "The Cathedral of College Basketball"?', options: ['The Palestra', 'Wells Fargo Center', 'Liacouras Center', 'Finneran Pavilion'], answer: 'The Palestra', difficulty: 'easy' },
+    { _id: 'col7', team: 'College', question: 'Which Big 5 team won the 1954 and 1955 NCAA championships?', options: ['Temple', 'La Salle', 'Villanova', 'Penn'], answer: 'La Salle', difficulty: 'hard' },
+    { _id: 'col8', team: 'College', question: 'Who was Temple\'s legendary coach known for his zone defense?', options: ['John Chaney', 'Harry Litwack', 'Fran Dunphy', 'Don Casey'], answer: 'John Chaney', difficulty: 'easy' },
+    { _id: 'col9', team: 'College', question: 'Which NBA star played at Villanova and was nicknamed "The Microwave"?', options: ['Kerry Kittles', 'Ed Pinckney', 'Kyle Lowry', 'Jalen Brunson'], answer: 'Kyle Lowry', difficulty: 'hard' },
+    { _id: 'col10', team: 'College', question: 'What year did Villanova upset Georgetown to win their first NCAA title?', options: ['1983', '1985', '1987', '1989'], answer: '1985', difficulty: 'medium' },
+    { _id: 'col11', team: 'College', question: 'Which Penn basketball team went undefeated in Ivy League play in 2018?', options: ['Men\'s Team', 'Women\'s Team', 'Both Teams', 'Neither Team'], answer: 'Women\'s Team', difficulty: 'hard' },
+    { _id: 'col12', team: 'College', question: 'Who is Temple University named after?', options: ['A Greek Temple', 'Russell Conwell', 'No one specific', 'Benjamin Franklin'], answer: 'Russell Conwell', difficulty: 'hard' },
+    { _id: 'col13', team: 'College', question: 'Which Villanova player won the 2018 National Championship MVP?', options: ['Jalen Brunson', 'Mikal Bridges', 'Donte DiVincenzo', 'Eric Paschall'], answer: 'Donte DiVincenzo', difficulty: 'medium' },
+    { _id: 'col14', team: 'College', question: 'What is Drexel\'s team nickname?', options: ['Dragons', 'Owls', 'Hawks', 'Explorers'], answer: 'Dragons', difficulty: 'easy' },
+    { _id: 'col15', team: 'College', question: 'Which Big 5 school is located in the Main Line suburbs?', options: ['Villanova', 'Saint Joseph\'s', 'La Salle', 'Penn'], answer: 'Villanova', difficulty: 'easy' },
+    { _id: 'col16', team: 'College', question: 'How many Big 5 schools are there?', options: ['4', '5', '6', '7'], answer: '5', difficulty: 'easy' },
+    { _id: 'col17', team: 'College', question: 'Which Saint Joseph\'s player was known as "Jameer the Great"?', options: ['Delonte West', 'Jameer Nelson', 'Pat Carroll', 'Langston Galloway'], answer: 'Jameer Nelson', difficulty: 'easy' },
+    { _id: 'col18', team: 'College', question: 'What conference does Temple play in for football?', options: ['Big East', 'AAC', 'Big Ten', 'ACC'], answer: 'AAC', difficulty: 'medium' },
+    { _id: 'col19', team: 'College', question: 'Which La Salle player is their all-time leading scorer?', options: ['Tom Gola', 'Lionel Simmons', 'Michael Brooks', 'Randy Woods'], answer: 'Lionel Simmons', difficulty: 'hard' },
+    { _id: 'col20', team: 'College', question: 'What year was the Big 5 founded?', options: ['1945', '1955', '1965', '1975'], answer: '1955', difficulty: 'hard' },
+
+    // ==================== GENERAL ====================
+    { _id: 'gen1', team: 'General', question: 'Which arena hosts the 76ers, Flyers, and Wings?', options: ['Wells Fargo Center', 'Lincoln Financial Field', 'Citizens Bank Park', 'The Palestra'], answer: 'Wells Fargo Center', difficulty: 'easy' },
+    { _id: 'gen2', team: 'General', question: 'What Philadelphia sports radio station is known as "The Fanatic"?', options: ['94.1 WIP', '97.5 The Fanatic', '94.5 PST', '610 ESPN'], answer: '97.5 The Fanatic', difficulty: 'easy' },
+    { _id: 'gen3', team: 'General', question: 'Which Philly team was the last to win a championship before the Phillies in 2008?', options: ['Eagles', 'Flyers', '76ers', 'None since 1983'], answer: '76ers', difficulty: 'medium' },
+    { _id: 'gen4', team: 'General', question: 'What year did Philadelphia host the NFL Draft?', options: ['2015', '2017', '2019', '2021'], answer: '2017', difficulty: 'medium' },
+    { _id: 'gen5', team: 'General', question: 'Which Philadelphia stadium was imploded in 2004?', options: ['The Spectrum', 'Veterans Stadium', 'JFK Stadium', 'Convention Hall'], answer: 'Veterans Stadium', difficulty: 'easy' },
+    { _id: 'gen6', team: 'General', question: 'What street is Lincoln Financial Field located on?', options: ['Broad Street', 'Pattison Avenue', 'Market Street', 'Chestnut Street'], answer: 'Pattison Avenue', difficulty: 'medium' },
+    { _id: 'gen7', team: 'General', question: 'Which Philadelphia team had a mascot named "Big Shot"?', options: ['76ers', 'Phillies', 'Flyers', 'Eagles'], answer: '76ers', difficulty: 'hard' },
+    { _id: 'gen8', team: 'General', question: 'What is the name of the Flyers\' female mascot?', options: ['Gritty Jr.', 'No female mascot', 'Gritty\'s Mom', 'Gritty is genderless'], answer: 'Gritty is genderless', difficulty: 'hard' },
+    { _id: 'gen9', team: 'General', question: 'Which Philadelphia venue closed in 2009?', options: ['The Spectrum', 'Veterans Stadium', 'First Union Center', 'JFK Stadium'], answer: 'The Spectrum', difficulty: 'medium' },
+    { _id: 'gen10', team: 'General', question: 'What Philadelphia team plays at Subaru Park?', options: ['Philadelphia Union', 'Philadelphia Wings', 'Philadelphia Soul', 'Philadelphia Fury'], answer: 'Philadelphia Union', difficulty: 'easy' },
+    { _id: 'gen11', team: 'General', question: 'What is WIP Sports Radio\'s frequency?', options: ['94.1 FM', '97.5 FM', '610 AM', '1210 AM'], answer: '94.1 FM', difficulty: 'medium' },
+    { _id: 'gen12', team: 'General', question: 'Which animal did Philadelphia fans once throw batteries at?', options: ['Santa Claus', 'J.D. Drew', 'Cowboys Fan', 'All of the above'], answer: 'J.D. Drew', difficulty: 'medium' },
+    { _id: 'gen13', team: 'General', question: 'What year did Gritty become the Flyers mascot?', options: ['2016', '2017', '2018', '2019'], answer: '2018', difficulty: 'easy' },
+    { _id: 'gen14', team: 'General', question: 'Which Philadelphia stadium had a courtroom and jail in the basement?', options: ['Veterans Stadium', 'Lincoln Financial Field', 'The Spectrum', 'JFK Stadium'], answer: 'Veterans Stadium', difficulty: 'easy' },
+    { _id: 'gen15', team: 'General', question: 'What is the Philadelphia Union\'s home city?', options: ['Philadelphia', 'Chester', 'Camden', 'Wilmington'], answer: 'Chester', difficulty: 'medium' },
+    { _id: 'gen16', team: 'General', question: 'Which broadcaster is known for calling "High Hopes" after Phillies wins?', options: ['Harry Kalas', 'Merrill Reese', 'Tom McCarthy', 'Scott Franzke'], answer: 'Harry Kalas', difficulty: 'easy' },
+    { _id: 'gen17', team: 'General', question: 'What year did Philadelphia Eagles fans boo Santa Claus?', options: ['1965', '1968', '1971', '1974'], answer: '1968', difficulty: 'medium' },
+    { _id: 'gen18', team: 'General', question: 'Which Philadelphia team\'s fans are known for "E-A-G-L-E-S" chant?', options: ['Eagles', 'All Philly teams', 'Phillies', '76ers'], answer: 'Eagles', difficulty: 'easy' },
+    { _id: 'gen19', team: 'General', question: 'What is the name of the Phillies\' hall of fame?', options: ['Phillies Wall of Fame', 'Citizens Bank Hall', 'Philly Legends', 'Veterans Memorial'], answer: 'Phillies Wall of Fame', difficulty: 'medium' },
+    { _id: 'gen20', team: 'General', question: 'How many major professional sports teams does Philadelphia have?', options: ['4', '5', '6', '7'], answer: '5', difficulty: 'medium' }
 ];
 
 export default async function handler(req, res) {

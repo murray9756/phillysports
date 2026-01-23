@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google Analytics (excludes admin users) -->
+    <script>
+    if (localStorage.getItem('isAdmin') !== 'true') {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97';
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Match | PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-color: #8b0000;
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --eagles-green: #004C54;
+            --phillies-red: #E81828;
+            --sixers-blue: #006BB6;
+            --flyers-orange: #F74902;
+            --college-purple: #6B21A8;
+            --general-gray: #6B7280;
+        }
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); min-height: 100vh; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .player-info { text-align: center; flex: 1; }
+        .player-info.opponent { opacity: 0.7; }
+        .player-name { font-weight: 700; margin-bottom: 0.5rem; }
+        .player-name.your-turn { color: var(--warning-color); }
+
+        /* Pie Chart */
+        .pie-chart {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .pie-slice-visual {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 50%);
+        }
+        .pie-center {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: var(--card-bg);
+            border-radius: 50%;
+            top: 30%;
+            left: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        /* Simple pie display */
+        .pie-pieces {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 80px;
+            margin: 0 auto;
+        }
+        .pie-piece {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid;
+            opacity: 0.3;
+        }
+        .pie-piece.filled { opacity: 1; }
+        .pie-piece.eagles { border-color: var(--eagles-green); background: var(--eagles-green); }
+        .pie-piece.phillies { border-color: var(--phillies-red); background: var(--phillies-red); }
+        .pie-piece.sixers { border-color: var(--sixers-blue); background: var(--sixers-blue); }
+        .pie-piece.flyers { border-color: var(--flyers-orange); background: var(--flyers-orange); }
+        .pie-piece.college { border-color: var(--college-purple); background: var(--college-purple); }
+        .pie-piece.general { border-color: var(--general-gray); background: var(--general-gray); }
+
+        .vs-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .pot-display {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        .pot-amount { color: var(--warning-color); font-weight: 700; }
+
+        /* Game Area */
+        .game-area {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        /* Spinner */
+        .spinner-container {
+            margin: 2rem auto;
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        .spinner-wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--eagles-green) 0deg 60deg,
+                var(--phillies-red) 60deg 120deg,
+                var(--sixers-blue) 120deg 180deg,
+                var(--flyers-orange) 180deg 240deg,
+                var(--college-purple) 240deg 300deg,
+                var(--general-gray) 300deg 360deg
+            );
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            position: relative;
+        }
+        .spinner-wheel::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30%;
+            height: 30%;
+            background: var(--card-bg);
+            border-radius: 50%;
+        }
+        .spinner-pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 20px solid var(--accent-color);
+            z-index: 10;
+        }
+        .spin-btn {
+            margin-top: 1rem;
+            padding: 1rem 2rem;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .spin-btn:hover { transform: scale(1.05); }
+        .spin-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* Category Display */
+        .category-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        .category-display.eagles { background: var(--eagles-green); color: white; }
+        .category-display.phillies { background: var(--phillies-red); color: white; }
+        .category-display.sixers { background: var(--sixers-blue); color: white; }
+        .category-display.flyers { background: var(--flyers-orange); color: white; }
+        .category-display.college { background: var(--college-purple); color: white; }
+        .category-display.general { background: var(--general-gray); color: white; }
+
+        /* Timer */
+        .timer {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+        .timer.warning { color: var(--warning-color); }
+        .timer.danger { color: var(--accent-color); animation: pulse 0.5s infinite; }
+        @keyframes pulse { 50% { opacity: 0.5; } }
+
+        /* Question */
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            line-height: 1.4;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .answer-btn {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .answer-btn:hover:not(:disabled) {
+            border-color: var(--accent-color);
+            background: rgba(139, 0, 0, 0.1);
+        }
+        .answer-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+        .answer-btn.correct { background: var(--success-color); color: white; border-color: var(--success-color); }
+        .answer-btn.incorrect { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .answer-btn.reveal-correct { border-color: var(--success-color); border-width: 3px; }
+
+        /* Result overlay */
+        .result-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .result-overlay.active { display: flex; }
+        .result-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 90%;
+        }
+        .result-card h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .result-card.won h2 { color: var(--success-color); }
+        .result-card.lost h2 { color: var(--accent-color); }
+        .winnings { font-size: 1.5rem; font-weight: 700; color: var(--warning-color); margin: 1rem 0; }
+
+        /* Waiting state */
+        .waiting-state {
+            padding: 3rem 1rem;
+        }
+        .waiting-state h3 { margin-bottom: 1rem; }
+        .waiting-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="ps-theme">
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <div id="loadingState" class="game-area">
+            <div class="waiting-spinner"></div>
+            <p>Loading match...</p>
+        </div>
+
+        <div id="gameContent" style="display: none;">
+            <!-- Match Header -->
+            <div class="match-header">
+                <div class="player-info" id="player1Info">
+                    <div class="player-name" id="player1Name">You</div>
+                    <div class="pie-pieces" id="player1Pieces"></div>
+                </div>
+                <div class="vs-badge">VS</div>
+                <div class="player-info opponent" id="player2Info">
+                    <div class="player-name" id="player2Name">Opponent</div>
+                    <div class="pie-pieces" id="player2Pieces"></div>
+                </div>
+            </div>
+            <div class="pot-display">Pot: <span class="pot-amount" id="potAmount">0</span> DD</div>
+
+            <!-- Game Area -->
+            <div class="game-area" id="gameArea">
+                <!-- Spin Phase -->
+                <div id="spinPhase" style="display: none;">
+                    <h3>Your Turn!</h3>
+                    <div class="spinner-container">
+                        <div class="spinner-pointer"></div>
+                        <div class="spinner-wheel" id="spinnerWheel"></div>
+                    </div>
+                    <button class="spin-btn" id="spinBtn">SPIN!</button>
+                </div>
+
+                <!-- Question Phase -->
+                <div id="questionPhase" style="display: none;">
+                    <div class="category-display" id="categoryDisplay">Eagles</div>
+                    <div class="timer" id="timer">30</div>
+                    <div class="question-text" id="questionText">Question goes here?</div>
+                    <div class="answer-options" id="answerOptions"></div>
+                </div>
+
+                <!-- Waiting for Opponent -->
+                <div id="waitingPhase" class="waiting-state" style="display: none;">
+                    <h3>Opponent's Turn</h3>
+                    <div class="waiting-spinner"></div>
+                    <p id="waitingMessage">Waiting for opponent to play...</p>
+                </div>
+
+                <!-- Turn Result -->
+                <div id="resultPhase" style="display: none;">
+                    <h3 id="resultTitle">Correct!</h3>
+                    <p id="resultMessage">You won the Eagles piece!</p>
+                    <button class="spin-btn" id="continueBtn">Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div class="result-overlay" id="gameOverOverlay">
+            <div class="result-card" id="gameOverCard">
+                <h2 id="gameOverTitle">You Won!</h2>
+                <p id="gameOverMessage">Congratulations!</p>
+                <div class="winnings" id="gameOverWinnings">+50 DD</div>
+                <a href="/trivia-challenge.html" class="spin-btn">Play Again</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/header.js"></script>
+    <script>
+        const CATEGORIES = ['Eagles', 'Phillies', '76ers', 'Flyers', 'College', 'General'];
+        const CATEGORY_CLASSES = {
+            'Eagles': 'eagles',
+            'Phillies': 'phillies',
+            '76ers': 'sixers',
+            'Flyers': 'flyers',
+            'College': 'college',
+            'General': 'general'
+        };
+
+        let challengeId = null;
+        let currentUser = null;
+        let gameState = null;
+        let timerInterval = null;
+        let pollInterval = null;
+
+        // Get challenge ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        challengeId = urlParams.get('id');
+
+        if (!challengeId) {
+            window.location.href = '/trivia-challenge.html';
+        }
+
+        // Check auth and load game
+        async function init() {
+            try {
+                const res = await fetch('/api/auth/me', { credentials: 'include' });
+                const data = await res.json();
+                if (!data.user) {
+                    window.location.href = '/login.html';
+                    return;
+                }
+                currentUser = data.user;
+                await loadGameState();
+            } catch (e) {
+                console.error('Init error:', e);
+            }
+        }
+
+        async function loadGameState() {
+            try {
+                const res = await fetch(`/api/trivia/challenge/${challengeId}`, { credentials: 'include' });
+                if (!res.ok) {
+                    alert('Challenge not found');
+                    window.location.href = '/trivia-challenge.html';
+                    return;
+                }
+                gameState = await res.json();
+                renderGame();
+            } catch (e) {
+                console.error('Load game error:', e);
+            }
+        }
+
+        function renderGame() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('gameContent').style.display = 'block';
+
+            // Determine which player we are
+            const isPlayer1 = gameState.challenger.userId === currentUser._id;
+            const myPieces = isPlayer1 ? gameState.player1Pieces : gameState.player2Pieces;
+            const opponentPieces = isPlayer1 ? gameState.player2Pieces : gameState.player1Pieces;
+            const opponent = isPlayer1 ? gameState.challenged : gameState.challenger;
+
+            // Update header
+            document.getElementById('player1Name').textContent = 'You';
+            document.getElementById('player2Name').textContent = '@' + (opponent?.username || 'Opponent');
+            document.getElementById('potAmount').textContent = gameState.pot;
+
+            // Render pie pieces
+            renderPieces('player1Pieces', myPieces);
+            renderPieces('player2Pieces', opponentPieces);
+
+            // Check for game over
+            if (gameState.status === 'complete') {
+                showGameOver();
+                return;
+            }
+
+            // Update turn indicator
+            if (gameState.isYourTurn) {
+                document.getElementById('player1Name').classList.add('your-turn');
+                document.getElementById('player2Name').classList.remove('your-turn');
+            } else {
+                document.getElementById('player1Name').classList.remove('your-turn');
+                document.getElementById('player2Name').classList.add('your-turn');
+            }
+
+            // Show appropriate phase
+            hideAllPhases();
+
+            if (gameState.isYourTurn) {
+                if (gameState.currentQuestion) {
+                    showQuestionPhase();
+                } else {
+                    showSpinPhase();
+                }
+            } else {
+                showWaitingPhase();
+                startPolling();
+            }
+        }
+
+        function renderPieces(containerId, pieces) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = CATEGORIES.map(cat => {
+                const filled = pieces[cat] ? 'filled' : '';
+                const colorClass = CATEGORY_CLASSES[cat];
+                return `<div class="pie-piece ${colorClass} ${filled}"></div>`;
+            }).join('');
+        }
+
+        function hideAllPhases() {
+            document.getElementById('spinPhase').style.display = 'none';
+            document.getElementById('questionPhase').style.display = 'none';
+            document.getElementById('waitingPhase').style.display = 'none';
+            document.getElementById('resultPhase').style.display = 'none';
+            stopPolling();
+            stopTimer();
+        }
+
+        function showSpinPhase() {
+            document.getElementById('spinPhase').style.display = 'block';
+            document.getElementById('spinBtn').disabled = false;
+        }
+
+        function showQuestionPhase() {
+            document.getElementById('questionPhase').style.display = 'block';
+
+            const category = gameState.currentCategory;
+            const question = gameState.currentQuestion;
+
+            // Set category
+            const catDisplay = document.getElementById('categoryDisplay');
+            catDisplay.textContent = category;
+            catDisplay.className = 'category-display ' + CATEGORY_CLASSES[category];
+
+            // Set question
+            document.getElementById('questionText').textContent = question.question;
+
+            // Set answers
+            const optionsContainer = document.getElementById('answerOptions');
+            optionsContainer.innerHTML = question.options.map((opt, i) =>
+                `<button class="answer-btn" onclick="submitAnswer('${opt.replace(/'/g, "\\'")}')">${opt}</button>`
+            ).join('');
+
+            // Start timer
+            startTimer(gameState.timeRemaining || 30);
+        }
+
+        function showWaitingPhase() {
+            document.getElementById('waitingPhase').style.display = 'block';
+        }
+
+        function showResultPhase(result) {
+            hideAllPhases();
+            document.getElementById('resultPhase').style.display = 'block';
+
+            const title = document.getElementById('resultTitle');
+            const message = document.getElementById('resultMessage');
+
+            if (result.correct) {
+                title.textContent = 'Correct!';
+                title.style.color = 'var(--success-color)';
+                message.textContent = result.pieceWon ? `You won the ${result.category} piece!` : 'Well done!';
+            } else {
+                title.textContent = result.timedOut ? 'Time\'s Up!' : 'Incorrect';
+                title.style.color = 'var(--accent-color)';
+                message.textContent = `The answer was: ${result.correctAnswer}`;
+            }
+        }
+
+        function showGameOver() {
+            const won = gameState.winner?.userId === currentUser._id;
+            const card = document.getElementById('gameOverCard');
+            card.className = 'result-card ' + (won ? 'won' : 'lost');
+
+            document.getElementById('gameOverTitle').textContent = won ? 'You Won!' : 'You Lost';
+            document.getElementById('gameOverMessage').textContent = won
+                ? 'Congratulations on your victory!'
+                : 'Better luck next time!';
+            document.getElementById('gameOverWinnings').textContent = won
+                ? '+' + gameState.pot + ' DD'
+                : '-' + (gameState.pot / 2) + ' DD';
+
+            document.getElementById('gameOverOverlay').classList.add('active');
+        }
+
+        // Spin wheel
+        document.getElementById('spinBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('spinBtn');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`/api/trivia/challenge/${challengeId}/spin`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Animate spinner
+                    const wheel = document.getElementById('spinnerWheel');
+                    const categoryIndex = CATEGORIES.indexOf(data.category);
+                    const baseRotation = 360 * 5; // 5 full spins
+                    const categoryRotation = (categoryIndex * 60) + 30; // Center of slice
+                    wheel.style.transform = `rotate(${baseRotation + 360 - categoryRotation}deg)`;
+
+                    // After animation, show question
+                    setTimeout(async () => {
+                        await loadGameState();
+                    }, 3500);
+                } else {
+                    alert(data.error || 'Failed to spin');
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert('Error spinning wheel');
+                btn.disabled = false;
+            }
+        });
+
+        // Submit answer
+        async function submitAnswer(answer) {
+            stopTimer();
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach(b => b.disabled = true);
+
+            try {
+                const res = await fetch(`/api/trivia/challenge/${challengeId}/answer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ answer })
+                });
+                const data = await res.json();
+
+                // Highlight correct/incorrect
+                buttons.forEach(b => {
+                    if (b.textContent === answer) {
+                        b.classList.add(data.correct ? 'correct' : 'incorrect');
+                    }
+                    if (b.textContent === data.correctAnswer && !data.correct) {
+                        b.classList.add('reveal-correct');
+                    }
+                });
+
+                // Show result after brief delay
+                setTimeout(() => {
+                    if (data.gameOver) {
+                        gameState = data.challenge;
+                        showGameOver();
+                    } else {
+                        showResultPhase(data);
+                    }
+                }, 1500);
+
+            } catch (e) {
+                alert('Error submitting answer');
+            }
+        }
+
+        // Continue button
+        document.getElementById('continueBtn').addEventListener('click', () => {
+            loadGameState();
+        });
+
+        // Timer
+        function startTimer(seconds) {
+            const timerEl = document.getElementById('timer');
+            let remaining = seconds;
+
+            updateTimerDisplay(remaining);
+
+            timerInterval = setInterval(() => {
+                remaining--;
+                updateTimerDisplay(remaining);
+
+                if (remaining <= 0) {
+                    stopTimer();
+                    // Auto-submit timeout
+                    submitAnswer('__TIMEOUT__');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            const timerEl = document.getElementById('timer');
+            timerEl.textContent = seconds;
+            timerEl.className = 'timer';
+            if (seconds <= 10) timerEl.classList.add('warning');
+            if (seconds <= 5) timerEl.classList.add('danger');
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        // Polling for opponent's turn
+        function startPolling() {
+            pollInterval = setInterval(async () => {
+                await loadGameState();
+            }, 3000);
+        }
+
+        function stopPolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        // Init
+        init();
+    </script>
+
+    <script src="/js/live-ticker.js"></script>
+</body>
+</html>
