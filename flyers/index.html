@@ -201,8 +201,35 @@
     <div class="team-hero"><h1>Philadelphia Flyers</h1><p>News, Scores & Schedule</p></div>
     <main class="main-container">
         <aside class="left-sidebar">
+            <!-- Recent Scores Widget -->
             <div class="widget">
-                <div class="widget-header"><span>&#127942;</span><h3 class="widget-title">Metro Standings</h3></div>
+                <div class="widget-header">
+                    <div class="widget-header-content">
+                        <h3 class="widget-title">Recent Scores</h3>
+                        <span class="widget-subtitle">click game for boxscore</span>
+                    </div>
+                </div>
+                <div class="widget-content" id="scoresContainer">
+                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Upcoming Games Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Upcoming Games</h3>
+                    <div style="font-size:0.6rem;color:var(--text-muted);opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
+                </div>
+                <div class="widget-content" id="scheduleContainer">
+                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Metropolitan Division Standings Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Metropolitan Division Standings</h3>
+                </div>
                 <div class="widget-content" style="padding: 0;">
                     <table class="standings-table" id="standingsTable">
                         <thead><tr><th>Team</th><th class="record">W-L</th><th class="pct">PTS</th></tr></thead>
@@ -211,28 +238,27 @@
                 </div>
             </div>
 
-            <!-- Diehard Dollar Leaderboard Widget -->
+            <!-- Flyers Podcasts Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#129689;</span>
-                    <h3 class="widget-title">Top Diehards</h3>
+                    <h3 class="widget-title">Flyers Podcasts</h3>
                 </div>
-                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                <div class="widget-content" style="padding:0.5rem;">
+                    <a href="https://open.spotify.com/show/5k5IfqqGTBdJmcqdZ6nF91" target="_blank" class="podcast-card" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;text-decoration:none;border-bottom:1px solid var(--border-color);">
+                        <div class="podcast-icon" style="background:var(--team-color);width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-primary);margin:0;">Broad Street Hockey</h4>
+                            <p style="font-size:0.7rem;color:var(--text-muted);margin:0;">Flyers coverage</p>
+                        </div>
+                    </a>
+                    <a href="https://open.spotify.com/show/4TBKZP2iOFCJ7f0JhLrqxG" target="_blank" class="podcast-card" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;text-decoration:none;">
+                        <div class="podcast-icon" style="background:var(--team-color);width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4 style="font-size:0.85rem;font-weight:600;color:var(--text-primary);margin:0;">Flyers Daily</h4>
+                            <p style="font-size:0.7rem;color:var(--text-muted);margin:0;">Daily Flyers talk</p>
+                        </div>
+                    </a>
                 </div>
-                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
-            </div>
-
-            <!-- Source Leaderboard Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128240;</span>
-                    <h3 class="widget-title">Top Sources</h3>
-                </div>
-                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
-                </div>
-                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
             </div>
         </aside>
         <div class="content-section">
@@ -247,21 +273,47 @@
 
         </div>
         <aside class="sidebar">
-            <div class="widget"><div class="widget-header"><span>&#129485;</span><h3 class="widget-title">Roster</h3></div><div class="widget-content" id="rosterContainer" style="max-height:300px;overflow-y:auto;padding:0;"><div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading roster...</div></div></div>
-            <!-- AdSense Sidebar Ad -->
-            <div class="widget ad-widget">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-1980537474373781"
-                     data-ad-slot="auto"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            <!-- Flyers Trivia Widget -->
+            <div class="widget trivia-promo-widget">
+                <div class="trivia-promo-header">
+                    <span class="trivia-promo-title">Flyers Trivia</span>
+                    <div id="triviaLoginHint" style="font-size:0.6rem;color:rgba(255,255,255,0.7);margin-top:0.15rem;">Login to earn Diehard Dollars</div>
+                </div>
+                <div class="trivia-promo-body">
+                    <p class="trivia-promo-tagline">Test Your Flyers Knowledge!</p>
+                    <div class="trivia-promo-stats">
+                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
+                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
+                    </div>
+                    <a href="/trivia.html?team=Flyers" class="trivia-promo-btn">Play Now</a>
+                </div>
             </div>
-            <!-- eBay Memorabilia Widget -->
+
+            <!-- Top Diehards Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127941;</span>
+                    <h3 class="widget-title">Top Diehards</h3>
+                </div>
+                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
+            </div>
+
+            <!-- Top Sources Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Sources</h3>
+                </div>
+                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
+            </div>
+
+            <!-- Flyers Memorabilia Widget -->
+            <div class="widget">
+                <div class="widget-header">
                     <h3 class="widget-title">Flyers Memorabilia</h3>
                 </div>
                 <div class="widget-content" style="padding:0.75rem;">
@@ -285,25 +337,16 @@
                     <div style="text-align:center;font-size:0.65rem;color:var(--text-muted);margin-top:0.5rem;">Affiliate Partner</div>
                 </div>
             </div>
-            <div class="widget"><div class="widget-header"><span>&#127942;</span><h3 class="widget-title">Recent Score</h3></div><div class="widget-content" id="scoresContainer"><div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div></div></div>
-            <div class="widget"><div class="widget-header"><span>&#128197;</span><h3 class="widget-title">Upcoming Games</h3></div><div class="widget-content" id="scheduleContainer"><div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div></div></div>
-            <div class="widget"><div class="widget-header"><span>&#128279;</span><h3 class="widget-title">Quick Links</h3></div><div class="widget-content">
-                <a href="https://www.nhl.com/flyers" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Website</a>
-                <a href="https://www.nhl.com/flyers/tickets" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Buy Tickets</a>
-                <a href="https://open.spotify.com/show/5k5IfqqGTBdJmcqdZ6nF91" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Broad Street Hockey Podcast</a>
-            </div></div>
-            <div class="widget trivia-promo-widget">
-                <div class="trivia-promo-header">
-                    <span class="trivia-promo-icon">&#129504;</span>
-                    <span class="trivia-promo-title">Philly Trivia</span>
+
+            <!-- Quick Links Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Quick Links</h3>
                 </div>
-                <div class="trivia-promo-body">
-                    <p class="trivia-promo-tagline">Test Your Flyers Knowledge!</p>
-                    <div class="trivia-promo-stats">
-                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
-                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
-                    </div>
-                    <a href="/trivia.html?team=Flyers" class="trivia-promo-btn">Play Now</a>
+                <div class="widget-content" style="padding:0.75rem;">
+                    <a href="https://www.nhl.com/flyers" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Flyers Official</a>
+                    <a href="https://www.nhl.com/flyers/tickets" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Buy Tickets</a>
+                    <a href="https://www.nhl.com/flyers" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">NHL.com Flyers</a>
                 </div>
             </div>
         </aside>

@@ -233,9 +233,33 @@
 
     <main class="main-container">
         <aside class="left-sidebar">
+            <!-- Recent Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127942;</span>
+                    <div class="widget-header-content">
+                        <h3 class="widget-title">Recent Scores</h3>
+                        <span class="widget-subtitle">click game for boxscore</span>
+                    </div>
+                </div>
+                <div class="widget-content" id="scoresContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
+                </div>
+            </div>
+
+            <!-- Upcoming Games Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Upcoming Games</h3>
+                    <div style="font-size:0.6rem;color:var(--team-color);opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
+                </div>
+                <div class="widget-content" id="scheduleContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
+                </div>
+            </div>
+
+            <!-- Ivy League Standings Widget -->
+            <div class="widget">
+                <div class="widget-header">
                     <h3 class="widget-title">Ivy League Standings</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
@@ -250,28 +274,20 @@
                 </div>
             </div>
 
-            <!-- Diehard Dollar Leaderboard Widget -->
+            <!-- Podcasts Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#129689;</span>
-                    <h3 class="widget-title">Top Diehards</h3>
+                    <h3 class="widget-title">Penn Podcasts</h3>
                 </div>
-                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                <div class="widget-content" style="padding:0.5rem;">
+                    <a href="https://open.spotify.com/search/penn%20quakers" target="_blank" class="podcast-card" style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem;text-decoration:none;color:var(--text-primary);border-radius:6px;transition:background 0.2s;">
+                        <div class="podcast-icon" style="background:var(--team-color);width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;flex-shrink:0;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4 style="font-size:0.85rem;font-weight:600;margin:0;">Philly College Sports</h4>
+                            <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">Ivy League coverage</p>
+                        </div>
+                    </a>
                 </div>
-                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
-            </div>
-
-            <!-- Source Leaderboard Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128240;</span>
-                    <h3 class="widget-title">Top Sources</h3>
-                </div>
-                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
-                </div>
-                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
             </div>
         </aside>
 
@@ -291,66 +307,11 @@
         </div>
 
         <aside class="sidebar">
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#129485;</span>
-                    <h3 class="widget-title">Roster</h3>
-                </div>
-                <div class="widget-content" id="rosterContainer" style="max-height:300px;overflow-y:auto;padding:0;">
-                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading roster...</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#127942;</span>
-                    <h3 class="widget-title">Recent Score</h3>
-                </div>
-                <div class="widget-content" id="scoresContainer">
-                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128197;</span>
-                    <h3 class="widget-title">Upcoming Games</h3>
-                </div>
-                <div class="widget-content" id="scheduleContainer">
-                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128279;</span>
-                    <h3 class="widget-title">Quick Links</h3>
-                </div>
-                <div class="widget-content">
-                    <a href="https://pennathletics.com/sports/mens-basketball" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Athletics Site</a>
-                    <a href="https://pennathletics.com/sports/mens-basketball/schedule" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Full Schedule</a>
-                    <a href="https://pennathletics.com/sports/mens-basketball/roster" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Full Roster</a>
-                    <a href="https://pennathletics.com/sports/2018/7/17/tickets-mens-basketball.aspx" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Buy Tickets</a>
-                </div>
-            </div>
-
-            <!-- AdSense Ad Unit -->
-            <div class="widget">
-                <div class="widget-content" style="padding: 0.5rem; min-height: 250px;">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-1980537474373781"
-                         data-ad-slot="auto"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                </div>
-            </div>
-
+            <!-- Trivia Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
-                    <span class="trivia-promo-icon">&#129504;</span>
-                    <span class="trivia-promo-title">Philly Trivia</span>
+                    <span class="trivia-promo-title">Penn Trivia</span>
+                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#ffffff;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-promo-body">
                     <p class="trivia-promo-tagline">Test Your Penn Knowledge!</p>
@@ -359,6 +320,73 @@
                         <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
                     </div>
                     <a href="/trivia.html?team=Penn" class="trivia-promo-btn">Play Now</a>
+                </div>
+            </div>
+
+            <!-- Top Diehards Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Diehards</h3>
+                </div>
+                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
+            </div>
+
+            <!-- Top Sources Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Sources</h3>
+                </div>
+                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
+            </div>
+
+            <!-- Penn Memorabilia Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Penn Memorabilia</h3>
+                </div>
+                <div class="widget-content" style="padding:0.75rem;">
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=penn+quakers+autographed&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;border-bottom:1px solid var(--border-color);text-decoration:none;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> Autographed Items
+                    </a>
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=penn+quakers+jersey&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;border-bottom:1px solid var(--border-color);text-decoration:none;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> Jerseys
+                    </a>
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=penn+quakers+vintage&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;border-bottom:1px solid var(--border-color);text-decoration:none;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> Vintage Items
+                    </a>
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=penn+quakers+cards&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;text-decoration:none;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> Trading Cards
+                    </a>
+                    <div style="text-align:center;padding-top:0.75rem;border-top:1px solid var(--border-color);margin-top:0.5rem;">
+                        <a href="https://www.ebay.com/sch/i.html?_nkw=penn+quakers+memorabilia&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="color:var(--accent-color);font-size:0.8rem;font-weight:600;text-decoration:none;">
+                            Shop All on eBay &rarr;
+                        </a>
+                    </div>
+                    <div style="text-align:center;font-size:0.65rem;color:var(--text-muted);margin-top:0.5rem;">Affiliate Partner</div>
+                </div>
+            </div>
+
+            <!-- Quick Links Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Quick Links</h3>
+                </div>
+                <div class="widget-content" style="padding:0.75rem;">
+                    <a href="https://pennathletics.com/sports/mens-basketball" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> Penn Athletics Official
+                    </a>
+                    <a href="https://pennathletics.com/sports/2018/7/17/tickets-mens-basketball.aspx" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> Buy Tickets
+                    </a>
+                    <a href="https://www.espn.com/mens-college-basketball/team/_/id/219/penn-quakers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">
+                        <span style="width:8px;height:8px;border-radius:50%;background:var(--team-color);"></span> ESPN Penn
+                    </a>
                 </div>
             </div>
         </aside>

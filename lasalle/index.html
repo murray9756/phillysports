@@ -155,18 +155,56 @@
         .widget-header span { font-size: 1rem; }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .widget-content { padding: 0.75rem; }
+        .widget-header-content { display: flex; flex-direction: column; gap: 0.15rem; align-items: center; }
+        .widget-subtitle { font-size: 0.65rem; font-weight: 400; color: #1A2744; opacity: 0.8; text-align: center; }
+        [data-theme="dark"] .widget-header .widget-subtitle,
+        [data-theme="dark"] .widget-subtitle { color: #1A2744 !important; }
+
         .trivia-promo-widget { padding: 0; overflow: hidden; }
-        .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; }
-        .trivia-promo-icon { font-size: 1.25rem; }
-        .trivia-promo-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .trivia-promo-body { padding: 1rem; text-align: center; }
-        .trivia-promo-tagline { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
-        .trivia-promo-stats { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-        .trivia-stat { display: flex; flex-direction: column; align-items: center; padding: 0.4rem 0.6rem; background: var(--dark-bg); border-radius: 6px; min-width: 60px; }
-        .trivia-stat .stat-number { font-size: 0.9rem; font-weight: 800; color: #673ab7; }
-        .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
-        .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
-        .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4); }
+        .trivia-promo-header { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem; padding: 0.75rem 1rem; background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%); border-bottom: 1px solid #1A2744; }
+        .trivia-promo-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #1A2744; }
+        .trivia-widget-body { padding: 1rem; }
+        .trivia-loading { text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+        [data-theme="dark"] .trivia-promo-header { background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important; border-bottom-color: #1A2744 !important; }
+        [data-theme="dark"] .trivia-promo-title { color: #1A2744 !important; }
+        [data-theme="dark"] .trivia-widget-body { background: #1e1e1e !important; }
+
+        .podcast-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; border-radius: 6px; transition: background 0.2s; text-decoration: none; }
+        .podcast-card:hover { background: var(--card-bg-hover); }
+        .podcast-icon { width: 40px; height: 40px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; flex-shrink: 0; }
+        .podcast-info h4 { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); margin: 0; }
+        .podcast-info p { font-size: 0.7rem; color: var(--text-muted); margin: 0; }
+
+        /* Trivia Widget Styles */
+        .trivia-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.7rem; }
+        .trivia-team-badge, .trivia-difficulty { padding: 0.25rem 0.5rem; border-radius: 4px; background: var(--dark-bg); color: var(--text-muted); }
+        .trivia-dd-info { margin-bottom: 0.75rem; font-size: 0.75rem; text-align: center; }
+        .trivia-dd-stake { color: #ff9800; font-weight: 600; }
+        .trivia-question-text { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 0.75rem; }
+        .trivia-options { display: flex; flex-direction: column; gap: 0.5rem; }
+        .trivia-option { padding: 0.6rem 0.75rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: left; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+        .trivia-option:hover:not(:disabled) { border-color: #8b0000; background: rgba(139, 0, 0, 0.05); }
+        .trivia-option:disabled { cursor: default; }
+        .trivia-option.correct { background: rgba(76, 175, 80, 0.15); border-color: #4caf50; color: #2e7d32; }
+        .trivia-option.incorrect { background: rgba(244, 67, 54, 0.15); border-color: #f44336; color: #c62828; }
+        .trivia-result { margin-top: 0.75rem; padding: 0.75rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-align: center; }
+        .trivia-result.correct { background: rgba(76, 175, 80, 0.15); color: #2e7d32; }
+        .trivia-result.incorrect { background: rgba(244, 67, 54, 0.15); color: #c62828; }
+        .trivia-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        .trivia-btn { flex: 1; padding: 0.6rem; border: 2px solid var(--ps-navy, #1a1a1a); border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .trivia-btn-primary { background: var(--ps-navy, #1a1a1a); border-color: var(--ps-navy, #1a1a1a); color: var(--ps-cream, #f5f2eb); }
+        .trivia-btn-primary:hover { border-color: var(--ps-red, #8B0000); background: var(--ps-red, #8B0000); }
+        .trivia-btn-secondary { background: transparent; color: var(--ps-navy, #1a1a1a); }
+        .trivia-btn-secondary:hover { border-color: var(--ps-red, #8B0000); color: var(--ps-red, #8B0000); }
+        .trivia-login-prompt { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; }
+        .trivia-login-prompt a { color: var(--accent-color); text-decoration: underline; }
+        [data-theme="dark"] .trivia-option { background: #1e1e1e !important; border-color: #333 !important; color: #e8e8e8 !important; }
+        [data-theme="dark"] .trivia-option:hover { border-color: #8B0000 !important; }
+        [data-theme="dark"] .trivia-btn-primary { background: #8B0000 !important; color: #fff !important; }
+        [data-theme="dark"] .trivia-btn-secondary { background: #1e1e1e !important; border-color: #333 !important; color: #e8e8e8 !important; }
+        [data-theme="dark"] .trivia-question-text { color: #e8e8e8 !important; }
+        [data-theme="dark"] .trivia-meta { color: #808080 !important; }
+        [data-theme="dark"] #triviaLoginHint { color: #1A2744 !important; }
 
         .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
@@ -235,9 +273,33 @@
 
     <main class="main-container">
         <aside class="left-sidebar">
+            <!-- Recent Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127942;</span>
+                    <div class="widget-header-content">
+                        <h3 class="widget-title">Recent Scores</h3>
+                        <span class="widget-subtitle">click game for boxscore</span>
+                    </div>
+                </div>
+                <div class="widget-content" id="scoresContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
+                </div>
+            </div>
+
+            <!-- Upcoming Games Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Upcoming Games</h3>
+                    <div style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
+                </div>
+                <div class="widget-content" id="scheduleContainer">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
+                </div>
+            </div>
+
+            <!-- Atlantic 10 Standings Widget -->
+            <div class="widget">
+                <div class="widget-header">
                     <h3 class="widget-title">Atlantic 10 Standings</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
@@ -252,28 +314,20 @@
                 </div>
             </div>
 
-            <!-- Diehard Dollar Leaderboard Widget -->
+            <!-- Podcasts Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#129689;</span>
-                    <h3 class="widget-title">Top Diehards</h3>
+                    <h3 class="widget-title">La Salle Podcasts</h3>
                 </div>
-                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                <div class="widget-content" style="padding:0.5rem;">
+                    <a href="https://open.spotify.com/show/4qZ8V4cGxKkYg2r7s2c6c4" target="_blank" class="podcast-card">
+                        <div class="podcast-icon" style="background: var(--team-color);width:40px;height:40px;font-size:1rem;">&#127911;</div>
+                        <div class="podcast-info">
+                            <h4>College Hoops Today</h4>
+                            <p>NCAA basketball coverage</p>
+                        </div>
+                    </a>
                 </div>
-                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
-            </div>
-
-            <!-- Source Leaderboard Widget -->
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128240;</span>
-                    <h3 class="widget-title">Top Sources</h3>
-                </div>
-                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
-                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
-                </div>
-                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
             </div>
         </aside>
 
@@ -293,73 +347,81 @@
         </div>
 
         <aside class="sidebar">
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#129485;</span>
-                    <h3 class="widget-title">Roster</h3>
-                </div>
-                <div class="widget-content" id="rosterContainer" style="max-height:300px;overflow-y:auto;padding:0;">
-                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading roster...</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#127942;</span>
-                    <h3 class="widget-title">Recent Score</h3>
-                </div>
-                <div class="widget-content" id="scoresContainer">
-                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128197;</span>
-                    <h3 class="widget-title">Upcoming Games</h3>
-                </div>
-                <div class="widget-content" id="scheduleContainer">
-                    <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <span>&#128279;</span>
-                    <h3 class="widget-title">Quick Links</h3>
-                </div>
-                <div class="widget-content">
-                    <a href="https://goexplorers.com/sports/mens-basketball" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Official Athletics Site</a>
-                    <a href="https://goexplorers.com/sports/mens-basketball/schedule" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;border-bottom:1px solid var(--border-color);">Full Schedule</a>
-                    <a href="https://goexplorers.com/tickets" target="_blank" style="display:block;padding:0.5rem;color:var(--text-secondary);font-size:0.85rem;">Buy Tickets</a>
-                </div>
-            </div>
-
-            <!-- AdSense Ad Unit -->
-            <div class="widget">
-                <div class="widget-content" style="padding: 0.5rem; min-height: 250px;">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-1980537474373781"
-                         data-ad-slot="auto"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                </div>
-            </div>
-
+            <!-- La Salle Trivia Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
-                    <span class="trivia-promo-icon">&#129504;</span>
-                    <span class="trivia-promo-title">Philly Trivia</span>
+                    <span class="trivia-promo-title">La Salle Trivia</span>
+                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
-                <div class="trivia-promo-body">
-                    <p class="trivia-promo-tagline">Test Your Explorers Knowledge!</p>
-                    <div class="trivia-promo-stats">
-                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
-                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
+                <div class="trivia-widget-body" id="triviaWidget">
+                    <div class="trivia-loading">Loading question...</div>
+                </div>
+            </div>
+
+            <!-- Top Diehards Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Diehards</h3>
+                </div>
+                <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Leaderboard →</a>
+            </div>
+
+            <!-- Top Sources Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Top Sources</h3>
+                </div>
+                <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
+                    <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:0.5rem;font-size:0.8rem;">Loading...</div>
+                </div>
+                <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
+            </div>
+
+            <!-- La Salle Memorabilia Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">La Salle Memorabilia</h3>
+                </div>
+                <div class="widget-content" style="padding:0.75rem;">
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=la+salle+explorers+autographed&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;border-bottom:1px solid var(--border-color);text-decoration:none;">
+                        <span class="team-dot" style="background:var(--team-color);"></span> Autographed Items
+                    </a>
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=la+salle+explorers+jersey&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;border-bottom:1px solid var(--border-color);text-decoration:none;">
+                        <span class="team-dot" style="background:var(--team-color);"></span> Jerseys
+                    </a>
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=la+salle+explorers+vintage&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;border-bottom:1px solid var(--border-color);text-decoration:none;">
+                        <span class="team-dot" style="background:var(--team-color);"></span> Vintage Items
+                    </a>
+                    <a href="https://www.ebay.com/sch/i.html?_nkw=la+salle+explorers+cards&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-color);font-size:0.85rem;text-decoration:none;">
+                        <span class="team-dot" style="background:var(--team-color);"></span> Trading Cards
+                    </a>
+                    <div style="text-align:center;padding-top:0.75rem;border-top:1px solid var(--border-color);margin-top:0.5rem;">
+                        <a href="https://www.ebay.com/sch/i.html?_nkw=la+salle+explorers&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339137703&toolid=10001" target="_blank" rel="noopener" style="color:var(--accent-color);font-size:0.8rem;font-weight:600;text-decoration:none;">
+                            Shop All on eBay &rarr;
+                        </a>
                     </div>
-                    <a href="/trivia.html?team=LaSalle" class="trivia-promo-btn">Play Now</a>
+                    <div style="text-align:center;font-size:0.65rem;color:var(--text-muted);margin-top:0.5rem;">Affiliate Partner</div>
+                </div>
+            </div>
+
+            <!-- Quick Links Widget -->
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Quick Links</h3>
+                </div>
+                <div class="widget-content" style="padding:0.75rem;">
+                    <a href="https://goexplorers.com/sports/mens-basketball" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span class="team-dot" style="background:var(--team-color);"></span> La Salle Athletics
+                    </a>
+                    <a href="https://goexplorers.com/tickets" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;border-bottom:1px solid var(--border-color);">
+                        <span class="team-dot" style="background:var(--team-color);"></span> Buy Tickets
+                    </a>
+                    <a href="https://www.espn.com/mens-college-basketball/team/_/id/2325/la-salle-explorers" target="_blank" class="quick-link" style="display:flex;align-items:center;gap:0.5rem;padding:0.5rem;color:var(--text-secondary);font-size:0.8rem;">
+                        <span class="team-dot" style="background:var(--team-color);"></span> ESPN La Salle
+                    </a>
                 </div>
             </div>
         </aside>
@@ -557,27 +619,6 @@
             }
         }
 
-        async function loadRoster() {
-            const container = document.getElementById('rosterContainer');
-            try {
-                const response = await fetch(`/api/roster?team=${TEAM}`);
-                const data = await response.json();
-                if (data.players && data.players.length > 0) {
-                    container.innerHTML = data.players.map(player => `
-                        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
-                            <span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${player.number || '-'}</span>
-                            ${player.link ? `<a href="${player.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${player.name}</a>` : `<span style="flex:1;font-weight:500;">${player.name}</span>`}
-                            <span style="color:var(--text-muted);font-size:0.75rem;">${player.position}</span>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No roster available</div>';
-                }
-            } catch (e) {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load roster</div>';
-            }
-        }
-
         async function loadStandings() {
             const container = document.getElementById('standingsBody');
             try {
@@ -664,13 +705,163 @@
             }
         }
 
+        // Trivia Widget
+        let currentTriviaQuestion = null;
+        let triviaAnswered = false;
+
+        async function loadTriviaQuestion() {
+            const widget = document.getElementById('triviaWidget');
+            widget.innerHTML = '<div class="trivia-loading">Loading question...</div>';
+
+            try {
+                const response = await fetch('/api/trivia?team=LaSalle');
+                const data = await response.json();
+
+                if (!data.success || !data.question) {
+                    widget.innerHTML = `
+                        <div style="text-align:center;padding:1rem;">
+                            <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:0.75rem;">
+                                ${data.message || 'No questions available'}
+                            </p>
+                            <a href="/trivia.html?team=LaSalle" class="trivia-btn trivia-btn-primary" style="display:inline-block;padding:0.5rem 1rem;text-decoration:none;">
+                                Play Full Trivia
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                currentTriviaQuestion = data.question;
+                triviaAnswered = false;
+                renderTriviaQuestion(data.question);
+            } catch (error) {
+                widget.innerHTML = `
+                    <div style="text-align:center;padding:1rem;">
+                        <p style="color:var(--text-muted);font-size:0.85rem;">Failed to load question</p>
+                        <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-secondary" style="margin-top:0.5rem;">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTriviaQuestion(q) {
+            const widget = document.getElementById('triviaWidget');
+            const isLoggedIn = !!localStorage.getItem('token');
+
+            const loginHint = document.getElementById('triviaLoginHint');
+            if (loginHint) loginHint.style.display = isLoggedIn ? 'none' : 'block';
+
+            const ddValues = { easy: 5, medium: 10, hard: 20 };
+            const ddAtStake = ddValues[q.difficulty] || 10;
+
+            widget.innerHTML = `
+                <div class="trivia-meta">
+                    <span class="trivia-team-badge"><strong>Category:</strong> ${q.team}</span>
+                    <span class="trivia-difficulty ${q.difficulty}"><strong>Difficulty:</strong> ${q.difficulty}</span>
+                </div>
+                ${isLoggedIn ? `<div class="trivia-dd-info"><span class="trivia-dd-stake">&#129689; ${ddAtStake} DD at stake</span></div>` : ''}
+                <p class="trivia-question-text">${q.question}</p>
+                <div class="trivia-options">
+                    ${q.options.map((opt, i) => `
+                        <button class="trivia-option" onclick="submitTriviaAnswer('${opt.replace(/'/g, "\\'")}', this)">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        async function submitTriviaAnswer(answer, btn) {
+            if (triviaAnswered) return;
+            triviaAnswered = true;
+
+            const options = document.querySelectorAll('.trivia-option');
+            options.forEach(opt => opt.disabled = true);
+
+            try {
+                const response = await fetch('/api/trivia', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        questionId: currentTriviaQuestion._id,
+                        selectedAnswer: answer
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 401) {
+                    options.forEach(opt => {
+                        if (opt.textContent.trim() === data.correctAnswer) opt.classList.add('correct');
+                        else if (opt === btn) opt.classList.add('incorrect');
+                    });
+
+                    const widget = document.getElementById('triviaWidget');
+                    widget.innerHTML += `
+                        <div class="trivia-result ${btn.textContent.trim() === data.correctAnswer ? 'correct' : 'incorrect'}">
+                            ${btn.textContent.trim() === data.correctAnswer ? 'Correct!' : 'Incorrect - ' + (data.correctAnswer || 'Try again')}
+                        </div>
+                        <div class="trivia-login-prompt">
+                            <a href="/login.html">Login</a> to earn Diehard Dollars!
+                        </div>
+                        <div class="trivia-actions">
+                            <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Next Question</button>
+                            <a href="/trivia.html?team=LaSalle" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                options.forEach(opt => {
+                    const optText = opt.textContent.trim();
+                    if (optText === data.correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (opt === btn && !data.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+
+                const widget = document.getElementById('triviaWidget');
+                let resultHtml = '';
+                if (data.correct) {
+                    resultHtml = `<div class="trivia-result correct">Correct! +${data.coinsEarned} &#129689;</div>`;
+                    const coinBalance = document.querySelector('.coin-balance');
+                    if (coinBalance) coinBalance.textContent = Math.round(data.newBalance);
+                } else {
+                    resultHtml = `<div class="trivia-result incorrect">Incorrect! ${data.coinsLost > 0 ? '-' + data.coinsLost + ' &#129689;' : ''}</div>`;
+                    if (data.coinsLost > 0) {
+                        const coinBalance = document.querySelector('.coin-balance');
+                        if (coinBalance) coinBalance.textContent = Math.round(data.newBalance);
+                    }
+                }
+
+                widget.innerHTML += `
+                    ${resultHtml}
+                    <div class="trivia-actions">
+                        <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Next Question</button>
+                        <a href="/trivia.html?team=LaSalle" class="trivia-btn trivia-btn-secondary" style="text-align:center;text-decoration:none;">More Trivia</a>
+                    </div>
+                `;
+            } catch (error) {
+                const widget = document.getElementById('triviaWidget');
+                widget.innerHTML += `
+                    <div class="trivia-result incorrect">Error submitting answer</div>
+                    <div class="trivia-actions">
+                        <button onclick="loadTriviaQuestion()" class="trivia-btn trivia-btn-primary">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
         loadNews();
         loadScores();
         loadSchedule();
-        loadRoster();
         loadStandings();
         loadDiehardLeaderboard();
         loadSourceLeaderboard();
+        loadTriviaQuestion();
 
         // Auth check for header
         async function checkAuth() {
