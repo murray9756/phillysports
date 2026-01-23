@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Contests | Admin | PhillySports.com</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #8b0000; --dark-bg: #0a0a0a; --card-bg: #1a1a1a; --border-color: #333; --text-primary: #e8e8e8; --text-muted: #888; --success: #4caf50; --warning: #ff9800; --danger: #f44336; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+        a { color: var(--accent-color); text-decoration: none; }
+
+        .admin-header { background: var(--card-bg); padding: 1rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .admin-header h1 { font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        .admin-nav { display: flex; gap: 1rem; }
+        .admin-nav a { color: var(--text-muted); padding: 0.5rem 1rem; border-radius: 6px; transition: all 0.2s; }
+        .admin-nav a:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+        .filters { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .filter-select { padding: 0.5rem 1rem; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.9rem; cursor: pointer; }
+        .filter-select:focus { outline: none; border-color: var(--accent-color); }
+
+        .add-btn { padding: 0.75rem 1.5rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        .add-btn:hover { opacity: 0.9; }
+
+        .stats-bar { display: flex; gap: 2rem; padding: 1rem 1.5rem; background: var(--card-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+        .contests-list { display: flex; flex-direction: column; gap: 1rem; }
+
+        .contest-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.25rem; display: grid; grid-template-columns: auto 1fr auto auto; gap: 1.5rem; align-items: center; }
+        .contest-card:hover { border-color: rgba(139, 0, 0, 0.5); }
+
+        .contest-sport { font-size: 2.5rem; text-align: center; min-width: 60px; }
+        .contest-details { flex: 1; }
+        .contest-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .contest-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-muted); }
+        .contest-meta span { display: flex; align-items: center; gap: 0.35rem; }
+
+        .contest-stats { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 100px; }
+        .prize-amount { font-size: 1.25rem; font-weight: 700; color: var(--accent-color); }
+        .entry-info { font-size: 0.8rem; color: var(--text-muted); }
+
+        .contest-actions { display: flex; flex-direction: column; gap: 0.5rem; min-width: 120px; }
+        .action-btn { padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; border: none; }
+        .action-btn.primary { background: var(--accent-color); color: white; }
+        .action-btn.primary:hover { opacity: 0.9; }
+        .action-btn.secondary { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .action-btn.secondary:hover { border-color: var(--text-primary); }
+        .action-btn.danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        .action-btn.danger:hover { background: rgba(244, 67, 54, 0.1); }
+
+        .status-badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .status-badge.upcoming { background: rgba(33, 150, 243, 0.2); color: #2196f3; }
+        .status-badge.live { background: rgba(244, 67, 54, 0.2); color: #f44336; }
+        .status-badge.completed { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 16px; max-width: 550px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
+        .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { font-size: 1.1rem; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: var(--text-primary); }
+        .modal-body { padding: 1.5rem; }
+        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 1rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+        .form-group input, .form-group select { width: 100%; padding: 0.65rem 0.85rem; background: var(--dark-bg); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-primary); font-size: 0.95rem; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent-color); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+        .sport-select { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+        .sport-option { padding: 0.75rem; text-align: center; background: var(--dark-bg); border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .sport-option:hover { border-color: var(--text-muted); }
+        .sport-option.selected { border-color: var(--accent-color); background: rgba(139, 0, 0, 0.1); }
+        .sport-option .emoji { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
+        .sport-option .label { font-size: 0.8rem; font-weight: 600; }
+
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border-radius: 8px; color: white; font-weight: 500; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+
+        /* Entries Modal */
+        .entries-list { max-height: 400px; overflow-y: auto; }
+        .entry-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--dark-bg); border-radius: 6px; margin-bottom: 0.5rem; }
+        .entry-user { font-weight: 500; }
+        .entry-points { color: var(--accent-color); font-weight: 600; }
+
+        @media (max-width: 768px) {
+            .contest-card { grid-template-columns: 1fr; gap: 1rem; text-align: center; }
+            .contest-actions { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+            .form-row { grid-template-columns: 1fr; }
+            .sport-select { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>Fantasy Contests</h1>
+        <nav class="admin-nav">
+            <a href="/admin.html">Dashboard</a>
+            <a href="/fantasy.html">View Contests</a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value" id="upcomingCount">-</div>
+                <div class="stat-label">Upcoming</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="liveCount">-</div>
+                <div class="stat-label">Live</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="completedCount">-</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="totalEntries">-</div>
+                <div class="stat-label">Total Entries</div>
+            </div>
+        </div>
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="filters">
+                <select class="filter-select" id="sportFilter">
+                    <option value="">All Sports</option>
+                    <option value="NFL">NFL</option>
+                    <option value="NBA">NBA</option>
+                    <option value="MLB">MLB</option>
+                    <option value="NHL">NHL</option>
+                </select>
+                <select class="filter-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="live">Live</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <button class="add-btn" onclick="openCreateModal()">+ Create Contest</button>
+        </div>
+
+        <!-- Contests List -->
+        <div class="contests-list" id="contestsList"></div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <p>No contests found.</p>
+            <p>Click "Create Contest" to add your first fantasy contest.</p>
+        </div>
+
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading contests...</p>
+        </div>
+    </main>
+
+    <!-- Create Contest Modal -->
+    <div class="modal-overlay" id="createModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Fantasy Contest</h2>
+                <button class="modal-close" onclick="closeCreateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    <div class="form-group">
+                        <label>Sport *</label>
+                        <div class="sport-select">
+                            <div class="sport-option" data-sport="NFL" onclick="selectSport('NFL')">
+                                <span class="emoji">🏈</span>
+                                <span class="label">NFL</span>
+                            </div>
+                            <div class="sport-option" data-sport="NBA" onclick="selectSport('NBA')">
+                                <span class="emoji">🏀</span>
+                                <span class="label">NBA</span>
+                            </div>
+                            <div class="sport-option" data-sport="MLB" onclick="selectSport('MLB')">
+                                <span class="emoji">⚾</span>
+                                <span class="label">MLB</span>
+                            </div>
+                            <div class="sport-option" data-sport="NHL" onclick="selectSport('NHL')">
+                                <span class="emoji">🏒</span>
+                                <span class="label">NHL</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selectedSport" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Game Date *</label>
+                        <input type="date" id="gameDate" required>
+                        <div class="form-hint">Contest will include all games for this date</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contest Title (optional)</label>
+                        <input type="text" id="contestTitle" placeholder="Auto-generated if blank">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Entry Fee (DD)</label>
+                            <input type="number" id="entryFee" min="0" value="0" placeholder="0 for free">
+                        </div>
+                        <div class="form-group">
+                            <label>Prize Pool (DD)</label>
+                            <input type="number" id="prizePool" min="1" value="100" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="closeCreateModal()">Cancel</button>
+                <button class="action-btn primary" onclick="createContest()">Create Contest</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entries Modal -->
+    <div class="modal-overlay" id="entriesModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="entriesModalTitle">Contest Entries</h2>
+                <button class="modal-close" onclick="closeEntriesModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="entries-list" id="entriesList">
+                    <div class="loading">Loading entries...</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="closeEntriesModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const sportEmojis = { NFL: '🏈', NBA: '🏀', MLB: '⚾', NHL: '🏒' };
+        let contests = [];
+        let selectedSport = '';
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function selectSport(sport) {
+            selectedSport = sport;
+            document.getElementById('selectedSport').value = sport;
+            document.querySelectorAll('.sport-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.sport === sport);
+            });
+        }
+
+        // Load contests
+        async function loadContests() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('contestsList').innerHTML = '';
+            document.getElementById('emptyState').style.display = 'none';
+
+            try {
+                const sport = document.getElementById('sportFilter').value;
+                const status = document.getElementById('statusFilter').value;
+
+                let url = '/api/fantasy/contests?limit=50';
+                if (sport) url += `&sport=${sport}`;
+                if (status) url += `&status=${status}`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load contests');
+                }
+
+                contests = data.contests || [];
+                renderContests();
+                updateStats();
+            } catch (error) {
+                console.error('Load error:', error);
+                showToast(error.message, 'error');
+            } finally {
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        // Render contests
+        function renderContests() {
+            const list = document.getElementById('contestsList');
+
+            if (contests.length === 0) {
+                list.innerHTML = '';
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('emptyState').style.display = 'none';
+
+            list.innerHTML = contests.map(contest => {
+                const emoji = sportEmojis[contest.sport] || '🏆';
+                const gameDate = new Date(contest.gameDate);
+                const dateStr = gameDate.toLocaleDateString('en-US', {
+                    weekday: 'short', month: 'short', day: 'numeric'
+                });
+                const locksAt = new Date(contest.locksAt);
+                const locksStr = locksAt.toLocaleTimeString('en-US', {
+                    hour: 'numeric', minute: '2-digit'
+                });
+
+                return `
+                    <div class="contest-card">
+                        <div class="contest-sport">${emoji}</div>
+                        <div class="contest-details">
+                            <div class="contest-title">${contest.title}</div>
+                            <div class="contest-meta">
+                                <span>${dateStr}</span>
+                                <span>Locks: ${locksStr}</span>
+                                <span class="status-badge ${contest.status}">${contest.status}</span>
+                            </div>
+                        </div>
+                        <div class="contest-stats">
+                            <div class="prize-amount">${contest.prizePool} DD</div>
+                            <div class="entry-info">${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD Entry'}</div>
+                            <div class="entry-info">${contest.entryCount || 0} / ${contest.maxTotalEntries} entries</div>
+                        </div>
+                        <div class="contest-actions">
+                            <button class="action-btn secondary" onclick="viewEntries('${contest._id}', '${contest.title.replace(/'/g, "\\'")}')">View Entries</button>
+                            <a href="/fantasy-contest.html?id=${contest._id}" class="action-btn secondary">View Contest</a>
+                            ${contest.status === 'upcoming' ? `
+                                <button class="action-btn danger" onclick="deleteContest('${contest._id}')">Delete</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            const upcoming = contests.filter(c => c.status === 'upcoming').length;
+            const live = contests.filter(c => c.status === 'live').length;
+            const completed = contests.filter(c => c.status === 'completed').length;
+            const totalEntries = contests.reduce((sum, c) => sum + (c.entryCount || 0), 0);
+
+            document.getElementById('upcomingCount').textContent = upcoming;
+            document.getElementById('liveCount').textContent = live;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalEntries').textContent = totalEntries;
+        }
+
+        // Create contest modal
+        function openCreateModal() {
+            selectedSport = '';
+            document.getElementById('selectedSport').value = '';
+            document.querySelectorAll('.sport-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('createForm').reset();
+
+            // Default to tomorrow's date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('gameDate').value = tomorrow.toISOString().split('T')[0];
+
+            document.getElementById('createModal').classList.add('show');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('show');
+        }
+
+        // Create contest
+        async function createContest() {
+            const sport = document.getElementById('selectedSport').value;
+            const date = document.getElementById('gameDate').value;
+            const title = document.getElementById('contestTitle').value;
+            const entryFee = document.getElementById('entryFee').value;
+            const prizePool = document.getElementById('prizePool').value;
+
+            if (!sport) {
+                showToast('Please select a sport', 'error');
+                return;
+            }
+
+            if (!date) {
+                showToast('Please select a game date', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/fantasy/contests', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sport,
+                        date,
+                        title: title || undefined,
+                        entryFee: parseInt(entryFee) || 0,
+                        prizePool: parseInt(prizePool) || 100
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create contest');
+                }
+
+                showToast('Contest created!');
+                closeCreateModal();
+                loadContests();
+            } catch (error) {
+                console.error('Create error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Delete contest
+        async function deleteContest(id) {
+            if (!confirm('Delete this contest? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/api/fantasy/contests/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to delete contest');
+                }
+
+                showToast('Contest deleted');
+                loadContests();
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        // View entries modal
+        async function viewEntries(contestId, contestTitle) {
+            document.getElementById('entriesModalTitle').textContent = contestTitle + ' - Entries';
+            document.getElementById('entriesList').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            document.getElementById('entriesModal').classList.add('show');
+
+            try {
+                const response = await fetch(`/api/fantasy/contests/${contestId}/leaderboard`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load entries');
+                }
+
+                const entries = data.leaderboard || [];
+
+                if (entries.length === 0) {
+                    document.getElementById('entriesList').innerHTML = '<div class="empty-state">No entries yet</div>';
+                    return;
+                }
+
+                document.getElementById('entriesList').innerHTML = entries.map((entry, index) => `
+                    <div class="entry-item">
+                        <div>
+                            <span style="color: var(--text-muted); margin-right: 0.5rem;">#${index + 1}</span>
+                            <span class="entry-user">${entry.username || 'Anonymous'}</span>
+                        </div>
+                        <span class="entry-points">${entry.totalPoints || 0} pts</span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Load entries error:', error);
+                document.getElementById('entriesList').innerHTML = '<div class="empty-state">Failed to load entries</div>';
+            }
+        }
+
+        function closeEntriesModal() {
+            document.getElementById('entriesModal').classList.remove('show');
+        }
+
+        // Filter handlers
+        document.getElementById('sportFilter').addEventListener('change', loadContests);
+        document.getElementById('statusFilter').addEventListener('change', loadContests);
+
+        // Close modals on outside click
+        document.getElementById('createModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('createModal')) closeCreateModal();
+        });
+        document.getElementById('entriesModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('entriesModal')) closeEntriesModal();
+        });
+
+        // Initialize
+        loadContests();
+    </script>
+</body>
+</html>
