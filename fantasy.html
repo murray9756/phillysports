@@ -516,7 +516,7 @@
                                 </div>
                             </div>
                             <div class="contest-details">
-                                <div class="prize-pool">${contest.prizePool} DD</div>
+                                <div class="prize-pool">Pot: ${(contest.entryFee || 0) * (contest.entryCount || 0)} DD</div>
                                 <div class="entry-fee">${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD Entry'}</div>
                             </div>
                             <div class="contest-action">
@@ -565,7 +565,7 @@
                                 </div>
                             </div>
                             <div class="contest-details">
-                                <div class="prize-pool">${contest.prizePool} DD</div>
+                                <div class="prize-pool">Pot: ${(contest.entryFee || 0) * (contest.entryCount || 0)} DD</div>
                             </div>
                         </a>
                     `;

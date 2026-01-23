@@ -488,11 +488,12 @@
 
                 const locksAt = new Date(contest.locksAt);
                 const locksAtEST = locksAt.toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' });
+                const currentPot = (contest.entryFee || 0) * (contest.entryCount || 0);
                 document.getElementById('contestMeta').innerHTML = `
-                    <span>Prize: ${contest.prizePool} DD</span>
+                    <span>Entries: ${contest.entryCount || 0}</span>
+                    <span>Pot: ${currentPot} DD</span>
                     <span>Entry: ${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD'}</span>
                     <span>Locks: ${locksAtEST} ET</span>
-                    <span>Status: ${contest.status}</span>
                 `;
 
                 // Build lineup slots
