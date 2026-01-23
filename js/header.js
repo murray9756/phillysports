@@ -19,11 +19,17 @@
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                        <span class="theme-label">Dark Mode</span>
-                    </button>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
+                            <span class="theme-icon-light">&#9790;</span>
+                            <span class="theme-icon-dark">&#9728;</span>
+                            <span class="theme-label">Dark Mode</span>
+                        </button>
+                        <button type="button" class="feedback-link" onclick="window.openFeedbackModal && window.openFeedbackModal()" title="Report an Issue">
+                            <span>&#9888;</span>
+                            <span class="feedback-label">Report Issue</span>
+                        </button>
+                    </div>
                 </div>
                 <!-- Center Column: Logo -->
                 <a href="/" class="header-logo">
@@ -911,6 +917,41 @@
             letter-spacing: 0.5px;
         }
 
+        /* ----- Feedback Link ----- */
+        .feedback-link {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
+            box-shadow: inset 0 0 0 2px #8B1A28;
+            padding: 0.4rem 0.75rem;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: #1A2744;
+            font-family: Georgia, serif;
+        }
+
+        .feedback-link:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
+            transform: translateY(-1px);
+        }
+
+        .feedback-link .feedback-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        [data-theme="dark"] .feedback-link {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
+            border: 3px solid #1A2744 !important;
+            color: #1A2744 !important;
+        }
+
         /* ----- Main Navigation ----- */
         .main-nav {
             background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
@@ -1402,6 +1443,7 @@
             .header-search { display: none; }
             .header-auth { display: none; }
             .theme-toggle { display: none; }
+            .feedback-link { display: none; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
             .header-logo {
