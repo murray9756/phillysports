@@ -12,6 +12,7 @@ import {
     getChallengeHistory,
     WAGER_TIERS
 } from '../../lib/trivia/challengeEngine.js';
+import { sendTriviaNotification, PUSHER_EVENTS } from '../../lib/pusher.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -65,7 +66,13 @@ export default async function handler(req, res) {
             try {
                 const challenge = await createChallenge(userId, targetUserId, wagerAmount, 'direct');
 
-                // TODO: Send Pusher notification to challenged user
+                // Send Pusher notification to challenged user
+                await sendTriviaNotification(targetUserId, PUSHER_EVENTS.TRIVIA_CHALLENGE_RECEIVED, {
+                    challengeId: challenge._id.toString(),
+                    challenger: challenge.challenger,
+                    wagerAmount,
+                    message: `${challenge.challenger.username} challenged you to trivia for ${wagerAmount} DD!`
+                });
 
                 res.status(201).json({
                     success: true,

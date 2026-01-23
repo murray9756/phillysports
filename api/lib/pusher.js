@@ -95,5 +95,25 @@ export const PUSHER_EVENTS = {
 
   // Private events (per user)
   HOLE_CARDS: 'hole-cards',
-  YOUR_TURN: 'your-turn'
+  YOUR_TURN: 'your-turn',
+
+  // Trivia challenge events
+  TRIVIA_MATCHED: 'trivia-matched',
+  TRIVIA_CHALLENGE_RECEIVED: 'trivia-challenge-received',
+  TRIVIA_YOUR_TURN: 'trivia-your-turn',
+  TRIVIA_MATCH_COMPLETE: 'trivia-match-complete'
 };
+
+/**
+ * Send trivia notification to a specific user
+ */
+export async function sendTriviaNotification(userId, eventType, data) {
+  const pusher = getPusher();
+  if (!pusher) return;
+
+  try {
+    await pusher.trigger(`private-user-${userId}`, eventType, data);
+  } catch (error) {
+    console.error('Pusher trivia notification error:', error);
+  }
+}

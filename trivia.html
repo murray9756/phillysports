@@ -114,6 +114,8 @@
         .team-btn[data-team="Phillies"].active { background: var(--phillies-red); }
         .team-btn[data-team="76ers"].active { background: var(--sixers-blue); }
         .team-btn[data-team="Flyers"].active { background: var(--flyers-orange); }
+        .team-btn[data-team="College"].active { background: #1e3a5f; }
+        .team-btn[data-team="General"].active { background: #6b5b95; }
         .main-wrapper { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
         .main-container { max-width: 700px; margin: 0 auto; }
         .stats-bar { display: flex; justify-content: center; gap: 2rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
@@ -126,6 +128,8 @@
         .question-team.Phillies { background: var(--phillies-red); }
         .question-team.sixers, .question-team[data-team="76ers"] { background: var(--sixers-blue); }
         .question-team.Flyers { background: var(--flyers-orange); }
+        .question-team.College { background: #1e3a5f; }
+        .question-team.General { background: #6b5b95; }
         .question-difficulty { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; text-transform: uppercase; }
         .question-difficulty.easy { background: #e8f5e9; color: #2e7d32; }
         .question-difficulty.medium { background: #fff3e0; color: #e65100; }
@@ -159,6 +163,10 @@
         .toast.error { background: #f44336; }
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         @media (max-width: 768px) {
             .page-hero h1 { font-size: 1.75rem; }
             .question-text { font-size: 1.1rem; }
@@ -188,6 +196,8 @@
         <button class="team-btn" data-team="Phillies">Phillies</button>
         <button class="team-btn" data-team="76ers">76ers</button>
         <button class="team-btn" data-team="Flyers">Flyers</button>
+        <button class="team-btn" data-team="College">College</button>
+        <button class="team-btn" data-team="General">General</button>
     </div>
 
     <div class="main-wrapper">
@@ -211,8 +221,80 @@
                 </div>
             </div>
 
-            <div id="questionContainer">
-                <div class="empty-state">Loading question...</div>
+            <!-- Mode Selector -->
+            <div class="mode-selector" style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                <button class="mode-btn active" data-mode="solo" style="flex: 1; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--accent-color); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    Solo Trivia
+                    <span style="display: block; font-size: 0.75rem; font-weight: 400; opacity: 0.9;">Earn Diehard Dollars</span>
+                </button>
+                <button class="mode-btn" data-mode="challenge" style="flex: 1; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    Challenge Mode
+                    <span style="display: block; font-size: 0.75rem; font-weight: 400; color: var(--text-muted);">Battle Head-to-Head</span>
+                </button>
+            </div>
+
+            <!-- Solo Trivia Content -->
+            <div id="soloContent">
+                <div id="questionContainer">
+                    <div class="empty-state">Loading question...</div>
+                </div>
+            </div>
+
+            <!-- Challenge Mode Content -->
+            <div id="challengeContent" style="display: none;">
+                <div class="challenge-hub" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-color);">
+                    <div style="text-align: center; margin-bottom: 1.5rem;">
+                        <h3 style="margin-bottom: 0.5rem;">Head-to-Head Trivia Battle</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Challenge friends or find a random opponent. First to collect all 6 pie pieces wins!</p>
+                    </div>
+
+                    <!-- Wager Selection -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">Select Wager</label>
+                        <div class="wager-selector" style="display: flex; gap: 0.5rem;">
+                            <button class="wager-btn" data-wager="10" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); cursor: pointer; font-weight: 600;">10 DD</button>
+                            <button class="wager-btn selected" data-wager="25" style="flex: 1; padding: 0.75rem; border: 2px solid var(--accent-color); border-radius: 8px; background: var(--accent-color); color: white; cursor: pointer; font-weight: 600;">25 DD</button>
+                            <button class="wager-btn" data-wager="50" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); cursor: pointer; font-weight: 600;">50 DD</button>
+                            <button class="wager-btn" data-wager="100" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); cursor: pointer; font-weight: 600;">100 DD</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                        <button id="randomMatchBtn" class="next-btn" style="margin: 0;">Random Match</button>
+                        <button id="challengeFriendBtn" class="next-btn" style="margin: 0; background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--accent-color);">Challenge Friend</button>
+                    </div>
+
+                    <!-- Matchmaking Status -->
+                    <div id="matchmakingStatus" style="display: none; text-align: center; padding: 2rem;">
+                        <div style="width: 40px; height: 40px; border: 3px solid var(--border-color); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                        <p style="font-weight: 600;">Finding opponent...</p>
+                        <button id="cancelMatchmaking" style="margin-top: 1rem; padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); cursor: pointer;">Cancel</button>
+                    </div>
+
+                    <!-- Pending Challenges -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                            Incoming Challenges
+                            <span id="pendingBadge" style="background: var(--accent-color); color: white; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.75rem;">0</span>
+                        </h4>
+                        <div id="pendingChallenges" style="color: var(--text-muted); font-size: 0.9rem;">No pending challenges</div>
+                    </div>
+
+                    <!-- Active Matches -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                            Active Matches
+                            <span id="activeBadge" style="background: var(--accent-color); color: white; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.75rem;">0</span>
+                        </h4>
+                        <div id="activeChallenges" style="color: var(--text-muted); font-size: 0.9rem;">No active matches</div>
+                    </div>
+
+                    <!-- View Full Hub Link -->
+                    <div style="text-align: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <a href="/trivia-challenge.html" style="color: var(--accent-color); font-weight: 600;">View Full Challenge Hub &rarr;</a>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -488,6 +570,248 @@
                 loadQuestion();
             });
         });
+
+        // ========== CHALLENGE MODE ==========
+        let currentMode = 'solo';
+        let selectedWager = 25;
+        let matchmakingPollInterval = null;
+
+        // Mode switching
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                if (mode === currentMode) return;
+
+                currentMode = mode;
+                document.querySelectorAll('.mode-btn').forEach(b => {
+                    b.classList.remove('active');
+                    if (b.dataset.mode === 'solo') {
+                        b.style.background = mode === 'solo' ? 'var(--accent-color)' : 'var(--card-bg)';
+                        b.style.color = mode === 'solo' ? 'white' : 'var(--text-primary)';
+                        b.style.borderColor = mode === 'solo' ? 'var(--accent-color)' : 'var(--border-color)';
+                    } else {
+                        b.style.background = mode === 'challenge' ? 'var(--accent-color)' : 'var(--card-bg)';
+                        b.style.color = mode === 'challenge' ? 'white' : 'var(--text-primary)';
+                        b.style.borderColor = mode === 'challenge' ? 'var(--accent-color)' : 'var(--border-color)';
+                    }
+                });
+                btn.classList.add('active');
+
+                document.getElementById('soloContent').style.display = mode === 'solo' ? 'block' : 'none';
+                document.getElementById('challengeContent').style.display = mode === 'challenge' ? 'block' : 'none';
+
+                // Hide team filter in challenge mode
+                document.querySelector('.team-filter').style.display = mode === 'solo' ? 'flex' : 'none';
+
+                if (mode === 'challenge') {
+                    loadChallengeData();
+                }
+            });
+        });
+
+        // Wager selection
+        document.querySelectorAll('.wager-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedWager = parseInt(btn.dataset.wager);
+                document.querySelectorAll('.wager-btn').forEach(b => {
+                    b.classList.remove('selected');
+                    b.style.background = 'var(--card-bg)';
+                    b.style.color = 'var(--text-primary)';
+                    b.style.borderColor = 'var(--border-color)';
+                });
+                btn.classList.add('selected');
+                btn.style.background = 'var(--accent-color)';
+                btn.style.color = 'white';
+                btn.style.borderColor = 'var(--accent-color)';
+            });
+        });
+
+        // Random Match
+        document.getElementById('randomMatchBtn').addEventListener('click', async () => {
+            if (!currentUser) {
+                showToast('Please login to play challenge mode', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/trivia/matchmaking/join', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ wagerAmount: selectedWager })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to join matchmaking');
+                }
+
+                if (data.matched) {
+                    // Immediately matched - go to game
+                    window.location.href = `/trivia-match.html?id=${data.challengeId}`;
+                } else {
+                    // Waiting for opponent
+                    showMatchmakingStatus();
+                    startMatchmakingPoll();
+                }
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Cancel matchmaking
+        document.getElementById('cancelMatchmaking').addEventListener('click', async () => {
+            try {
+                await fetch('/api/trivia/matchmaking/leave', { method: 'POST' });
+                hideMatchmakingStatus();
+                stopMatchmakingPoll();
+                showToast('Left matchmaking queue', 'info');
+            } catch (error) {
+                console.error('Failed to leave queue:', error);
+            }
+        });
+
+        // Challenge Friend
+        document.getElementById('challengeFriendBtn').addEventListener('click', () => {
+            if (!currentUser) {
+                showToast('Please login to challenge friends', 'error');
+                return;
+            }
+            // Redirect to full challenge hub for friend search
+            window.location.href = `/trivia-challenge.html?wager=${selectedWager}`;
+        });
+
+        function showMatchmakingStatus() {
+            document.getElementById('matchmakingStatus').style.display = 'block';
+            document.querySelector('.wager-selector').parentElement.style.display = 'none';
+            document.querySelector('#randomMatchBtn').parentElement.style.display = 'none';
+        }
+
+        function hideMatchmakingStatus() {
+            document.getElementById('matchmakingStatus').style.display = 'none';
+            document.querySelector('.wager-selector').parentElement.style.display = 'block';
+            document.querySelector('#randomMatchBtn').parentElement.style.display = 'grid';
+        }
+
+        function startMatchmakingPoll() {
+            matchmakingPollInterval = setInterval(async () => {
+                try {
+                    const response = await fetch('/api/trivia/matchmaking/status');
+                    const data = await response.json();
+
+                    if (data.matched) {
+                        stopMatchmakingPoll();
+                        window.location.href = `/trivia-match.html?id=${data.challengeId}`;
+                    } else if (!data.inQueue) {
+                        stopMatchmakingPoll();
+                        hideMatchmakingStatus();
+                    }
+                } catch (error) {
+                    console.error('Matchmaking poll error:', error);
+                }
+            }, 3000);
+        }
+
+        function stopMatchmakingPoll() {
+            if (matchmakingPollInterval) {
+                clearInterval(matchmakingPollInterval);
+                matchmakingPollInterval = null;
+            }
+        }
+
+        async function loadChallengeData() {
+            if (!currentUser) return;
+
+            try {
+                // Load pending challenges
+                const pendingRes = await fetch('/api/trivia/challenge/pending');
+                const pendingData = await pendingRes.json();
+
+                const pendingContainer = document.getElementById('pendingChallenges');
+                const pendingBadge = document.getElementById('pendingBadge');
+
+                if (pendingData.challenges && pendingData.challenges.length > 0) {
+                    pendingBadge.textContent = pendingData.challenges.length;
+                    pendingContainer.innerHTML = pendingData.challenges.map(c => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--dark-bg); border-radius: 8px; margin-bottom: 0.5rem;">
+                            <div>
+                                <strong>${c.challenger.username}</strong> challenges you
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">(${c.wagerAmount} DD)</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button onclick="acceptChallenge('${c._id}')" style="padding: 0.4rem 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Accept</button>
+                                <button onclick="declineChallenge('${c._id}')" style="padding: 0.4rem 0.75rem; background: transparent; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-size: 0.85rem;">Decline</button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    pendingBadge.textContent = '0';
+                    pendingContainer.innerHTML = '<span style="color: var(--text-muted);">No pending challenges</span>';
+                }
+
+                // Load active challenges
+                const activeRes = await fetch('/api/trivia/challenge/active');
+                const activeData = await activeRes.json();
+
+                const activeContainer = document.getElementById('activeChallenges');
+                const activeBadge = document.getElementById('activeBadge');
+
+                if (activeData.challenges && activeData.challenges.length > 0) {
+                    activeBadge.textContent = activeData.challenges.length;
+                    activeContainer.innerHTML = activeData.challenges.map(c => {
+                        const isMyTurn = c.currentTurn === currentUser.id;
+                        const opponent = c.challenger.userId === currentUser.id ? c.challenged : c.challenger;
+                        return `
+                            <div onclick="window.location.href='/trivia-match.html?id=${c._id}'" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--dark-bg); border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                                <div>
+                                    <strong>vs ${opponent.username}</strong>
+                                    <span style="color: var(--text-muted); font-size: 0.85rem;">(${c.wagerAmount} DD)</span>
+                                </div>
+                                <span style="padding: 0.25rem 0.5rem; background: ${isMyTurn ? 'var(--accent-color)' : 'var(--border-color)'}; color: ${isMyTurn ? 'white' : 'var(--text-muted)'}; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                                    ${isMyTurn ? 'Your Turn' : 'Their Turn'}
+                                </span>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    activeBadge.textContent = '0';
+                    activeContainer.innerHTML = '<span style="color: var(--text-muted);">No active matches</span>';
+                }
+            } catch (error) {
+                console.error('Failed to load challenge data:', error);
+            }
+        }
+
+        async function acceptChallenge(challengeId) {
+            try {
+                const response = await fetch(`/api/trivia/challenge/${challengeId}/accept`, { method: 'POST' });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to accept challenge');
+                }
+
+                window.location.href = `/trivia-match.html?id=${challengeId}`;
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function declineChallenge(challengeId) {
+            try {
+                const response = await fetch(`/api/trivia/challenge/${challengeId}/decline`, { method: 'POST' });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to decline challenge');
+                }
+
+                showToast('Challenge declined', 'info');
+                loadChallengeData();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
 
         // Initialize
         checkAuth().then(loadQuestion);

@@ -1630,11 +1630,191 @@
                         window.location.reload();
                     });
                 }
+
+                // Initialize Pusher for real-time notifications
+                initPusher(data.user.id || data.user._id);
             }
         } catch (error) {
             // Not logged in, keep default header
         }
     }
+
+    // ========== PUSHER REAL-TIME NOTIFICATIONS ==========
+    let pusherInstance = null;
+    let userChannel = null;
+
+    // Load Pusher JS library dynamically
+    function loadPusherScript() {
+        return new Promise((resolve, reject) => {
+            if (window.Pusher) {
+                resolve();
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = 'https://js.pusher.com/8.3/pusher.min.js';
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // Initialize Pusher for real-time notifications
+    async function initPusher(userId) {
+        try {
+            // Load Pusher library
+            await loadPusherScript();
+
+            // Get Pusher config from API
+            const configRes = await fetch('/api/pusher/config');
+            const config = await configRes.json();
+
+            if (!config.key) {
+                console.log('Pusher not configured');
+                return;
+            }
+
+            // Initialize Pusher
+            pusherInstance = new window.Pusher(config.key, {
+                cluster: config.cluster,
+                authEndpoint: '/api/pusher/auth',
+                auth: {
+                    headers: {}
+                }
+            });
+
+            // Subscribe to private user channel
+            userChannel = pusherInstance.subscribe(`private-user-${userId}`);
+
+            // Listen for trivia events
+            userChannel.bind('trivia-matched', (data) => {
+                showNotification({
+                    title: 'Match Found!',
+                    message: data.message || `You've been matched for trivia!`,
+                    type: 'success',
+                    action: {
+                        text: 'Join Game',
+                        url: `/trivia-match.html?id=${data.challengeId}`
+                    }
+                });
+            });
+
+            userChannel.bind('trivia-challenge-received', (data) => {
+                showNotification({
+                    title: 'New Challenge!',
+                    message: data.message || `${data.challenger?.username} challenged you!`,
+                    type: 'info',
+                    action: {
+                        text: 'View Challenge',
+                        url: '/trivia.html'
+                    }
+                });
+            });
+
+            userChannel.bind('trivia-your-turn', (data) => {
+                showNotification({
+                    title: 'Your Turn!',
+                    message: data.message || `It's your turn in trivia!`,
+                    type: 'info',
+                    action: {
+                        text: 'Play Now',
+                        url: `/trivia-match.html?id=${data.challengeId}`
+                    }
+                });
+            });
+
+            userChannel.bind('trivia-match-complete', (data) => {
+                const isWinner = data.winner?.userId === userId;
+                showNotification({
+                    title: isWinner ? 'You Won!' : 'Match Complete',
+                    message: data.message || (isWinner ? 'Congratulations!' : 'Better luck next time!'),
+                    type: isWinner ? 'success' : 'info',
+                    action: {
+                        text: 'View Results',
+                        url: `/trivia-match.html?id=${data.challengeId}`
+                    }
+                });
+            });
+
+            console.log('Pusher initialized for user:', userId);
+        } catch (error) {
+            console.error('Pusher initialization error:', error);
+        }
+    }
+
+    // Show notification banner
+    function showNotification({ title, message, type = 'info', action, duration = 8000 }) {
+        // Create notification container if it doesn't exist
+        let container = document.getElementById('site-notifications');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'site-notifications';
+            container.style.cssText = 'position: fixed; top: 80px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; max-width: 350px;';
+            document.body.appendChild(container);
+        }
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `site-notification site-notification-${type}`;
+        notification.style.cssText = `
+            background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#1A2744'};
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        `;
+
+        notification.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="font-size: 0.95rem;">${title}</strong>
+                <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; opacity: 0.7;">&times;</button>
+            </div>
+            <p style="margin: 0; font-size: 0.85rem; opacity: 0.9;">${message}</p>
+            ${action ? `<a href="${action.url}" style="background: rgba(255,255,255,0.2); color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none; text-align: center; font-weight: 600; font-size: 0.85rem; margin-top: 0.25rem;">${action.text}</a>` : ''}
+        `;
+
+        // Add animation keyframes if not already added
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        container.appendChild(notification);
+
+        // Play notification sound (optional)
+        try {
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleC4EWI6+yeB5U0A8e6jH4o92QkNMg6TF54d8S1dgmM3xvZJDKDV1uP/ZqXNNPUBnqNnwn3FWSFV7r9zqmmhDOkhkqeLnnG9OO0hTg7ji6aBwQi9AZpvN7sGdWzEhQHKjxfLQoFoxJk2Cp83yupo8Gip0vP/tvYxLMEZcj8Hx2qlBGRpPi7Tr7a5hNDQ/Xo2958WsVCIZMmaTxO7frk8fEj9wqNnowqBQHxM8cpnK88WnPBQNPXGk1PLTsEQHCUp+sc3086c4BQBBc6bT8+S0OgAAQ3On0fPlszcAAEN0p9Hz5LM3AABDdKfR8+SzNwAAQ3Sn0fPkszcAAEN0p9Hz5LM3AAA=');
+            audio.volume = 0.3;
+            audio.play().catch(() => {});
+        } catch (e) {}
+
+        // Auto-remove after duration
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+    }
+
+    // Cleanup Pusher on page unload
+    window.addEventListener('beforeunload', () => {
+        if (pusherInstance) {
+            pusherInstance.disconnect();
+        }
+    });
 
     // Highlight current page in navigation
     function highlightCurrentPage() {
@@ -1688,6 +1868,8 @@
     window.PhillySportsHeader = {
         checkAuth,
         initThemeToggle,
-        initMobileMenu
+        initMobileMenu,
+        showNotification,
+        initPusher
     };
 })();

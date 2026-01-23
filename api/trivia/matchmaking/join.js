@@ -6,6 +6,7 @@ import { authenticate } from '../../lib/auth.js';
 import { getCollection } from '../../lib/mongodb.js';
 import { createChallenge, WAGER_TIERS } from '../../lib/trivia/challengeEngine.js';
 import { deductCoins } from '../../lib/coins.js';
+import { sendTriviaNotification, PUSHER_EVENTS } from '../../lib/pusher.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -100,7 +101,13 @@ export default async function handler(req, res) {
                 }
             );
 
-            // TODO: Send Pusher notifications to both players
+            // Send Pusher notification to the opponent who was waiting
+            await sendTriviaNotification(opponent.userId.toString(), PUSHER_EVENTS.TRIVIA_MATCHED, {
+                challengeId: challenge._id.toString(),
+                opponent: { username: user.username },
+                wagerAmount,
+                message: `Matched with ${user.username}!`
+            });
 
             res.status(200).json({
                 matched: true,

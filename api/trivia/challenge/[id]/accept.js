@@ -3,6 +3,9 @@
 
 import { authenticate } from '../../../lib/auth.js';
 import { acceptChallenge, getChallengeState } from '../../../lib/trivia/challengeEngine.js';
+import { sendTriviaNotification, PUSHER_EVENTS } from '../../../lib/pusher.js';
+import { getCollection } from '../../../lib/mongodb.js';
+import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,12 +27,19 @@ export default async function handler(req, res) {
         }
 
         const { id } = req.query;
+        const users = await getCollection('users');
+        const user = await users.findOne({ _id: new ObjectId(decoded.userId) });
 
         await acceptChallenge(id, decoded.userId);
 
-        // TODO: Send Pusher notification to challenger
-
         const state = await getChallengeState(id, decoded.userId);
+
+        // Notify the challenger that their challenge was accepted
+        await sendTriviaNotification(state.challenger.userId, PUSHER_EVENTS.TRIVIA_YOUR_TURN, {
+            challengeId: id,
+            opponent: { username: user.username },
+            message: `${user.username} accepted your challenge! It's your turn.`
+        });
 
         res.status(200).json({
             success: true,
