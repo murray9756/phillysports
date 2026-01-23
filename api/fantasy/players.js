@@ -1,5 +1,5 @@
 // Fantasy Players API
-// GET: Returns players for a given sport and date for lineup building
+// GET: Returns real players from ESPN API for lineup building
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,9 +21,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Generate sample players based on sport
-        // In production, this would fetch from a real fantasy sports data provider
-        const players = generateSamplePlayers(sport.toUpperCase());
+        const players = await fetchPlayersFromESPN(sport.toUpperCase());
 
         return res.status(200).json({
             success: true,
@@ -37,127 +35,264 @@ export default async function handler(req, res) {
     }
 }
 
-function generateSamplePlayers(sport) {
-    const sportConfigs = {
-        NFL: {
-            positions: ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'],
-            teams: [
-                { abbr: 'PHI', name: 'Eagles', opponent: 'vs DAL' },
-                { abbr: 'DAL', name: 'Cowboys', opponent: '@ PHI' },
-                { abbr: 'NYG', name: 'Giants', opponent: 'vs WAS' },
-                { abbr: 'WAS', name: 'Commanders', opponent: '@ NYG' }
-            ],
-            players: [
-                { name: 'Jalen Hurts', position: 'QB', team: 'PHI', salary: 8500 },
-                { name: 'Saquon Barkley', position: 'RB', team: 'PHI', salary: 9000 },
-                { name: 'AJ Brown', position: 'WR', team: 'PHI', salary: 7800 },
-                { name: 'DeVonta Smith', position: 'WR', team: 'PHI', salary: 7200 },
-                { name: 'Dallas Goedert', position: 'TE', team: 'PHI', salary: 5500 },
-                { name: 'Jake Elliott', position: 'K', team: 'PHI', salary: 4500 },
-                { name: 'Eagles D/ST', position: 'DEF', team: 'PHI', salary: 4000 },
-                { name: 'Dak Prescott', position: 'QB', team: 'DAL', salary: 7500 },
-                { name: 'CeeDee Lamb', position: 'WR', team: 'DAL', salary: 8200 },
-                { name: 'Rico Dowdle', position: 'RB', team: 'DAL', salary: 5800 },
-                { name: 'Jake Ferguson', position: 'TE', team: 'DAL', salary: 4800 },
-                { name: 'Daniel Jones', position: 'QB', team: 'NYG', salary: 5500 },
-                { name: 'Malik Nabers', position: 'WR', team: 'NYG', salary: 6500 },
-                { name: 'Devin Singletary', position: 'RB', team: 'NYG', salary: 5200 },
-                { name: 'Jayden Daniels', position: 'QB', team: 'WAS', salary: 7000 },
-                { name: 'Terry McLaurin', position: 'WR', team: 'WAS', salary: 6800 },
-                { name: 'Brian Robinson', position: 'RB', team: 'WAS', salary: 5500 }
-            ]
-        },
-        NBA: {
-            positions: ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL'],
-            teams: [
-                { abbr: 'PHI', name: '76ers', opponent: 'vs BOS' },
-                { abbr: 'BOS', name: 'Celtics', opponent: '@ PHI' },
-                { abbr: 'NYK', name: 'Knicks', opponent: 'vs BKN' },
-                { abbr: 'BKN', name: 'Nets', opponent: '@ NYK' }
-            ],
-            players: [
-                { name: 'Joel Embiid', position: 'C', team: 'PHI', salary: 10500 },
-                { name: 'Tyrese Maxey', position: 'PG', team: 'PHI', salary: 8200 },
-                { name: 'Paul George', position: 'SF', team: 'PHI', salary: 7500 },
-                { name: 'Caleb Martin', position: 'SF', team: 'PHI', salary: 4500 },
-                { name: 'Kelly Oubre Jr', position: 'SG', team: 'PHI', salary: 5200 },
-                { name: 'Jayson Tatum', position: 'SF', team: 'BOS', salary: 9800 },
-                { name: 'Jaylen Brown', position: 'SG', team: 'BOS', salary: 8000 },
-                { name: 'Derrick White', position: 'PG', team: 'BOS', salary: 6200 },
-                { name: 'Jalen Brunson', position: 'PG', team: 'NYK', salary: 8500 },
-                { name: 'Karl-Anthony Towns', position: 'C', team: 'NYK', salary: 8800 },
-                { name: 'OG Anunoby', position: 'SF', team: 'NYK', salary: 6000 },
-                { name: 'Cam Thomas', position: 'SG', team: 'BKN', salary: 7200 },
-                { name: 'Nic Claxton', position: 'C', team: 'BKN', salary: 5500 }
-            ]
-        },
-        MLB: {
-            positions: ['P', 'C', '1B', '2B', '3B', 'SS', 'OF'],
-            teams: [
-                { abbr: 'PHI', name: 'Phillies', opponent: 'vs NYM' },
-                { abbr: 'NYM', name: 'Mets', opponent: '@ PHI' },
-                { abbr: 'ATL', name: 'Braves', opponent: 'vs MIA' },
-                { abbr: 'MIA', name: 'Marlins', opponent: '@ ATL' }
-            ],
-            players: [
-                { name: 'Bryce Harper', position: '1B', team: 'PHI', salary: 5800 },
-                { name: 'Kyle Schwarber', position: 'OF', team: 'PHI', salary: 5200 },
-                { name: 'Trea Turner', position: 'SS', team: 'PHI', salary: 5500 },
-                { name: 'JT Realmuto', position: 'C', team: 'PHI', salary: 4800 },
-                { name: 'Alec Bohm', position: '3B', team: 'PHI', salary: 4500 },
-                { name: 'Nick Castellanos', position: 'OF', team: 'PHI', salary: 4200 },
-                { name: 'Zack Wheeler', position: 'P', team: 'PHI', salary: 9500 },
-                { name: 'Aaron Nola', position: 'P', team: 'PHI', salary: 8200 },
-                { name: 'Francisco Lindor', position: 'SS', team: 'NYM', salary: 5600 },
-                { name: 'Pete Alonso', position: '1B', team: 'NYM', salary: 5000 },
-                { name: 'Mark Vientos', position: '3B', team: 'NYM', salary: 4800 },
-                { name: 'Ronald Acuna Jr', position: 'OF', team: 'ATL', salary: 6000 },
-                { name: 'Ozzie Albies', position: '2B', team: 'ATL', salary: 4500 },
-                { name: 'Matt Olson', position: '1B', team: 'ATL', salary: 4800 }
-            ]
-        },
-        NHL: {
-            positions: ['C', 'W', 'D', 'G', 'UTIL'],
-            teams: [
-                { abbr: 'PHI', name: 'Flyers', opponent: 'vs PIT' },
-                { abbr: 'PIT', name: 'Penguins', opponent: '@ PHI' },
-                { abbr: 'NYR', name: 'Rangers', opponent: 'vs NJD' },
-                { abbr: 'NJD', name: 'Devils', opponent: '@ NYR' }
-            ],
-            players: [
-                { name: 'Travis Konecny', position: 'W', team: 'PHI', salary: 7200 },
-                { name: 'Matvei Michkov', position: 'W', team: 'PHI', salary: 6800 },
-                { name: 'Owen Tippett', position: 'W', team: 'PHI', salary: 5500 },
-                { name: 'Morgan Frost', position: 'C', team: 'PHI', salary: 5000 },
-                { name: 'Sean Couturier', position: 'C', team: 'PHI', salary: 4800 },
-                { name: 'Travis Sanheim', position: 'D', team: 'PHI', salary: 4500 },
-                { name: 'Samuel Ersson', position: 'G', team: 'PHI', salary: 7500 },
-                { name: 'Sidney Crosby', position: 'C', team: 'PIT', salary: 8000 },
-                { name: 'Evgeni Malkin', position: 'C', team: 'PIT', salary: 6500 },
-                { name: 'Bryan Rust', position: 'W', team: 'PIT', salary: 5800 },
-                { name: 'Artemi Panarin', position: 'W', team: 'NYR', salary: 8200 },
-                { name: 'Adam Fox', position: 'D', team: 'NYR', salary: 7000 },
-                { name: 'Jack Hughes', position: 'C', team: 'NJD', salary: 8500 },
-                { name: 'Jesper Bratt', position: 'W', team: 'NJD', salary: 7200 }
-            ]
-        }
+// Fetch real players from ESPN API
+async function fetchPlayersFromESPN(sport) {
+    const sportConfig = {
+        NFL: { league: 'nfl', limit: 300 },
+        NBA: { league: 'nba', limit: 200 },
+        MLB: { league: 'mlb', limit: 300 },
+        NHL: { league: 'nhl', limit: 200 }
     };
 
-    const config = sportConfigs[sport] || sportConfigs.NFL;
+    const config = sportConfig[sport];
+    if (!config) {
+        throw new Error(`Unsupported sport: ${sport}`);
+    }
 
-    // Add IDs, team abbrs, and opponent info
-    return config.players.map((player, index) => {
-        const teamInfo = config.teams.find(t => t.abbr === player.team);
-        return {
-            id: `${sport}-${player.team}-${index}`,
-            name: player.name,
-            position: player.position,
-            team: teamInfo?.name || player.team,
-            teamAbbreviation: player.team,
-            salary: player.salary,
-            opponent: teamInfo?.opponent || 'TBD',
-            projectedPoints: Math.round((player.salary / 1000) * (Math.random() * 0.4 + 0.8) * 10) / 10,
-            imageUrl: null
-        };
-    });
+    // ESPN Athletes API
+    const url = `https://site.api.espn.com/apis/site/v2/sports/${getESPNSportPath(sport)}/athletes?limit=${config.limit}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        // Fallback to team rosters approach
+        return await fetchPlayersFromTeamRosters(sport);
+    }
+
+    const data = await response.json();
+
+    if (!data.athletes || data.athletes.length === 0) {
+        return await fetchPlayersFromTeamRosters(sport);
+    }
+
+    return data.athletes.map((athlete, index) => ({
+        id: athlete.id,
+        name: athlete.fullName || athlete.displayName,
+        position: athlete.position?.abbreviation || 'UTIL',
+        team: athlete.team?.displayName || 'Free Agent',
+        teamAbbreviation: athlete.team?.abbreviation || 'FA',
+        salary: calculateSalary(sport, athlete, index),
+        opponent: 'TBD',
+        projectedPoints: 0,
+        imageUrl: athlete.headshot?.href || null
+    }));
+}
+
+// Fetch players by getting team rosters
+async function fetchPlayersFromTeamRosters(sport) {
+    const teams = getTeamsForSport(sport);
+    const allPlayers = [];
+
+    for (const team of teams) {
+        try {
+            const url = `https://site.api.espn.com/apis/site/v2/sports/${getESPNSportPath(sport)}/teams/${team.id}/roster`;
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const data = await response.json();
+                const athletes = data.athletes || [];
+
+                // Handle different roster structures
+                let playerList = [];
+                if (Array.isArray(athletes)) {
+                    // Some sports return grouped by position
+                    athletes.forEach(group => {
+                        if (group.items) {
+                            playerList = playerList.concat(group.items);
+                        } else if (group.id) {
+                            playerList.push(group);
+                        }
+                    });
+                }
+
+                playerList.forEach((athlete, index) => {
+                    allPlayers.push({
+                        id: athlete.id,
+                        name: athlete.fullName || athlete.displayName,
+                        position: athlete.position?.abbreviation || 'UTIL',
+                        team: team.name,
+                        teamAbbreviation: team.abbreviation,
+                        salary: calculateSalary(sport, athlete, allPlayers.length),
+                        opponent: 'TBD',
+                        projectedPoints: 0,
+                        imageUrl: athlete.headshot?.href || null
+                    });
+                });
+            }
+        } catch (e) {
+            console.error(`Error fetching roster for ${team.name}:`, e);
+        }
+    }
+
+    return allPlayers;
+}
+
+function getESPNSportPath(sport) {
+    const paths = {
+        NFL: 'football/nfl',
+        NBA: 'basketball/nba',
+        MLB: 'baseball/mlb',
+        NHL: 'hockey/nhl'
+    };
+    return paths[sport] || 'football/nfl';
+}
+
+function getTeamsForSport(sport) {
+    // All teams for each league
+    const teams = {
+        NFL: [
+            { id: '21', name: 'Philadelphia Eagles', abbreviation: 'PHI' },
+            { id: '6', name: 'Dallas Cowboys', abbreviation: 'DAL' },
+            { id: '19', name: 'New York Giants', abbreviation: 'NYG' },
+            { id: '28', name: 'Washington Commanders', abbreviation: 'WAS' },
+            { id: '1', name: 'Arizona Cardinals', abbreviation: 'ARI' },
+            { id: '2', name: 'Atlanta Falcons', abbreviation: 'ATL' },
+            { id: '3', name: 'Baltimore Ravens', abbreviation: 'BAL' },
+            { id: '4', name: 'Buffalo Bills', abbreviation: 'BUF' },
+            { id: '5', name: 'Carolina Panthers', abbreviation: 'CAR' },
+            { id: '7', name: 'Chicago Bears', abbreviation: 'CHI' },
+            { id: '8', name: 'Cincinnati Bengals', abbreviation: 'CIN' },
+            { id: '9', name: 'Cleveland Browns', abbreviation: 'CLE' },
+            { id: '10', name: 'Denver Broncos', abbreviation: 'DEN' },
+            { id: '11', name: 'Detroit Lions', abbreviation: 'DET' },
+            { id: '12', name: 'Green Bay Packers', abbreviation: 'GB' },
+            { id: '13', name: 'Houston Texans', abbreviation: 'HOU' },
+            { id: '14', name: 'Indianapolis Colts', abbreviation: 'IND' },
+            { id: '15', name: 'Jacksonville Jaguars', abbreviation: 'JAX' },
+            { id: '16', name: 'Kansas City Chiefs', abbreviation: 'KC' },
+            { id: '17', name: 'Las Vegas Raiders', abbreviation: 'LV' },
+            { id: '18', name: 'Los Angeles Chargers', abbreviation: 'LAC' },
+            { id: '20', name: 'New England Patriots', abbreviation: 'NE' },
+            { id: '22', name: 'Los Angeles Rams', abbreviation: 'LAR' },
+            { id: '23', name: 'New Orleans Saints', abbreviation: 'NO' },
+            { id: '24', name: 'New York Jets', abbreviation: 'NYJ' },
+            { id: '25', name: 'Pittsburgh Steelers', abbreviation: 'PIT' },
+            { id: '26', name: 'San Francisco 49ers', abbreviation: 'SF' },
+            { id: '27', name: 'Seattle Seahawks', abbreviation: 'SEA' },
+            { id: '29', name: 'Tampa Bay Buccaneers', abbreviation: 'TB' },
+            { id: '30', name: 'Tennessee Titans', abbreviation: 'TEN' },
+            { id: '33', name: 'Miami Dolphins', abbreviation: 'MIA' },
+            { id: '34', name: 'Minnesota Vikings', abbreviation: 'MIN' }
+        ],
+        NBA: [
+            { id: '20', name: 'Philadelphia 76ers', abbreviation: 'PHI' },
+            { id: '2', name: 'Boston Celtics', abbreviation: 'BOS' },
+            { id: '17', name: 'Brooklyn Nets', abbreviation: 'BKN' },
+            { id: '18', name: 'New York Knicks', abbreviation: 'NYK' },
+            { id: '1', name: 'Atlanta Hawks', abbreviation: 'ATL' },
+            { id: '4', name: 'Chicago Bulls', abbreviation: 'CHI' },
+            { id: '5', name: 'Cleveland Cavaliers', abbreviation: 'CLE' },
+            { id: '8', name: 'Detroit Pistons', abbreviation: 'DET' },
+            { id: '11', name: 'Indiana Pacers', abbreviation: 'IND' },
+            { id: '15', name: 'Miami Heat', abbreviation: 'MIA' },
+            { id: '16', name: 'Milwaukee Bucks', abbreviation: 'MIL' },
+            { id: '19', name: 'Orlando Magic', abbreviation: 'ORL' },
+            { id: '27', name: 'Toronto Raptors', abbreviation: 'TOR' },
+            { id: '30', name: 'Washington Wizards', abbreviation: 'WAS' },
+            { id: '6', name: 'Dallas Mavericks', abbreviation: 'DAL' },
+            { id: '7', name: 'Denver Nuggets', abbreviation: 'DEN' },
+            { id: '9', name: 'Golden State Warriors', abbreviation: 'GSW' },
+            { id: '10', name: 'Houston Rockets', abbreviation: 'HOU' },
+            { id: '12', name: 'Los Angeles Clippers', abbreviation: 'LAC' },
+            { id: '13', name: 'Los Angeles Lakers', abbreviation: 'LAL' },
+            { id: '14', name: 'Memphis Grizzlies', abbreviation: 'MEM' },
+            { id: '21', name: 'Phoenix Suns', abbreviation: 'PHX' },
+            { id: '22', name: 'Portland Trail Blazers', abbreviation: 'POR' },
+            { id: '23', name: 'Sacramento Kings', abbreviation: 'SAC' },
+            { id: '24', name: 'San Antonio Spurs', abbreviation: 'SAS' },
+            { id: '25', name: 'Oklahoma City Thunder', abbreviation: 'OKC' },
+            { id: '26', name: 'Utah Jazz', abbreviation: 'UTA' },
+            { id: '3', name: 'Charlotte Hornets', abbreviation: 'CHA' },
+            { id: '28', name: 'New Orleans Pelicans', abbreviation: 'NOP' },
+            { id: '29', name: 'Minnesota Timberwolves', abbreviation: 'MIN' }
+        ],
+        MLB: [
+            { id: '22', name: 'Philadelphia Phillies', abbreviation: 'PHI' },
+            { id: '21', name: 'New York Mets', abbreviation: 'NYM' },
+            { id: '15', name: 'Atlanta Braves', abbreviation: 'ATL' },
+            { id: '28', name: 'Miami Marlins', abbreviation: 'MIA' },
+            { id: '20', name: 'Washington Nationals', abbreviation: 'WSH' },
+            { id: '10', name: 'New York Yankees', abbreviation: 'NYY' },
+            { id: '1', name: 'Baltimore Orioles', abbreviation: 'BAL' },
+            { id: '2', name: 'Boston Red Sox', abbreviation: 'BOS' },
+            { id: '30', name: 'Tampa Bay Rays', abbreviation: 'TB' },
+            { id: '14', name: 'Toronto Blue Jays', abbreviation: 'TOR' },
+            { id: '5', name: 'Chicago White Sox', abbreviation: 'CWS' },
+            { id: '6', name: 'Cleveland Guardians', abbreviation: 'CLE' },
+            { id: '7', name: 'Detroit Tigers', abbreviation: 'DET' },
+            { id: '9', name: 'Kansas City Royals', abbreviation: 'KC' },
+            { id: '8', name: 'Minnesota Twins', abbreviation: 'MIN' },
+            { id: '18', name: 'Houston Astros', abbreviation: 'HOU' },
+            { id: '3', name: 'Los Angeles Angels', abbreviation: 'LAA' },
+            { id: '11', name: 'Oakland Athletics', abbreviation: 'OAK' },
+            { id: '12', name: 'Seattle Mariners', abbreviation: 'SEA' },
+            { id: '13', name: 'Texas Rangers', abbreviation: 'TEX' },
+            { id: '4', name: 'Chicago Cubs', abbreviation: 'CHC' },
+            { id: '17', name: 'Cincinnati Reds', abbreviation: 'CIN' },
+            { id: '23', name: 'Pittsburgh Pirates', abbreviation: 'PIT' },
+            { id: '24', name: 'St. Louis Cardinals', abbreviation: 'STL' },
+            { id: '16', name: 'Milwaukee Brewers', abbreviation: 'MIL' },
+            { id: '29', name: 'Arizona Diamondbacks', abbreviation: 'ARI' },
+            { id: '27', name: 'Colorado Rockies', abbreviation: 'COL' },
+            { id: '19', name: 'Los Angeles Dodgers', abbreviation: 'LAD' },
+            { id: '25', name: 'San Diego Padres', abbreviation: 'SD' },
+            { id: '26', name: 'San Francisco Giants', abbreviation: 'SF' }
+        ],
+        NHL: [
+            { id: '15', name: 'Philadelphia Flyers', abbreviation: 'PHI' },
+            { id: '5', name: 'Pittsburgh Penguins', abbreviation: 'PIT' },
+            { id: '4', name: 'New York Rangers', abbreviation: 'NYR' },
+            { id: '1', name: 'New Jersey Devils', abbreviation: 'NJD' },
+            { id: '2', name: 'New York Islanders', abbreviation: 'NYI' },
+            { id: '7', name: 'Boston Bruins', abbreviation: 'BOS' },
+            { id: '8', name: 'Buffalo Sabres', abbreviation: 'BUF' },
+            { id: '9', name: 'Detroit Red Wings', abbreviation: 'DET' },
+            { id: '10', name: 'Florida Panthers', abbreviation: 'FLA' },
+            { id: '11', name: 'Montreal Canadiens', abbreviation: 'MTL' },
+            { id: '12', name: 'Ottawa Senators', abbreviation: 'OTT' },
+            { id: '14', name: 'Tampa Bay Lightning', abbreviation: 'TBL' },
+            { id: '13', name: 'Toronto Maple Leafs', abbreviation: 'TOR' },
+            { id: '6', name: 'Carolina Hurricanes', abbreviation: 'CAR' },
+            { id: '3', name: 'Washington Capitals', abbreviation: 'WSH' },
+            { id: '29', name: 'Columbus Blue Jackets', abbreviation: 'CBJ' },
+            { id: '16', name: 'Chicago Blackhawks', abbreviation: 'CHI' },
+            { id: '17', name: 'Colorado Avalanche', abbreviation: 'COL' },
+            { id: '18', name: 'Dallas Stars', abbreviation: 'DAL' },
+            { id: '19', name: 'Minnesota Wild', abbreviation: 'MIN' },
+            { id: '20', name: 'Nashville Predators', abbreviation: 'NSH' },
+            { id: '21', name: 'St. Louis Blues', abbreviation: 'STL' },
+            { id: '22', name: 'Winnipeg Jets', abbreviation: 'WPG' },
+            { id: '23', name: 'Anaheim Ducks', abbreviation: 'ANA' },
+            { id: '24', name: 'Arizona Coyotes', abbreviation: 'ARI' },
+            { id: '25', name: 'Calgary Flames', abbreviation: 'CGY' },
+            { id: '26', name: 'Edmonton Oilers', abbreviation: 'EDM' },
+            { id: '27', name: 'Los Angeles Kings', abbreviation: 'LAK' },
+            { id: '28', name: 'San Jose Sharks', abbreviation: 'SJS' },
+            { id: '30', name: 'Seattle Kraken', abbreviation: 'SEA' },
+            { id: '54', name: 'Vegas Golden Knights', abbreviation: 'VGK' },
+            { id: '55', name: 'Vancouver Canucks', abbreviation: 'VAN' }
+        ]
+    };
+
+    return teams[sport] || teams.NFL;
+}
+
+// Calculate salary based on position importance and some variance
+function calculateSalary(sport, athlete, index) {
+    const positionValues = {
+        NFL: { QB: 8000, RB: 6500, WR: 6000, TE: 5000, K: 4500, DEF: 4000, default: 5000 },
+        NBA: { PG: 7000, SG: 6500, SF: 6500, PF: 6000, C: 7000, G: 6500, F: 6000, default: 6000 },
+        MLB: { SP: 9000, RP: 5000, C: 4500, '1B': 5000, '2B': 4500, '3B': 5000, SS: 5500, OF: 5000, DH: 5000, default: 5000 },
+        NHL: { C: 6000, LW: 5500, RW: 5500, W: 5500, D: 5000, G: 7000, default: 5500 }
+    };
+
+    const sportPos = positionValues[sport] || positionValues.NFL;
+    const pos = athlete.position?.abbreviation || 'default';
+    const baseValue = sportPos[pos] || sportPos.default;
+
+    // Add variance based on index (simulates player ranking)
+    const variance = Math.floor(Math.random() * 3000) - 1000;
+    const salary = Math.max(3000, Math.min(12000, baseValue + variance));
+
+    // Round to nearest 100
+    return Math.round(salary / 100) * 100;
 }
