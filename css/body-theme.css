@@ -852,27 +852,118 @@ a {
 
 [data-theme="dark"] .trivia-option {
     background: #1e1e1e !important;
-    border-color: #333 !important;
+    border-color: #444 !important;
     color: #e8e8e8 !important;
 }
 
 [data-theme="dark"] .trivia-option:hover {
     border-color: #8B0000 !important;
+    background: #2a2a2a !important;
+}
+
+[data-theme="dark"] .trivia-option.correct {
+    background: rgba(76, 175, 80, 0.2) !important;
+    border-color: #4caf50 !important;
+    color: #81c784 !important;
+}
+
+[data-theme="dark"] .trivia-option.incorrect {
+    background: rgba(244, 67, 54, 0.2) !important;
+    border-color: #f44336 !important;
+    color: #e57373 !important;
+}
+
+[data-theme="dark"] .trivia-option.reveal-correct {
+    background: rgba(76, 175, 80, 0.15) !important;
+    border-color: #4caf50 !important;
+}
+
+[data-theme="dark"] .trivia-btn {
+    border-color: #444 !important;
 }
 
 [data-theme="dark"] .trivia-btn-primary {
+    background: #e8e8e8 !important;
+    border-color: #e8e8e8 !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="dark"] .trivia-btn-primary:hover {
     background: #8B0000 !important;
+    border-color: #8B0000 !important;
     color: #fff !important;
 }
 
 [data-theme="dark"] .trivia-btn-secondary {
-    background: #1e1e1e !important;
-    border-color: #333 !important;
+    background: #333 !important;
+    border-color: #444 !important;
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .trivia-btn-secondary:hover {
+    background: #444 !important;
+    border-color: #8B0000 !important;
     color: #e8e8e8 !important;
 }
 
 [data-theme="dark"] .trivia-question-text {
     color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .trivia-team-badge {
+    background: #333 !important;
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .trivia-team-badge strong {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .trivia-team-badge.Eagles { color: #4ade80 !important; }
+[data-theme="dark"] .trivia-team-badge.Phillies { color: #f87171 !important; }
+[data-theme="dark"] .trivia-team-badge.t76ers { color: #60a5fa !important; }
+[data-theme="dark"] .trivia-team-badge.Flyers { color: #fb923c !important; }
+
+[data-theme="dark"] .trivia-difficulty {
+    background: #333 !important;
+}
+
+[data-theme="dark"] .trivia-difficulty strong {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .trivia-dd-info {
+    color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] .trivia-dd-stake {
+    color: #fbbf24 !important;
+}
+
+[data-theme="dark"] .trivia-dd-login {
+    color: #f87171 !important;
+}
+
+[data-theme="dark"] .trivia-result {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .trivia-result.correct {
+    background: rgba(76, 175, 80, 0.2) !important;
+    color: #81c784 !important;
+}
+
+[data-theme="dark"] .trivia-result.incorrect {
+    background: rgba(244, 67, 54, 0.2) !important;
+    color: #e57373 !important;
+}
+
+[data-theme="dark"] .trivia-login-prompt {
+    color: #808080 !important;
+}
+
+[data-theme="dark"] .trivia-login-prompt a {
+    color: #f87171 !important;
 }
 
 [data-theme="dark"] .ps-btn-secondary {
