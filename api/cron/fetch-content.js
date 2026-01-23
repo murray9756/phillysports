@@ -432,6 +432,50 @@ export default async function handler(req, res) {
             console.log(`Source ${source.name}: fetched=${items.length}, skippedNoDate=${skippedNoDate}, skippedOld=${skippedOld}, new=${newItems}`);
         }
 
+        // Auto-publish stale queue items (older than 24 hours)
+        const staleThreshold = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        const staleItems = await queue.find({
+            status: 'pending',
+            fetchedAt: { $lt: staleThreshold }
+        }).toArray();
+
+        let stalePublished = 0;
+        for (const item of staleItems) {
+            try {
+                await curated.insertOne({
+                    type: item.type || 'article',
+                    sourceUrl: item.sourceUrl,
+                    sourceName: item.sourceName,
+                    sourceLogoUrl: item.sourceLogoUrl || null,
+                    title: item.title,
+                    description: item.description,
+                    thumbnail: item.thumbnail,
+                    author: item.author,
+                    publishedAt: item.publishedAt,
+                    curatedAt: new Date(),
+                    curatedBy: null,
+                    curatorUsername: null,
+                    curatorNote: null,
+                    curatorReview: null,
+                    teams: item.teams || ['eagles', 'phillies', 'sixers', 'flyers'],
+                    featured: false,
+                    featuredOnPages: [],
+                    status: 'published',
+                    autoPublished: true,
+                    autoPublishReason: 'stale_queue_item'
+                });
+
+                await queue.deleteOne({ _id: item._id });
+                stalePublished++;
+            } catch (e) {
+                console.error('Error auto-publishing stale item:', e.message);
+            }
+        }
+
+        if (stalePublished > 0) {
+            console.log(`[Cron] Auto-published ${stalePublished} stale queue items (>24h old)`);
+        }
+
         // Log the cron run
         console.log(`[Cron] Content fetch completed: ${totalNew} new items from ${sources.length} sources`);
 
@@ -442,6 +486,7 @@ export default async function handler(req, res) {
             totalFetched,
             totalNew,
             totalAutoPublished,
+            stalePublished,
             results
         });
     } catch (error) {
