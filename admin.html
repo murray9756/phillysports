@@ -251,6 +251,17 @@
                         <div id="quickAddResult" style="margin-top: 0.75rem; display: none;"></div>
                     </div>
 
+                    <!-- Team Filter -->
+                    <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Filter by team:</span>
+                        <button class="queue-filter-btn active" data-filter="all" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--accent-color); color: white;">All</button>
+                        <button class="queue-filter-btn" data-filter="eagles" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Eagles</button>
+                        <button class="queue-filter-btn" data-filter="phillies" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Phillies</button>
+                        <button class="queue-filter-btn" data-filter="sixers" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Sixers</button>
+                        <button class="queue-filter-btn" data-filter="flyers" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Flyers</button>
+                        <button class="queue-filter-btn" data-filter="college" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">College</button>
+                    </div>
+
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <div id="queueStats" style="font-size: 0.85rem; color: var(--text-muted);">Loading...</div>
                         <div style="display: flex; gap: 0.5rem;">
@@ -1043,6 +1054,23 @@
             });
         });
 
+        // Queue filter handling
+        let currentQueueFilter = 'all';
+        document.querySelectorAll('.queue-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.queue-filter-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.style.background = 'var(--card-bg)';
+                    b.style.color = 'var(--text-primary)';
+                });
+                btn.classList.add('active');
+                btn.style.background = 'var(--accent-color)';
+                btn.style.color = 'white';
+                currentQueueFilter = btn.dataset.filter;
+                loadContentQueue();
+            });
+        });
+
         // Load content queue
         async function loadContentQueue() {
             const container = document.getElementById('queueList');
@@ -1058,10 +1086,19 @@
                     return;
                 }
 
-                statsDiv.innerHTML = `${data.statusCounts.pending || data.items?.length || 0} items awaiting review`;
+                // Filter items by selected team
+                let filteredItems = data.items || [];
+                if (currentQueueFilter !== 'all') {
+                    filteredItems = filteredItems.filter(item =>
+                        (item.teams || []).includes(currentQueueFilter)
+                    );
+                }
 
-                if (data.items && data.items.length > 0) {
-                    container.innerHTML = data.items.map(item => `
+                const filterLabel = currentQueueFilter === 'all' ? '' : ` (${currentQueueFilter})`;
+                statsDiv.innerHTML = `${filteredItems.length} of ${data.statusCounts.pending || data.items?.length || 0} items${filterLabel}`;
+
+                if (filteredItems.length > 0) {
+                    container.innerHTML = filteredItems.map(item => `
                         <div class="queue-item" id="queue-${item._id}" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem;">
                             <div style="display: flex; gap: 1rem;">
                                 <div style="flex-shrink: 0;">
@@ -1124,7 +1161,11 @@
                         </div>
                     `).join('');
                 } else {
-                    container.innerHTML = '<p style="color: var(--text-muted);">No pending items. Click "Fetch New Content" to pull from sources.</p>';
+                    if (currentQueueFilter !== 'all' && data.items?.length > 0) {
+                        container.innerHTML = `<p style="color: var(--text-muted);">No ${currentQueueFilter} items in queue. Try a different filter or click "All".</p>`;
+                    } else {
+                        container.innerHTML = '<p style="color: var(--text-muted);">No pending items. Click "Fetch New Content" to pull from sources.</p>';
+                    }
                 }
             } catch (e) {
                 console.error('Load queue error:', e);
