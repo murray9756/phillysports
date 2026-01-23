@@ -221,6 +221,18 @@
         .team-badge.phillies { background: var(--phillies-red); color: white; }
         .team-badge.sixers { background: var(--sixers-blue); color: white; }
         .team-badge.flyers { background: var(--flyers-orange); color: white; }
+        .source-badge { padding: 0.25rem 0.5rem; font-size: 0.65rem; font-weight: 700; border-radius: 3px; text-transform: uppercase; }
+        .source-badge.ebay-badge { background: #0064D2; color: white; }
+        .source-badge.raffle-badge { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a1a; }
+        .listing-action { margin-top: 0.5rem; }
+        .btn-ebay { display: inline-block; padding: 0.4rem 0.75rem; background: #0064D2; color: white; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        .listing-card.ebay-card:hover .btn-ebay { background: #0053b3; }
+        .btn-raffle { display: inline-block; padding: 0.4rem 0.75rem; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a1a; border-radius: 4px; font-size: 0.8rem; font-weight: 700; }
+        .listing-card.raffle-card:hover .btn-raffle { background: linear-gradient(135deg, #ffe44d, #ffa500); }
+        .raffle-info { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .raffle-info .ticket-price { color: #b8860b; font-weight: 600; }
+        .raffle-info .draw-time { color: var(--text-secondary); }
+        .raffle-info .prize-value { color: var(--success-color); font-weight: 600; }
         .listing-info { padding: 1rem; }
         .listing-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .listing-seller { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
@@ -276,8 +288,8 @@
     <section class="page-hero">
         <div class="page-hero-inner">
             <div>
-                <h1>Fan Marketplace</h1>
-                <p>Buy and sell Philly sports items from fellow fans</p>
+                <h1>Marketplace</h1>
+                <p>Shop Philly sports gear from eBay partners and fellow fans</p>
             </div>
             <a href="/marketplace/sell.html" class="btn-sell">
                 <span>+</span> Sell an Item
@@ -291,8 +303,30 @@
         <aside class="sidebar">
             <div class="filter-card">
                 <h3 class="filter-title">Search</h3>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search listings...">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search items...">
                 <button class="filter-btn" onclick="applyFilters()">Search</button>
+            </div>
+
+            <div class="filter-card">
+                <h3 class="filter-title">Source</h3>
+                <div class="filter-options" id="sourceFilters">
+                    <div class="filter-option active">
+                        <input type="radio" name="source" value="" id="source-all" checked>
+                        <label for="source-all">All Sources</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="source" value="ebay" id="source-ebay">
+                        <label for="source-ebay">eBay Partner</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="source" value="user" id="source-user">
+                        <label for="source-user">User Listings</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" name="source" value="raffles" id="source-raffles">
+                        <label for="source-raffles">Raffles</label>
+                    </div>
+                </div>
             </div>
 
             <div class="filter-card">
@@ -425,12 +459,23 @@
         });
 
         const API_URL = '/api';
-        let listings = [];
+        let items = [];
         let currentUser = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuth();
-            await loadListings();
+            // Check for source filter in URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const sourceParam = urlParams.get('source');
+            if (sourceParam) {
+                const sourceRadio = document.querySelector(`input[name="source"][value="${sourceParam}"]`);
+                if (sourceRadio) {
+                    sourceRadio.checked = true;
+                    document.querySelectorAll('#sourceFilters .filter-option').forEach(opt => opt.classList.remove('active'));
+                    sourceRadio.closest('.filter-option').classList.add('active');
+                }
+            }
+            await loadItems();
             setupFilters();
         });
 
@@ -478,17 +523,19 @@
             window.location.reload();
         }
 
-        async function loadListings() {
+        async function loadItems() {
             const grid = document.getElementById('listingsGrid');
-            grid.innerHTML = '<div class="loading">Loading listings...</div>';
+            grid.innerHTML = '<div class="loading">Loading items...</div>';
 
             try {
                 const params = new URLSearchParams();
+                const source = document.querySelector('input[name="source"]:checked')?.value;
                 const category = document.querySelector('input[name="category"]:checked')?.value;
                 const currency = document.querySelector('input[name="currency"]:checked')?.value;
                 const sort = document.getElementById('sortSelect').value;
                 const search = document.getElementById('searchInput').value;
 
+                if (source) params.set('source', source);
                 if (category) params.set('category', category);
                 if (currency) params.set('currency', currency);
                 if (sort) params.set('sort', sort);
@@ -508,76 +555,190 @@
                     params.set('condition', selectedConditions[0]);
                 }
 
-                const res = await fetch(`${API_URL}/marketplace/listings?${params}`);
+                const res = await fetch(`${API_URL}/marketplace/unified?${params}`);
                 const data = await res.json();
 
                 if (data.success) {
-                    listings = data.listings;
-                    renderListings();
-                    document.getElementById('listingsCount').textContent = `${data.pagination.totalCount} listings`;
+                    items = data.items;
+                    renderItems();
+                    // Show counts by source
+                    const countText = data.counts.total === 1 ? '1 item' : `${data.counts.total} items`;
+                    document.getElementById('listingsCount').textContent = countText;
                 } else {
-                    grid.innerHTML = '<div class="empty-state"><h3>Failed to load listings</h3></div>';
+                    grid.innerHTML = '<div class="empty-state"><h3>Failed to load items</h3></div>';
                 }
             } catch (e) {
-                console.error('Load listings error:', e);
-                grid.innerHTML = '<div class="empty-state"><h3>Failed to load listings</h3></div>';
+                console.error('Load items error:', e);
+                grid.innerHTML = '<div class="empty-state"><h3>Failed to load items</h3></div>';
             }
         }
 
-        function renderListings() {
+        function renderItems() {
             const grid = document.getElementById('listingsGrid');
 
-            if (listings.length === 0) {
+            if (items.length === 0) {
                 grid.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
-                        <h3>No listings found</h3>
+                        <h3>No items found</h3>
                         <p>Try adjusting your filters or check back later.</p>
                     </div>
                 `;
                 return;
             }
 
-            grid.innerHTML = listings.map(listing => {
-                const primaryImage = listing.images?.find(i => i.isPrimary) || listing.images?.[0];
+            grid.innerHTML = items.map(item => {
+                const primaryImage = item.images?.find(i => i.isPrimary) || item.images?.[0];
                 const conditionLabels = {
                     'new': 'New',
+                    'New': 'New',
                     'like_new': 'Like New',
+                    'Like New': 'Like New',
                     'good': 'Good',
+                    'Good': 'Good',
                     'fair': 'Fair',
+                    'Fair': 'Fair',
                     'poor': 'Poor'
                 };
 
-                return `
-                    <div class="listing-card" onclick="viewListing('${listing._id}')">
-                        <div class="listing-image">
-                            ${primaryImage ? `<img src="${primaryImage.url}" alt="${escapeHtml(listing.title)}">` : '<span class="placeholder">&#128247;</span>'}
-                            <div class="listing-badges">
-                                <span class="condition-badge">${conditionLabels[listing.condition] || listing.condition}</span>
-                                ${listing.team ? `<span class="team-badge ${listing.team}">${listing.team}</span>` : ''}
-                            </div>
-                        </div>
-                        <div class="listing-info">
-                            <div class="listing-title">${escapeHtml(listing.title)}</div>
-                            <div class="listing-seller">Sold by ${escapeHtml(listing.sellerUsername)}</div>
-                            <div class="listing-prices">
-                                ${listing.acceptsUSD ? `<span class="price-usd">$${(listing.priceUSD / 100).toFixed(2)}</span>` : ''}
-                                ${listing.acceptsDiehardDollars ? `<span class="price-dd">${listing.priceDiehardDollars.toLocaleString()} DD</span>` : ''}
-                            </div>
-                            <div class="listing-meta">
-                                <span>${listing.category}</span>
-                                <span>${listing.viewCount || 0} views</span>
-                            </div>
+                // Render based on source type
+                if (item.source === 'ebay') {
+                    return renderEbayCard(item, primaryImage, conditionLabels);
+                } else if (item.source === 'raffle') {
+                    return renderRaffleCard(item, primaryImage);
+                } else {
+                    return renderUserCard(item, primaryImage, conditionLabels);
+                }
+            }).join('');
+        }
+
+        function renderEbayCard(item, primaryImage, conditionLabels) {
+            const imageUrl = primaryImage?.url || primaryImage;
+            return `
+                <div class="listing-card ebay-card" onclick="openEbayLink('${item._id}', '${encodeURIComponent(item.affiliateLink)}')">
+                    <div class="listing-image">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${escapeHtml(item.title)}">` : '<span class="placeholder">&#128247;</span>'}
+                        <div class="listing-badges">
+                            <span class="source-badge ebay-badge">eBay Partner</span>
+                            ${item.team ? `<span class="team-badge ${item.team}">${item.team}</span>` : ''}
                         </div>
                     </div>
-                `;
-            }).join('');
+                    <div class="listing-info">
+                        <div class="listing-title">${escapeHtml(item.title)}</div>
+                        <div class="listing-seller">via ${escapeHtml(item.seller?.username || 'eBay')}</div>
+                        <div class="listing-prices">
+                            <span class="price-usd">$${(item.priceUSD / 100).toFixed(2)}</span>
+                        </div>
+                        <div class="listing-action">
+                            <span class="btn-ebay">Shop on eBay &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderUserCard(item, primaryImage, conditionLabels) {
+            const imageUrl = primaryImage?.url || primaryImage;
+            return `
+                <div class="listing-card user-card" onclick="viewListing('${item._id}')">
+                    <div class="listing-image">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${escapeHtml(item.title)}">` : '<span class="placeholder">&#128247;</span>'}
+                        <div class="listing-badges">
+                            <span class="condition-badge">${conditionLabels[item.condition] || item.condition}</span>
+                            ${item.team ? `<span class="team-badge ${item.team}">${item.team}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="listing-info">
+                        <div class="listing-title">${escapeHtml(item.title)}</div>
+                        <div class="listing-seller">by @${escapeHtml(item.seller?.username || 'User')}</div>
+                        <div class="listing-prices">
+                            ${item.acceptsUSD ? `<span class="price-usd">$${(item.priceUSD / 100).toFixed(2)}</span>` : ''}
+                            ${item.acceptsDiehardDollars && item.priceDiehardDollars ? `<span class="price-dd">${item.priceDiehardDollars.toLocaleString()} DD</span>` : ''}
+                        </div>
+                        <div class="listing-meta">
+                            <span>${item.category || ''}</span>
+                            <span>${item.viewCount || 0} views</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRaffleCard(item, primaryImage) {
+            const imageUrl = primaryImage?.url || primaryImage;
+            const drawDate = new Date(item.drawDate);
+            const now = new Date();
+            const timeLeft = drawDate - now;
+            const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+            let timeLeftText = '';
+            if (daysLeft > 0) {
+                timeLeftText = `${daysLeft}d ${hoursLeft}h left`;
+            } else if (hoursLeft > 0) {
+                timeLeftText = `${hoursLeft}h left`;
+            } else {
+                timeLeftText = 'Ending soon!';
+            }
+
+            return `
+                <div class="listing-card raffle-card" onclick="viewRaffle('${item._id}')">
+                    <div class="listing-image">
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${escapeHtml(item.title)}">` : '<span class="placeholder">&#127942;</span>'}
+                        <div class="listing-badges">
+                            <span class="source-badge raffle-badge">Raffle</span>
+                            ${item.team ? `<span class="team-badge ${item.team}">${item.team}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="listing-info">
+                        <div class="listing-title">${escapeHtml(item.title)}</div>
+                        <div class="raffle-info">
+                            <span class="ticket-price">${item.ticketPrice} DD per ticket</span>
+                            ${item.estimatedValue ? `<span class="prize-value">~$${item.estimatedValue} value</span>` : ''}
+                            <span class="draw-time">${timeLeftText}</span>
+                        </div>
+                        <div class="listing-meta">
+                            <span>${item.totalTicketsSold || 0} tickets sold</span>
+                        </div>
+                        <div class="listing-action">
+                            <span class="btn-raffle">Enter Raffle &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function viewListing(id) {
             window.location.href = `/marketplace/listing.html?id=${id}`;
         }
 
+        function viewRaffle(id) {
+            window.location.href = `/raffles/raffle.html?id=${id}`;
+        }
+
+        function openEbayLink(productId, affiliateLink) {
+            // Open link first (before async) to avoid popup blocker
+            if (affiliateLink) {
+                window.open(decodeURIComponent(affiliateLink), '_blank');
+            }
+            // Track the click in the background
+            fetch('/api/shop/affiliate-click', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId })
+            }).catch(err => console.log('Click tracking error:', err));
+        }
+
         function setupFilters() {
+            // Source filter
+            document.querySelectorAll('input[name="source"]').forEach(input => {
+                input.addEventListener('change', () => {
+                    document.querySelectorAll('#sourceFilters .filter-option').forEach(opt => opt.classList.remove('active'));
+                    input.closest('.filter-option').classList.add('active');
+                    applyFilters();
+                });
+            });
+
+            // Category filter
             document.querySelectorAll('input[name="category"]').forEach(input => {
                 input.addEventListener('change', () => {
                     document.querySelectorAll('#categoryFilters .filter-option').forEach(opt => opt.classList.remove('active'));
@@ -586,17 +747,29 @@
                 });
             });
 
+            // Currency filter
             document.querySelectorAll('input[name="currency"]').forEach(input => {
                 input.addEventListener('change', applyFilters);
             });
 
+            // Team filters (checkboxes)
+            document.querySelectorAll('#teamFilters input').forEach(input => {
+                input.addEventListener('change', applyFilters);
+            });
+
+            // Condition filters (checkboxes)
+            document.querySelectorAll('#conditionFilters input').forEach(input => {
+                input.addEventListener('change', applyFilters);
+            });
+
+            // Search
             document.getElementById('searchInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') applyFilters();
             });
         }
 
         function applyFilters() {
-            loadListings();
+            loadItems();
         }
 
         function escapeHtml(str) {

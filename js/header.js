@@ -140,15 +140,8 @@
                         </div>
                     </div>
 
-                    <div class="nav-dropdown">
-                        <span class="nav-item dropdown-trigger">Shop <span class="dropdown-arrow">&#9660;</span></span>
-                        <div class="dropdown-menu">
-                            <a href="/shop.html">Shop</a>
-                            <a href="/marketplace/">Marketplace</a>
-                            <a href="/raffles/">Raffles</a>
-                            <a href="/membership.html">Membership</a>
-                        </div>
-                    </div>
+                    <a href="/marketplace/" class="nav-item">Shop</a>
+                    <a href="/membership.html" class="nav-item">Membership</a>
 
                     <a href="/esports/" class="nav-item">eSports</a>
                     <a href="/youth/" class="nav-item">Youth</a>
@@ -248,18 +241,8 @@
                     </div>
                 </div>
 
-                <div class="mobile-nav-dropdown">
-                    <div class="mobile-nav-dropdown-trigger">
-                        <span>Shop</span>
-                        <span class="arrow">&#9660;</span>
-                    </div>
-                    <div class="mobile-nav-dropdown-menu">
-                        <a href="/shop.html">Shop</a>
-                        <a href="/marketplace/">Marketplace</a>
-                        <a href="/raffles/">Raffles</a>
-                        <a href="/membership.html">Membership</a>
-                    </div>
-                </div>
+                <a href="/marketplace/" class="mobile-nav-item">Shop</a>
+                <a href="/membership.html" class="mobile-nav-item">Membership</a>
 
                 <a href="/esports/" class="mobile-nav-item">eSports</a>
                 <a href="/youth/" class="mobile-nav-item">Youth</a>
