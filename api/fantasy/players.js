@@ -29,13 +29,21 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'SportsDataIO API key not configured' });
     }
 
+    const debugInfo = {
+        apiKeyPresent: !!SPORTSDATA_API_KEY,
+        apiKeyLength: SPORTSDATA_API_KEY?.length || 0,
+        steps: []
+    };
+
     try {
         const targetDate = date || new Date().toISOString().split('T')[0];
         const sportUpper = sport.toUpperCase();
+        debugInfo.steps.push(`Starting fetch for ${sportUpper} on ${targetDate}`);
 
         // Fetch games and players from SportsDataIO
-        const result = await fetchPlayersFromSportsDataIO(sportUpper, targetDate);
+        const result = await fetchPlayersFromSportsDataIO(sportUpper, targetDate, debugInfo);
         let { players, games } = result;
+        debugInfo.steps.push(`Got ${players.length} players, ${games.length} games`);
 
         // Filter by contestId if provided (only if players have gameIds)
         const hasGameIds = players.some(p => p.gameId);
@@ -63,10 +71,7 @@ export default async function handler(req, res) {
             date: targetDate,
             source: 'sportsdata',
             totalPlayers: players.length,
-            debug: {
-                apiKeyPresent: !!SPORTSDATA_API_KEY,
-                apiKeyLength: SPORTSDATA_API_KEY?.length || 0
-            }
+            debug: debugInfo
         });
     } catch (error) {
         console.error('Fantasy players error:', error);
@@ -75,7 +80,7 @@ export default async function handler(req, res) {
 }
 
 // Fetch players from SportsDataIO
-async function fetchPlayersFromSportsDataIO(sport, targetDate) {
+async function fetchPlayersFromSportsDataIO(sport, targetDate, debugInfo) {
     // Determine current season based on date
     const date = new Date(targetDate);
     const year = date.getFullYear();
@@ -99,23 +104,29 @@ async function fetchPlayersFromSportsDataIO(sport, targetDate) {
         throw new Error(`Unsupported sport: ${sport}`);
     }
 
+    debugInfo.steps.push(`Using season: ${config.season}, endpoint: ${config.endpoint}`);
     console.log(`fetchPlayersFromSportsDataIO: sport=${sport}, date=${targetDate}, season=${config.season}`);
     console.log(`API Key present: ${!!SPORTSDATA_API_KEY}, length: ${SPORTSDATA_API_KEY?.length || 0}`);
 
     // First try to get DFS slates (best for salaries)
     try {
         const slatesUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+        debugInfo.steps.push(`Trying DFS slates endpoint`);
         console.log(`Trying DFS slates: ${slatesUrl.replace(SPORTSDATA_API_KEY, 'XXX')}`);
         const slatesResponse = await fetch(slatesUrl);
+        debugInfo.steps.push(`DFS slates response: ${slatesResponse.status}`);
         console.log(`DFS slates response: ${slatesResponse.status}`);
 
         if (slatesResponse.ok) {
             const slates = await slatesResponse.json();
+            debugInfo.steps.push(`DFS slates returned: ${slates?.length || 0} slates`);
 
             if (slates && slates.length > 0) {
                 const mainSlate = slates.find(s => s.Operator === 'DraftKings') || slates[0];
+                debugInfo.steps.push(`Using slate: ${mainSlate?.Operator || 'unknown'}, SlateID: ${mainSlate?.SlateID}`);
 
                 if (mainSlate && mainSlate.DfsSlateGames && mainSlate.DfsSlateGames.length > 0) {
+                    debugInfo.steps.push(`Slate has ${mainSlate.DfsSlateGames.length} games`);
                     // Extract games from the slate
                     const games = mainSlate.DfsSlateGames.map(g => ({
                         id: (g.GameID || g.Game?.GameID)?.toString(),
@@ -127,10 +138,13 @@ async function fetchPlayersFromSportsDataIO(sport, targetDate) {
 
                     // Fetch player projections for this slate
                     const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatePlayersBySlateID/${mainSlate.SlateID}?key=${SPORTSDATA_API_KEY}`;
+                    debugInfo.steps.push(`Fetching slate players`);
                     const playersResponse = await fetch(playersUrl);
+                    debugInfo.steps.push(`Slate players response: ${playersResponse.status}`);
 
                     if (playersResponse.ok) {
                         const slatePlayers = await playersResponse.json();
+                        debugInfo.steps.push(`Got ${slatePlayers?.length || 0} slate players - SUCCESS via DFS`);
 
                         const players = slatePlayers.map(player => ({
                             id: player.PlayerID?.toString() || player.OperatorPlayerID,
@@ -152,33 +166,41 @@ async function fetchPlayersFromSportsDataIO(sport, targetDate) {
             }
         }
     } catch (e) {
+        debugInfo.steps.push(`DFS slates error: ${e.message}`);
         console.log('DFS slates not available, falling back to schedule:', e.message);
     }
 
     // Fallback: Get games from schedule and players from roster
-    return await fetchFromScheduleAndRosters(sport, config, targetDate);
+    debugInfo.steps.push(`Falling back to GamesByDate + Players endpoint`);
+    return await fetchFromScheduleAndRosters(sport, config, targetDate, debugInfo);
 }
 
 // Fallback: fetch games from schedule and players from rosters
-async function fetchFromScheduleAndRosters(sport, config, targetDate) {
+async function fetchFromScheduleAndRosters(sport, config, targetDate, debugInfo) {
     // Get games for the date
     const gamesUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+    debugInfo.steps.push(`Fetching GamesByDate`);
     console.log(`Fetching games from: ${gamesUrl.replace(SPORTSDATA_API_KEY, 'XXX')}`);
 
     const gamesResponse = await fetch(gamesUrl);
+    debugInfo.steps.push(`GamesByDate response: ${gamesResponse.status}`);
 
     if (!gamesResponse.ok) {
-        console.error('Games fetch failed:', gamesResponse.status, await gamesResponse.text());
+        const errorText = await gamesResponse.text();
+        debugInfo.steps.push(`GamesByDate failed: ${gamesResponse.status} - ${errorText.substring(0, 100)}`);
+        console.error('Games fetch failed:', gamesResponse.status, errorText);
         // If no games endpoint, return all active players
-        return await fetchAllActivePlayers(sport, config);
+        return await fetchAllActivePlayers(sport, config, debugInfo);
     }
 
     const gamesData = await gamesResponse.json();
+    debugInfo.steps.push(`GamesByDate returned ${gamesData?.length || 0} games`);
     console.log(`Games found for ${sport} on ${targetDate}:`, gamesData?.length || 0);
 
     if (!gamesData || gamesData.length === 0) {
+        debugInfo.steps.push(`No games for date, fetching all active players`);
         console.log('No games found for date, returning all active players');
-        return await fetchAllActivePlayers(sport, config);
+        return await fetchAllActivePlayers(sport, config, debugInfo);
     }
 
     // Build list of teams playing
@@ -215,17 +237,24 @@ async function fetchFromScheduleAndRosters(sport, config, targetDate) {
 
     // Fetch all players and filter to teams playing
     const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/Players?key=${SPORTSDATA_API_KEY}`;
+    debugInfo.steps.push(`Fetching all Players`);
     const playersResponse = await fetch(playersUrl);
+    debugInfo.steps.push(`Players response: ${playersResponse.status}`);
 
     if (!playersResponse.ok) {
+        debugInfo.steps.push(`Players fetch failed!`);
         throw new Error(`Players fetch failed: ${playersResponse.status}`);
     }
 
     const allPlayers = await playersResponse.json();
+    debugInfo.steps.push(`Got ${allPlayers?.length || 0} total players`);
 
     // Filter to active players on teams playing today
-    const players = allPlayers
-        .filter(p => p.Status === 'Active' && teamsPlaying.has(p.Team))
+    const activePlayers = allPlayers.filter(p => p.Status === 'Active');
+    const teamsPlayingPlayers = activePlayers.filter(p => teamsPlaying.has(p.Team));
+    debugInfo.steps.push(`Active: ${activePlayers.length}, On teams playing: ${teamsPlayingPlayers.length}`);
+
+    const players = teamsPlayingPlayers
         .map(player => {
             const gameInfo = gamesByTeam[player.Team] || {};
             return {
@@ -251,7 +280,8 @@ async function fetchFromScheduleAndRosters(sport, config, targetDate) {
 }
 
 // Fetch all active players (when no games found for date)
-async function fetchAllActivePlayers(sport, config) {
+async function fetchAllActivePlayers(sport, config, debugInfo) {
+    debugInfo.steps.push(`fetchAllActivePlayers for ${sport}`);
     console.log(`fetchAllActivePlayers called for ${sport}, endpoint: ${config.endpoint}`);
     console.log(`API Key present: ${!!SPORTSDATA_API_KEY}`);
 
@@ -259,19 +289,24 @@ async function fetchAllActivePlayers(sport, config) {
     console.log(`Fetching players from: ${playersUrl.replace(SPORTSDATA_API_KEY, 'XXX')}`);
 
     const response = await fetch(playersUrl);
+    debugInfo.steps.push(`AllActivePlayers response: ${response.status}`);
     console.log(`Players response status: ${response.status}`);
 
     if (!response.ok) {
         const errorText = await response.text();
+        debugInfo.steps.push(`AllActivePlayers failed: ${response.status}`);
         console.error(`Players fetch failed: ${response.status}`, errorText);
         throw new Error(`Players fetch failed: ${response.status}`);
     }
 
     const allPlayers = await response.json();
+    debugInfo.steps.push(`AllActivePlayers got ${allPlayers?.length || 0} total`);
     console.log(`Total players returned: ${allPlayers?.length || 0}`);
 
-    const players = allPlayers
-        .filter(p => p.Status === 'Active')
+    const activePlayers = allPlayers.filter(p => p.Status === 'Active');
+    debugInfo.steps.push(`Active players: ${activePlayers.length}, limiting to 500`);
+
+    const players = activePlayers
         .slice(0, 500) // Limit for performance
         .map(player => ({
             id: player.PlayerID?.toString(),
