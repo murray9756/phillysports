@@ -15,7 +15,13 @@ const PRO_SPORTS = ['NFL', 'NBA', 'MLB', 'NHL'];
 
 // College sports use TheOddsAPI
 const COLLEGE_SPORTS = ['NCAAF', 'NCAAB'];
-const COLLEGE_SPORT_KEYS = {
+
+// TheOddsAPI sport keys for all sports (used as fallback for pro sports)
+const ODDS_API_SPORT_KEYS = {
+    'NFL': 'americanfootball_nfl',
+    'NBA': 'basketball_nba',
+    'MLB': 'baseball_mlb',
+    'NHL': 'icehockey_nhl',
     'NCAAF': 'americanfootball_ncaaf',
     'NCAAB': 'basketball_ncaab'
 };
@@ -113,8 +119,22 @@ async function fetchCollegeSportsOdds() {
     return allGames;
 }
 
-// Fetch odds from SportsDataIO (pro sports)
+// Fetch odds for pro sports - tries SportsDataIO first, falls back to TheOddsAPI
 async function fetchSportsDataOdds(sport, team, targetDate, phillyOnly = true) {
+    // Try SportsDataIO first
+    let games = await fetchFromSportsDataIO(sport, team, targetDate, phillyOnly);
+
+    // If no results from SportsDataIO, fall back to TheOddsAPI
+    if (games.length === 0 && ODDS_API_KEY) {
+        console.log(`SportsDataIO returned no ${sport} odds, trying TheOddsAPI fallback`);
+        games = await fetchTheOddsAPIData(sport, phillyOnly);
+    }
+
+    return games;
+}
+
+// Fetch from SportsDataIO (primary source for pro sports)
+async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true) {
     if (!SPORTSDATA_API_KEY) {
         console.warn('SPORTSDATA_API_KEY not configured');
         return [];
@@ -153,7 +173,7 @@ async function fetchSportsDataOdds(sport, team, targetDate, phillyOnly = true) {
         url = `https://api.sportsdata.io/v3/${endpoint}/odds/json/GameOddsByDate/${dateToUse}?key=${SPORTSDATA_API_KEY}`;
     }
 
-    console.log(`Fetching ${sport} odds from: ${url.replace(SPORTSDATA_API_KEY, 'XXX')}`);
+    console.log(`Fetching ${sport} odds from SportsDataIO: ${url.replace(SPORTSDATA_API_KEY, 'XXX')}`);
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -163,7 +183,7 @@ async function fetchSportsDataOdds(sport, team, targetDate, phillyOnly = true) {
     }
 
     let games = await response.json();
-    console.log(`${sport} odds response: ${games.length} games found`);
+    console.log(`SportsDataIO ${sport} odds response: ${games.length} games found`);
 
     // Filter by team if specified
     if (team) {
@@ -232,17 +252,19 @@ function transformSportsDataGame(game, sport) {
     };
 }
 
-// Fetch odds from TheOddsAPI (college sports only)
-async function fetchTheOddsAPIData(sport) {
+// Fetch odds from TheOddsAPI (all sports)
+async function fetchTheOddsAPIData(sport, phillyOnly = false) {
     if (!ODDS_API_KEY) {
-        console.warn('ODDS_API_KEY not configured for college sports');
+        console.warn('ODDS_API_KEY not configured');
         return [];
     }
 
-    const sportKey = COLLEGE_SPORT_KEYS[sport];
+    const sportKey = ODDS_API_SPORT_KEYS[sport];
     if (!sportKey) return [];
 
     const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}&regions=us&markets=spreads,h2h,totals&oddsFormat=american`;
+
+    console.log(`Fetching ${sport} odds from TheOddsAPI: ${sportKey}`);
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -250,12 +272,30 @@ async function fetchTheOddsAPIData(sport) {
         return [];
     }
 
-    const data = await response.json();
+    let data = await response.json();
+    console.log(`TheOddsAPI ${sport} odds response: ${data.length} games found`);
 
     // Track remaining API requests
     const remaining = response.headers.get('x-requests-remaining');
     if (remaining) {
+        console.log(`TheOddsAPI requests remaining: ${remaining}`);
         await trackAPIUsage(parseInt(remaining));
+    }
+
+    // Filter to Philly teams if requested (for pro sports)
+    if (phillyOnly && PRO_SPORTS.includes(sport)) {
+        const phillyTeams = {
+            NFL: ['Philadelphia Eagles', 'Eagles'],
+            NBA: ['Philadelphia 76ers', '76ers', 'Sixers'],
+            MLB: ['Philadelphia Phillies', 'Phillies'],
+            NHL: ['Philadelphia Flyers', 'Flyers']
+        };
+        const teamNames = phillyTeams[sport] || [];
+        data = data.filter(game =>
+            teamNames.some(name =>
+                game.home_team?.includes(name) || game.away_team?.includes(name)
+            )
+        );
     }
 
     return data.map(game => transformTheOddsAPIGame(game, sport));
