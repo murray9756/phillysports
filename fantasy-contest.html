@@ -334,14 +334,30 @@
             font-weight: 700;
             text-align: center;
         }
+        .entry-player-row .player-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .entry-player-row .player-pos {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
         .entry-player-row .player-pts {
             font-weight: 700;
             text-align: right;
+            color: var(--text-primary);
         }
         .entry-player-row .player-pts.scoring { color: var(--success-color); }
+        .my-entry-score {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
         .entry-status-live { background: rgba(46,125,50,0.1); color: var(--success-color); border: 1px solid var(--success-color); }
         .entry-status-completed { background: rgba(139,0,0,0.1); color: var(--accent-color); border: 1px solid var(--accent-color); }
         .entry-status-upcoming { background: rgba(0,0,0,0.05); color: var(--text-muted); border: 1px solid var(--border-color); }
+        [data-theme="dark"] .entry-status-upcoming { background: rgba(255,255,255,0.05); }
 
         .tab-buttons {
             display: flex;
@@ -443,7 +459,7 @@
                     <h3 class="leaderboard-header" style="margin: 0;">My Entry</h3>
                     <div id="myEntryRank" style="font-size: 0.9rem; color: var(--text-muted);"></div>
                 </div>
-                <div id="myEntryScore" style="font-size: 2rem; font-weight: 800; color: var(--accent-color); margin-bottom: 1rem;">0 pts</div>
+                <div id="myEntryScore" class="my-entry-score">0 pts</div>
                 <div id="myEntryLineup"></div>
                 <div id="myEntryStatus" style="margin-top: 1rem; padding: 0.75rem; border-radius: 6px; text-align: center;"></div>
             </div>
@@ -512,10 +528,6 @@
                 }
 
                 contest = data.contest;
-                console.log('Contest data:', data);
-                console.log('User entry:', data.userEntry);
-                // DEBUG: Show on page
-                document.getElementById('messageArea').innerHTML = `<div class="message" style="background:#ffe;color:#333;border:1px solid #cc0;">DEBUG: userEntry = ${data.userEntry ? 'EXISTS' : 'NULL'}, status = ${contest.status}</div>`;
                 document.getElementById('contestTitle').textContent = contest.title;
 
                 const locksAt = new Date(contest.locksAt);
@@ -945,8 +957,8 @@
                     <div class="entry-player-row">
                         <span class="pos-badge">${player.position}</span>
                         <div>
-                            <div style="font-weight: 600;">${player.playerName}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted);">${player.playerPosition}</div>
+                            <div class="player-name">${player.playerName}</div>
+                            <div class="player-pos">${player.playerPosition}</div>
                         </div>
                         <span class="player-pts ${pts > 0 ? 'scoring' : ''}">${pts} pts</span>
                     </div>

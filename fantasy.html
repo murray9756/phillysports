@@ -512,12 +512,10 @@
                 });
                 const data = await response.json();
 
-                console.log('User entries response:', data);
                 const contestsWithEntries = (data.contests || []).filter(c => c.userEntry);
-                console.log('Contests with entries:', contestsWithEntries);
 
                 if (contestsWithEntries.length === 0) {
-                    container.innerHTML = `<div class="empty-state">No entries yet (${data.contests?.length || 0} contests checked)</div>`;
+                    container.innerHTML = '<div class="empty-state">No entries yet</div>';
                     return;
                 }
 
