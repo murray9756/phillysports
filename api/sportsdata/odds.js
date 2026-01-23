@@ -49,8 +49,13 @@ async function fetchUpcomingOdds(sport, team) {
 
     const formatDate = (d) => d.toISOString().split('T')[0];
 
+    // Calculate current NFL season (season starts in Sept, so Jan-Aug = previous year)
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth(); // 0-indexed
+    const nflSeason = currentMonth < 8 ? currentYear - 1 : currentYear; // Before September = last year's season
+
     const endpoints = {
-        NFL: `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/2024REG/1`,
+        NFL: `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/${nflSeason}REG/1`,
         NBA: `https://api.sportsdata.io/v3/nba/odds/json/GameOddsByDate/${formatDate(today)}`,
         MLB: `https://api.sportsdata.io/v3/mlb/odds/json/GameOddsByDate/${formatDate(today)}`,
         NHL: `https://api.sportsdata.io/v3/nhl/odds/json/GameOddsByDate/${formatDate(today)}`
@@ -63,7 +68,7 @@ async function fetchUpcomingOdds(sport, team) {
             const weekResponse = await fetch(weekUrl);
             if (weekResponse.ok) {
                 const currentWeek = await weekResponse.json();
-                endpoints.NFL = `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/2024REG/${currentWeek}`;
+                endpoints.NFL = `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/${nflSeason}REG/${currentWeek}`;
             }
         } catch (e) {
             console.error('Failed to get current NFL week');

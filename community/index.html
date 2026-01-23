@@ -298,35 +298,17 @@
             if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
         });
 
-        // Check auth state
+        // Auth check - header UI is handled by header.js
         async function checkAuth() {
             try {
                 const response = await fetch('/api/auth/me', { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
-                    const premiumBadge = data.user.isSubscribed
-                        ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
-                    const adminLink = data.user.isAdmin
-                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
-                        : '';
-                    document.getElementById('authSection').innerHTML = `
-                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                            <span class="theme-icon-light">&#9790;</span>
-                            <span class="theme-icon-dark">&#9728;</span>
-                        </button>
-                        <div class="coin-display">
-                            <span class="coin-icon">🪙</span>
-                            <span class="coin-balance">${Math.round(data.user.coinBalance || 0)}</span>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
-                        </div>
-                        ${premiumBadge}${adminLink}
-                        <a href="/profile.html">${data.user.displayName || data.user.username}</a>
-                        <a href="#" onclick="logout(); return false;">Logout</a>
-                    `;
-                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    currentUser = data.user;
                 }
-            } catch (e) {}
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
         }
 
         async function logout() {

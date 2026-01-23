@@ -382,40 +382,13 @@
         let gamesData = {};
         let betType = 'single';
 
-        // Auth check
+        // Auth check - header UI is handled by header.js
         async function checkAuth() {
             try {
-                const response = await fetch('/api/auth/me');
-                const data = await response.json();
-                if (data.user) {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                if (response.ok) {
+                    const data = await response.json();
                     currentUser = data.user;
-                    const premiumBadge = data.user.isSubscribed
-                        ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
-                    const adminLink = data.user.isAdmin
-                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
-                        : '';
-                    document.getElementById('headerAuth').innerHTML = `
-                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                            <span class="theme-icon-light">&#9790;</span>
-                            <span class="theme-icon-dark">&#9728;</span>
-                        </button>
-                        <div class="coin-display" title="Diehard Dollars" id="coinDisplay">
-                            <span>&#129689;</span>
-                            <span class="coin-balance" id="coinBalance">${Math.round(data.user.coinBalance || 0)}</span>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
-                        </div>
-                        ${premiumBadge}
-                        ${adminLink}
-                        <a href="/profile.html">${data.user.username}</a>
-                        <a href="#" id="logoutBtn">Logout</a>
-                    `;
-                    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-                    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-                        e.preventDefault();
-                        await fetch('/api/auth/logout', { method: 'POST' });
-                        window.location.href = '/';
-                    });
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
