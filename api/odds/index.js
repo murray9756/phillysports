@@ -187,7 +187,10 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
 
     // Debug: log first game structure to see field names
     if (games.length > 0) {
-        console.log(`SportsDataIO ${sport} first game fields:`, Object.keys(games[0]).join(', '));
+        const firstGame = games[0];
+        console.log(`SportsDataIO ${sport} first game fields:`, Object.keys(firstGame).join(', '));
+        console.log(`SportsDataIO ${sport} HomeTeam value:`, firstGame.HomeTeam, '| AwayTeam:', firstGame.AwayTeam);
+        console.log(`SportsDataIO ${sport} HomeTeamName value:`, firstGame.HomeTeamName, '| AwayTeamName:', firstGame.AwayTeamName);
     }
 
     // Filter by team if specified
