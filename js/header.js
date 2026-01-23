@@ -19,7 +19,7 @@
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <div style="display: flex; gap: 0.5rem; align-items: stretch;">
                         <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>
@@ -891,6 +891,8 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
+            height: 100%;
+            box-sizing: border-box;
             gap: 0.35rem;
             color: #1A2744;
             font-family: Georgia, serif;
@@ -929,6 +931,8 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
+            height: 100%;
+            box-sizing: border-box;
             gap: 0.35rem;
             color: #1A2744;
             font-family: Georgia, serif;
