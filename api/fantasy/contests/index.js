@@ -18,9 +18,7 @@ const ROSTER_POSITIONS = {
         { position: 'SF', count: 1 },
         { position: 'PF', count: 1 },
         { position: 'C', count: 1 },
-        { position: 'G', count: 1, eligible: ['PG', 'SG', 'G'] },
-        { position: 'F', count: 1, eligible: ['SF', 'PF', 'F'] },
-        { position: 'UTIL', count: 1, eligible: ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F'] }
+        { position: 'UTIL', count: 3, eligible: ['PG', 'SG', 'SF', 'PF', 'C'] }
     ],
     MLB: [
         { position: 'P', count: 2, eligible: ['SP', 'RP'] },
