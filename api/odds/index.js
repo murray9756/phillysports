@@ -1,36 +1,24 @@
-// Odds API - Fetch betting odds from The Odds API
-// GET: Returns odds for games across NFL, NBA, MLB, NHL, NCAAF, NCAAB
+// Odds API - Unified endpoint
+// Pro sports (NFL, NBA, MLB, NHL) -> SportsDataIO
+// College sports (NCAAF, NCAAB) -> TheOddsAPI
 
 import { getCollection } from '../lib/mongodb.js';
 
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 const ODDS_API_KEY = process.env.ODDS_API_KEY;
-const ODDS_API_BASE = 'https://api.the-odds-api.com/v4';
 
 // Cache duration: 15 minutes
 const CACHE_DURATION_MS = 15 * 60 * 1000;
 
-// Sport key mapping for The Odds API
-const SPORT_KEYS = {
-    'NFL': 'americanfootball_nfl',
-    'NBA': 'basketball_nba',
-    'MLB': 'baseball_mlb',
-    'NHL': 'icehockey_nhl',
+// Pro sports use SportsDataIO
+const PRO_SPORTS = ['NFL', 'NBA', 'MLB', 'NHL'];
+
+// College sports use TheOddsAPI
+const COLLEGE_SPORTS = ['NCAAF', 'NCAAB'];
+const COLLEGE_SPORT_KEYS = {
     'NCAAF': 'americanfootball_ncaaf',
     'NCAAB': 'basketball_ncaab'
 };
-
-// Sport display names
-const SPORT_NAMES = {
-    'americanfootball_nfl': 'NFL',
-    'basketball_nba': 'NBA',
-    'baseball_mlb': 'MLB',
-    'icehockey_nhl': 'NHL',
-    'americanfootball_ncaaf': 'NCAAF',
-    'basketball_ncaab': 'NCAAB'
-};
-
-// Preferred bookmakers (in order of preference)
-const PREFERRED_BOOKMAKERS = ['draftkings', 'fanduel', 'betmgm', 'caesars', 'pointsbetus'];
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -45,71 +33,48 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { sport, date } = req.query;
+    const { sport, team } = req.query;
+    const sportUpper = sport?.toUpperCase();
 
     // Validate sport parameter
-    if (sport && !SPORT_KEYS[sport.toUpperCase()]) {
+    const validSports = [...PRO_SPORTS, ...COLLEGE_SPORTS];
+    if (sportUpper && !validSports.includes(sportUpper)) {
         return res.status(400).json({
             error: 'Invalid sport',
-            validSports: Object.keys(SPORT_KEYS)
+            validSports
         });
     }
 
     try {
-        // Check cache first
-        const cacheKey = `odds_${date || 'today'}_${sport || 'all'}`;
-        const cachedData = await getCachedOdds(cacheKey);
+        let games = [];
 
-        if (cachedData) {
-            return res.status(200).json({
-                success: true,
-                games: cachedData.games,
-                lastUpdated: cachedData.lastUpdated,
-                cached: true
-            });
+        if (!sportUpper) {
+            // Fetch all sports
+            const [proGames, collegeGames] = await Promise.all([
+                fetchProSportsOdds(team),
+                fetchCollegeSportsOdds()
+            ]);
+            games = [...proGames, ...collegeGames];
+        } else if (PRO_SPORTS.includes(sportUpper)) {
+            // Pro sport - use SportsDataIO
+            games = await fetchSportsDataOdds(sportUpper, team);
+        } else if (COLLEGE_SPORTS.includes(sportUpper)) {
+            // College sport - use TheOddsAPI
+            games = await fetchTheOddsAPIData(sportUpper);
         }
 
-        // Check if API key is configured
-        if (!ODDS_API_KEY) {
-            // Return mock data for development/demo
-            return res.status(200).json({
-                success: true,
-                games: getMockOddsData(sport),
-                lastUpdated: new Date().toISOString(),
-                cached: false,
-                demo: true
-            });
-        }
-
-        // Fetch from The Odds API
-        const games = await fetchOddsFromAPI(sport);
-
-        // Cache the results
-        await cacheOdds(cacheKey, games);
+        // Sort by commence time
+        games.sort((a, b) => new Date(a.commenceTime) - new Date(b.commenceTime));
 
         return res.status(200).json({
             success: true,
             games,
-            lastUpdated: new Date().toISOString(),
-            cached: false
+            sport: sportUpper || 'all',
+            lastUpdated: new Date().toISOString()
         });
 
     } catch (error) {
         console.error('Odds API error:', error);
-
-        // Try to return stale cache on error
-        const staleData = await getStaleCache(sport);
-        if (staleData) {
-            return res.status(200).json({
-                success: true,
-                games: staleData.games,
-                lastUpdated: staleData.lastUpdated,
-                cached: true,
-                stale: true,
-                warning: 'Showing cached data due to API error'
-            });
-        }
-
         return res.status(500).json({
             error: 'Failed to fetch odds',
             message: error.message
@@ -117,63 +82,199 @@ export default async function handler(req, res) {
     }
 }
 
-async function fetchOddsFromAPI(sportFilter) {
+// Fetch all pro sports odds from SportsDataIO
+async function fetchProSportsOdds(team) {
     const allGames = [];
-    const sportsToFetch = sportFilter
-        ? [SPORT_KEYS[sportFilter.toUpperCase()]]
-        : Object.values(SPORT_KEYS);
-
-    for (const sportKey of sportsToFetch) {
+    for (const sport of PRO_SPORTS) {
         try {
-            const url = `${ODDS_API_BASE}/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}&regions=us&markets=spreads,h2h,totals&oddsFormat=american`;
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                console.error(`Failed to fetch ${sportKey}:`, response.status);
-                continue;
-            }
-
-            const data = await response.json();
-
-            // Track remaining API requests
-            const remaining = response.headers.get('x-requests-remaining');
-            if (remaining) {
-                await trackAPIUsage(parseInt(remaining));
-            }
-
-            // Process each game
-            for (const game of data) {
-                const processedGame = processGameOdds(game, sportKey);
-                if (processedGame) {
-                    allGames.push(processedGame);
-                }
-            }
+            const games = await fetchSportsDataOdds(sport, team);
+            allGames.push(...games);
         } catch (e) {
-            console.error(`Error fetching ${sportKey}:`, e);
+            console.error(`Error fetching ${sport} odds:`, e.message);
         }
     }
-
-    // Sort by commence time
-    allGames.sort((a, b) => new Date(a.commenceTime) - new Date(b.commenceTime));
-
     return allGames;
 }
 
-function processGameOdds(game, sportKey) {
-    // Find preferred bookmaker
-    const bookmaker = findPreferredBookmaker(game.bookmakers);
-    if (!bookmaker) return null;
+// Fetch all college sports odds from TheOddsAPI
+async function fetchCollegeSportsOdds() {
+    if (!ODDS_API_KEY) return [];
 
-    // Extract odds from bookmaker
-    const spreadMarket = bookmaker.markets?.find(m => m.key === 'spreads');
-    const moneylineMarket = bookmaker.markets?.find(m => m.key === 'h2h');
-    const totalMarket = bookmaker.markets?.find(m => m.key === 'totals');
+    const allGames = [];
+    for (const sport of COLLEGE_SPORTS) {
+        try {
+            const games = await fetchTheOddsAPIData(sport);
+            allGames.push(...games);
+        } catch (e) {
+            console.error(`Error fetching ${sport} odds:`, e.message);
+        }
+    }
+    return allGames;
+}
 
-    // Build odds object
+// Fetch odds from SportsDataIO (pro sports)
+async function fetchSportsDataOdds(sport, team) {
+    if (!SPORTSDATA_API_KEY) {
+        console.warn('SPORTSDATA_API_KEY not configured');
+        return [];
+    }
+
+    const endpoints = {
+        NFL: 'nfl',
+        NBA: 'nba',
+        MLB: 'mlb',
+        NHL: 'nhl'
+    };
+
+    const endpoint = endpoints[sport];
+    if (!endpoint) return [];
+
+    // Get current week for NFL, today's date for others
+    let url;
+    if (sport === 'NFL') {
+        // Get current NFL week
+        try {
+            const weekUrl = `https://api.sportsdata.io/v3/nfl/scores/json/CurrentWeek?key=${SPORTSDATA_API_KEY}`;
+            const weekResponse = await fetch(weekUrl);
+            if (weekResponse.ok) {
+                const currentWeek = await weekResponse.json();
+                url = `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/2025REG/${currentWeek}?key=${SPORTSDATA_API_KEY}`;
+            }
+        } catch (e) {
+            console.error('Failed to get NFL week, using default');
+        }
+        if (!url) {
+            url = `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/2025REG/1?key=${SPORTSDATA_API_KEY}`;
+        }
+    } else {
+        const today = new Date().toISOString().split('T')[0];
+        url = `https://api.sportsdata.io/v3/${endpoint}/odds/json/GameOddsByDate/${today}?key=${SPORTSDATA_API_KEY}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        console.error(`SportsDataIO odds fetch failed for ${sport}:`, response.status);
+        return [];
+    }
+
+    let games = await response.json();
+
+    // Filter by team if specified
+    if (team) {
+        const teamUpper = team.toUpperCase();
+        games = games.filter(g =>
+            g.HomeTeam?.toUpperCase() === teamUpper ||
+            g.AwayTeam?.toUpperCase() === teamUpper
+        );
+    } else {
+        // Default: filter to Philly teams
+        games = games.filter(g =>
+            g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI'
+        );
+    }
+
+    // Transform to unified format
+    return games.map(game => transformSportsDataGame(game, sport));
+}
+
+// Transform SportsDataIO game to unified format
+function transformSportsDataGame(game, sport) {
+    const pregameOdds = game.PregameOdds || [];
+    const consensus = pregameOdds.find(o => o.Sportsbook === 'Consensus') ||
+                      pregameOdds.find(o => o.Sportsbook === 'DraftKings') ||
+                      pregameOdds.find(o => o.Sportsbook === 'FanDuel') ||
+                      pregameOdds[0] || {};
+
     const odds = {};
 
     // Spread
+    if (consensus.HomePointSpread !== null && consensus.HomePointSpread !== undefined) {
+        odds.spread = {
+            home: { point: consensus.HomePointSpread, price: consensus.HomePointSpreadPayout || -110 },
+            away: { point: consensus.AwayPointSpread, price: consensus.AwayPointSpreadPayout || -110 }
+        };
+    }
+
+    // Moneyline
+    if (consensus.HomeMoneyLine !== null && consensus.HomeMoneyLine !== undefined) {
+        odds.moneyline = {
+            home: consensus.HomeMoneyLine,
+            away: consensus.AwayMoneyLine
+        };
+    }
+
+    // Total
+    if (consensus.OverUnder !== null && consensus.OverUnder !== undefined) {
+        odds.total = {
+            over: { point: consensus.OverUnder, price: consensus.OverPayout || -110 },
+            under: { point: consensus.OverUnder, price: consensus.UnderPayout || -110 }
+        };
+    }
+
+    return {
+        id: game.GameId || game.ScoreID,
+        sport,
+        commenceTime: game.DateTime || game.Day,
+        homeTeam: game.HomeTeam,
+        awayTeam: game.AwayTeam,
+        bookmaker: consensus.Sportsbook || 'Consensus',
+        odds: Object.keys(odds).length > 0 ? odds : null,
+        status: game.Status,
+        lastUpdate: new Date().toISOString(),
+        source: 'sportsdata'
+    };
+}
+
+// Fetch odds from TheOddsAPI (college sports only)
+async function fetchTheOddsAPIData(sport) {
+    if (!ODDS_API_KEY) {
+        console.warn('ODDS_API_KEY not configured for college sports');
+        return [];
+    }
+
+    const sportKey = COLLEGE_SPORT_KEYS[sport];
+    if (!sportKey) return [];
+
+    const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}&regions=us&markets=spreads,h2h,totals&oddsFormat=american`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        console.error(`TheOddsAPI fetch failed for ${sport}:`, response.status);
+        return [];
+    }
+
+    const data = await response.json();
+
+    // Track remaining API requests
+    const remaining = response.headers.get('x-requests-remaining');
+    if (remaining) {
+        await trackAPIUsage(parseInt(remaining));
+    }
+
+    return data.map(game => transformTheOddsAPIGame(game, sport));
+}
+
+// Transform TheOddsAPI game to unified format
+function transformTheOddsAPIGame(game, sport) {
+    const bookmaker = findPreferredBookmaker(game.bookmakers);
+    if (!bookmaker) {
+        return {
+            id: game.id,
+            sport,
+            commenceTime: game.commence_time,
+            homeTeam: game.home_team,
+            awayTeam: game.away_team,
+            bookmaker: null,
+            odds: null,
+            lastUpdate: new Date().toISOString(),
+            source: 'theoddsapi'
+        };
+    }
+
+    const odds = {};
+
+    // Spread
+    const spreadMarket = bookmaker.markets?.find(m => m.key === 'spreads');
     if (spreadMarket?.outcomes) {
         const homeSpread = spreadMarket.outcomes.find(o => o.name === game.home_team);
         const awaySpread = spreadMarket.outcomes.find(o => o.name === game.away_team);
@@ -186,6 +287,7 @@ function processGameOdds(game, sportKey) {
     }
 
     // Moneyline
+    const moneylineMarket = bookmaker.markets?.find(m => m.key === 'h2h');
     if (moneylineMarket?.outcomes) {
         const homeMl = moneylineMarket.outcomes.find(o => o.name === game.home_team);
         const awayMl = moneylineMarket.outcomes.find(o => o.name === game.away_team);
@@ -197,7 +299,8 @@ function processGameOdds(game, sportKey) {
         }
     }
 
-    // Total (Over/Under)
+    // Total
+    const totalMarket = bookmaker.markets?.find(m => m.key === 'totals');
     if (totalMarket?.outcomes) {
         const over = totalMarket.outcomes.find(o => o.name === 'Over');
         const under = totalMarket.outcomes.find(o => o.name === 'Under');
@@ -211,16 +314,19 @@ function processGameOdds(game, sportKey) {
 
     return {
         id: game.id,
-        sport: SPORT_NAMES[sportKey] || sportKey,
-        sportKey,
+        sport,
         commenceTime: game.commence_time,
         homeTeam: game.home_team,
         awayTeam: game.away_team,
         bookmaker: formatBookmakerName(bookmaker.key),
-        odds,
-        lastUpdate: bookmaker.last_update || new Date().toISOString()
+        odds: Object.keys(odds).length > 0 ? odds : null,
+        lastUpdate: bookmaker.last_update || new Date().toISOString(),
+        source: 'theoddsapi'
     };
 }
+
+// Preferred bookmakers for TheOddsAPI
+const PREFERRED_BOOKMAKERS = ['draftkings', 'fanduel', 'betmgm', 'caesars', 'pointsbetus'];
 
 function findPreferredBookmaker(bookmakers) {
     if (!bookmakers || bookmakers.length === 0) return null;
@@ -229,8 +335,6 @@ function findPreferredBookmaker(bookmakers) {
         const found = bookmakers.find(b => b.key === preferred);
         if (found) return found;
     }
-
-    // Return first available if no preferred found
     return bookmakers[0];
 }
 
@@ -243,54 +347,6 @@ function formatBookmakerName(key) {
         'pointsbetus': 'PointsBet'
     };
     return names[key] || key;
-}
-
-async function getCachedOdds(cacheKey) {
-    try {
-        const cache = await getCollection('odds_cache');
-        const cached = await cache.findOne({
-            cacheKey,
-            expiresAt: { $gt: new Date() }
-        });
-        return cached;
-    } catch (e) {
-        console.error('Cache read error:', e);
-        return null;
-    }
-}
-
-async function cacheOdds(cacheKey, games) {
-    try {
-        const cache = await getCollection('odds_cache');
-        await cache.updateOne(
-            { cacheKey },
-            {
-                $set: {
-                    cacheKey,
-                    games,
-                    lastUpdated: new Date().toISOString(),
-                    expiresAt: new Date(Date.now() + CACHE_DURATION_MS),
-                    updatedAt: new Date()
-                }
-            },
-            { upsert: true }
-        );
-    } catch (e) {
-        console.error('Cache write error:', e);
-    }
-}
-
-async function getStaleCache(sport) {
-    try {
-        const cache = await getCollection('odds_cache');
-        const stale = await cache.findOne(
-            { cacheKey: { $regex: sport || '' } },
-            { sort: { updatedAt: -1 } }
-        );
-        return stale;
-    } catch (e) {
-        return null;
-    }
 }
 
 async function trackAPIUsage(remaining) {
@@ -308,127 +364,4 @@ async function trackAPIUsage(remaining) {
     } catch (e) {
         console.error('Usage tracking error:', e);
     }
-}
-
-// Mock data for development/demo when API key not configured
-// Returns empty array since we can't provide accurate odds without the API
-// This prevents showing misleading matchup data that doesn't match the actual schedule
-function getMockOddsData(sportFilter) {
-    // Determine which sports are currently in season
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1; // 1-12
-
-    const isNflSeason = currentMonth >= 9 || currentMonth <= 2;
-    const isNbaSeason = currentMonth >= 10 || currentMonth <= 6;
-    const isNhlSeason = currentMonth >= 10 || currentMonth <= 6;
-    const isMlbSeason = currentMonth >= 3 && currentMonth <= 10;
-    const isNcaafSeason = currentMonth >= 8 && currentMonth <= 1;
-    const isNcaabSeason = currentMonth >= 11 || currentMonth <= 3;
-
-    // Return empty array - without real API data we can't show accurate odds
-    // The UI should handle this gracefully and indicate odds are unavailable
-    const mockGames = [];
-
-    // Only add placeholder message games for in-season sports
-    // These indicate that odds API is not configured rather than showing fake matchups
-    if (isNflSeason) {
-        mockGames.push({
-            id: 'demo-nfl',
-            sport: 'NFL',
-            sportKey: 'americanfootball_nfl',
-            commenceTime: new Date(Date.now() + 86400000).toISOString(),
-            homeTeam: 'Philadelphia Eagles',
-            awayTeam: 'Opponent TBD',
-            bookmaker: 'Demo',
-            odds: null,
-            demo: true,
-            message: 'Configure ODDS_API_KEY for live odds',
-            lastUpdate: new Date().toISOString()
-        });
-    }
-
-    if (isNbaSeason) {
-        mockGames.push({
-            id: 'demo-nba',
-            sport: 'NBA',
-            sportKey: 'basketball_nba',
-            commenceTime: new Date(Date.now() + 43200000).toISOString(),
-            homeTeam: 'Philadelphia 76ers',
-            awayTeam: 'Opponent TBD',
-            bookmaker: 'Demo',
-            odds: null,
-            demo: true,
-            message: 'Configure ODDS_API_KEY for live odds',
-            lastUpdate: new Date().toISOString()
-        });
-    }
-
-    if (isNhlSeason) {
-        mockGames.push({
-            id: 'demo-nhl',
-            sport: 'NHL',
-            sportKey: 'icehockey_nhl',
-            commenceTime: new Date(Date.now() + 72000000).toISOString(),
-            homeTeam: 'Philadelphia Flyers',
-            awayTeam: 'Opponent TBD',
-            bookmaker: 'Demo',
-            odds: null,
-            demo: true,
-            message: 'Configure ODDS_API_KEY for live odds',
-            lastUpdate: new Date().toISOString()
-        });
-    }
-
-    if (isMlbSeason) {
-        mockGames.push({
-            id: 'demo-mlb',
-            sport: 'MLB',
-            sportKey: 'baseball_mlb',
-            commenceTime: new Date(Date.now() + 100000000).toISOString(),
-            homeTeam: 'Philadelphia Phillies',
-            awayTeam: 'Opponent TBD',
-            bookmaker: 'Demo',
-            odds: null,
-            demo: true,
-            message: 'Configure ODDS_API_KEY for live odds',
-            lastUpdate: new Date().toISOString()
-        });
-    }
-
-    if (isNcaafSeason) {
-        mockGames.push({
-            id: 'demo-ncaaf',
-            sport: 'NCAAF',
-            sportKey: 'americanfootball_ncaaf',
-            commenceTime: new Date(Date.now() + 150000000).toISOString(),
-            homeTeam: 'Penn State Nittany Lions',
-            awayTeam: 'Opponent TBD',
-            bookmaker: 'Demo',
-            odds: null,
-            demo: true,
-            message: 'Configure ODDS_API_KEY for live odds',
-            lastUpdate: new Date().toISOString()
-        });
-    }
-
-    if (isNcaabSeason) {
-        mockGames.push({
-            id: 'demo-ncaab',
-            sport: 'NCAAB',
-            sportKey: 'basketball_ncaab',
-            commenceTime: new Date(Date.now() + 60000000).toISOString(),
-            homeTeam: 'Villanova Wildcats',
-            awayTeam: 'Opponent TBD',
-            bookmaker: 'Demo',
-            odds: null,
-            demo: true,
-            message: 'Configure ODDS_API_KEY for live odds',
-            lastUpdate: new Date().toISOString()
-        });
-    }
-
-    if (sportFilter) {
-        return mockGames.filter(g => g.sport === sportFilter.toUpperCase());
-    }
-    return mockGames;
 }
