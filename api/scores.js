@@ -46,53 +46,53 @@ export default async function handler(req, res) {
     try {
         const scores = [];
 
-        // Fetch scores for each major sport
+        // ESPN endpoints for scores (more reliable for real data)
+        const ESPN_URLS = {
+            NFL: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/phi/schedule',
+            NBA: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/phi/schedule',
+            MLB: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/phi/schedule',
+            NHL: 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/teams/phi/schedule'
+        };
+
         const sportsToFetch = ['NFL', 'NBA', 'MLB', 'NHL'];
 
         await Promise.all(sportsToFetch.map(async (sport) => {
             try {
-                // Get scores from the last few days to find most recent Philly game
-                const today = new Date();
-                let foundGame = null;
+                // Use ESPN for scores (has real data)
+                const espnUrl = ESPN_URLS[sport];
+                const response = await fetch(espnUrl);
+                if (!response.ok) throw new Error('ESPN fetch failed');
 
-                // Check the last 7 days for completed Philly games
-                for (let daysAgo = 0; daysAgo <= 7 && !foundGame; daysAgo++) {
-                    const checkDate = new Date(today);
-                    checkDate.setDate(checkDate.getDate() - daysAgo);
-                    const dateStr = checkDate.toISOString().split('T')[0];
+                const data = await response.json();
+                const events = data.events || [];
 
-                    try {
-                        const dayScores = await fetchScoresByDate(sport, dateStr);
-                        // Find completed Philly games from this day
-                        const phillyGames = dayScores.filter(g =>
-                            (g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI') &&
-                            (g.Status === 'Final' || g.Status === 'F/OT' || g.IsClosed)
-                        );
+                // Find most recent completed game
+                const completedGames = events.filter(e =>
+                    e.competitions?.[0]?.status?.type?.completed
+                );
 
-                        if (phillyGames.length > 0) {
-                            foundGame = phillyGames[0];
-                        }
-                    } catch (e) {
-                        // Day might not have games, continue
-                    }
-                }
+                const recentGame = completedGames[completedGames.length - 1];
+                if (recentGame) {
+                    const comp = recentGame.competitions[0];
+                    const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
+                    const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
+                    const phillyIsHome = homeTeam?.team?.abbreviation === 'PHI' ||
+                                        homeTeam?.team?.displayName?.includes('Philadelphia');
 
-                if (foundGame) {
-                    const isHome = foundGame.HomeTeam === 'PHI';
                     const config = Object.values(TEAM_CONFIG).find(c => c.sport === sport);
 
                     scores.push({
                         sport,
                         team: config?.name || sport,
                         teamColor: config?.color || '#666666',
-                        homeTeam: foundGame.HomeTeam,
-                        homeScore: String(foundGame.HomeScore ?? foundGame.HomeTeamScore ?? 0),
-                        awayTeam: foundGame.AwayTeam,
-                        awayScore: String(foundGame.AwayScore ?? foundGame.AwayTeamScore ?? 0),
-                        isHome,
-                        date: foundGame.DateTime || foundGame.Day,
-                        gameId: (foundGame.GameID || foundGame.ScoreID)?.toString(),
-                        status: foundGame.Status
+                        homeTeam: homeTeam?.team?.abbreviation || homeTeam?.team?.shortDisplayName || 'Home',
+                        homeScore: String(homeTeam?.score?.displayValue || homeTeam?.score || '0'),
+                        awayTeam: awayTeam?.team?.abbreviation || awayTeam?.team?.shortDisplayName || 'Away',
+                        awayScore: String(awayTeam?.score?.displayValue || awayTeam?.score || '0'),
+                        isHome: phillyIsHome,
+                        date: recentGame.date,
+                        gameId: recentGame.id,
+                        status: comp.status?.type?.shortDetail || 'Final'
                     });
                 }
             } catch (e) {
