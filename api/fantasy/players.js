@@ -37,8 +37,9 @@ export default async function handler(req, res) {
         const result = await fetchPlayersFromSportsDataIO(sportUpper, targetDate);
         let { players, games } = result;
 
-        // Filter by contestId if provided
-        if (contestId && players.length > 0) {
+        // Filter by contestId if provided (only if players have gameIds)
+        const hasGameIds = players.some(p => p.gameId);
+        if (contestId && players.length > 0 && hasGameIds) {
             try {
                 const contestsCollection = await getCollection('fantasy_contests');
                 const { ObjectId } = await import('mongodb');
@@ -47,7 +48,7 @@ export default async function handler(req, res) {
                 if (contest && contest.gameIds && contest.gameIds.length > 0) {
                     const validGameIds = new Set(contest.gameIds.map(id => id.toString()));
                     players = players.filter(p => p.gameId && validGameIds.has(p.gameId.toString()));
-                    games = games.filter(g => validGameIds.has(g.id.toString()));
+                    games = games.filter(g => g.id && validGameIds.has(g.id.toString()));
                 }
             } catch (err) {
                 console.error('Error filtering by contest:', err.message);
@@ -71,11 +72,22 @@ export default async function handler(req, res) {
 
 // Fetch players from SportsDataIO
 async function fetchPlayersFromSportsDataIO(sport, targetDate) {
+    // Determine current season based on date
+    const date = new Date(targetDate);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+
+    // NBA/NHL seasons span two years - use the ending year
+    // e.g., 2025-26 season = "2026" in January 2026
+    const nbaNhlSeason = month >= 10 ? year + 1 : year;
+    const mlbSeason = year;
+    const nflSeason = month >= 3 && month <= 8 ? year : year; // Regular season year
+
     const sportConfig = {
-        NFL: { endpoint: 'nfl', season: '2025' },
-        NBA: { endpoint: 'nba', season: '2025' },
-        MLB: { endpoint: 'mlb', season: '2025' },
-        NHL: { endpoint: 'nhl', season: '2025' }
+        NFL: { endpoint: 'nfl', season: nflSeason.toString() },
+        NBA: { endpoint: 'nba', season: nbaNhlSeason.toString() },
+        MLB: { endpoint: 'mlb', season: mlbSeason.toString() },
+        NHL: { endpoint: 'nhl', season: nbaNhlSeason.toString() }
     };
 
     const config = sportConfig[sport];
@@ -142,15 +154,18 @@ async function fetchPlayersFromSportsDataIO(sport, targetDate) {
 async function fetchFromScheduleAndRosters(sport, config, targetDate) {
     // Get games for the date
     const gamesUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+    console.log(`Fetching games from: ${gamesUrl.replace(SPORTSDATA_API_KEY, 'XXX')}`);
+
     const gamesResponse = await fetch(gamesUrl);
 
     if (!gamesResponse.ok) {
-        console.error('Games fetch failed:', gamesResponse.status);
+        console.error('Games fetch failed:', gamesResponse.status, await gamesResponse.text());
         // If no games endpoint, return all active players
         return await fetchAllActivePlayers(sport, config);
     }
 
     const gamesData = await gamesResponse.json();
+    console.log(`Games found for ${sport} on ${targetDate}:`, gamesData?.length || 0);
 
     if (!gamesData || gamesData.length === 0) {
         console.log('No games found for date, returning all active players');
