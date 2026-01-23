@@ -1,5 +1,5 @@
 // Unified Marketplace API
-// GET: Browse all products (eBay affiliate + user listings + raffles) with filtering
+// GET: Browse all products (eBay affiliate + user listings + raffles + curated tickets) with filtering
 
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
     try {
         const {
-            source = 'all',  // 'all', 'ebay', 'user', 'raffles'
+            source = 'all',  // 'all', 'ebay', 'user', 'raffles', 'tickets'
             category,
             team,
             condition,
@@ -39,6 +39,7 @@ export default async function handler(req, res) {
         let ebayCount = 0;
         let userCount = 0;
         let raffleCount = 0;
+        let ticketCount = 0;
 
         // Fetch eBay products if source is 'all' or 'ebay'
         if (source === 'all' || source === 'ebay') {
@@ -67,6 +68,15 @@ export default async function handler(req, res) {
             allItems = allItems.concat(raffleItems);
         }
 
+        // Fetch curated tickets if source is 'all' or 'tickets'
+        if (source === 'all' || source === 'tickets') {
+            const ticketItems = await fetchTicketListings({
+                team, search, minPrice, maxPrice
+            });
+            ticketCount = ticketItems.length;
+            allItems = allItems.concat(ticketItems);
+        }
+
         // Sort combined results
         allItems = sortItems(allItems, sort, currency);
 
@@ -83,6 +93,7 @@ export default async function handler(req, res) {
                 ebay: ebayCount,
                 user: userCount,
                 raffles: raffleCount,
+                tickets: ticketCount,
                 total: totalCount
             },
             pagination: {
@@ -300,6 +311,81 @@ async function fetchRaffles(filters) {
         viewCount: 0,
         createdAt: raffle.createdAt,
         updatedAt: raffle.updatedAt
+    }));
+}
+
+// Fetch curated ticket listings from shop_products collection
+async function fetchTicketListings(filters) {
+    const { team, search, minPrice, maxPrice } = filters;
+
+    const products = await getCollection('shop_products');
+
+    const query = {
+        category: 'tickets',
+        status: 'active',
+        'ticketData.status': 'available',
+        'ticketData.eventDate': { $gt: new Date() }  // Only future events
+    };
+
+    if (team) query.team = team;
+
+    // Price filtering (priceUSD is in cents)
+    if (minPrice) query.priceUSD = { $gte: parseInt(minPrice) * 100 };
+    if (maxPrice) query.priceUSD = { ...query.priceUSD, $lte: parseInt(maxPrice) * 100 };
+
+    // Text search
+    if (search) {
+        query.$or = [
+            { name: { $regex: search, $options: 'i' } },
+            { 'ticketData.eventTitle': { $regex: search, $options: 'i' } },
+            { 'ticketData.venue': { $regex: search, $options: 'i' } }
+        ];
+    }
+
+    const results = await products.find(query)
+        .sort({ 'ticketData.eventDate': 1 })  // Sort by event date
+        .toArray();
+
+    // Transform to unified format
+    return results.map(ticket => ({
+        _id: ticket._id.toString(),
+        source: 'ticket',
+        sourceType: 'curated',
+        title: ticket.name,
+        description: `${ticket.ticketData.eventTitle} at ${ticket.ticketData.venue}`,
+        images: ticket.images || [],
+        category: 'tickets',
+        team: ticket.team,
+        condition: null,
+        priceUSD: ticket.priceUSD,
+        priceDiehardDollars: null,
+        acceptsUSD: true,
+        acceptsDiehardDollars: false,
+        seller: {
+            username: 'PhillySports.com',
+            isOfficial: true
+        },
+        affiliateLink: null,
+        // Ticket-specific fields
+        ticketData: {
+            eventTitle: ticket.ticketData.eventTitle,
+            eventDate: ticket.ticketData.eventDate,
+            venue: ticket.ticketData.venue,
+            city: ticket.ticketData.city,
+            section: ticket.ticketData.section,
+            row: ticket.ticketData.row,
+            quantity: ticket.ticketData.quantity,
+            pricePerTicket: ticket.ticketData.pricePerTicket,
+            tier: ticket.ticketData.tier,
+            source: ticket.ticketData.source,
+            sourceUrl: ticket.ticketData.sourceUrl
+        },
+        inStock: true,
+        quantity: ticket.ticketData.quantity,
+        expiresAt: ticket.ticketData.eventDate,  // Expires at event time
+        viewCount: 0,
+        createdAt: ticket.createdAt,
+        updatedAt: ticket.updatedAt
     }));
 }
 
