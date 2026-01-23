@@ -1,5 +1,9 @@
 // Fantasy Players API
-// GET: Returns real players from ESPN API for lineup building
+// GET: Returns real players with DFS salaries from SportsDataIO
+// Fallback to ESPN if no API key configured
+
+// SportsDataIO API key - set in environment variable
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,18 +25,137 @@ export default async function handler(req, res) {
     }
 
     try {
-        const players = await fetchPlayersFromESPN(sport.toUpperCase());
+        let players;
+        let source = 'espn';
+
+        // Try SportsDataIO first if API key is configured
+        if (SPORTSDATA_API_KEY) {
+            try {
+                players = await fetchPlayersFromSportsDataIO(sport.toUpperCase(), date);
+                source = 'sportsdata';
+            } catch (e) {
+                console.error('SportsDataIO error, falling back to ESPN:', e.message);
+                players = await fetchPlayersFromESPN(sport.toUpperCase());
+            }
+        } else {
+            // Fallback to ESPN (no salaries)
+            players = await fetchPlayersFromESPN(sport.toUpperCase());
+        }
 
         return res.status(200).json({
             success: true,
             players,
             sport: sport.toUpperCase(),
-            date: date || new Date().toISOString().split('T')[0]
+            date: date || new Date().toISOString().split('T')[0],
+            source
         });
     } catch (error) {
         console.error('Fantasy players error:', error);
         return res.status(500).json({ error: 'Failed to fetch players' });
     }
+}
+
+// Fetch players with DFS salaries from SportsDataIO
+async function fetchPlayersFromSportsDataIO(sport, date) {
+    const sportConfig = {
+        NFL: { endpoint: 'nfl', season: '2024REG' },
+        NBA: { endpoint: 'nba', season: '2025' },
+        MLB: { endpoint: 'mlb', season: '2025' },
+        NHL: { endpoint: 'nhl', season: '2025' }
+    };
+
+    const config = sportConfig[sport];
+    if (!config) {
+        throw new Error(`Unsupported sport: ${sport}`);
+    }
+
+    // Get the date for DFS projections (today if not specified)
+    const targetDate = date || new Date().toISOString().split('T')[0];
+
+    // SportsDataIO DFS Projections endpoint
+    const url = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`SportsDataIO API error: ${response.status}`);
+    }
+
+    const slates = await response.json();
+
+    if (!slates || slates.length === 0) {
+        // No slates for this date, try to get player list instead
+        return await fetchPlayerListFromSportsDataIO(sport, config);
+    }
+
+    // Get the first slate's players (usually main slate)
+    const mainSlate = slates.find(s => s.Operator === 'DraftKings') || slates[0];
+
+    if (!mainSlate || !mainSlate.DfsSlateGames) {
+        return await fetchPlayerListFromSportsDataIO(sport, config);
+    }
+
+    // Fetch player projections for this slate
+    const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatePlayersBySlateID/${mainSlate.SlateID}?key=${SPORTSDATA_API_KEY}`;
+    const playersResponse = await fetch(playersUrl);
+
+    if (!playersResponse.ok) {
+        throw new Error(`SportsDataIO players API error: ${playersResponse.status}`);
+    }
+
+    const slatePlayers = await playersResponse.json();
+
+    return slatePlayers.map(player => ({
+        id: player.PlayerID?.toString() || player.OperatorPlayerID,
+        name: player.OperatorPlayerName || player.Name,
+        position: player.OperatorPosition || player.Position,
+        team: player.Team,
+        teamAbbreviation: player.Team,
+        salary: player.OperatorSalary || 5000,
+        opponent: player.Opponent || 'TBD',
+        projectedPoints: player.FantasyPoints || player.OperatorFantasyPoints || 0,
+        imageUrl: null,
+        gameTime: player.GameTime,
+        slateId: mainSlate.SlateID
+    }));
+}
+
+// Fetch general player list when no DFS slate is available
+async function fetchPlayerListFromSportsDataIO(sport, config) {
+    const url = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/Players?key=${SPORTSDATA_API_KEY}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`SportsDataIO players list error: ${response.status}`);
+    }
+
+    const players = await response.json();
+
+    return players
+        .filter(p => p.Status === 'Active')
+        .slice(0, 500) // Limit to prevent too large response
+        .map(player => ({
+            id: player.PlayerID?.toString(),
+            name: `${player.FirstName} ${player.LastName}`,
+            position: player.Position,
+            team: player.Team,
+            teamAbbreviation: player.Team,
+            salary: calculateSalaryFromPosition(sport, player.Position),
+            opponent: 'TBD',
+            projectedPoints: 0,
+            imageUrl: player.PhotoUrl || null
+        }));
+}
+
+function calculateSalaryFromPosition(sport, position) {
+    const positionValues = {
+        NFL: { QB: 7500, RB: 6500, WR: 6000, TE: 5000, K: 4500, DEF: 4000, default: 5000 },
+        NBA: { PG: 7000, SG: 6500, SF: 6500, PF: 6000, C: 7000, default: 6000 },
+        MLB: { SP: 9000, RP: 5000, C: 4500, '1B': 5000, '2B': 4500, '3B': 5000, SS: 5500, OF: 5000, default: 5000 },
+        NHL: { C: 6000, LW: 5500, RW: 5500, D: 5000, G: 7000, default: 5500 }
+    };
+
+    const sportPos = positionValues[sport] || positionValues.NFL;
+    return sportPos[position] || sportPos.default;
 }
 
 // Fetch real players from ESPN API
