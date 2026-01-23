@@ -33,8 +33,9 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { sport, team } = req.query;
+    const { sport, team, date } = req.query;
     const sportUpper = sport?.toUpperCase();
+    const targetDate = date || new Date().toISOString().split('T')[0];
 
     // Validate sport parameter
     const validSports = [...PRO_SPORTS, ...COLLEGE_SPORTS];
@@ -49,15 +50,15 @@ export default async function handler(req, res) {
         let games = [];
 
         if (!sportUpper) {
-            // Fetch all sports
+            // Fetch all sports - filter to Philly teams only
             const [proGames, collegeGames] = await Promise.all([
-                fetchProSportsOdds(team),
+                fetchProSportsOdds(team, targetDate, true),  // phillyOnly=true
                 fetchCollegeSportsOdds()
             ]);
             games = [...proGames, ...collegeGames];
         } else if (PRO_SPORTS.includes(sportUpper)) {
-            // Pro sport - use SportsDataIO
-            games = await fetchSportsDataOdds(sportUpper, team);
+            // Specific pro sport selected - show all games for that sport
+            games = await fetchSportsDataOdds(sportUpper, team, targetDate, false);  // phillyOnly=false
         } else if (COLLEGE_SPORTS.includes(sportUpper)) {
             // College sport - use TheOddsAPI
             games = await fetchTheOddsAPIData(sportUpper);
@@ -83,11 +84,11 @@ export default async function handler(req, res) {
 }
 
 // Fetch all pro sports odds from SportsDataIO
-async function fetchProSportsOdds(team) {
+async function fetchProSportsOdds(team, targetDate, phillyOnly = true) {
     const allGames = [];
     for (const sport of PRO_SPORTS) {
         try {
-            const games = await fetchSportsDataOdds(sport, team);
+            const games = await fetchSportsDataOdds(sport, team, targetDate, phillyOnly);
             allGames.push(...games);
         } catch (e) {
             console.error(`Error fetching ${sport} odds:`, e.message);
@@ -113,7 +114,7 @@ async function fetchCollegeSportsOdds() {
 }
 
 // Fetch odds from SportsDataIO (pro sports)
-async function fetchSportsDataOdds(sport, team) {
+async function fetchSportsDataOdds(sport, team, targetDate, phillyOnly = true) {
     if (!SPORTSDATA_API_KEY) {
         console.warn('SPORTSDATA_API_KEY not configured');
         return [];
@@ -129,7 +130,9 @@ async function fetchSportsDataOdds(sport, team) {
     const endpoint = endpoints[sport];
     if (!endpoint) return [];
 
-    // Get current week for NFL, today's date for others
+    const dateToUse = targetDate || new Date().toISOString().split('T')[0];
+
+    // Get current week for NFL, target date for others
     let url;
     if (sport === 'NFL') {
         // Get current NFL week
@@ -147,17 +150,20 @@ async function fetchSportsDataOdds(sport, team) {
             url = `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/2025REG/1?key=${SPORTSDATA_API_KEY}`;
         }
     } else {
-        const today = new Date().toISOString().split('T')[0];
-        url = `https://api.sportsdata.io/v3/${endpoint}/odds/json/GameOddsByDate/${today}?key=${SPORTSDATA_API_KEY}`;
+        url = `https://api.sportsdata.io/v3/${endpoint}/odds/json/GameOddsByDate/${dateToUse}?key=${SPORTSDATA_API_KEY}`;
     }
+
+    console.log(`Fetching ${sport} odds from: ${url.replace(SPORTSDATA_API_KEY, 'XXX')}`);
 
     const response = await fetch(url);
     if (!response.ok) {
-        console.error(`SportsDataIO odds fetch failed for ${sport}:`, response.status);
+        const errorText = await response.text();
+        console.error(`SportsDataIO odds fetch failed for ${sport}: ${response.status} - ${errorText}`);
         return [];
     }
 
     let games = await response.json();
+    console.log(`${sport} odds response: ${games.length} games found`);
 
     // Filter by team if specified
     if (team) {
@@ -166,12 +172,13 @@ async function fetchSportsDataOdds(sport, team) {
             g.HomeTeam?.toUpperCase() === teamUpper ||
             g.AwayTeam?.toUpperCase() === teamUpper
         );
-    } else {
-        // Default: filter to Philly teams
+    } else if (phillyOnly) {
+        // Filter to Philly teams when viewing "all sports"
         games = games.filter(g =>
             g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI'
         );
     }
+    // If phillyOnly is false and no team specified, return all games
 
     // Transform to unified format
     return games.map(game => transformSportsDataGame(game, sport));
