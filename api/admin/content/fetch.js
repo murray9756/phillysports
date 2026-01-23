@@ -363,7 +363,7 @@ export default async function handler(req, res) {
                         publishedAt: item.publishedAt,
                         fetchedAt: new Date(),
                         status: 'pending',
-                        teams: source.teams || []
+                        teams: source.teams && source.teams.length > 0 ? source.teams : ['eagles', 'phillies', 'sixers', 'flyers']
                     });
                 }
 
