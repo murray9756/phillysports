@@ -142,10 +142,19 @@ export default async function handler(req, res) {
             }
 
             // Get game IDs and game times from SportsDataIO
+            // SportsDataIO returns times in Eastern Time without timezone suffix
             const gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
             const gameTimes = gamesData
-                .map(g => new Date(g.DateTime || g.Day))
-                .filter(d => !isNaN(d.getTime()))
+                .map(g => {
+                    const dt = g.DateTime || g.Day;
+                    if (!dt) return null;
+                    // If no timezone in string, treat as Eastern Time
+                    if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
+                        return new Date(dt + '-05:00'); // Append EST offset
+                    }
+                    return new Date(dt);
+                })
+                .filter(d => d && !isNaN(d.getTime()))
                 .sort((a, b) => a - b);
             const earliestGame = gameTimes[0] || new Date(targetDate + 'T18:00:00-05:00');
             const latestGame = gameTimes[gameTimes.length - 1] || earliestGame;
