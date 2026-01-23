@@ -175,12 +175,16 @@ export function buildAffiliateLink(itemWebUrl) {
         return itemWebUrl;
     }
 
-    // eBay Partner Network tracking URL format
-    const affiliateUrl = new URL('https://rover.ebay.com/rover/1/' + campaignId + '/1');
-    affiliateUrl.searchParams.set('mpre', itemWebUrl);
-    affiliateUrl.searchParams.set('toolid', '10001');
+    // Append eBay Partner Network tracking parameters directly to the URL
+    // This is more reliable than the rover redirect
+    const url = new URL(itemWebUrl);
+    url.searchParams.set('mkevt', '1');           // Event tracking
+    url.searchParams.set('mkcid', '1');           // Channel ID (1 = EPN)
+    url.searchParams.set('mkrid', '711-53200-19255-0'); // US marketplace
+    url.searchParams.set('campid', campaignId);   // Your campaign ID
+    url.searchParams.set('toolid', '10001');      // Tool ID
 
-    return affiliateUrl.toString();
+    return url.toString();
 }
 
 /**
