@@ -269,7 +269,10 @@
             localStorage.setItem('theme', newTheme);
         }
         initTheme();
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+        });
 
         const teamEmojis = {
             eagles: '🦅',
