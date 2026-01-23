@@ -164,22 +164,11 @@
         .schedule-time { font-size: 0.7rem; color: var(--text-muted); }
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
-        .carousel { position: relative; width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
-        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; will-change: transform; }
-        .carousel-slide { width: 100%; flex: 0 0 100%; }
-        .carousel-slide .featured-article { display: block; background: var(--card-bg); }
-        .carousel-slide .featured-image { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
-        .carousel-slide .featured-content { padding: 1rem; }
-        .carousel-slide .featured-title { font-size: 1.1rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
-        .carousel-slide .article-tag { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border-radius: 3px; background: var(--team-color); margin-bottom: 0.5rem; }
-        .carousel-controls { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; z-index: 10; }
-        .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; border: none; transition: background 0.3s; }
-        .carousel-dot:hover { background: rgba(255,255,255,0.7); }
-        .carousel-dot.active { background: #fff; }
-        .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 10; }
-        .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
-        .carousel-arrow.prev { left: 0.5rem; }
-        .carousel-arrow.next { right: 0.5rem; }
+        .content-filters { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .content-filters .filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+        .content-filters .filter-btn { padding: 0.35rem 0.75rem; font-size: 0.8rem; font-weight: 500; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; transition: all 0.2s; color: var(--text-secondary); }
+        .content-filters .filter-btn:hover { border-color: var(--team-color); color: var(--team-color); }
+        .content-filters .filter-btn.active { background: var(--team-color); color: #fff; border-color: var(--team-color); }
         /* All-Time Leaders Section - fits within center column */
         .stats-section { margin-top: 1rem; }
         .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
@@ -293,14 +282,17 @@
             </div>
         </aside>
         <div class="content-section">
-            <div class="section-header"><h2 class="section-title">Latest Flyers News</h2></div>
-            <div class="carousel" id="newsCarousel">
-                <div class="carousel-inner" id="carouselInner"><div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127954;</div><div class="featured-content"><span class="article-tag">Loading</span><h3 class="featured-title">Loading news...</h3></div></div></div></div>
-                <button class="carousel-arrow prev" onclick="prevSlide()">&#10094;</button>
-                <button class="carousel-arrow next" onclick="nextSlide()">&#10095;</button>
-                <div class="carousel-controls" id="carouselDots"></div>
+            <div class="section-header"><h2 class="section-title">Carefully Curated Flyers Content</h2></div>
+            <div class="content-filters">
+                <span class="filter-label">Type:</span>
+                <button class="filter-btn active" data-type="all">All</button>
+                <button class="filter-btn" data-type="article">Articles</button>
+                <button class="filter-btn" data-type="video">Videos</button>
+                <button class="filter-btn" data-type="podcast">Pods</button>
             </div>
-            <div class="article-list" id="articleList"></div>
+            <div class="article-list" id="articleList">
+                <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading news...</div>
+            </div>
             <div id="showMoreContainer" style="display:none;text-align:center;padding:0.75rem;">
                 <button id="showMoreBtn" style="background:var(--team-color);color:#fff;border:none;padding:0.5rem 1.5rem;border-radius:4px;font-weight:600;cursor:pointer;font-size:0.85rem;">Show More News</button>
             </div>
@@ -439,14 +431,6 @@
         });
 
         const TEAM = 'flyers';
-        let currentSlide = 0;
-        let carouselInterval = null;
-        let carouselArticles = [];
-        function goToSlide(index) { const inner = document.getElementById('carouselInner'); const dots = document.querySelectorAll('.carousel-dot'); currentSlide = index; if (currentSlide >= carouselArticles.length) currentSlide = 0; if (currentSlide < 0) currentSlide = carouselArticles.length - 1; inner.style.transform = `translateX(-${currentSlide * 100}%)`; dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide)); }
-        function nextSlide() { goToSlide(currentSlide + 1); }
-        function prevSlide() { goToSlide(currentSlide - 1); }
-        function startCarousel() { stopCarousel(); carouselInterval = setInterval(nextSlide, 5000); }
-        function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
         const sourceLogos={'Crossing Broad':'https://www.crossingbroad.com/app/themes/bramble/public/build/assets/cb-logo-AC5c2OGU.svg','On Pattison':'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png?v=2','ESPN':'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'};
         function getSourceLogo(s){const l=s&&sourceLogos[s]?sourceLogos[s]:sourceLogos['ESPN'];return`<img src="${l}" alt="${s||'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;}
         function timeAgo(d){const s=Math.floor((new Date()-new Date(d))/1000);if(s<60)return'Just now';const m=Math.floor(s/60);if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
@@ -510,9 +494,11 @@
             }
         }
 
-        // Show More news functionality
+        // News functionality with type filtering
         let allArticles = [];
         let showingAll = false;
+        let currentTypeFilter = 'all';
+
         function setupShowMore() {
             const showMoreBtn = document.getElementById('showMoreBtn');
             if (showMoreBtn) {
@@ -523,48 +509,69 @@
                 });
             }
         }
+
+        function setupTypeFilters() {
+            const filterBtns = document.querySelectorAll('.content-filters .filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTypeFilter = this.dataset.type;
+                    showingAll = false;
+                    const showMoreBtn = document.getElementById('showMoreBtn');
+                    if (showMoreBtn) showMoreBtn.textContent = 'Show More News';
+                    renderArticleList();
+                });
+            });
+        }
+
+        function getFilteredArticles() {
+            if (currentTypeFilter === 'all') return allArticles;
+            return allArticles.filter(a => {
+                const type = (a.type || 'article').toLowerCase();
+                if (currentTypeFilter === 'article') return type === 'article' || !a.type;
+                if (currentTypeFilter === 'video') return type === 'video';
+                if (currentTypeFilter === 'podcast') return type === 'podcast' || type === 'pod';
+                return true;
+            });
+        }
+
         function renderArticleList() {
             const container = document.getElementById('articleList');
             const showMoreContainer = document.getElementById('showMoreContainer');
-            const listArticles = showingAll ? allArticles.slice(4, 14) : allArticles.slice(4, 9);
+            const filtered = getFilteredArticles();
+            const displayCount = showingAll ? 15 : 8;
+            const listArticles = filtered.slice(0, displayCount);
+
             if (listArticles.length > 0) {
                 container.innerHTML = listArticles.map(a => {
                     const thumbStyle = a.image ? `background-image:url('${a.image}');background-size:cover;background-position:center;` : '';
-                    return `<a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="article-item"><div class="article-thumb" style="${thumbStyle}">${!a.image?getSourceLogo(a.source):''}</div><div class="article-info"><h4 class="article-title">${a.headline}</h4><div class="article-meta">${timeAgo(a.published)}${a.source?' · '+a.source:''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div></div></a>`;
+                    const typeIcon = a.type === 'video' ? '&#9658; ' : a.type === 'podcast' ? '&#127911; ' : '';
+                    return `<a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="article-item"><div class="article-thumb" style="${thumbStyle}">${!a.image?getSourceLogo(a.source):''}</div><div class="article-info"><h4 class="article-title">${typeIcon}${a.headline}</h4><div class="article-meta">${timeAgo(a.published)}${a.source?' · '+a.source:''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div></div></a>`;
                 }).join('');
+            } else {
+                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No content found for this filter</div>';
             }
-            if (showMoreContainer && allArticles.length > 9) {
-                showMoreContainer.style.display = 'block';
+
+            if (showMoreContainer) {
+                showMoreContainer.style.display = filtered.length > 8 ? 'block' : 'none';
             }
         }
 
-        async function loadNews() {
+        async function loadNews(typeFilter) {
             const c = document.getElementById('articleList');
-            const carouselInner = document.getElementById('carouselInner');
-            const carouselDots = document.getElementById('carouselDots');
-            const carousel = document.getElementById('newsCarousel');
+            if (typeFilter) currentTypeFilter = typeFilter;
             try {
                 const r = await fetch(`/api/news?team=${TEAM}`);
                 const d = await r.json();
                 if (d.articles && d.articles.length > 0) {
                     allArticles = d.articles;
-                    carouselArticles = d.articles.slice(0, 4);
-                    carouselInner.innerHTML = carouselArticles.map(a => {
-                        const imgStyle = a.image ? `background-image:url('${a.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
-                        return `<div class="carousel-slide"><a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="featured-article"><div class="featured-image" style="${imgStyle}">${!a.image ? getSourceLogo(a.source) : ''}</div><div class="featured-content"><span class="article-tag">${a.team || 'Flyers'}</span><h3 class="featured-title">${a.headline}</h3></div></a></div>`;
-                    }).join('');
-                    carouselDots.innerHTML = carouselArticles.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
-                    carousel.addEventListener('mouseenter', stopCarousel);
-                    carousel.addEventListener('mouseleave', startCarousel);
-                    startCarousel();
                     renderArticleList();
                 } else {
-                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">' + getSourceLogo() + '</div><div class="featured-content"><span class="article-tag">Flyers</span><h3 class="featured-title">No news available</h3></div></div></div>';
-                    c.innerHTML = '';
+                    c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No news available</div>';
                 }
             } catch (e) {
-                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">' + getSourceLogo() + '</div><div class="featured-content"><span class="article-tag">Flyers</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
-                c.innerHTML = '';
+                c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load news</div>';
             }
         }
         async function loadScores(){const c=document.getElementById('scoresContainer');try{const r=await fetch(`/api/scores?team=${TEAM}`);const d=await r.json();if(d.scores?.length>0){c.innerHTML=d.scores.map(s=>{const content=`<div class="score-teams"><div class="score-team"><span class="team-dot" style="background:${s.isHome?s.teamColor:'#666'}"></span> ${s.homeTeam}</div><div class="score-team"><span class="team-dot" style="background:${!s.isHome?s.teamColor:'#666'}"></span> ${s.awayTeam}</div></div><div class="score-result"><span>${s.homeScore}</span><span>${s.awayScore}</span></div>`;return s.link?`<a href="${s.link}" target="_blank" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`:`<div class="score-item">${content}</div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
@@ -783,7 +790,7 @@
             }
         }
 
-        loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStandings();setupShowMore();loadStats();loadTriviaQuestion();
+        loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStandings();setupShowMore();setupTypeFilters();loadStats();loadTriviaQuestion();
         async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');const premiumBadge = d.user.isSubscribed ? `<a href="/membership.html" class="premium-badge">${d.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>` : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;const adminLink = d.user.isAdmin ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>` : '';h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars">
                             <span class="coin-icon">&#129689;</span>
                             <span class="coin-balance">${Math.round(d.user.coinBalance || 0)}</span>

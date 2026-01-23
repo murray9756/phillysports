@@ -127,6 +127,77 @@ async function parseRSS(feedUrl) {
     }
 }
 
+// Scrape articles from a webpage
+async function scrapePage(pageUrl, sourceName) {
+    try {
+        const response = await fetch(pageUrl, {
+            headers: {
+                'User-Agent': 'PhillySports/1.0 (+https://phillysports.com)'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const html = await response.text();
+        const origin = new URL(pageUrl).origin;
+        const items = [];
+
+        // Look for article patterns
+        const patterns = [
+            /<article[^>]*>[\s\S]*?<a[^>]+href=["']([^"']+)["'][^>]*>[\s\S]*?<(?:h[1-6])[^>]*>([^<]+)<\/(?:h[1-6])>[\s\S]*?<\/article>/gi,
+            /<a[^>]+href=["']([^"']+)["'][^>]*>[\s\S]*?<(?:h[1-6])[^>]*>([^<]+)<\/(?:h[1-6])>[\s\S]*?<\/a>/gi
+        ];
+
+        const seen = new Set();
+
+        for (const pattern of patterns) {
+            let match;
+            while ((match = pattern.exec(html)) !== null) {
+                let url = match[1];
+                const title = cleanText(match[2]);
+
+                if (!title || title.length < 10 ||
+                    url.includes('#') || url.includes('javascript:') ||
+                    url.includes('/tag/') || url.includes('/category/') ||
+                    url.includes('/author/') || url.includes('/page/')) {
+                    continue;
+                }
+
+                if (url.startsWith('/')) {
+                    url = origin + url;
+                } else if (!url.startsWith('http')) {
+                    url = origin + '/' + url;
+                }
+
+                if (!seen.has(url)) {
+                    seen.add(url);
+                    let thumbnail = null;
+                    const imgMatch = match[0].match(/src=["']([^"']+\.(jpg|jpeg|png|gif|webp))[^"']*["']/i);
+                    if (imgMatch) {
+                        thumbnail = imgMatch[1].startsWith('/') ? origin + imgMatch[1] : imgMatch[1];
+                    }
+
+                    items.push({
+                        title: title,
+                        sourceUrl: url,
+                        description: null,
+                        thumbnail: thumbnail,
+                        author: null,
+                        publishedAt: new Date()
+                    });
+                }
+            }
+        }
+
+        return items.slice(0, 20);
+    } catch (error) {
+        console.error(`Error scraping ${pageUrl}:`, error.message);
+        return [];
+    }
+}
+
 function extractTag(xml, tagName) {
     const regex = new RegExp(`<${tagName}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tagName}>|<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, 'i');
     const match = xml.match(regex);
@@ -149,19 +220,34 @@ function cleanText(text) {
 
 // Verify this is a legitimate cron request
 function verifyCronRequest(req) {
-    // Vercel cron jobs include this header
-    const authHeader = req.headers['authorization'];
     const cronSecret = process.env.CRON_SECRET;
 
+    // Check Authorization header (Vercel sends Bearer token)
+    const authHeader = req.headers['authorization'];
     if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
         return true;
     }
 
-    // Also allow if called from Vercel's internal cron system
-    // Vercel sets x-vercel-cron-secret header for cron jobs
+    // Check x-vercel-cron-secret header
     const vercelCronHeader = req.headers['x-vercel-cron-secret'];
-    if (vercelCronHeader && vercelCronHeader === cronSecret) {
+    if (cronSecret && vercelCronHeader === cronSecret) {
         return true;
+    }
+
+    // Vercel cron jobs come from Vercel's internal infrastructure
+    // Check for Vercel-specific headers that indicate internal cron request
+    const vercelId = req.headers['x-vercel-id'];
+    const vercelDeploymentUrl = req.headers['x-vercel-deployment-url'];
+    const userAgent = req.headers['user-agent'] || '';
+
+    // If request comes from Vercel infrastructure (has Vercel headers and no external user agent patterns)
+    if (vercelId && vercelDeploymentUrl && !userAgent.includes('Mozilla') && !userAgent.includes('Chrome')) {
+        // This is likely an internal Vercel cron request
+        // Allow it if no CRON_SECRET is configured (user hasn't set it up)
+        if (!cronSecret) {
+            console.log('[Cron] Allowing request from Vercel infrastructure (no CRON_SECRET configured)');
+            return true;
+        }
     }
 
     return false;
@@ -210,10 +296,10 @@ export default async function handler(req, res) {
         const queue = await getCollection('content_queue');
         const curated = await getCollection('curated_content');
 
-        // Get all active sources (RSS and beehiiv)
+        // Get all active sources (RSS, beehiiv, and scrape)
         const sources = await sourcesCollection.find({
             active: true,
-            type: { $in: ['rss', 'beehiiv'] }
+            type: { $in: ['rss', 'beehiiv', 'scrape'] }
         }).toArray();
 
         if (sources.length === 0) {
@@ -240,6 +326,8 @@ export default async function handler(req, res) {
             let items = [];
             if (source.type === 'beehiiv') {
                 items = await parseBeehiiv(source.feedUrl, source.siteUrl);
+            } else if (source.type === 'scrape') {
+                items = await scrapePage(source.feedUrl, source.name);
             } else {
                 items = await parseRSS(source.feedUrl);
             }

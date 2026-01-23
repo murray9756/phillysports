@@ -5,6 +5,148 @@ import { ObjectId } from 'mongodb';
 import { authenticate } from '../../lib/auth.js';
 import { getCollection } from '../../lib/mongodb.js';
 
+// Beehiiv newsletter scraper - fetches from sitemap and extracts post metadata
+async function parseBeehiiv(sitemapUrl, siteUrl) {
+    try {
+        const response = await fetch(sitemapUrl, {
+            headers: {
+                'User-Agent': 'PhillySports/1.0 (+https://phillysports.com)'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const sitemapXml = await response.text();
+
+        // Parse sitemap for post URLs and lastmod dates
+        const postMatches = sitemapXml.matchAll(/<loc>([^<]+\/p\/[^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g);
+        const posts = [];
+        for (const match of postMatches) {
+            posts.push({ url: match[1], date: match[2] });
+        }
+
+        // Sort by date (most recent first) and take top 10
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const recentPosts = posts.slice(0, 10);
+
+        // Fetch metadata from each post page
+        const items = [];
+        for (const post of recentPosts) {
+            try {
+                const postRes = await fetch(post.url, {
+                    headers: {
+                        'User-Agent': 'PhillySports/1.0 (+https://phillysports.com)'
+                    }
+                });
+                const postHtml = await postRes.text();
+
+                // Extract meta tags
+                const titleMatch = postHtml.match(/<meta property="og:title" content="([^"]+)"/);
+                const descMatch = postHtml.match(/<meta property="og:description" content="([^"]+)"/);
+                const imageMatch = postHtml.match(/<meta property="og:image" content="([^"]+)"/);
+
+                if (titleMatch) {
+                    items.push({
+                        title: cleanText(titleMatch[1]),
+                        sourceUrl: post.url,
+                        description: descMatch ? cleanText(descMatch[1])?.substring(0, 500) : null,
+                        thumbnail: imageMatch ? imageMatch[1] : null,
+                        author: null,
+                        publishedAt: new Date(post.date)
+                    });
+                }
+            } catch (e) {
+                console.error('Beehiiv post fetch error:', e.message);
+            }
+        }
+
+        return items;
+    } catch (error) {
+        console.error(`Error fetching beehiiv ${sitemapUrl}:`, error.message);
+        return [];
+    }
+}
+
+// Scrape articles from a webpage
+async function scrapePage(pageUrl, sourceName) {
+    try {
+        const response = await fetch(pageUrl, {
+            headers: {
+                'User-Agent': 'PhillySports/1.0 (+https://phillysports.com)'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const html = await response.text();
+        const origin = new URL(pageUrl).origin;
+        const items = [];
+
+        // Look for article patterns
+        const patterns = [
+            // <article> tags with links and titles
+            /<article[^>]*>[\s\S]*?<a[^>]+href=["']([^"']+)["'][^>]*>[\s\S]*?<(?:h[1-6])[^>]*>([^<]+)<\/(?:h[1-6])>[\s\S]*?<\/article>/gi,
+            // Cards with headlines inside links
+            /<a[^>]+href=["']([^"']+)["'][^>]*>[\s\S]*?<(?:h[1-6])[^>]*>([^<]+)<\/(?:h[1-6])>[\s\S]*?<\/a>/gi
+        ];
+
+        const seen = new Set();
+
+        for (const pattern of patterns) {
+            let match;
+            while ((match = pattern.exec(html)) !== null) {
+                let url = match[1];
+                const title = cleanText(match[2]);
+
+                // Skip non-article links
+                if (!title || title.length < 10 ||
+                    url.includes('#') || url.includes('javascript:') ||
+                    url.includes('/tag/') || url.includes('/category/') ||
+                    url.includes('/author/') || url.includes('/page/')) {
+                    continue;
+                }
+
+                // Make absolute URL
+                if (url.startsWith('/')) {
+                    url = origin + url;
+                } else if (!url.startsWith('http')) {
+                    url = origin + '/' + url;
+                }
+
+                // Dedupe
+                if (!seen.has(url)) {
+                    seen.add(url);
+
+                    // Try to extract image from the article block
+                    let thumbnail = null;
+                    const imgMatch = match[0].match(/src=["']([^"']+\.(jpg|jpeg|png|gif|webp))[^"']*["']/i);
+                    if (imgMatch) {
+                        thumbnail = imgMatch[1].startsWith('/') ? origin + imgMatch[1] : imgMatch[1];
+                    }
+
+                    items.push({
+                        title: title,
+                        sourceUrl: url,
+                        description: null,
+                        thumbnail: thumbnail,
+                        author: null,
+                        publishedAt: new Date() // Scraped items don't have reliable dates
+                    });
+                }
+            }
+        }
+
+        return items.slice(0, 20); // Limit to 20 items
+    } catch (error) {
+        console.error(`Error scraping ${pageUrl}:`, error.message);
+        return [];
+    }
+}
+
 // Simple RSS parser - no external dependencies
 async function parseRSS(feedUrl) {
     try {
@@ -114,16 +256,17 @@ export default async function handler(req, res) {
         const queue = await getCollection('content_queue');
         const curated = await getCollection('curated_content');
 
-        // Get sources to fetch
-        const filter = { active: true, type: 'rss' };
+        // Get sources to fetch (RSS, beehiiv, and scrape)
+        const filter = { active: true, type: { $in: ['rss', 'beehiiv', 'scrape'] } };
         if (sourceId) {
             filter._id = new ObjectId(sourceId);
+            delete filter.type; // Allow fetching specific source regardless of type
         }
 
         const sources = await sourcesCollection.find(filter).toArray();
 
         if (sources.length === 0) {
-            return res.status(404).json({ error: 'No active RSS sources found' });
+            return res.status(404).json({ error: 'No active sources found' });
         }
 
         let totalFetched = 0;
@@ -134,9 +277,17 @@ export default async function handler(req, res) {
         for (const source of sources) {
             if (!source.feedUrl) continue;
 
-            console.log(`Fetching: ${source.name}, teams: ${JSON.stringify(source.teams)}, feedUrl: ${source.feedUrl}`);
+            console.log(`Fetching: ${source.name}, type: ${source.type}, teams: ${JSON.stringify(source.teams)}, feedUrl: ${source.feedUrl}`);
 
-            const items = await parseRSS(source.feedUrl);
+            // Parse based on source type
+            let items = [];
+            if (source.type === 'beehiiv') {
+                items = await parseBeehiiv(source.feedUrl, source.siteUrl);
+            } else if (source.type === 'scrape') {
+                items = await scrapePage(source.feedUrl, source.name);
+            } else {
+                items = await parseRSS(source.feedUrl);
+            }
             totalFetched += items.length;
 
             let newItems = 0;

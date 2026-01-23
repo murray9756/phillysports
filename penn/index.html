@@ -174,22 +174,12 @@
         .article-title { font-size: 1rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
         .article-meta { font-size: 0.75rem; color: var(--text-muted); }
 
-        .carousel { position: relative; width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
-        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; will-change: transform; }
-        .carousel-slide { width: 100%; flex: 0 0 100%; }
-        .carousel-slide .featured-article { display: block; background: var(--card-bg); }
-        .carousel-slide .featured-image { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
-        .carousel-slide .featured-content { padding: 1rem; }
-        .carousel-slide .featured-title { font-size: 1.1rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
-        .carousel-slide .article-tag { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border-radius: 3px; background: var(--team-color); color: #fff; margin-bottom: 0.5rem; }
-        .carousel-controls { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; z-index: 10; }
-        .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; border: none; transition: background 0.3s; }
-        .carousel-dot:hover { background: rgba(255,255,255,0.7); }
-        .carousel-dot.active { background: #fff; }
-        .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 10; }
-        .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
-        .carousel-arrow.prev { left: 0.5rem; }
-        .carousel-arrow.next { right: 0.5rem; }
+        .content-filters { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); padding: 0.75rem 1rem; margin-bottom: 1rem; }
+        .filter-group { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+        .filter-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-right: 0.25rem; }
+        .filter-btn { background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .filter-btn:hover { border-color: var(--team-color); color: var(--team-color); }
+        .filter-btn.active { background: var(--team-color); border-color: var(--team-color); color: #fff; }
 
         .score-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
         .score-item:last-child { border-bottom: none; }
@@ -289,15 +279,17 @@
 
         <div class="content-section">
             <div class="section-header">
-                <h2 class="section-title">Latest Penn News</h2>
+                <h2 class="section-title">Carefully Curated Penn Content</h2>
             </div>
-            <div class="carousel" id="newsCarousel">
-                <div class="carousel-inner" id="carouselInner">
-                    <div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Loading</span><h3 class="featured-title">Loading news...</h3></div></div></div>
+            <!-- Content Type Filters -->
+            <div class="content-filters" id="contentFilters">
+                <div class="filter-group">
+                    <span class="filter-label">Type:</span>
+                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
+                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
+                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
                 </div>
-                <button class="carousel-arrow prev" onclick="prevSlide()">&#10094;</button>
-                <button class="carousel-arrow next" onclick="nextSlide()">&#10095;</button>
-                <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
             <button id="showMoreNews" class="show-more-btn" style="display:none;width:100%;padding:0.75rem;margin-top:0.5rem;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--team-color)'" onmouseout="this.style.borderColor='var(--border-color)'">Show More News</button>
@@ -424,23 +416,9 @@
 
         const TEAM = 'penn';
         const ESPN_TEAM_ID = 219;
-        let currentSlide = 0;
-        let carouselInterval = null;
-        let carouselArticles = [];
-
-        function goToSlide(index) {
-            const inner = document.getElementById('carouselInner');
-            const dots = document.querySelectorAll('.carousel-dot');
-            currentSlide = index;
-            if (currentSlide >= carouselArticles.length) currentSlide = 0;
-            if (currentSlide < 0) currentSlide = carouselArticles.length - 1;
-            inner.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
-        }
-        function nextSlide() { goToSlide(currentSlide + 1); }
-        function prevSlide() { goToSlide(currentSlide - 1); }
-        function startCarousel() { stopCarousel(); carouselInterval = setInterval(nextSlide, 5000); }
-        function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
+        let allArticles = [];
+        let currentTypeFilter = 'all';
+        let showingAll = false;
 
         const sourceLogos = {
             'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
@@ -470,85 +448,44 @@
             return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
         }
 
-        let allNewsArticles = [];
-        let newsExpanded = false;
-
-        async function loadNews() {
+        async function loadNews(filters = {}) {
+            if (filters.type) currentTypeFilter = filters.type;
             const container = document.getElementById('articleList');
-            const carouselInner = document.getElementById('carouselInner');
-            const carouselDots = document.getElementById('carouselDots');
-            const carousel = document.getElementById('newsCarousel');
-            const showMoreBtn = document.getElementById('showMoreNews');
             try {
-                const response = await fetch(`/api/news?team=${TEAM}`);
+                const response = await fetch('/api/news?team=' + TEAM);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
-                    carouselArticles = data.articles.slice(0, 5);
-                    // Store all remaining articles for Show More functionality
-                    allNewsArticles = data.articles.slice(5, 15);
-
-                    carouselInner.innerHTML = carouselArticles.map(article => {
-                        const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
-                        return `
-                            <div class="carousel-slide">
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="featured-article">
-                                    <div class="featured-image" style="${imgStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                                    <div class="featured-content">
-                                        <span class="article-tag">${article.team || 'Penn'}</span>
-                                        <h3 class="featured-title">${article.headline}</h3>
-                                    </div>
-                                </a>
-                            </div>
-                        `;
-                    }).join('');
-
-                    carouselDots.innerHTML = carouselArticles.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
-
-                    carousel.addEventListener('mouseenter', stopCarousel);
-                    carousel.addEventListener('mouseleave', startCarousel);
-                    startCarousel();
-
-                    // Show only first 5 articles initially
-                    renderNewsArticles(false);
-
-                    // Show "Show More" button if there are more articles
-                    if (allNewsArticles.length > 5) {
-                        showMoreBtn.style.display = 'block';
-                        showMoreBtn.addEventListener('click', function() {
-                            newsExpanded = !newsExpanded;
-                            renderNewsArticles(newsExpanded);
-                            this.textContent = newsExpanded ? 'Show Less News' : 'Show More News';
-                        });
-                    }
+                    allArticles = data.articles;
+                    renderArticleList();
                 } else {
-                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Penn</span><h3 class="featured-title">No Penn news available</h3></div></div></div>';
-                    container.innerHTML = '';
+                    container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">No news available</div>';
                 }
             } catch (e) {
-                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Penn</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
-                container.innerHTML = '';
+                container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Unable to load news</div>';
             }
         }
 
-        function renderNewsArticles(showAll) {
+        function renderArticleList() {
             const container = document.getElementById('articleList');
-            const articlesToShow = showAll ? allNewsArticles : allNewsArticles.slice(0, 5);
-
-            if (articlesToShow.length > 0) {
-                container.innerHTML = articlesToShow.map(article => {
-                    const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
-                    return `
-                        <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
-                            <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                            <div class="article-info">
-                                <h4 class="article-title">${article.headline}</h4>
-                                <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
-                            </div>
-                        </a>
-                    `;
+            const showMoreBtn = document.getElementById('showMoreNews');
+            let filtered = allArticles;
+            if (currentTypeFilter !== 'all') {
+                filtered = allArticles.filter(a => (a.type || 'article') === currentTypeFilter);
+            }
+            const listArticles = showingAll ? filtered.slice(0, 15) : filtered.slice(0, 8);
+            if (listArticles.length > 0) {
+                container.innerHTML = listArticles.map(article => {
+                    const thumbStyle = article.image ? "background-image:url('" + article.image + "');background-size:cover;background-position:center;" : '';
+                    return '<a href="/article.html?url=' + encodeURIComponent(article.link) + '&title=' + encodeURIComponent(article.headline) + '&image=' + encodeURIComponent(article.image || '') + '&source=' + encodeURIComponent(article.source || '') + '" class="article-item"><div class="article-thumb" style="' + thumbStyle + '">' + (!article.image ? getSourceLogo(article.source) : '') + '</div><div class="article-info"><h4 class="article-title">' + article.headline + '</h4><div class="article-meta">' + timeAgo(article.published) + (article.source ? ' · ' + article.source : '') + '</div></div></a>';
                 }).join('');
             } else {
-                container.innerHTML = '';
+                container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">No ' + currentTypeFilter + ' content available</div>';
+            }
+            if (showMoreBtn && filtered.length > 8) {
+                showMoreBtn.style.display = 'block';
+                showMoreBtn.textContent = showingAll ? 'Show Less' : 'Show More News (' + Math.min(7, filtered.length - 8) + ' more)';
+            } else if (showMoreBtn) {
+                showMoreBtn.style.display = 'none';
             }
         }
 
@@ -716,6 +653,21 @@
         loadStandings();
         loadDiehardLeaderboard();
         loadSourceLeaderboard();
+
+        // Filter button click handlers
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadNews({ type: btn.dataset.value });
+            });
+        });
+
+        // Show More button click handler
+        document.getElementById('showMoreNews').addEventListener('click', function() {
+            showingAll = !showingAll;
+            renderArticleList();
+        });
 
         // Auth check for header
         async function checkAuth() {
