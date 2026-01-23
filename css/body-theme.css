@@ -464,7 +464,33 @@ a {
 .tag-union { background: var(--union-gold); color: #000; }
 
 [data-theme="dark"] .article-list {
-    background: #121212 !important;
+    background: transparent !important;
+}
+
+[data-theme="dark"] .article-item {
+    background: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .article-item:hover {
+    border-color: #8B0000 !important;
+}
+
+[data-theme="dark"] .article-title,
+[data-theme="dark"] .article-item .article-title,
+[data-theme="dark"] .article-info .article-title,
+[data-theme="dark"] h4.article-title {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .article-meta,
+[data-theme="dark"] .article-item .article-meta {
+    color: #808080 !important;
+}
+
+[data-theme="dark"] .article-thumb {
+    background: #333 !important;
 }
 
 [data-theme="dark"] .article-tag {
@@ -1067,6 +1093,74 @@ a {
 }
 
 /* ===========================================
+   SCORE ITEMS DARK MODE
+   =========================================== */
+[data-theme="dark"] .score-item {
+    color: #e8e8e8 !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .score-teams,
+[data-theme="dark"] .score-team,
+[data-theme="dark"] .score-result {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .score-final {
+    color: #808080 !important;
+}
+
+/* ===========================================
+   CAROUSEL DARK MODE
+   =========================================== */
+[data-theme="dark"] .carousel {
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .carousel-slide .featured-article {
+    background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .carousel-slide .featured-content {
+    background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .carousel-slide .featured-title,
+[data-theme="dark"] .featured-title {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .carousel-slide .featured-image {
+    background-color: #333 !important;
+}
+
+/* ===========================================
+   STANDINGS TABLE DARK MODE
+   =========================================== */
+[data-theme="dark"] .standings-table {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .standings-table th {
+    color: #808080 !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .standings-table td {
+    border-color: #333 !important;
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .standings-table .team-name {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .standings-table .record,
+[data-theme="dark"] .standings-table .pct {
+    color: #b0b0b0 !important;
+}
+
+/* ===========================================
    BACKGROUND SECTIONS DARK MODE
    =========================================== */
 [data-theme="dark"] .news-section {
@@ -1074,7 +1168,155 @@ a {
 }
 
 [data-theme="dark"] .sidebar {
+    background: transparent !important;
+}
+
+[data-theme="dark"] .left-sidebar {
+    background: transparent !important;
+}
+
+[data-theme="dark"] .content-section {
+    background: transparent !important;
+}
+
+[data-theme="dark"] .main-container {
+    background: transparent !important;
+}
+
+/* Body and main background */
+[data-theme="dark"] body,
+[data-theme="dark"] body.ps-theme {
     background: #121212 !important;
+    color: #e8e8e8 !important;
+}
+
+/* Podcast cards dark mode */
+[data-theme="dark"] .podcast-card {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .podcast-card:hover {
+    background: #2a2a2a !important;
+}
+
+[data-theme="dark"] .podcast-info h4 {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .podcast-info p {
+    color: #808080 !important;
+}
+
+/* Leaderboard items dark mode */
+[data-theme="dark"] #diehardLeaderboardWidget div,
+[data-theme="dark"] #sourceLeaderboardWidget div {
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] #diehardLeaderboardWidget a,
+[data-theme="dark"] #sourceLeaderboardWidget span {
+    color: #e8e8e8 !important;
+}
+
+/* Stats section dark mode */
+[data-theme="dark"] .stats-section {
+    background: transparent !important;
+}
+
+[data-theme="dark"] .stats-container {
+    background: #1e1e1e !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .stats-tabs {
+    background: #2a2a2a !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .stats-tab {
+    color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] .stats-tab:hover {
+    color: #e8e8e8 !important;
+    background: #333 !important;
+}
+
+[data-theme="dark"] .stats-tab.active {
+    color: #e8e8e8 !important;
+    background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .stats-scroll-controls {
+    background: #1e1e1e !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .stats-scroll-btn {
+    background: #1e1e1e !important;
+    border-color: #333 !important;
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .stats-scroll-btn:hover {
+    background: #333 !important;
+}
+
+[data-theme="dark"] .stats-table-container {
+    background: #1e1e1e !important;
+}
+
+[data-theme="dark"] .stats-table {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .stats-table th {
+    background: #2a2a2a !important;
+    color: #b0b0b0 !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] .stats-table th:hover {
+    background: #333 !important;
+}
+
+[data-theme="dark"] .stats-table td {
+    border-color: #333 !important;
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .stats-table tr:hover {
+    background: rgba(255,255,255,0.05) !important;
+}
+
+[data-theme="dark"] .stats-table .player-name {
+    color: #e8e8e8 !important;
+}
+
+[data-theme="dark"] .stats-table .player-years {
+    color: #808080 !important;
+}
+
+[data-theme="dark"] .stats-footer {
+    background: #2a2a2a !important;
+    color: #808080 !important;
+}
+
+[data-theme="dark"] .stats-loading {
+    color: #808080 !important;
+}
+
+/* Show More button dark mode */
+[data-theme="dark"] #showMoreBtn,
+[data-theme="dark"] .show-more-btn {
+    background: #1e1e1e !important;
+    color: #e8e8e8 !important;
+    border-color: #333 !important;
+}
+
+[data-theme="dark"] #showMoreBtn:hover,
+[data-theme="dark"] .show-more-btn:hover {
+    background: #333 !important;
 }
 
 /* ===========================================
