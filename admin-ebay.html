@@ -124,6 +124,10 @@
                 <div class="stat-value" id="estRevenue">-</div>
                 <div class="stat-label">Est. Revenue</div>
             </div>
+            <div class="stat" style="margin-left: auto;">
+                <button id="fixLinksBtn" onclick="fixAffiliateLinks()" style="padding: 0.5rem 1rem; background: #f59e0b; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem;">Fix Affiliate Links</button>
+                <div class="stat-label" style="margin-top: 0.25rem;">Update old links</div>
+            </div>
         </div>
 
         <!-- Search Section -->
@@ -180,6 +184,34 @@
             toast.textContent = message;
             toast.className = 'toast ' + type + ' show';
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Fix affiliate links for existing products
+        async function fixAffiliateLinks() {
+            const btn = document.getElementById('fixLinksBtn');
+            btn.disabled = true;
+            btn.textContent = 'Fixing...';
+
+            try {
+                const response = await fetch('/api/admin/ebay/fix-links', { method: 'POST' });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fix links');
+                }
+
+                showToast(`Fixed ${data.updated} of ${data.total} product links`);
+                btn.textContent = 'Done!';
+                setTimeout(() => {
+                    btn.textContent = 'Fix Affiliate Links';
+                    btn.disabled = false;
+                }, 2000);
+            } catch (error) {
+                console.error('Fix links error:', error);
+                showToast(error.message, 'error');
+                btn.textContent = 'Fix Affiliate Links';
+                btn.disabled = false;
+            }
         }
 
         // Load stats
