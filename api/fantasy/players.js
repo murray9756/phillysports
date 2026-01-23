@@ -1,11 +1,9 @@
-// Fantasy Players API
+// Fantasy Players API - SportsDataIO Only
 // GET: Returns real players with DFS salaries from SportsDataIO
-// Fallback to ESPN if no API key configured
 // Supports contestId filtering to show only players from games in the contest
 
 import { getCollection } from '../lib/mongodb.js';
 
-// SportsDataIO API key - set in environment variable
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 export default async function handler(req, res) {
@@ -27,31 +25,17 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Sport is required' });
     }
 
+    if (!SPORTSDATA_API_KEY) {
+        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
+    }
+
     try {
         const targetDate = date || new Date().toISOString().split('T')[0];
-        let players;
-        let games = [];
-        let source = 'espn';
+        const sportUpper = sport.toUpperCase();
 
-        // Try SportsDataIO first if API key is configured
-        if (SPORTSDATA_API_KEY) {
-            try {
-                const result = await fetchPlayersFromSportsDataIO(sport.toUpperCase(), targetDate);
-                players = result.players;
-                games = result.games;
-                source = 'sportsdata';
-            } catch (e) {
-                console.error('SportsDataIO error, falling back to ESPN:', e.message);
-                const result = await fetchPlayersFromESPN(sport.toUpperCase(), targetDate);
-                players = result.players;
-                games = result.games;
-            }
-        } else {
-            // Fallback to ESPN (no salaries)
-            const result = await fetchPlayersFromESPN(sport.toUpperCase(), targetDate);
-            players = result.players;
-            games = result.games;
-        }
+        // Fetch games and players from SportsDataIO
+        const result = await fetchPlayersFromSportsDataIO(sportUpper, targetDate);
+        let { players, games } = result;
 
         // Filter by contestId if provided
         if (contestId && players.length > 0) {
@@ -74,21 +58,21 @@ export default async function handler(req, res) {
             success: true,
             players,
             games,
-            sport: sport.toUpperCase(),
+            sport: sportUpper,
             date: targetDate,
-            source,
+            source: 'sportsdata',
             totalPlayers: players.length
         });
     } catch (error) {
         console.error('Fantasy players error:', error);
-        return res.status(500).json({ error: 'Failed to fetch players' });
+        return res.status(500).json({ error: 'Failed to fetch players: ' + error.message });
     }
 }
 
-// Fetch players with DFS salaries from SportsDataIO
+// Fetch players from SportsDataIO
 async function fetchPlayersFromSportsDataIO(sport, targetDate) {
     const sportConfig = {
-        NFL: { endpoint: 'nfl', season: '2024REG' },
+        NFL: { endpoint: 'nfl', season: '2025' },
         NBA: { endpoint: 'nba', season: '2025' },
         MLB: { endpoint: 'mlb', season: '2025' },
         NHL: { endpoint: 'nhl', season: '2025' }
@@ -99,182 +83,142 @@ async function fetchPlayersFromSportsDataIO(sport, targetDate) {
         throw new Error(`Unsupported sport: ${sport}`);
     }
 
-    // SportsDataIO DFS Projections endpoint
-    const url = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
-
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`SportsDataIO API error: ${response.status}`);
-    }
-
-    const slates = await response.json();
-
-    if (!slates || slates.length === 0) {
-        // No slates for this date, try to get player list from ESPN with games
-        return await fetchPlayersFromESPN(sport, targetDate);
-    }
-
-    // Get the first slate's players (usually main slate)
-    const mainSlate = slates.find(s => s.Operator === 'DraftKings') || slates[0];
-
-    if (!mainSlate || !mainSlate.DfsSlateGames) {
-        return await fetchPlayersFromESPN(sport, targetDate);
-    }
-
-    // Extract games from the slate
-    const games = (mainSlate.DfsSlateGames || []).map(g => ({
-        id: g.GameID?.toString() || g.Game?.GameID?.toString(),
-        homeTeam: g.Game?.HomeTeam,
-        awayTeam: g.Game?.AwayTeam,
-        gameTime: g.Game?.DateTime,
-        status: g.Game?.Status
-    }));
-
-    // Fetch player projections for this slate
-    const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatePlayersBySlateID/${mainSlate.SlateID}?key=${SPORTSDATA_API_KEY}`;
-    const playersResponse = await fetch(playersUrl);
-
-    if (!playersResponse.ok) {
-        throw new Error(`SportsDataIO players API error: ${playersResponse.status}`);
-    }
-
-    const slatePlayers = await playersResponse.json();
-
-    const players = slatePlayers.map(player => ({
-        id: player.PlayerID?.toString() || player.OperatorPlayerID,
-        name: player.OperatorPlayerName || player.Name,
-        position: player.OperatorPosition || player.Position,
-        team: player.Team,
-        teamAbbreviation: player.Team,
-        salary: player.OperatorSalary || 5000,
-        opponent: player.Opponent || 'TBD',
-        projectedPoints: player.FantasyPoints || player.OperatorFantasyPoints || 0,
-        imageUrl: null,
-        gameTime: player.GameTime,
-        gameId: player.SlateGameID?.toString() || player.GameID?.toString(),
-        slateId: mainSlate.SlateID
-    }));
-
-    return { players, games };
-}
-
-function calculateSalaryFromPosition(sport, position) {
-    const positionValues = {
-        NFL: { QB: 7500, RB: 6500, WR: 6000, TE: 5000, K: 4500, DEF: 4000, default: 5000 },
-        NBA: { PG: 7000, SG: 6500, SF: 6500, PF: 6000, C: 7000, default: 6000 },
-        MLB: { SP: 9000, RP: 5000, C: 4500, '1B': 5000, '2B': 4500, '3B': 5000, SS: 5500, OF: 5000, default: 5000 },
-        NHL: { C: 6000, LW: 5500, RW: 5500, D: 5000, G: 7000, default: 5500 }
-    };
-
-    const sportPos = positionValues[sport] || positionValues.NFL;
-    return sportPos[position] || sportPos.default;
-}
-
-// Fetch real players from ESPN API with games for the date
-async function fetchPlayersFromESPN(sport, targetDate) {
-    const sportPath = getESPNSportPath(sport);
-
-    // Format date for ESPN (YYYYMMDD)
-    const dateObj = new Date(targetDate);
-    const formattedDate = `${dateObj.getFullYear()}${String(dateObj.getMonth() + 1).padStart(2, '0')}${String(dateObj.getDate()).padStart(2, '0')}`;
-
-    // First get games for the date
-    const scoreboardUrl = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${formattedDate}`;
-    let games = [];
-    const teamsPlaying = new Map();
-
+    // First try to get DFS slates (best for salaries)
     try {
-        const scoreboardResponse = await fetch(scoreboardUrl);
-        if (scoreboardResponse.ok) {
-            const scoreboardData = await scoreboardResponse.json();
-            const events = scoreboardData.events || [];
+        const slatesUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+        const slatesResponse = await fetch(slatesUrl);
 
-            for (const event of events) {
-                const competition = event.competitions?.[0];
-                if (!competition) continue;
+        if (slatesResponse.ok) {
+            const slates = await slatesResponse.json();
 
-                const homeTeam = competition.competitors?.find(c => c.homeAway === 'home');
-                const awayTeam = competition.competitors?.find(c => c.homeAway === 'away');
+            if (slates && slates.length > 0) {
+                const mainSlate = slates.find(s => s.Operator === 'DraftKings') || slates[0];
 
-                if (homeTeam?.team) {
-                    teamsPlaying.set(homeTeam.team.id, {
-                        id: homeTeam.team.id,
-                        name: homeTeam.team.displayName,
-                        abbreviation: homeTeam.team.abbreviation,
-                        opponent: awayTeam?.team?.displayName,
-                        isHome: true,
-                        gameId: event.id,
-                        gameTime: event.date
-                    });
+                if (mainSlate && mainSlate.DfsSlateGames && mainSlate.DfsSlateGames.length > 0) {
+                    // Extract games from the slate
+                    const games = mainSlate.DfsSlateGames.map(g => ({
+                        id: (g.GameID || g.Game?.GameID)?.toString(),
+                        homeTeam: g.Game?.HomeTeam,
+                        awayTeam: g.Game?.AwayTeam,
+                        gameTime: g.Game?.DateTime,
+                        status: g.Game?.Status
+                    }));
+
+                    // Fetch player projections for this slate
+                    const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/projections/json/DfsSlatePlayersBySlateID/${mainSlate.SlateID}?key=${SPORTSDATA_API_KEY}`;
+                    const playersResponse = await fetch(playersUrl);
+
+                    if (playersResponse.ok) {
+                        const slatePlayers = await playersResponse.json();
+
+                        const players = slatePlayers.map(player => ({
+                            id: player.PlayerID?.toString() || player.OperatorPlayerID,
+                            name: player.OperatorPlayerName || player.Name,
+                            position: player.OperatorPosition || player.Position,
+                            team: player.Team,
+                            teamAbbreviation: player.Team,
+                            salary: player.OperatorSalary || calculateSalary(sport, player.OperatorPosition || player.Position),
+                            opponent: player.Opponent || 'TBD',
+                            projectedPoints: player.FantasyPoints || player.OperatorFantasyPoints || 0,
+                            imageUrl: null,
+                            gameTime: player.GameTime,
+                            gameId: (player.SlateGameID || player.GameID)?.toString()
+                        }));
+
+                        return { players, games };
+                    }
                 }
-                if (awayTeam?.team) {
-                    teamsPlaying.set(awayTeam.team.id, {
-                        id: awayTeam.team.id,
-                        name: awayTeam.team.displayName,
-                        abbreviation: awayTeam.team.abbreviation,
-                        opponent: homeTeam?.team?.displayName,
-                        isHome: false,
-                        gameId: event.id,
-                        gameTime: event.date
-                    });
-                }
-
-                games.push({
-                    id: event.id,
-                    homeTeam: homeTeam?.team?.displayName,
-                    awayTeam: awayTeam?.team?.displayName,
-                    gameTime: event.date,
-                    status: competition.status?.type?.description
-                });
             }
         }
     } catch (e) {
-        console.error('Failed to fetch scoreboard:', e.message);
+        console.log('DFS slates not available, falling back to schedule:', e.message);
     }
 
-    // If no games today, return empty
-    if (teamsPlaying.size === 0) {
-        return { players: [], games: [] };
+    // Fallback: Get games from schedule and players from roster
+    return await fetchFromScheduleAndRosters(sport, config, targetDate);
+}
+
+// Fallback: fetch games from schedule and players from rosters
+async function fetchFromScheduleAndRosters(sport, config, targetDate) {
+    // Get games for the date
+    const gamesUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+    const gamesResponse = await fetch(gamesUrl);
+
+    if (!gamesResponse.ok) {
+        console.error('Games fetch failed:', gamesResponse.status);
+        // If no games endpoint, return all active players
+        return await fetchAllActivePlayers(sport, config);
     }
 
-    // Fetch rosters for teams playing
-    const players = [];
-    const rosterBaseUrl = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/teams`;
+    const gamesData = await gamesResponse.json();
 
-    for (const [teamId, teamInfo] of teamsPlaying) {
-        try {
-            const rosterUrl = `${rosterBaseUrl}/${teamId}/roster`;
-            const rosterResponse = await fetch(rosterUrl);
-            if (!rosterResponse.ok) continue;
-
-            const rosterData = await rosterResponse.json();
-            const athletes = rosterData.athletes || [];
-
-            for (const positionGroup of athletes) {
-                const groupAthletes = positionGroup.items || [];
-                for (const athlete of groupAthletes) {
-                    const position = athlete.position?.abbreviation || mapESPNPosition(sport, positionGroup.position) || 'UTIL';
-
-                    players.push({
-                        id: athlete.id,
-                        name: athlete.fullName || athlete.displayName,
-                        team: teamInfo.name,
-                        teamAbbreviation: teamInfo.abbreviation,
-                        position,
-                        salary: calculateSalaryFromPosition(sport, position),
-                        opponent: teamInfo.opponent,
-                        isHome: teamInfo.isHome,
-                        gameId: teamInfo.gameId,
-                        gameTime: teamInfo.gameTime,
-                        projectedPoints: 0,
-                        imageUrl: athlete.headshot?.href || null
-                    });
-                }
-            }
-        } catch (err) {
-            console.error(`Error fetching roster for team ${teamId}:`, err.message);
-        }
+    if (!gamesData || gamesData.length === 0) {
+        console.log('No games found for date, returning all active players');
+        return await fetchAllActivePlayers(sport, config);
     }
+
+    // Build list of teams playing
+    const teamsPlaying = new Set();
+    const games = gamesData.map(game => {
+        teamsPlaying.add(game.HomeTeam);
+        teamsPlaying.add(game.AwayTeam);
+
+        return {
+            id: (game.GameID || game.ScoreID)?.toString(),
+            homeTeam: game.HomeTeam,
+            awayTeam: game.AwayTeam,
+            gameTime: game.DateTime || game.Day,
+            status: game.Status
+        };
+    });
+
+    // Create game lookup for opponent info
+    const gamesByTeam = {};
+    gamesData.forEach(game => {
+        gamesByTeam[game.HomeTeam] = {
+            gameId: (game.GameID || game.ScoreID)?.toString(),
+            opponent: game.AwayTeam,
+            isHome: true,
+            gameTime: game.DateTime || game.Day
+        };
+        gamesByTeam[game.AwayTeam] = {
+            gameId: (game.GameID || game.ScoreID)?.toString(),
+            opponent: game.HomeTeam,
+            isHome: false,
+            gameTime: game.DateTime || game.Day
+        };
+    });
+
+    // Fetch all players and filter to teams playing
+    const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/Players?key=${SPORTSDATA_API_KEY}`;
+    const playersResponse = await fetch(playersUrl);
+
+    if (!playersResponse.ok) {
+        throw new Error(`Players fetch failed: ${playersResponse.status}`);
+    }
+
+    const allPlayers = await playersResponse.json();
+
+    // Filter to active players on teams playing today
+    const players = allPlayers
+        .filter(p => p.Status === 'Active' && teamsPlaying.has(p.Team))
+        .map(player => {
+            const gameInfo = gamesByTeam[player.Team] || {};
+            return {
+                id: player.PlayerID?.toString(),
+                name: `${player.FirstName} ${player.LastName}`,
+                position: player.Position,
+                team: player.Team,
+                teamAbbreviation: player.Team,
+                salary: calculateSalary(sport, player.Position),
+                opponent: gameInfo.opponent || 'TBD',
+                isHome: gameInfo.isHome,
+                projectedPoints: 0,
+                imageUrl: player.PhotoUrl || null,
+                gameId: gameInfo.gameId,
+                gameTime: gameInfo.gameTime
+            };
+        });
 
     // Sort by salary descending
     players.sort((a, b) => b.salary - a.salary);
@@ -282,23 +226,53 @@ async function fetchPlayersFromESPN(sport, targetDate) {
     return { players, games };
 }
 
-function mapESPNPosition(sport, position) {
-    const mapping = {
-        NFL: { 'Quarterback': 'QB', 'Running Back': 'RB', 'Wide Receiver': 'WR', 'Tight End': 'TE', 'Kicker': 'K', 'Defense': 'DEF' },
-        NBA: { 'Point Guard': 'PG', 'Shooting Guard': 'SG', 'Small Forward': 'SF', 'Power Forward': 'PF', 'Center': 'C' },
-        MLB: { 'Starting Pitcher': 'SP', 'Relief Pitcher': 'RP', 'Catcher': 'C', 'Outfielder': 'OF' },
-        NHL: { 'Center': 'C', 'Left Wing': 'LW', 'Right Wing': 'RW', 'Defenseman': 'D', 'Goalie': 'G' }
-    };
-    return mapping[sport]?.[position] || position;
+// Fetch all active players (when no games found for date)
+async function fetchAllActivePlayers(sport, config) {
+    const playersUrl = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/Players?key=${SPORTSDATA_API_KEY}`;
+    const response = await fetch(playersUrl);
+
+    if (!response.ok) {
+        throw new Error(`Players fetch failed: ${response.status}`);
+    }
+
+    const allPlayers = await response.json();
+
+    const players = allPlayers
+        .filter(p => p.Status === 'Active')
+        .slice(0, 500) // Limit for performance
+        .map(player => ({
+            id: player.PlayerID?.toString(),
+            name: `${player.FirstName} ${player.LastName}`,
+            position: player.Position,
+            team: player.Team,
+            teamAbbreviation: player.Team,
+            salary: calculateSalary(sport, player.Position),
+            opponent: 'TBD',
+            projectedPoints: 0,
+            imageUrl: player.PhotoUrl || null,
+            gameId: null,
+            gameTime: null
+        }));
+
+    // Sort by salary descending
+    players.sort((a, b) => b.salary - a.salary);
+
+    return { players, games: [] };
 }
 
-function getESPNSportPath(sport) {
-    const paths = {
-        NFL: 'football/nfl',
-        NBA: 'basketball/nba',
-        MLB: 'baseball/mlb',
-        NHL: 'hockey/nhl'
+// Calculate salary based on position
+function calculateSalary(sport, position) {
+    const salaries = {
+        NFL: { QB: 7500, RB: 6500, WR: 6000, TE: 5000, K: 4500, DEF: 4000, default: 5000 },
+        NBA: { PG: 7000, SG: 6500, SF: 6500, PF: 6000, C: 7000, G: 6500, F: 6000, default: 6000 },
+        MLB: { SP: 9000, RP: 5000, C: 4500, '1B': 5000, '2B': 4500, '3B': 5000, SS: 5500, OF: 5000, DH: 5000, default: 5000 },
+        NHL: { C: 6000, LW: 5500, RW: 5500, D: 5000, G: 7000, default: 5500 }
     };
-    return paths[sport] || 'football/nfl';
-}
 
+    const sportSalaries = salaries[sport] || salaries.NFL;
+    const base = sportSalaries[position] || sportSalaries.default;
+
+    // Add some variance for realism
+    const variance = Math.floor(Math.random() * 2000) - 500;
+    return Math.max(3000, Math.min(10000, base + variance));
+}
