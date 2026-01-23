@@ -3,7 +3,6 @@
 
 import {
     fetchTeamSchedule,
-    fetchScoresByDate,
     isPhillyTeam,
     getCurrentSeason,
     getTeamLogo,
@@ -186,7 +185,7 @@ export default async function handler(req, res) {
         res.status(200).json({
             scores: filteredScores,
             updated: new Date().toISOString(),
-            source: 'sportsdata'
+            source: 'espn'
         });
     } catch (error) {
         console.error('Scores fetch error:', error);
