@@ -249,13 +249,12 @@
                     </div>
 
                     <!-- Wager Selection -->
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">Select Wager</label>
-                        <div class="wager-selector" style="display: flex; gap: 0.5rem;">
-                            <button class="wager-btn" data-wager="10" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); cursor: pointer; font-weight: 600;">10 DD</button>
-                            <button class="wager-btn selected" data-wager="25" style="flex: 1; padding: 0.75rem; border: 2px solid var(--accent-color); border-radius: 8px; background: var(--accent-color); color: white; cursor: pointer; font-weight: 600;">25 DD</button>
-                            <button class="wager-btn" data-wager="50" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); cursor: pointer; font-weight: 600;">50 DD</button>
-                            <button class="wager-btn" data-wager="100" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); cursor: pointer; font-weight: 600;">100 DD</button>
+                    <div class="wager-selector" style="margin-bottom: 1.5rem;">
+                        <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 0.5rem;">Select Wager: <span id="wagerDisplay" style="color: var(--accent-color);">25 DD</span></label>
+                        <input type="range" id="wagerSlider" min="1" max="1000" value="25" style="width: 100%; height: 8px; border-radius: 4px; background: var(--border-color); outline: none; cursor: pointer; accent-color: var(--accent-color);">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            <span>1 DD</span>
+                            <span>1000 DD</span>
                         </div>
                     </div>
 
@@ -579,10 +578,22 @@
             });
         });
 
-        // Wager selection
+        // Wager selection - slider
+        const wagerSlider = document.getElementById('wagerSlider');
+        const wagerDisplay = document.getElementById('wagerDisplay');
+        if (wagerSlider) {
+            wagerSlider.addEventListener('input', () => {
+                selectedWager = parseInt(wagerSlider.value);
+                wagerDisplay.textContent = `${selectedWager} DD`;
+            });
+        }
+
+        // Legacy wager buttons (if any remain)
         document.querySelectorAll('.wager-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 selectedWager = parseInt(btn.dataset.wager);
+                if (wagerSlider) wagerSlider.value = selectedWager;
+                if (wagerDisplay) wagerDisplay.textContent = `${selectedWager} DD`;
                 document.querySelectorAll('.wager-btn').forEach(b => {
                     b.classList.remove('selected');
                     b.style.background = 'var(--card-bg)';
