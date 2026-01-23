@@ -3,6 +3,7 @@
 // College sports (NCAAF, NCAAB) -> TheOddsAPI
 
 import { getCollection } from '../lib/mongodb.js';
+import { fetchGamesByDate } from '../lib/sportsdata.js';
 
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 const ODDS_API_KEY = process.env.ODDS_API_KEY;
@@ -155,10 +156,10 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
     // First fetch games to get team names (odds endpoint may not have them)
     let gamesLookup = {};
     try {
-        const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${dateToUse}?key=${SPORTSDATA_API_KEY}`;
-        const gamesResponse = await fetch(gamesUrl);
-        if (gamesResponse.ok) {
-            const gamesData = await gamesResponse.json();
+        const gamesData = await fetchGamesByDate(sport, dateToUse);
+        console.log(`Raw games data for ${sport} on ${dateToUse}: ${gamesData?.length || 0} games`);
+        if (gamesData && gamesData.length > 0) {
+            console.log(`First game fields: ${Object.keys(gamesData[0]).join(', ')}`);
             for (const g of gamesData) {
                 // Store under multiple ID variations
                 const ids = [g.GameID, g.GameId, g.ScoreID].filter(Boolean);
@@ -172,7 +173,7 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
                     gamesLookup[id] = teamInfo;
                 }
             }
-            console.log(`Loaded ${Object.keys(gamesLookup).length} games for team name lookup`);
+            console.log(`Loaded ${Object.keys(gamesLookup).length} entries in games lookup`);
         }
     } catch (e) {
         console.error('Failed to fetch games for team lookup:', e.message);
