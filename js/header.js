@@ -896,7 +896,6 @@
             gap: 0.35rem;
             color: #1A2744;
             font-family: Georgia, serif;
-            margin-top: 0.5rem;
         }
 
         .theme-toggle:hover {
