@@ -280,6 +280,13 @@
         .player-row:hover { background: var(--dark-bg); }
         .player-row.selected { background: rgba(46,125,50,0.1); }
 
+        .no-players {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
         .player-info { display: flex; align-items: center; gap: 0.75rem; }
         .player-avatar {
             width: 36px;
@@ -584,17 +591,36 @@
         }
 
         async function loadPlayers() {
+            const container = document.getElementById('playersList');
             try {
-                const date = new Date(contest.gameDate).toISOString().split('T')[0];
+                // Use gameDate if available, otherwise use locksAt
+                const gameDate = contest.gameDate || contest.locksAt;
+                if (!gameDate) {
+                    container.innerHTML = '<div class="no-players">No game date set for this contest</div>';
+                    return;
+                }
+
+                const date = new Date(gameDate).toISOString().split('T')[0];
+                console.log('Fetching players for:', contest.sport, date, contestId);
+
                 const response = await fetch(`/api/fantasy/players?sport=${contest.sport}&date=${date}&contestId=${contestId}`);
                 const data = await response.json();
 
+                console.log('Players API response:', data);
+
                 if (data.success) {
                     players = data.players;
-                    renderPlayers();
+                    if (players.length === 0) {
+                        container.innerHTML = '<div class="no-players">No games scheduled for this date. Try a different contest date.</div>';
+                    } else {
+                        renderPlayers();
+                    }
+                } else {
+                    container.innerHTML = `<div class="no-players">Error: ${data.error || 'Failed to load players'}</div>`;
                 }
             } catch (error) {
                 console.error('Load players error:', error);
+                container.innerHTML = `<div class="no-players">Error loading players: ${error.message}</div>`;
             }
         }
 
