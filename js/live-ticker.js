@@ -343,19 +343,30 @@
         tickerWrapper.appendChild(expandBtn);
         const wrapper = tickerWrapper;
 
-        // Insert after the header/navigation
+        // Insert after the site-header div (which contains the header)
+        const siteHeader = document.getElementById('site-header');
         const header = document.querySelector('.header');
-        const mainNav = document.querySelector('.main-nav');
 
-        if (mainNav && mainNav.parentNode) {
-            // Insert after the main navigation
-            mainNav.parentNode.insertBefore(wrapper, mainNav.nextSibling);
+        if (siteHeader && siteHeader.parentNode) {
+            // Insert after the site-header container
+            siteHeader.parentNode.insertBefore(wrapper, siteHeader.nextSibling);
         } else if (header && header.parentNode) {
-            // Insert after the header
-            header.parentNode.insertBefore(wrapper, header.nextSibling);
+            // Insert after the header element
+            if (header.parentNode.id === 'site-header') {
+                // Header is inside site-header, insert after site-header
+                header.parentNode.parentNode.insertBefore(wrapper, header.parentNode.nextSibling);
+            } else {
+                header.parentNode.insertBefore(wrapper, header.nextSibling);
+            }
         } else {
-            // Fallback: insert at beginning of body
-            document.body.insertBefore(wrapper, document.body.firstChild);
+            // Fallback: insert before main content
+            const body = document.body;
+            const firstMain = body.querySelector('main, .main-container');
+            if (firstMain) {
+                body.insertBefore(wrapper, firstMain);
+            } else {
+                body.insertBefore(wrapper, body.firstChild);
+            }
         }
     }
 
