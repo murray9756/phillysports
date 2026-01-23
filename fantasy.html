@@ -516,7 +516,7 @@
                                 </div>
                             </div>
                             <div class="contest-details">
-                                <div class="prize-pool">Pot: ${(contest.entryFee || 0) * (contest.entryCount || 0)} DD</div>
+                                <div class="prize-pool">Pot: ${500 + (contest.entryFee || 0) * (contest.entryCount || 0)} DD</div>
                                 <div class="entry-fee">${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD Entry'}</div>
                             </div>
                             <div class="contest-action">
@@ -524,7 +524,7 @@
                                     `<a href="/fantasy-contest.html?id=${contest._id}" class="enter-btn">Enter</a>` :
                                     `<a href="/fantasy-contest.html?id=${contest._id}" class="enter-btn" style="background: var(--text-muted);">View</a>`
                                 }
-                                <span class="entries-count">${contest.entryCount}/${contest.maxTotalEntries} entries</span>
+                                <span class="entries-count">${contest.entryCount || 0} entries</span>
                             </div>
                         </div>
                     `;
@@ -565,7 +565,7 @@
                                 </div>
                             </div>
                             <div class="contest-details">
-                                <div class="prize-pool">Pot: ${(contest.entryFee || 0) * (contest.entryCount || 0)} DD</div>
+                                <div class="prize-pool">Pot: ${500 + (contest.entryFee || 0) * (contest.entryCount || 0)} DD</div>
                             </div>
                         </a>
                     `;

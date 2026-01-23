@@ -317,6 +317,32 @@
         .rank { font-weight: 700; }
         .points { font-weight: 600; }
 
+        .entry-player-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 80px;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+        .entry-player-row .pos-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .entry-player-row .player-pts {
+            font-weight: 700;
+            text-align: right;
+        }
+        .entry-player-row .player-pts.scoring { color: var(--success-color); }
+        .entry-status-live { background: rgba(46,125,50,0.1); color: var(--success-color); border: 1px solid var(--success-color); }
+        .entry-status-completed { background: rgba(139,0,0,0.1); color: var(--accent-color); border: 1px solid var(--accent-color); }
+        .entry-status-upcoming { background: rgba(0,0,0,0.05); color: var(--text-muted); border: 1px solid var(--border-color); }
+
         .tab-buttons {
             display: flex;
             gap: 0.5rem;
@@ -373,6 +399,7 @@
 
         <div class="tab-buttons">
             <button class="tab-btn active" data-tab="lineup">Build Lineup</button>
+            <button class="tab-btn" data-tab="myentry" id="myEntryTab" style="display: none;">My Entry</button>
             <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
         </div>
 
@@ -409,6 +436,18 @@
                 <div id="leaderboardList"></div>
             </div>
         </div>
+
+        <div id="myentryTab" style="display: none;">
+            <div class="leaderboard-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 class="leaderboard-header" style="margin: 0;">My Entry</h3>
+                    <div id="myEntryRank" style="font-size: 0.9rem; color: var(--text-muted);"></div>
+                </div>
+                <div id="myEntryScore" style="font-size: 2rem; font-weight: 800; color: var(--accent-color); margin-bottom: 1rem;">0 pts</div>
+                <div id="myEntryLineup"></div>
+                <div id="myEntryStatus" style="margin-top: 1rem; padding: 0.75rem; border-radius: 6px; text-align: center;"></div>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -429,6 +468,9 @@
         let positionFilter = '';
         let searchQuery = '';
 
+        let userEntry = null;
+        let scoreRefreshInterval = null;
+
         // Tab switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -437,7 +479,9 @@
                 const tab = btn.dataset.tab;
                 document.getElementById('lineupTab').style.display = tab === 'lineup' ? 'block' : 'none';
                 document.getElementById('leaderboardTab').style.display = tab === 'leaderboard' ? 'block' : 'none';
+                document.getElementById('myentryTab').style.display = tab === 'myentry' ? 'block' : 'none';
                 if (tab === 'leaderboard') loadLeaderboard();
+                if (tab === 'myentry') loadMyEntry();
             });
         });
 
@@ -488,9 +532,10 @@
 
                 const locksAt = new Date(contest.locksAt);
                 const locksAtEST = locksAt.toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' });
-                const currentPot = (contest.entryFee || 0) * (contest.entryCount || 0);
+                const basePot = 500;
+                const currentPot = basePot + (contest.entryFee || 0) * (contest.entryCount || 0);
                 document.getElementById('contestMeta').innerHTML = `
-                    <span>Entries: ${contest.entryCount || 0}</span>
+                    <span>${contest.entryCount || 0} Entries</span>
                     <span>Pot: ${currentPot} DD</span>
                     <span>Entry: ${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD'}</span>
                     <span>Locks: ${locksAtEST} ET</span>
@@ -500,8 +545,11 @@
                 buildLineupSlots();
                 loadPlayers(); // This will also build position filters after loading
 
-                // If user has an entry, load it
+                // If user has an entry, load it and show My Entry tab
                 if (data.userEntry) {
+                    userEntry = data.userEntry;
+                    document.getElementById('myEntryTab').style.display = 'block';
+
                     for (const player of data.userEntry.lineup) {
                         lineup[player.position] = {
                             playerId: player.playerId,
@@ -511,7 +559,18 @@
                         };
                     }
                     updateLineupDisplay();
-                    showMessage('Your lineup is loaded. Contest is ' + contest.status, 'success');
+
+                    // If contest is live or completed, auto-switch to My Entry tab
+                    if (contest.status === 'live' || contest.status === 'completed') {
+                        document.querySelector('[data-tab="myentry"]').click();
+
+                        // Start auto-refresh for live contests
+                        if (contest.status === 'live') {
+                            startScoreRefresh();
+                        }
+                    } else {
+                        showMessage('Your lineup is submitted. Contest starts soon!', 'success');
+                    }
                 }
 
                 updateSubmitButton();
@@ -851,10 +910,87 @@
                             <span class="points">${entry.totalPoints}</span>
                         </div>
                     `).join('') || '<div style="padding: 1rem; color: var(--text-muted);">No entries yet</div>';
+
+                    // Update user's rank in My Entry tab
+                    if (currentUser && data.leaderboard) {
+                        const myRank = data.leaderboard.find(e => e.userId === currentUser._id?.toString() || e.userId === currentUser.userId);
+                        if (myRank) {
+                            document.getElementById('myEntryRank').textContent = `Rank: #${myRank.rank} of ${data.leaderboard.length}`;
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Leaderboard error:', error);
             }
+        }
+
+        async function loadMyEntry() {
+            if (!userEntry) return;
+
+            try {
+                // Fetch fresh entry data with scores
+                const response = await fetch(`/api/fantasy/contests/${contestId}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (data.success && data.userEntry) {
+                    userEntry = data.userEntry;
+                    renderMyEntry();
+                }
+
+                // Also load leaderboard to get rank
+                loadLeaderboard();
+            } catch (error) {
+                console.error('Load my entry error:', error);
+            }
+        }
+
+        function renderMyEntry() {
+            if (!userEntry) return;
+
+            const totalPoints = userEntry.totalPoints || 0;
+            document.getElementById('myEntryScore').textContent = `${totalPoints} pts`;
+
+            const container = document.getElementById('myEntryLineup');
+            container.innerHTML = userEntry.lineup.map(player => {
+                const pts = player.points || 0;
+                return `
+                    <div class="entry-player-row">
+                        <span class="pos-badge">${player.position}</span>
+                        <div>
+                            <div style="font-weight: 600;">${player.playerName}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">${player.playerPosition}</div>
+                        </div>
+                        <span class="player-pts ${pts > 0 ? 'scoring' : ''}">${pts} pts</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Show status message
+            const statusEl = document.getElementById('myEntryStatus');
+            if (contest.status === 'completed') {
+                const basePot = 500;
+                const totalPot = basePot + (contest.entryFee || 0) * (contest.entryCount || 0);
+                statusEl.className = 'entry-status-completed';
+                statusEl.innerHTML = `Contest Complete! Winner takes ${totalPot} DD`;
+            } else if (contest.status === 'live') {
+                statusEl.className = 'entry-status-live';
+                statusEl.innerHTML = 'Live - Scores updating automatically';
+            } else {
+                statusEl.className = 'entry-status-upcoming';
+                statusEl.innerHTML = 'Contest starts when first game locks';
+            }
+        }
+
+        function startScoreRefresh() {
+            if (scoreRefreshInterval) clearInterval(scoreRefreshInterval);
+            // Refresh scores every 60 seconds during live contests
+            scoreRefreshInterval = setInterval(() => {
+                if (contest.status === 'live') {
+                    loadMyEntry();
+                } else {
+                    clearInterval(scoreRefreshInterval);
+                }
+            }, 60000);
         }
 
         function showMessage(text, type) {

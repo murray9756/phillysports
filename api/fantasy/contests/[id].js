@@ -95,6 +95,22 @@ export default async function handler(req, res) {
         const now = new Date();
         const isLocked = now >= new Date(contest.locksAt);
 
+        // Format user entry with player points
+        let formattedUserEntry = null;
+        if (userEntry) {
+            formattedUserEntry = {
+                ...userEntry,
+                totalPoints: userEntry.totalPoints || 0,
+                lineup: userEntry.lineup.map(p => {
+                    const pts = userEntry.playerPoints?.find(pp => pp.playerId === p.playerId);
+                    return {
+                        ...p,
+                        points: pts?.points || 0
+                    };
+                })
+            };
+        }
+
         return res.status(200).json({
             success: true,
             contest: {
@@ -102,12 +118,12 @@ export default async function handler(req, res) {
                 isLocked,
                 canEnter: !isLocked && contest.status === 'upcoming' && contest.entryCount < contest.maxTotalEntries
             },
-            userEntry,
+            userEntry: formattedUserEntry,
             userEntryCount,
             canEnterMore: userEntryCount < contest.maxEntries && !isLocked,
             topEntries: topEntries.map(e => ({
                 username: e.username,
-                totalPoints: e.totalPoints,
+                totalPoints: e.totalPoints || 0,
                 rank: e.finalRank
             }))
         });

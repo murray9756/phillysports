@@ -109,24 +109,22 @@ export default async function handler(req, res) {
                             { $set: { status: 'completed', completedAt: now, updatedAt: now } }
                         );
 
-                        // Award prizes
+                        // Award prizes - winner takes all
                         const entries = await entriesCollection
                             .find({ contestId: contest._id })
                             .sort({ totalPoints: -1 })
                             .toArray();
 
+                        // Calculate total pot: $500 base + (entry fee × entries)
+                        const basePot = 500;
+                        const totalPot = basePot + (contest.entryFee || 0) * (contest.entryCount || entries.length);
+
                         for (let i = 0; i < entries.length; i++) {
                             const entry = entries[i];
                             const rank = i + 1;
 
-                            // Find prize amount for this rank
-                            let payout = 0;
-                            for (const prize of contest.prizeStructure) {
-                                if (prize.place === rank) {
-                                    payout = prize.amount;
-                                    break;
-                                }
-                            }
+                            // Winner takes all - only rank 1 gets the pot
+                            const payout = rank === 1 ? totalPot : 0;
 
                             // Update entry with final rank and payout
                             await entriesCollection.updateOne(
@@ -140,7 +138,7 @@ export default async function handler(req, res) {
                                 }
                             );
 
-                            // Award payout to user
+                            // Award payout to winner
                             if (payout > 0) {
                                 await usersCollection.updateOne(
                                     { _id: entry.userId },

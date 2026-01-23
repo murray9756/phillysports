@@ -45,19 +45,30 @@ export default async function handler(req, res) {
             .limit(parseInt(limit))
             .toArray();
 
-        // Add rank to entries
-        const rankedEntries = entries.map((entry, index) => ({
-            rank: parseInt(offset) + index + 1,
-            username: entry.username,
-            totalPoints: entry.totalPoints,
-            lineup: entry.lineup.map(p => ({
-                position: p.position,
-                playerName: p.playerName,
-                salary: p.salary
-            })),
-            payout: entry.payout || 0,
-            isPaid: contest.status === 'completed' && entry.payout > 0
-        }));
+        // Add rank to entries with player points
+        const rankedEntries = entries.map((entry, index) => {
+            const playerPointsMap = {};
+            if (entry.playerPoints) {
+                for (const pp of entry.playerPoints) {
+                    playerPointsMap[pp.playerId] = pp.points;
+                }
+            }
+            return {
+                rank: parseInt(offset) + index + 1,
+                userId: entry.userId?.toString(),
+                username: entry.username,
+                totalPoints: entry.totalPoints || 0,
+                lineup: entry.lineup.map(p => ({
+                    position: p.position,
+                    playerName: p.playerName,
+                    playerPosition: p.playerPosition,
+                    salary: p.salary,
+                    points: playerPointsMap[p.playerId] || 0
+                })),
+                payout: entry.payout || 0,
+                isPaid: contest.status === 'completed' && entry.payout > 0
+            };
+        });
 
         // Get user's entry if logged in
         let userEntry = null;
@@ -94,8 +105,14 @@ export default async function handler(req, res) {
             totalEntries,
             userEntry: userEntry ? {
                 rank: userRank,
-                totalPoints: userEntry.totalPoints,
-                lineup: userEntry.lineup,
+                totalPoints: userEntry.totalPoints || 0,
+                lineup: userEntry.lineup.map(p => {
+                    const pts = userEntry.playerPoints?.find(pp => pp.playerId === p.playerId);
+                    return {
+                        ...p,
+                        points: pts?.points || 0
+                    };
+                }),
                 payout: userEntry.payout || 0
             } : null
         });
