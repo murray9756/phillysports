@@ -72,7 +72,8 @@ export default async function handler(req, res) {
                     author: item.author,
                     publishedAt: item.publishedAt,
                     fetchedAt: item.fetchedAt,
-                    status: item.status
+                    status: item.status,
+                    teams: item.teams
                 })),
                 total,
                 statusCounts
