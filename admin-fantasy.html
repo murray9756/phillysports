@@ -104,6 +104,30 @@
         .entry-user { font-weight: 500; }
         .entry-points { color: var(--accent-color); font-weight: 600; }
 
+        /* Tabs */
+        .tab-nav { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
+        .tab-btn { padding: 1rem 1.5rem; background: none; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .tab-btn:hover { color: var(--text-primary); }
+        .tab-btn.active { color: var(--accent-color); border-bottom-color: var(--accent-color); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Templates */
+        .template-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .template-card:hover { border-color: rgba(139, 0, 0, 0.5); }
+        .template-info { flex: 1; }
+        .template-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.75rem; }
+        .template-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 1rem; flex-wrap: wrap; }
+        .template-badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .template-badge.active { background: rgba(76, 175, 80, 0.2); color: #4caf50; }
+        .template-badge.inactive { background: rgba(255, 152, 0, 0.2); color: #ff9800; }
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--border-color); border-radius: 24px; transition: 0.3s; }
+        .toggle-slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background: var(--success); }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
+
         @media (max-width: 768px) {
             .contest-card { grid-template-columns: 1fr; gap: 1rem; text-align: center; }
             .contest-actions { flex-direction: row; justify-content: center; flex-wrap: wrap; }
@@ -122,57 +146,89 @@
     </header>
 
     <main class="main-container">
-        <!-- Stats -->
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value" id="upcomingCount">-</div>
-                <div class="stat-label">Upcoming</div>
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('contests')">Contests</button>
+            <button class="tab-btn" onclick="switchTab('templates')">Recurring Templates</button>
+        </div>
+
+        <!-- Contests Tab -->
+        <div class="tab-content active" id="contestsTab">
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value" id="upcomingCount">-</div>
+                    <div class="stat-label">Upcoming</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="liveCount">-</div>
+                    <div class="stat-label">Live</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="completedCount">-</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="totalEntries">-</div>
+                    <div class="stat-label">Total Entries</div>
+                </div>
             </div>
-            <div class="stat">
-                <div class="stat-value" id="liveCount">-</div>
-                <div class="stat-label">Live</div>
+
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="filters">
+                    <select class="filter-select" id="sportFilter">
+                        <option value="">All Sports</option>
+                        <option value="NFL">NFL</option>
+                        <option value="NBA">NBA</option>
+                        <option value="MLB">MLB</option>
+                        <option value="NHL">NHL</option>
+                    </select>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="live">Live</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <button class="add-btn" onclick="openCreateModal()">+ Create Contest</button>
             </div>
-            <div class="stat">
-                <div class="stat-value" id="completedCount">-</div>
-                <div class="stat-label">Completed</div>
+
+            <!-- Contests List -->
+            <div class="contests-list" id="contestsList"></div>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <p>No contests found.</p>
+                <p>Click "Create Contest" to add your first fantasy contest.</p>
             </div>
-            <div class="stat">
-                <div class="stat-value" id="totalEntries">-</div>
-                <div class="stat-label">Total Entries</div>
+
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <p>Loading contests...</p>
             </div>
         </div>
 
-        <!-- Top Bar -->
-        <div class="top-bar">
-            <div class="filters">
-                <select class="filter-select" id="sportFilter">
-                    <option value="">All Sports</option>
-                    <option value="NFL">NFL</option>
-                    <option value="NBA">NBA</option>
-                    <option value="MLB">MLB</option>
-                    <option value="NHL">NHL</option>
-                </select>
-                <select class="filter-select" id="statusFilter">
-                    <option value="">All Status</option>
-                    <option value="upcoming">Upcoming</option>
-                    <option value="live">Live</option>
-                    <option value="completed">Completed</option>
-                </select>
+        <!-- Templates Tab -->
+        <div class="tab-content" id="templatesTab">
+            <div class="top-bar">
+                <div>
+                    <h2 style="font-size: 1.1rem; margin-bottom: 0.25rem;">Recurring Contest Templates</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Templates auto-create contests daily when games are scheduled</p>
+                </div>
+                <button class="add-btn" onclick="openTemplateModal()">+ New Template</button>
             </div>
-            <button class="add-btn" onclick="openCreateModal()">+ Create Contest</button>
-        </div>
 
-        <!-- Contests List -->
-        <div class="contests-list" id="contestsList"></div>
+            <div id="templatesList"></div>
 
-        <div class="empty-state" id="emptyState" style="display: none;">
-            <p>No contests found.</p>
-            <p>Click "Create Contest" to add your first fantasy contest.</p>
-        </div>
+            <div class="empty-state" id="templatesEmptyState" style="display: none;">
+                <p>No templates created yet.</p>
+                <p>Create a template like "NBA Daily" to auto-generate contests each day.</p>
+            </div>
 
-        <div class="loading" id="loadingState">
-            <div class="spinner"></div>
-            <p>Loading contests...</p>
+            <div class="loading" id="templatesLoadingState" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading templates...</p>
+            </div>
         </div>
     </main>
 
@@ -219,15 +275,10 @@
                         <input type="text" id="contestTitle" placeholder="Auto-generated if blank">
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Entry Fee (DD)</label>
-                            <input type="number" id="entryFee" min="0" value="0" placeholder="0 for free">
-                        </div>
-                        <div class="form-group">
-                            <label>Prize Pool (DD)</label>
-                            <input type="number" id="prizePool" min="1" value="100" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Entry Fee (DD)</label>
+                        <input type="number" id="entryFee" min="0" value="0" placeholder="0 for free">
+                        <div class="form-hint">Prize pool = Entry Fee × Number of Entries (winner takes all)</div>
                     </div>
                 </form>
             </div>
@@ -252,6 +303,70 @@
             </div>
             <div class="modal-footer">
                 <button class="action-btn secondary" onclick="closeEntriesModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Template Modal -->
+    <div class="modal-overlay" id="templateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Recurring Template</h2>
+                <button class="modal-close" onclick="closeTemplateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="templateForm">
+                    <div class="form-group">
+                        <label>Template Name *</label>
+                        <input type="text" id="templateName" placeholder="e.g., NBA Daily" required>
+                        <div class="form-hint">This will appear in contest titles</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sport *</label>
+                        <div class="sport-select" id="templateSportSelect">
+                            <div class="sport-option" data-sport="NFL" onclick="selectTemplateSport('NFL')">
+                                <span class="emoji">🏈</span>
+                                <span class="label">NFL</span>
+                            </div>
+                            <div class="sport-option" data-sport="NBA" onclick="selectTemplateSport('NBA')">
+                                <span class="emoji">🏀</span>
+                                <span class="label">NBA</span>
+                            </div>
+                            <div class="sport-option" data-sport="MLB" onclick="selectTemplateSport('MLB')">
+                                <span class="emoji">⚾</span>
+                                <span class="label">MLB</span>
+                            </div>
+                            <div class="sport-option" data-sport="NHL" onclick="selectTemplateSport('NHL')">
+                                <span class="emoji">🏒</span>
+                                <span class="label">NHL</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="templateSport" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Entry Fee (DD)</label>
+                            <input type="number" id="templateEntryFee" min="0" value="0" placeholder="0 for free">
+                        </div>
+                        <div class="form-group">
+                            <label>Schedule</label>
+                            <select id="templateSchedule">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-hint" style="margin-top: 0.5rem;">
+                        Contests are created automatically when games exist. Prize pool = entry fee × entries.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="action-btn secondary" onclick="closeTemplateModal()">Cancel</button>
+                <button class="action-btn primary" onclick="createTemplate()">Create Template</button>
             </div>
         </div>
     </div>
@@ -345,9 +460,9 @@
                             </div>
                         </div>
                         <div class="contest-stats">
-                            <div class="prize-amount">${contest.prizePool} DD</div>
+                            <div class="prize-amount">${(contest.entryFee || 0) * (contest.entryCount || 0)} DD Pot</div>
                             <div class="entry-info">${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD Entry'}</div>
-                            <div class="entry-info">${contest.entryCount || 0} / ${contest.maxTotalEntries} entries</div>
+                            <div class="entry-info">${contest.entryCount || 0} entries</div>
                         </div>
                         <div class="contest-actions">
                             <button class="action-btn secondary" onclick="viewEntries('${contest._id}', '${contest.title.replace(/'/g, "\\'")}')">View Entries</button>
@@ -398,7 +513,6 @@
             const date = document.getElementById('gameDate').value;
             const title = document.getElementById('contestTitle').value;
             const entryFee = document.getElementById('entryFee').value;
-            const prizePool = document.getElementById('prizePool').value;
 
             if (!sport) {
                 showToast('Please select a sport', 'error');
@@ -418,8 +532,7 @@
                         sport,
                         date,
                         title: title || undefined,
-                        entryFee: parseInt(entryFee) || 0,
-                        prizePool: parseInt(prizePool) || 100
+                        entryFee: parseInt(entryFee) || 0
                     })
                 });
 
@@ -512,6 +625,203 @@
         document.getElementById('entriesModal').addEventListener('click', (e) => {
             if (e.target === document.getElementById('entriesModal')) closeEntriesModal();
         });
+        document.getElementById('templateModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('templateModal')) closeTemplateModal();
+        });
+
+        // =====================
+        // TAB NAVIGATION
+        // =====================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+
+            if (tab === 'templates') {
+                loadTemplates();
+            }
+        }
+
+        // =====================
+        // TEMPLATES MANAGEMENT
+        // =====================
+        let templates = [];
+        let selectedTemplateSport = '';
+
+        function selectTemplateSport(sport) {
+            selectedTemplateSport = sport;
+            document.getElementById('templateSport').value = sport;
+            document.querySelectorAll('#templateSportSelect .sport-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.sport === sport);
+            });
+        }
+
+        async function loadTemplates() {
+            document.getElementById('templatesLoadingState').style.display = 'block';
+            document.getElementById('templatesList').innerHTML = '';
+            document.getElementById('templatesEmptyState').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/fantasy/templates');
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load templates');
+                }
+
+                templates = data.templates || [];
+                renderTemplates();
+            } catch (error) {
+                console.error('Load templates error:', error);
+                showToast(error.message, 'error');
+            } finally {
+                document.getElementById('templatesLoadingState').style.display = 'none';
+            }
+        }
+
+        function renderTemplates() {
+            const list = document.getElementById('templatesList');
+
+            if (templates.length === 0) {
+                list.innerHTML = '';
+                document.getElementById('templatesEmptyState').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('templatesEmptyState').style.display = 'none';
+
+            list.innerHTML = templates.map(template => {
+                const emoji = sportEmojis[template.sport] || '🏆';
+                const lastCreated = template.lastCreated
+                    ? `Last created: ${template.lastCreated}`
+                    : 'Never created';
+
+                return `
+                    <div class="template-card">
+                        <div style="font-size: 2rem;">${emoji}</div>
+                        <div class="template-info">
+                            <div class="template-name">
+                                ${template.name}
+                                <span class="template-badge ${template.active ? 'active' : 'inactive'}">
+                                    ${template.active ? 'Active' : 'Paused'}
+                                </span>
+                            </div>
+                            <div class="template-meta">
+                                <span>${template.sport}</span>
+                                <span>${template.schedule === 'daily' ? 'Daily' : 'Weekly'}</span>
+                                <span>${template.entryFee === 0 ? 'Free Entry' : template.entryFee + ' DD Entry'}</span>
+                                <span>${lastCreated}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${template.active ? 'checked' : ''}
+                                    onchange="toggleTemplate('${template._id}', this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <button class="action-btn danger" onclick="deleteTemplate('${template._id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openTemplateModal() {
+            selectedTemplateSport = '';
+            document.getElementById('templateSport').value = '';
+            document.querySelectorAll('#templateSportSelect .sport-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('templateForm').reset();
+            document.getElementById('templateModal').classList.add('show');
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templateModal').classList.remove('show');
+        }
+
+        async function createTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            const sport = document.getElementById('templateSport').value;
+            const entryFee = parseInt(document.getElementById('templateEntryFee').value) || 0;
+            const schedule = document.getElementById('templateSchedule').value;
+
+            if (!name) {
+                showToast('Please enter a template name', 'error');
+                return;
+            }
+
+            if (!sport) {
+                showToast('Please select a sport', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/fantasy/templates', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, sport, entryFee, schedule, active: true })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create template');
+                }
+
+                showToast('Template created!');
+                closeTemplateModal();
+                loadTemplates();
+            } catch (error) {
+                console.error('Create template error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function toggleTemplate(id, active) {
+            try {
+                const response = await fetch(`/api/fantasy/templates/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ active })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to update template');
+                }
+
+                showToast(active ? 'Template activated' : 'Template paused');
+                loadTemplates();
+            } catch (error) {
+                console.error('Toggle template error:', error);
+                showToast(error.message, 'error');
+                loadTemplates(); // Reload to reset toggle state
+            }
+        }
+
+        async function deleteTemplate(id) {
+            if (!confirm('Delete this template? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/api/fantasy/templates?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to delete template');
+                }
+
+                showToast('Template deleted');
+                loadTemplates();
+            } catch (error) {
+                console.error('Delete template error:', error);
+                showToast(error.message, 'error');
+            }
+        }
 
         // Initialize
         loadContests();

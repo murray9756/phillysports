@@ -35,6 +35,10 @@
     {
       "path": "/api/cron/fetch-content",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/fantasy/cron/create-daily",
+      "schedule": "0 6 * * *"
     }
   ]
 }
