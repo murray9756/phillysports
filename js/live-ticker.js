@@ -30,20 +30,17 @@
                 border-bottom: none;
             }
 
-            .live-ticker.minimized .ticker-expand {
-                display: flex;
-            }
-
+            /* Expand button - positioned in wrapper, not inside ticker */
             .ticker-expand {
                 display: none;
                 position: absolute;
-                bottom: -28px;
+                top: 0;
                 left: 50%;
                 transform: translateX(-50%);
-                background: #e94560;
+                background: linear-gradient(135deg, #e94560, #d63850);
                 color: white;
                 border: none;
-                padding: 4px 16px;
+                padding: 6px 20px;
                 border-radius: 0 0 8px 8px;
                 cursor: pointer;
                 font-size: 12px;
@@ -51,10 +48,23 @@
                 align-items: center;
                 gap: 6px;
                 z-index: 999;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+
+            .live-ticker-wrapper.minimized .ticker-expand {
+                display: flex;
             }
 
             .ticker-expand:hover {
-                background: #ff6b6b;
+                background: linear-gradient(135deg, #ff6b6b, #e94560);
+            }
+
+            .ticker-expand .live-dot {
+                width: 8px;
+                height: 8px;
+                background: #fff;
+                border-radius: 50%;
+                animation: pulse 1.5s infinite;
             }
 
             .ticker-header {
@@ -294,12 +304,15 @@
     }
 
     // Create ticker HTML
+    let tickerWrapper = null;
+
     function createTicker() {
         if (document.getElementById('live-ticker')) return;
 
         // Create wrapper for positioning the expand button
-        const wrapper = document.createElement('div');
-        wrapper.className = 'live-ticker-wrapper';
+        tickerWrapper = document.createElement('div');
+        tickerWrapper.className = 'live-ticker-wrapper' + (isMinimized ? ' minimized' : '');
+        tickerWrapper.id = 'live-ticker-wrapper';
 
         tickerContainer = document.createElement('div');
         tickerContainer.id = 'live-ticker';
@@ -318,12 +331,17 @@
             <div class="ticker-games">
                 <div class="ticker-loading">Loading live games...</div>
             </div>
-            <button class="ticker-expand" onclick="window.liveTicker.expand()">
-                <span class="live-dot"></span> Show Live Games
-            </button>
         `;
 
-        wrapper.appendChild(tickerContainer);
+        // Expand button goes in wrapper, not ticker (so it's visible when ticker is hidden)
+        const expandBtn = document.createElement('button');
+        expandBtn.className = 'ticker-expand';
+        expandBtn.onclick = window.liveTicker.expand;
+        expandBtn.innerHTML = '<span class="live-dot"></span> Show Live Games';
+
+        tickerWrapper.appendChild(tickerContainer);
+        tickerWrapper.appendChild(expandBtn);
+        const wrapper = tickerWrapper;
 
         // Insert after the header/navigation
         const header = document.querySelector('.header');
@@ -440,12 +458,14 @@
             isMinimized = true;
             localStorage.setItem('tickerMinimized', 'true');
             tickerContainer.classList.add('minimized');
+            if (tickerWrapper) tickerWrapper.classList.add('minimized');
         },
 
         expand: function() {
             isMinimized = false;
             localStorage.setItem('tickerMinimized', 'false');
             tickerContainer.classList.remove('minimized');
+            if (tickerWrapper) tickerWrapper.classList.remove('minimized');
             fetchGames();
         },
 
