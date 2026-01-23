@@ -381,10 +381,9 @@
             document.querySelectorAll('.sport-option').forEach(opt => opt.classList.remove('selected'));
             document.getElementById('createForm').reset();
 
-            // Default to tomorrow's date
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('gameDate').value = tomorrow.toISOString().split('T')[0];
+            // Default to today's date (in Eastern Time)
+            const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+            document.getElementById('gameDate').value = today;
 
             document.getElementById('createModal').classList.add('show');
         }
