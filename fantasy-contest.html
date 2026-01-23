@@ -510,8 +510,7 @@
 
                 // Build lineup slots
                 buildLineupSlots();
-                buildPositionFilters();
-                loadPlayers();
+                loadPlayers(); // This will also build position filters after loading
 
                 // If user has an entry, load it
                 if (data.userEntry) {
@@ -560,18 +559,29 @@
         }
 
         function buildPositionFilters() {
+            // Build filters from actual player positions (not roster positions)
+            // This ensures we only show positions that players actually have
             const positions = new Set();
-            for (const pos of contest.rosterPositions) {
-                if (pos.eligible) {
-                    pos.eligible.forEach(p => positions.add(p));
-                } else {
-                    positions.add(pos.position);
+            for (const player of players) {
+                if (player.position) {
+                    positions.add(player.position);
                 }
             }
 
+            // Sort positions in a logical order
+            const posOrder = ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF', 'SP', 'RP', 'LW', 'RW', 'D'];
+            const sortedPositions = Array.from(positions).sort((a, b) => {
+                const aIdx = posOrder.indexOf(a);
+                const bIdx = posOrder.indexOf(b);
+                if (aIdx === -1 && bIdx === -1) return a.localeCompare(b);
+                if (aIdx === -1) return 1;
+                if (bIdx === -1) return -1;
+                return aIdx - bIdx;
+            });
+
             const container = document.getElementById('positionFilters');
             container.innerHTML = '<button class="pos-filter active" data-pos="">All</button>';
-            positions.forEach(pos => {
+            sortedPositions.forEach(pos => {
                 container.innerHTML += `<button class="pos-filter" data-pos="${pos}">${pos}</button>`;
             });
 
@@ -610,6 +620,7 @@
                     if (players.length === 0) {
                         container.innerHTML = '<div class="no-players">No games scheduled for this date. Try a different contest date.</div>';
                     } else {
+                        buildPositionFilters(); // Build filters from actual player positions
                         renderPlayers();
                     }
                 } else {
