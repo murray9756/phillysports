@@ -10,7 +10,80 @@ import {
     calculateParlayPayout,
     recalculateParlayAfterPush
 } from '../lib/betting.js';
-import { fetchAllScoreboards, findGameResult, SPORT_KEY_MAP } from '../lib/espn.js';
+import { fetchScoresByDate } from '../lib/sportsdata.js';
+
+// Map TheOddsAPI sport keys to our sport names
+const SPORT_KEY_MAP = {
+    'americanfootball_nfl': 'NFL',
+    'basketball_nba': 'NBA',
+    'baseball_mlb': 'MLB',
+    'icehockey_nhl': 'NHL',
+    'americanfootball_ncaaf': 'NCAAF',
+    'basketball_ncaab': 'NCAAB'
+};
+
+/**
+ * Find game result from SportsDataIO scores
+ * Matches by team names (flexible matching)
+ */
+function findGameResult(bet, scoreboards) {
+    const sport = bet.sport || SPORT_KEY_MAP[bet.sportKey];
+    if (!sport || !scoreboards[sport]) return null;
+
+    const games = scoreboards[sport];
+    const homeTeam = bet.homeTeam?.toLowerCase() || '';
+    const awayTeam = bet.awayTeam?.toLowerCase() || '';
+
+    // Try to find matching game
+    for (const game of games) {
+        const gameHome = (game.HomeTeam || '').toLowerCase();
+        const gameAway = (game.AwayTeam || '').toLowerCase();
+
+        // Check if teams match (flexible - can match abbreviation or full name)
+        const homeMatch = gameHome === homeTeam ||
+                          homeTeam.includes(gameHome) ||
+                          gameHome.includes(homeTeam) ||
+                          normalizeTeamName(game.HomeTeam) === normalizeTeamName(bet.homeTeam);
+        const awayMatch = gameAway === awayTeam ||
+                          awayTeam.includes(gameAway) ||
+                          gameAway.includes(awayTeam) ||
+                          normalizeTeamName(game.AwayTeam) === normalizeTeamName(bet.awayTeam);
+
+        if (homeMatch && awayMatch) {
+            // Check if game is final
+            const isFinal = game.Status === 'Final' ||
+                           game.Status === 'F' ||
+                           game.Status === 'F/OT' ||
+                           game.IsClosed === true;
+
+            if (!isFinal) return null;
+
+            return {
+                homeScore: game.HomeScore ?? game.HomeTeamScore ?? 0,
+                awayScore: game.AwayScore ?? game.AwayTeamScore ?? 0,
+                totalScore: (game.HomeScore ?? game.HomeTeamScore ?? 0) + (game.AwayScore ?? game.AwayTeamScore ?? 0),
+                isFinal: true,
+                gameId: game.GameID || game.ScoreID
+            };
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Normalize team name for matching
+ */
+function normalizeTeamName(name) {
+    if (!name) return '';
+    return name.toLowerCase()
+        .replace(/philadelphia /gi, '')
+        .replace(/76ers/gi, 'phi')
+        .replace(/eagles/gi, 'phi')
+        .replace(/phillies/gi, 'phi')
+        .replace(/flyers/gi, 'phi')
+        .trim();
+}
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -68,29 +141,42 @@ async function scorePendingBets() {
     }
 
     // Determine which sports and dates we need scores for
-    const sportsNeeded = new Set();
-    const datesNeeded = new Set();
+    const sportDatePairs = new Set();
 
     for (const bet of pendingBets) {
         if (bet.betType === 'single') {
             const sport = bet.sport || SPORT_KEY_MAP[bet.sportKey];
-            if (sport) sportsNeeded.add(sport);
-            if (bet.commenceTime) {
-                datesNeeded.add(new Date(bet.commenceTime).toDateString());
+            if (sport && bet.commenceTime) {
+                const date = new Date(bet.commenceTime).toISOString().split('T')[0];
+                sportDatePairs.add(`${sport}:${date}`);
             }
         } else if (bet.betType === 'parlay') {
             for (const leg of bet.legs) {
                 const sport = leg.sport || SPORT_KEY_MAP[leg.sportKey];
-                if (sport) sportsNeeded.add(sport);
-                if (leg.commenceTime) {
-                    datesNeeded.add(new Date(leg.commenceTime).toDateString());
+                if (sport && leg.commenceTime) {
+                    const date = new Date(leg.commenceTime).toISOString().split('T')[0];
+                    sportDatePairs.add(`${sport}:${date}`);
                 }
             }
         }
     }
 
-    // Fetch scoreboards for needed sports
-    const scoreboards = await fetchAllScoreboards(Array.from(sportsNeeded));
+    // Fetch scoreboards from SportsDataIO for all needed sport/date combinations
+    const scoreboards = {};
+    for (const pair of sportDatePairs) {
+        const [sport, date] = pair.split(':');
+        try {
+            // Only fetch pro sports from SportsDataIO (college not supported for now)
+            if (['NFL', 'NBA', 'MLB', 'NHL'].includes(sport)) {
+                const scores = await fetchScoresByDate(sport, date);
+                if (!scoreboards[sport]) scoreboards[sport] = [];
+                scoreboards[sport].push(...scores);
+            }
+        } catch (e) {
+            console.error(`Error fetching ${sport} scores for ${date}:`, e.message);
+        }
+    }
+    console.log(`Fetched scores for ${Object.keys(scoreboards).length} sports`);
 
     let processed = 0;
     let settled = 0;
