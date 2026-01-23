@@ -133,6 +133,7 @@
                             <a href="/community/">Hub</a>
                             <a href="/community/forums.html">Forums</a>
                             <a href="/community/chat.html">Chat</a>
+                            <a href="/game-threads.html">Game Chats</a>
                             <a href="/community/clubs/">Clubs</a>
                             <a href="/community/tailgates/">Tailgates</a>
                             <a href="/community/watch-parties/">Watch Parties</a>
@@ -144,7 +145,6 @@
 
                     <a href="/esports/" class="nav-item">eSports</a>
                     <a href="/youth/" class="nav-item">Youth</a>
-                    <a href="/game-threads.html" class="nav-item">Live</a>
                 </div>
             </nav>
         </header>
@@ -233,6 +233,7 @@
                         <a href="/community/">Hub</a>
                         <a href="/community/forums.html">Forums</a>
                         <a href="/community/chat.html">Chat</a>
+                        <a href="/game-threads.html">Game Chats</a>
                         <a href="/community/clubs/">Clubs</a>
                         <a href="/community/tailgates/">Tailgates</a>
                         <a href="/community/watch-parties/">Watch Parties</a>
@@ -244,7 +245,6 @@
 
                 <a href="/esports/" class="mobile-nav-item">eSports</a>
                 <a href="/youth/" class="mobile-nav-item">Youth</a>
-                <a href="/game-threads.html" class="mobile-nav-item">Live</a>
             </div>
         </nav>
     `;

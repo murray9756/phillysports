@@ -324,6 +324,7 @@
                     Live Philly Sports
                 </div>
                 <div class="ticker-controls">
+                    <a href="/game-threads.html" class="ticker-btn" style="text-decoration: none;">Game Chats</a>
                     <button class="ticker-btn" onclick="window.liveTicker.refresh()">Refresh</button>
                     <button class="ticker-btn" onclick="window.liveTicker.minimize()">Minimize</button>
                 </div>
