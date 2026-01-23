@@ -162,8 +162,16 @@ export default async function handler(req, res) {
             }
         }
 
+        // Filter out scores older than 72 hours
+        const now = new Date();
+        const maxAge = 72 * 60 * 60 * 1000; // 72 hours in ms
+        let filteredScores = scores.filter(s => {
+            if (!s.date) return false;
+            const gameDate = new Date(s.date);
+            return (now - gameDate) <= maxAge;
+        });
+
         // Filter by team if specified
-        let filteredScores = scores;
         if (teamFilter) {
             const teamMap = {
                 'eagles': 'Eagles',
