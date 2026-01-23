@@ -564,22 +564,18 @@
             }).join('');
         }
 
-        async function openAffiliateLink(productId, affiliateLink) {
-            try {
-                // Track the click
-                await fetch('/api/shop/affiliate-click', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ productId })
-                });
-            } catch (error) {
-                console.error('Failed to track click:', error);
-            }
-
-            // Open affiliate link
+        function openAffiliateLink(productId, affiliateLink) {
+            // Open link FIRST (must be synchronous with user click)
             if (affiliateLink) {
                 window.open(decodeURIComponent(affiliateLink), '_blank');
             }
+
+            // Track click in background (non-blocking)
+            fetch('/api/shop/affiliate-click', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId })
+            }).catch(error => console.error('Failed to track click:', error));
         }
 
         // Category tab handlers
