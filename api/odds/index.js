@@ -185,6 +185,11 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
     let games = await response.json();
     console.log(`SportsDataIO ${sport} odds response: ${games.length} games found`);
 
+    // Debug: log first game structure to see field names
+    if (games.length > 0) {
+        console.log(`SportsDataIO ${sport} first game fields:`, Object.keys(games[0]).join(', '));
+    }
+
     // Filter by team if specified
     if (team) {
         const teamUpper = team.toUpperCase();
@@ -242,8 +247,8 @@ function transformSportsDataGame(game, sport) {
         id: game.GameId || game.ScoreID,
         sport,
         commenceTime: game.DateTime || game.Day,
-        homeTeam: game.HomeTeam,
-        awayTeam: game.AwayTeam,
+        homeTeam: game.HomeTeam || game.HomeTeamName || game.Home || 'Home',
+        awayTeam: game.AwayTeam || game.AwayTeamName || game.Away || 'Away',
         bookmaker: consensus.Sportsbook || 'Consensus',
         odds: Object.keys(odds).length > 0 ? odds : null,
         status: game.Status,
