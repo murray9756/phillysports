@@ -1559,6 +1559,9 @@
             const data = await response.json();
 
             if (data.user) {
+                // Store admin status for GA exclusion
+                localStorage.setItem('isAdmin', data.user.isAdmin ? 'true' : 'false');
+
                 const headerAuth = document.getElementById('headerAuth');
                 const mobileMenuAuth = document.getElementById('mobileMenuAuth');
 
@@ -1598,6 +1601,7 @@
                         e.preventDefault();
                         await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
                         localStorage.removeItem('auth_token');
+                        localStorage.removeItem('isAdmin');
                         window.location.reload();
                     });
                 }
@@ -1622,6 +1626,7 @@
                         e.preventDefault();
                         await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
                         localStorage.removeItem('auth_token');
+                        localStorage.removeItem('isAdmin');
                         window.location.reload();
                     });
                 }
