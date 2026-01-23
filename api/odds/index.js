@@ -160,14 +160,16 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
         if (gamesResponse.ok) {
             const gamesData = await gamesResponse.json();
             for (const g of gamesData) {
-                const gameId = g.GameID || g.ScoreID;
-                if (gameId) {
-                    gamesLookup[gameId] = {
-                        homeTeam: g.HomeTeam,
-                        awayTeam: g.AwayTeam,
-                        homeTeamName: g.HomeTeamName,
-                        awayTeamName: g.AwayTeamName
-                    };
+                // Store under multiple ID variations
+                const ids = [g.GameID, g.GameId, g.ScoreID].filter(Boolean);
+                const teamInfo = {
+                    homeTeam: g.HomeTeam,
+                    awayTeam: g.AwayTeam,
+                    homeTeamName: g.HomeTeamName,
+                    awayTeamName: g.AwayTeamName
+                };
+                for (const id of ids) {
+                    gamesLookup[id] = teamInfo;
                 }
             }
             console.log(`Loaded ${Object.keys(gamesLookup).length} games for team name lookup`);
@@ -238,8 +240,9 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
 
 // Transform SportsDataIO game to unified format
 function transformSportsDataGame(game, sport, gamesLookup = {}) {
-    const gameId = game.GameId || game.ScoreID;
-    const gameLookup = gamesLookup[gameId] || {};
+    const gameId = game.GameId || game.GameID || game.ScoreID;
+    // Try both capitalizations for lookup
+    const gameLookup = gamesLookup[gameId] || gamesLookup[game.GameID] || gamesLookup[game.GameId] || {};
 
     const pregameOdds = game.PregameOdds || [];
     const consensus = pregameOdds.find(o => o.Sportsbook === 'Consensus') ||
