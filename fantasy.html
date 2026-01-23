@@ -497,9 +497,9 @@
                 container.innerHTML = data.contests.map(contest => {
                     const emoji = sportEmojis[contest.sport] || '🏆';
                     const gameDate = new Date(contest.gameDate);
-                    const dateStr = gameDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    const dateStr = gameDate.toLocaleDateString('en-US', { timeZone: 'America/New_York', weekday: 'short', month: 'short', day: 'numeric' });
                     const locksAt = new Date(contest.locksAt);
-                    const locksStr = locksAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                    const locksStr = locksAt.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' }) + ' ET';
 
                     const isLocked = new Date() >= locksAt;
                     const canEnter = !isLocked && contest.status === 'upcoming' && contest.entryCount < contest.maxTotalEntries;

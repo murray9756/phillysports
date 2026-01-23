@@ -164,8 +164,8 @@ export default async function handler(req, res) {
             const contest = {
                 sport,
                 title: contestTitle,
-                // Store as noon to avoid timezone shifting to previous day
-                gameDate: new Date(targetDate + 'T12:00:00'),
+                // Store as noon EST to ensure correct date display
+                gameDate: new Date(targetDate + 'T12:00:00-05:00'),
                 gameDateString: targetDate, // Also store the string for easy access
                 gameIds,
                 salaryCap: 50000,

@@ -500,10 +500,11 @@
                 document.getElementById('contestTitle').textContent = contest.title;
 
                 const locksAt = new Date(contest.locksAt);
+                const locksAtEST = locksAt.toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'short', timeStyle: 'short' });
                 document.getElementById('contestMeta').innerHTML = `
                     <span>Prize: ${contest.prizePool} DD</span>
                     <span>Entry: ${contest.entryFee === 0 ? 'FREE' : contest.entryFee + ' DD'}</span>
-                    <span>Locks: ${locksAt.toLocaleString()}</span>
+                    <span>Locks: ${locksAtEST} ET</span>
                     <span>Status: ${contest.status}</span>
                 `;
 
