@@ -71,7 +71,30 @@ export async function authenticate(req) {
         return null;
     }
 
-    return decoded;
+    // Fetch full user from database to get isAdmin and other fields
+    try {
+        const { getCollection } = await import('./mongodb.js');
+        const { ObjectId } = await import('mongodb');
+        const usersCollection = await getCollection('users');
+        const user = await usersCollection.findOne({ _id: new ObjectId(decoded.userId) });
+
+        if (!user) {
+            return null;
+        }
+
+        return {
+            _id: user._id,
+            userId: user._id.toString(),
+            email: user.email,
+            username: user.username,
+            isAdmin: user.isAdmin || false,
+            coins: user.coins || 0
+        };
+    } catch (error) {
+        console.error('Auth database lookup error:', error);
+        // Fall back to decoded token if DB lookup fails
+        return decoded;
+    }
 }
 
 export function setAuthCookie(res, token) {
