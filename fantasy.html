@@ -506,15 +506,18 @@
 
             const container = document.getElementById('userEntriesGrid');
             try {
-                const response = await fetch('/api/fantasy/contests?status=live&includeUserEntries=true', {
+                // Fetch all contests (upcoming, live, completed) with user entries
+                const response = await fetch('/api/fantasy/contests?includeUserEntries=true&limit=50', {
                     credentials: 'include'
                 });
                 const data = await response.json();
 
+                console.log('User entries response:', data);
                 const contestsWithEntries = (data.contests || []).filter(c => c.userEntry);
+                console.log('Contests with entries:', contestsWithEntries);
 
                 if (contestsWithEntries.length === 0) {
-                    container.innerHTML = '<div class="empty-state">No active entries</div>';
+                    container.innerHTML = `<div class="empty-state">No entries yet (${data.contests?.length || 0} contests checked)</div>`;
                     return;
                 }
 
