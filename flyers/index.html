@@ -163,31 +163,49 @@
         .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
         .carousel-arrow.prev { left: 0.5rem; }
         .carousel-arrow.next { right: 0.5rem; }
-        /* All-Time Leaders Section */
-        .stats-section { grid-column: 1 / -1; margin-top: 1rem; }
+        /* All-Time Leaders Section - fits within center column */
+        .stats-section { margin-top: 1rem; }
         .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
-        .stats-header { padding: 1rem; background: linear-gradient(135deg, var(--team-color), #000); color: #fff; display: flex; align-items: center; justify-content: space-between; }
-        .stats-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-        .stats-attribution { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+        .stats-header { padding: 0.75rem 1rem; background: linear-gradient(135deg, var(--team-color), #000); color: #fff; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .stats-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-attribution { font-size: 0.65rem; color: rgba(255,255,255,0.7); }
         .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
-        .stats-tabs { display: flex; flex-wrap: wrap; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); }
-        .stats-tab { padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
+
+        .stats-tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+        .stats-tabs::-webkit-scrollbar { height: 4px; }
+        .stats-tabs::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+        .stats-tab { padding: 0.5rem 0.75rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .stats-tab:hover { color: var(--team-color); background: rgba(247,73,2,0.05); }
         .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: var(--card-bg); }
-        .stats-table-container { overflow-x: auto; }
-        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .stats-table th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-        .stats-table th:first-child { width: 40px; text-align: center; }
-        .stats-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-color); }
+
+        .stats-scroll-wrapper { position: relative; }
+        .stats-scroll-controls { display: flex; justify-content: flex-end; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); }
+        .stats-scroll-btn { width: 24px; height: 24px; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+        .stats-scroll-btn:hover { background: var(--team-color); color: #fff; border-color: var(--team-color); }
+        .stats-table-container { overflow: auto; max-height: 400px; scrollbar-width: thin; }
+        .stats-table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+        .stats-table-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        .stats-table-container::-webkit-scrollbar-corner { background: transparent; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .stats-table th { padding: 0.5rem 0.6rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; position: sticky; top: 0; z-index: 1; cursor: pointer; user-select: none; }
+        .stats-table th:hover { background: #e8e3d8; }
+        .stats-table th.sort-asc::after { content: ' ▲'; font-size: 0.6rem; }
+        .stats-table th.sort-desc::after { content: ' ▼'; font-size: 0.6rem; }
+        .stats-table th:first-child { width: 32px; text-align: center; }
+        .stats-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         .stats-table td:first-child { text-align: center; font-weight: 600; color: var(--text-muted); }
         .stats-table tr:hover { background: rgba(247,73,2,0.03); }
         .stats-table tr:last-child td { border-bottom: none; }
         .stats-table .player-name { font-weight: 600; color: var(--text-primary); }
-        .stats-table .player-years { font-size: 0.7rem; color: var(--text-muted); }
+        .stats-table .player-years { font-size: 0.65rem; color: var(--text-muted); display: block; }
         .stats-table .stat-highlight { font-weight: 700; color: var(--team-color); }
-        .stats-footer { padding: 0.75rem 1rem; background: #f5f2ed; font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+
+        .stats-footer { padding: 0.5rem 1rem; background: #f5f2ed; font-size: 0.65rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
         .stats-loading { padding: 2rem; text-align: center; color: var(--text-muted); }
-        .team-record { background: rgba(247,73,2,0.1); padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 0.5rem; font-weight: 600; text-align: center; }
+
+        [data-theme="dark"] .stats-table th { background: #2a2a2a; }
+        [data-theme="dark"] .stats-table th:hover { background: #333; }
+        [data-theme="dark"] .stats-footer { background: #2a2a2a; }
         @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .team-hero h1 { font-size: 1.8rem; } }
         @media (max-width: 600px) { .article-item { flex-direction: column; } .article-thumb { width: 100%; height: 150px; } .stats-tab { padding: 0.5rem 0.6rem; font-size: 0.7rem; } .stats-table { font-size: 0.75rem; } .stats-table th, .stats-table td { padding: 0.5rem; } }
     </style>
@@ -204,10 +222,7 @@
             <!-- Recent Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <div class="widget-header-content">
-                        <h3 class="widget-title">Recent Scores</h3>
-                        <span class="widget-subtitle">click game for boxscore</span>
-                    </div>
+                    <h3 class="widget-title">Recent Scores</h3>
                 </div>
                 <div class="widget-content" id="scoresContainer">
                     <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
@@ -218,7 +233,6 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3 class="widget-title">Upcoming Games</h3>
-                    <div style="font-size:0.6rem;color:var(--text-muted);opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
                     <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
@@ -270,14 +284,56 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+            <div id="showMoreContainer" style="display:none;text-align:center;padding:0.75rem;">
+                <button id="showMoreBtn" style="background:var(--team-color);color:#fff;border:none;padding:0.5rem 1.5rem;border-radius:4px;font-weight:600;cursor:pointer;font-size:0.85rem;">Show More News</button>
+            </div>
 
+            <!-- All-Time Leaders Section -->
+            <section class="stats-section">
+                <div class="stats-container">
+                    <div class="stats-header">
+                        <h2><span>&#127942;</span> All-Time Flyers Leaders</h2>
+                        <span class="stats-attribution">Data: <a href="https://www.hockey-reference.com/teams/PHI/" target="_blank">Hockey-Reference</a></span>
+                    </div>
+                    <div class="stats-tabs" id="statsTabs">
+                        <button class="stats-tab active" data-category="currentSeason">2025</button>
+                        <button class="stats-tab" data-category="goals">Goals</button>
+                        <button class="stats-tab" data-category="assists">Ast</button>
+                        <button class="stats-tab" data-category="points">Pts</button>
+                        <button class="stats-tab" data-category="games">GP</button>
+                        <button class="stats-tab" data-category="penaltyMinutes">PIM</button>
+                        <button class="stats-tab" data-category="plusMinus">+/-</button>
+                        <button class="stats-tab" data-category="goalieWins">GW</button>
+                        <button class="stats-tab" data-category="shutouts">SO</button>
+                    </div>
+                    <div class="stats-scroll-wrapper">
+                        <div class="stats-scroll-controls">
+                            <button class="stats-scroll-btn" onclick="scrollStats('left')" title="Scroll left">&#9664;</button>
+                            <button class="stats-scroll-btn" onclick="scrollStats('right')" title="Scroll right">&#9654;</button>
+                            <button class="stats-scroll-btn" onclick="scrollStats('up')" title="Scroll up">&#9650;</button>
+                            <button class="stats-scroll-btn" onclick="scrollStats('down')" title="Scroll down">&#9660;</button>
+                        </div>
+                        <div class="stats-table-container" id="statsTableContainer">
+                            <table class="stats-table" id="statsTable">
+                                <thead id="statsTableHead"></thead>
+                                <tbody id="statsTableBody">
+                                    <tr><td colspan="7" class="stats-loading">Loading stats...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="stats-footer">
+                        <span id="statsLastUpdated">Loading...</span>
+                        <span>Click headers to sort</span>
+                    </div>
+                </div>
+            </section>
         </div>
         <aside class="sidebar">
             <!-- Flyers Trivia Widget -->
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Flyers Trivia</span>
-                    <div id="triviaLoginHint" style="font-size:0.6rem;color:rgba(255,255,255,0.7);margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-promo-body">
                     <p class="trivia-promo-tagline">Test Your Flyers Knowledge!</p>
@@ -350,38 +406,6 @@
                 </div>
             </div>
         </aside>
-        <!-- All-Time Leaders Section -->
-        <section class="stats-section">
-            <div class="stats-container">
-                <div class="stats-header">
-                    <h2>&#127942; All-Time Flyers Leaders</h2>
-                    <span class="stats-attribution">Data from <a href="https://www.hockey-reference.com/teams/PHI/" target="_blank">Hockey-Reference.com</a></span>
-                </div>
-                <div class="stats-tabs" id="statsTabs">
-                    <button class="stats-tab active" data-category="currentSeason">2025-26 Season</button>
-                    <button class="stats-tab" data-category="goals">Goals</button>
-                    <button class="stats-tab" data-category="assists">Assists</button>
-                    <button class="stats-tab" data-category="points">Points</button>
-                    <button class="stats-tab" data-category="games">Games</button>
-                    <button class="stats-tab" data-category="penaltyMinutes">PIM</button>
-                    <button class="stats-tab" data-category="plusMinus">+/-</button>
-                    <button class="stats-tab" data-category="goalieWins">Goalie Wins</button>
-                    <button class="stats-tab" data-category="shutouts">Shutouts</button>
-                </div>
-                <div class="stats-table-container">
-                    <table class="stats-table" id="statsTable">
-                        <thead id="statsTableHead"></thead>
-                        <tbody id="statsTableBody">
-                            <tr><td colspan="7" class="stats-loading">Loading stats...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="stats-footer">
-                    <span id="statsLastUpdated">Loading...</span>
-                    <span>Philadelphia Flyers Franchise History</span>
-                </div>
-            </div>
-        </section>
     </main>
     <footer class="footer"><p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p></footer>
     <script>
@@ -474,77 +498,192 @@
             }
         }
 
-        async function loadNews(){const c=document.getElementById('articleList');const carouselInner=document.getElementById('carouselInner');const carouselDots=document.getElementById('carouselDots');const carousel=document.getElementById('newsCarousel');try{const r=await fetch(`/api/news?team=${TEAM}`);const d=await r.json();if(d.articles?.length>0){carouselArticles=d.articles.slice(0,4);
-                    // Limit to 5 more articles (10 total) to minimize height
-                    const listArticles=d.articles.slice(4, 9);carouselInner.innerHTML=carouselArticles.map(a=>{const imgStyle=a.image?`background-image:url('${a.image}');background-size:cover;background-position:center;`:'background:var(--team-color);';return`<div class="carousel-slide"><a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="featured-article"><div class="featured-image" style="${imgStyle}">${!a.image?getSourceLogo(a.source):''}</div><div class="featured-content"><span class="article-tag">${a.team||'Flyers'}</span><h3 class="featured-title">${a.headline}</h3></div></a></div>`;}).join('');carouselDots.innerHTML=carouselArticles.map((_,i)=>`<button class="carousel-dot${i===0?' active':''}" onclick="goToSlide(${i})"></button>`).join('');carousel.addEventListener('mouseenter',stopCarousel);carousel.addEventListener('mouseleave',startCarousel);startCarousel();if(listArticles.length>0){c.innerHTML=listArticles.map(a=>`<a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="article-item"><div class="article-thumb" style="${a.image?`background-image:url('${a.image}');background-size:cover;background-position:center;`:''}">${!a.image?getSourceLogo(a.source):''}</div><div class="article-info"><h4 class="article-title">${a.headline}</h4><div class="article-meta">${timeAgo(a.published)}${a.source?' · '+a.source:''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div></div></a>`).join('');}else{c.innerHTML='';}}else{carouselInner.innerHTML='<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">'+getSourceLogo()+'</div><div class="featured-content"><span class="article-tag">Flyers</span><h3 class="featured-title">No news available</h3></div></div></div>';c.innerHTML='';}}catch(e){carouselInner.innerHTML='<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">'+getSourceLogo()+'</div><div class="featured-content"><span class="article-tag">Flyers</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';c.innerHTML='';}}
+        // Show More news functionality
+        let allArticles = [];
+        let showingAll = false;
+        function setupShowMore() {
+            const showMoreBtn = document.getElementById('showMoreBtn');
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', function() {
+                    showingAll = !showingAll;
+                    renderArticleList();
+                    this.textContent = showingAll ? 'Show Less' : 'Show More News';
+                });
+            }
+        }
+        function renderArticleList() {
+            const container = document.getElementById('articleList');
+            const showMoreContainer = document.getElementById('showMoreContainer');
+            const listArticles = showingAll ? allArticles.slice(4, 14) : allArticles.slice(4, 9);
+            if (listArticles.length > 0) {
+                container.innerHTML = listArticles.map(a => {
+                    const thumbStyle = a.image ? `background-image:url('${a.image}');background-size:cover;background-position:center;` : '';
+                    return `<a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="article-item"><div class="article-thumb" style="${thumbStyle}">${!a.image?getSourceLogo(a.source):''}</div><div class="article-info"><h4 class="article-title">${a.headline}</h4><div class="article-meta">${timeAgo(a.published)}${a.source?' · '+a.source:''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div></div></a>`;
+                }).join('');
+            }
+            if (showMoreContainer && allArticles.length > 9) {
+                showMoreContainer.style.display = 'block';
+            }
+        }
+
+        async function loadNews() {
+            const c = document.getElementById('articleList');
+            const carouselInner = document.getElementById('carouselInner');
+            const carouselDots = document.getElementById('carouselDots');
+            const carousel = document.getElementById('newsCarousel');
+            try {
+                const r = await fetch(`/api/news?team=${TEAM}`);
+                const d = await r.json();
+                if (d.articles && d.articles.length > 0) {
+                    allArticles = d.articles;
+                    carouselArticles = d.articles.slice(0, 4);
+                    carouselInner.innerHTML = carouselArticles.map(a => {
+                        const imgStyle = a.image ? `background-image:url('${a.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
+                        return `<div class="carousel-slide"><a href="/article.html?url=${encodeURIComponent(a.link)}&title=${encodeURIComponent(a.headline)}&image=${encodeURIComponent(a.image || '')}&source=${encodeURIComponent(a.source || '')}" class="featured-article"><div class="featured-image" style="${imgStyle}">${!a.image ? getSourceLogo(a.source) : ''}</div><div class="featured-content"><span class="article-tag">${a.team || 'Flyers'}</span><h3 class="featured-title">${a.headline}</h3></div></a></div>`;
+                    }).join('');
+                    carouselDots.innerHTML = carouselArticles.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
+                    carousel.addEventListener('mouseenter', stopCarousel);
+                    carousel.addEventListener('mouseleave', startCarousel);
+                    startCarousel();
+                    renderArticleList();
+                } else {
+                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">' + getSourceLogo() + '</div><div class="featured-content"><span class="article-tag">Flyers</span><h3 class="featured-title">No news available</h3></div></div></div>';
+                    c.innerHTML = '';
+                }
+            } catch (e) {
+                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image" style="background:var(--team-color);">' + getSourceLogo() + '</div><div class="featured-content"><span class="article-tag">Flyers</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
+                c.innerHTML = '';
+            }
+        }
         async function loadScores(){const c=document.getElementById('scoresContainer');try{const r=await fetch(`/api/scores?team=${TEAM}`);const d=await r.json();if(d.scores?.length>0){c.innerHTML=d.scores.map(s=>{const content=`<div class="score-teams"><div class="score-team"><span class="team-dot" style="background:${s.isHome?s.teamColor:'#666'}"></span> ${s.homeTeam}</div><div class="score-team"><span class="team-dot" style="background:${!s.isHome?s.teamColor:'#666'}"></span> ${s.awayTeam}</div></div><div class="score-result"><span>${s.homeScore}</span><span>${s.awayScore}</span></div>`;return s.link?`<a href="${s.link}" target="_blank" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`:`<div class="score-item">${content}</div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadSchedule(){const c=document.getElementById('scheduleContainer');try{const r=await fetch(`/api/schedule?team=${TEAM}`);const d=await r.json();if(d.schedule?.length>0){c.innerHTML=d.schedule.map(g=>{const f=formatGameDate(g.date);return`<div class="schedule-item"><div class="schedule-date"><div class="schedule-day">${f.day}</div><div class="schedule-month">${f.month}</div></div><div class="schedule-info"><div class="schedule-matchup">${g.isHome?'vs':'@'} ${g.opponent}</div><div class="schedule-time">${f.dayName} ${f.time}${g.broadcast?' · '+g.broadcast:''}</div></div></div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadRoster(){const c=document.getElementById('rosterContainer');try{const r=await fetch(`/api/roster?team=${TEAM}`);const d=await r.json();if(d.players?.length>0){c.innerHTML=d.players.map(p=>`<div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;"><span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${p.number||'-'}</span>${p.link?`<a href="${p.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${p.name}</a>`:`<span style="flex:1;font-weight:500;">${p.name}</span>`}<span style="color:var(--text-muted);font-size:0.75rem;">${p.position}</span></div>`).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No roster available</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load roster</div>';}}
+        // Stats scroll controls
+        function scrollStats(direction) {
+            const container = document.getElementById('statsTableContainer');
+            const scrollAmount = 100;
+            switch(direction) {
+                case 'left': container.scrollLeft -= scrollAmount; break;
+                case 'right': container.scrollLeft += scrollAmount; break;
+                case 'up': container.scrollTop -= scrollAmount; break;
+                case 'down': container.scrollTop += scrollAmount; break;
+            }
+        }
+
         // Stats section functionality
         let statsData = null;
+        let currentCategory = 'currentSeason';
         const categoryLabels = {
             goals: 'Goals', assists: 'Assists', points: 'Points',
             games: 'Games Played', penaltyMinutes: 'Penalty Minutes',
             plusMinus: 'Plus/Minus', goalieWins: 'Wins', shutouts: 'Shutouts'
         };
+
+        function renderStatsTable(category) {
+            const container = document.getElementById('statsTableContainer');
+            if (category === 'currentSeason') {
+                if (!statsData || !statsData.currentSeason) {
+                    container.innerHTML = '<div class="stats-loading">No data available</div>';
+                    return;
+                }
+                const season = statsData.currentSeason;
+                let html = `<div style="background:#fef3ed;padding:0.75rem 1rem;text-align:center;font-weight:600;border-bottom:1px solid var(--border-color);">
+                    Record: ${season.record} (${season.points} pts) | GF: ${season.goalsFor} | GA: ${season.goalsAgainst}</div>`;
+                // Skaters
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>GP</th><th>G</th><th>A</th><th>PTS</th><th>+/-</th><th>PIM</th></tr></thead><tbody>';
+                season.skaters.forEach(p => {
+                    html += `<tr><td><span class="player-name">${p.player}</span></td><td>${p.gp}</td><td class="stat-highlight">${p.g}</td><td>${p.a}</td><td class="stat-highlight">${p.pts}</td><td>${p.plusMinus > 0 ? '+' : ''}${p.plusMinus}</td><td>${p.pim}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                // Goalies
+                html += '<div style="background:#f5f2ed;padding:0.5rem 1rem;font-weight:700;">Goaltenders</div>';
+                html += '<table class="stats-table"><thead><tr><th>Player</th><th>GP</th><th>W</th><th>L</th><th>GAA</th><th>SV%</th></tr></thead><tbody>';
+                season.goalies.forEach(g => {
+                    html += `<tr><td><span class="player-name">${g.player}</span></td><td>${g.gp}</td><td class="stat-highlight">${g.w}</td><td>${g.l}</td><td>${g.gaa}</td><td>${g.svPct}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                return;
+            }
+            if (!statsData || !statsData[category]) {
+                container.innerHTML = '<div class="stats-loading">No data available</div>';
+                return;
+            }
+            const label = categoryLabels[category] || category;
+            let html = '<table class="stats-table"><thead><tr><th>#</th><th>Player</th><th class="stat-highlight">' + label + '</th></tr></thead><tbody>';
+            statsData[category].forEach(p => {
+                html += `<tr><td>${p.rank}</td><td><span class="player-name">${p.player}</span><span class="player-years">${p.years}</span></td><td class="stat-highlight">${p.value.toLocaleString()}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function switchStatsTab(category) {
+            currentCategory = category;
+            document.querySelectorAll('.stats-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
+            renderStatsTable(category);
+        }
+
         async function loadStats() {
+            const container = document.getElementById('statsTableContainer');
             try {
                 const r = await fetch('/api/stats/flyers');
                 statsData = await r.json();
-                renderStatsTable('currentSeason');
                 if (statsData.lastUpdated) {
                     const date = new Date(statsData.lastUpdated);
-                    document.getElementById('statsLastUpdated').textContent =
-                        'Last updated: ' + date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    document.getElementById('statsLastUpdated').textContent = 'Last updated: ' + date.toLocaleDateString();
                 }
+                renderStatsTable(currentCategory);
             } catch (e) {
-                document.getElementById('statsTableBody').innerHTML =
-                    '<tr><td colspan="7" class="stats-loading">Unable to load stats</td></tr>';
+                container.innerHTML = '<div class="stats-loading">Unable to load stats</div>';
             }
         }
-        function renderStatsTable(category) {
-            const thead = document.getElementById('statsTableHead');
-            const tbody = document.getElementById('statsTableBody');
-            if (category === 'currentSeason') {
-                if (!statsData || !statsData.currentSeason) return;
-                const season = statsData.currentSeason;
-                const recordRow = `<tr style="background:#fef3ed;"><td colspan="7" class="team-record">
-                    Record: ${season.record} (${season.points} pts) | GF: ${season.goalsFor} | GA: ${season.goalsAgainst}</td></tr>`;
-                thead.innerHTML = `<tr><th>Player</th><th>GP</th><th>G</th><th>A</th><th>PTS</th><th>+/-</th><th>PIM</th></tr>`;
-                const skaterRows = season.skaters.map(p => `
-                    <tr><td><span class="player-name">${p.player}</span></td>
-                    <td>${p.gp}</td><td class="stat-highlight">${p.g}</td>
-                    <td>${p.a}</td><td class="stat-highlight">${p.pts}</td>
-                    <td>${p.plusMinus > 0 ? '+' : ''}${p.plusMinus}</td><td>${p.pim}</td></tr>`).join('');
-                const goalieHeader = `<tr style="background:#f5f2ed;"><td colspan="7" style="font-weight:700;padding:0.75rem;">Goaltenders</td></tr>`;
-                const goalieSubhead = `<tr><th>Player</th><th>GP</th><th>W</th><th>L</th><th>GAA</th><th>SV%</th><th></th></tr>`;
-                const goalieRows = season.goalies.map(g => `
-                    <tr><td><span class="player-name">${g.player}</span></td>
-                    <td>${g.gp}</td><td class="stat-highlight">${g.w}</td>
-                    <td>${g.l}</td><td>${g.gaa}</td><td>${g.svPct}</td><td></td></tr>`).join('');
-                tbody.innerHTML = recordRow + skaterRows + goalieHeader + goalieSubhead + goalieRows;
-            } else {
-                if (!statsData || !statsData[category]) return;
-                const label = categoryLabels[category] || category;
-                thead.innerHTML = `<tr><th>#</th><th>Player</th><th class="stat-highlight">${label}</th></tr>`;
-                tbody.innerHTML = statsData[category].map(p => `
-                    <tr>
-                        <td>${p.rank}</td>
-                        <td><span class="player-name">${p.player}</span><br><span class="player-years">${p.years}</span></td>
-                        <td class="stat-highlight">${p.value.toLocaleString()}</td>
-                    </tr>
-                `).join('');
-            }
-        }
-        document.getElementById('statsTabs').addEventListener('click', (e) => {
-            if (e.target.classList.contains('stats-tab')) {
-                document.querySelectorAll('.stats-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                renderStatsTable(e.target.dataset.category);
-            }
+
+        // Setup tab click handlers
+        document.querySelectorAll('.stats-tab').forEach(tab => {
+            tab.addEventListener('click', () => switchStatsTab(tab.dataset.category));
         });
+
+        // Column sorting
+        let sortColumn = null;
+        let sortDirection = 'desc';
+        function setupSorting() {
+            document.getElementById('statsTableContainer').addEventListener('click', function(e) {
+                const th = e.target.closest('th');
+                if (!th || th.cellIndex === undefined) return;
+                const colIndex = th.cellIndex;
+                if (sortColumn === colIndex) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = colIndex;
+                    sortDirection = 'desc';
+                }
+                const table = th.closest('table');
+                const tbody = table.querySelector('tbody');
+                if (!tbody) return;
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                rows.sort((a, b) => {
+                    const aVal = a.cells[colIndex]?.textContent?.replace(/[,%]/g, '') || '';
+                    const bVal = b.cells[colIndex]?.textContent?.replace(/[,%]/g, '') || '';
+                    const aNum = parseFloat(aVal.replace(/,/g, ''));
+                    const bNum = parseFloat(bVal.replace(/,/g, ''));
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+                    }
+                    return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                });
+                rows.forEach(row => tbody.appendChild(row));
+                table.querySelectorAll('th').forEach((h, i) => {
+                    h.classList.remove('sort-asc', 'sort-desc');
+                    if (i === colIndex) h.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                });
+            });
+        }
+        setupSorting();
         async function loadStandings(){const c=document.getElementById('standingsBody');try{const r=await fetch('/api/standings/nhl');const d=await r.json();if(d.standings?.length>0){c.innerHTML=d.standings.map(t=>{const isPhi=t.abbreviation==='PHI';return`<tr><td><span class="team-name ${isPhi?'highlight':''}">${t.abbreviation}</span></td><td class="record">${t.wins}-${t.losses}</td><td class="pct">${t.points}</td></tr>`;}).join('');}else{throw new Error('No data');}}catch(e){c.innerHTML=`<tr><td><span class="team-name highlight">PHI</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">CAR</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NYR</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NJD</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">WSH</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">PIT</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">NYI</span></td><td class="record">--</td><td class="pct">--</td></tr><tr><td><span class="team-name">CBJ</span></td><td class="record">--</td><td class="pct">--</td></tr>`;}}
-        loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStats();loadStandings();
+        loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadRoster();loadStandings();setupShowMore();loadStats();
         async function checkAuth(){try{const r=await fetch('/api/auth/me');const d=await r.json();if(d.user){const h=document.getElementById('headerAuth');const premiumBadge = d.user.isSubscribed ? `<a href="/membership.html" class="premium-badge">${d.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>` : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;const adminLink = d.user.isAdmin ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>` : '';h.innerHTML=`<button class="theme-toggle" id="themeToggle" title="Toggle dark mode"><span class="theme-icon-light">&#9790;</span><span class="theme-icon-dark">&#9728;</span></button><div class="coin-display" title="Diehard Dollars">
                             <span class="coin-icon">&#129689;</span>
                             <span class="coin-balance">${Math.round(d.user.coinBalance || 0)}</span>

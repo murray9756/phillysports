@@ -151,9 +151,7 @@
         .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
         .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
         .widget-header span { font-size: 1rem; }
-        .widget-header-content { display: flex; flex-direction: column; gap: 0.15rem; align-items: center; }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .widget-subtitle { font-size: 0.65rem; font-weight: 400; color: var(--text-muted); opacity: 0.8; text-align: center; }
         .widget-content { padding: 0.75rem; }
 
         /* Podcast Card Styles */
@@ -251,10 +249,7 @@
             <!-- Recent Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <div class="widget-header-content">
-                        <h3 class="widget-title">Recent Scores</h3>
-                        <span class="widget-subtitle">click game for boxscore</span>
-                    </div>
+                    <h3 class="widget-title">Recent Scores</h3>
                 </div>
                 <div class="widget-content" id="scoresContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
@@ -265,7 +260,6 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3 class="widget-title">Upcoming Games</h3>
-                    <div style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
@@ -319,6 +313,7 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+            <button id="showMoreNews" style="display:none;width:100%;padding:0.75rem;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--team-color)'" onmouseout="this.style.borderColor='var(--border-color)'">Show More News</button>
         </div>
 
         <aside class="sidebar">
@@ -326,7 +321,6 @@
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Villanova Trivia</span>
-                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-widget-body" id="triviaWidget">
                     <div class="trivia-promo-body">
@@ -491,18 +485,54 @@
             return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
         }
 
+        let allNewsArticles = [];
+        let newsExpanded = false;
+
+        function renderArticleItem(article) {
+            const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
+            return `
+                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
+                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                    <div class="article-info">
+                        <h4 class="article-title">${article.headline}</h4>
+                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
+                    </div>
+                </a>
+            `;
+        }
+
+        function renderNewsList() {
+            const container = document.getElementById('articleList');
+            const showMoreBtn = document.getElementById('showMoreNews');
+            const articlesToShow = newsExpanded ? allNewsArticles.slice(0, 10) : allNewsArticles.slice(0, 5);
+
+            if (articlesToShow.length > 0) {
+                container.innerHTML = articlesToShow.map(renderArticleItem).join('');
+            } else {
+                container.innerHTML = '';
+            }
+
+            // Show/hide "Show More" button
+            if (allNewsArticles.length > 5 && !newsExpanded) {
+                showMoreBtn.style.display = 'block';
+            } else {
+                showMoreBtn.style.display = 'none';
+            }
+        }
+
         async function loadNews() {
             const container = document.getElementById('articleList');
             const carouselInner = document.getElementById('carouselInner');
             const carouselDots = document.getElementById('carouselDots');
             const carousel = document.getElementById('newsCarousel');
+            const showMoreBtn = document.getElementById('showMoreNews');
             try {
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
                     carouselArticles = data.articles.slice(0, 5);
-                    // Limit to 5 more articles (10 total) to minimize height
-                    const remainingArticles = data.articles.slice(5, 10);
+                    // Store remaining articles for list (after carousel)
+                    allNewsArticles = data.articles.slice(5, 15);
 
                     carouselInner.innerHTML = carouselArticles.map(article => {
                         const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
@@ -525,29 +555,23 @@
                     carousel.addEventListener('mouseleave', startCarousel);
                     startCarousel();
 
-                    if (remainingArticles.length > 0) {
-                        container.innerHTML = remainingArticles.map(article => {
-                            const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
-                            return `
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                                    <div class="article-info">
-                                        <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
-                                    </div>
-                                </a>
-                            `;
-                        }).join('');
-                    } else {
-                        container.innerHTML = '';
-                    }
+                    // Render initial news list (5 items)
+                    renderNewsList();
+
+                    // Set up Show More button
+                    showMoreBtn.addEventListener('click', function() {
+                        newsExpanded = true;
+                        renderNewsList();
+                    });
                 } else {
                     carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Villanova</span><h3 class="featured-title">No Villanova news available</h3></div></div></div>';
                     container.innerHTML = '';
+                    showMoreBtn.style.display = 'none';
                 }
             } catch (e) {
                 carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Villanova</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
                 container.innerHTML = '';
+                showMoreBtn.style.display = 'none';
             }
         }
 

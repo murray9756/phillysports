@@ -155,11 +155,13 @@
         .widget-header-content { display: flex; flex-direction: column; }
         .widget-header span { font-size: 1rem; }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .widget-subtitle { font-size: 0.6rem; color: #1A2744; opacity: 0.7; }
         .widget-content { padding: 0.75rem; }
 
         /* Ticket Links */
         .ticket-link:hover { background: var(--team-color) !important; color: #fff !important; }
+
+        /* Show More Button */
+        .show-more-btn:hover { background: var(--team-color); color: #fff; border-color: var(--team-color); }
 
         /* Podcast Cards */
         .podcast-card:hover { border-color: var(--team-color) !important; }
@@ -251,7 +253,6 @@
                 <div class="widget-header">
                     <div class="widget-header-content">
                         <h3 class="widget-title">Recent Scores</h3>
-                        <span class="widget-subtitle">click game for boxscore</span>
                     </div>
                 </div>
                 <div class="widget-content" id="scoresContainer">
@@ -263,7 +264,6 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3 class="widget-title">Upcoming Games</h3>
-                    <div style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
@@ -324,6 +324,7 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+            <button id="showMoreNews" class="show-more-btn" style="display:none;width:100%;padding:0.75rem;margin-top:0.5rem;background:var(--widget-header-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">Show More News</button>
         </div>
 
         <!-- Right Sidebar -->
@@ -332,7 +333,6 @@
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Temple Trivia</span>
-                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-promo-body">
                     <p class="trivia-promo-tagline">Test Your Owls Knowledge!</p>
@@ -495,18 +495,53 @@
             return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
         }
 
+        let allNewsArticles = [];
+        let newsExpanded = false;
+
+        function renderArticles(articles) {
+            return articles.map(article => {
+                const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
+                return `
+                    <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
+                        <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                        <div class="article-info">
+                            <h4 class="article-title">${article.headline}</h4>
+                            <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function updateNewsDisplay() {
+            const container = document.getElementById('articleList');
+            const showMoreBtn = document.getElementById('showMoreNews');
+            const displayCount = newsExpanded ? 10 : 5;
+            const articlesToShow = allNewsArticles.slice(0, displayCount);
+
+            container.innerHTML = renderArticles(articlesToShow);
+
+            if (allNewsArticles.length > 5 && !newsExpanded) {
+                showMoreBtn.style.display = 'block';
+                showMoreBtn.textContent = `Show More News (${Math.min(5, allNewsArticles.length - 5)} more)`;
+            } else {
+                showMoreBtn.style.display = 'none';
+            }
+        }
+
         async function loadNews() {
             const container = document.getElementById('articleList');
             const carouselInner = document.getElementById('carouselInner');
             const carouselDots = document.getElementById('carouselDots');
             const carousel = document.getElementById('newsCarousel');
+            const showMoreBtn = document.getElementById('showMoreNews');
             try {
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
                     carouselArticles = data.articles.slice(0, 5);
-                    // Limit to 5 more articles (10 total) to minimize height
-                    const remainingArticles = data.articles.slice(5, 10);
+                    // Store remaining articles for Show More functionality
+                    allNewsArticles = data.articles.slice(5, 15);
 
                     carouselInner.innerHTML = carouselArticles.map(article => {
                         const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
@@ -529,29 +564,23 @@
                     carousel.addEventListener('mouseleave', startCarousel);
                     startCarousel();
 
-                    if (remainingArticles.length > 0) {
-                        container.innerHTML = remainingArticles.map(article => {
-                            const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
-                            return `
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                                    <div class="article-info">
-                                        <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
-                                    </div>
-                                </a>
-                            `;
-                        }).join('');
-                    } else {
-                        container.innerHTML = '';
-                    }
+                    // Initial display with Show More button
+                    updateNewsDisplay();
+
+                    // Setup Show More button
+                    showMoreBtn.addEventListener('click', function() {
+                        newsExpanded = true;
+                        updateNewsDisplay();
+                    });
                 } else {
                     carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Owls</span><h3 class="featured-title">No Owls news available</h3></div></div></div>';
                     container.innerHTML = '';
+                    showMoreBtn.style.display = 'none';
                 }
             } catch (e) {
                 carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Owls</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
                 container.innerHTML = '';
+                showMoreBtn.style.display = 'none';
             }
         }
 

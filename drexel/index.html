@@ -155,9 +155,6 @@
         .widget-header span { font-size: 1rem; }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .widget-content { padding: 0.75rem; }
-        .widget-header-content { display: flex; flex-direction: column; gap: 0.15rem; align-items: center; }
-        .widget-subtitle { font-size: 0.65rem; font-weight: 400; color: #1A2744; opacity: 0.8; text-align: center; }
-        [data-theme="dark"] .widget-header .widget-subtitle, [data-theme="dark"] .widget-subtitle { color: #1A2744 !important; }
         .podcast-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; border-radius: 6px; transition: background 0.2s; text-decoration: none; color: var(--text-primary); }
         .podcast-card:hover { background: var(--card-bg-hover); }
         .podcast-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem; }
@@ -246,10 +243,7 @@
             <!-- Recent Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <div class="widget-header-content">
-                        <h3 class="widget-title">Recent Scores</h3>
-                        <span class="widget-subtitle">click game for boxscore</span>
-                    </div>
+                    <h3 class="widget-title">Recent Scores</h3>
                 </div>
                 <div class="widget-content" id="scoresContainer">
                     <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
@@ -260,7 +254,6 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3 class="widget-title">Upcoming Games</h3>
-                    <div style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
                     <div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading...</div>
@@ -314,6 +307,7 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+            <button id="showMoreNewsBtn" style="display:none;width:100%;padding:0.75rem;margin-top:0.5rem;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--team-color)'" onmouseout="this.style.borderColor='var(--border-color)'">Show More News</button>
         </div>
 
         <aside class="sidebar">
@@ -321,7 +315,6 @@
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Drexel Trivia</span>
-                    <div id="triviaLoginHint" style="font-size:0.6rem;color:rgba(255,255,255,0.8);margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-promo-body">
                     <p class="trivia-promo-tagline">Test Your Dragons Knowledge!</p>
@@ -484,18 +477,22 @@
             return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
         }
 
+        let allListArticles = [];
+        let showingAllNews = false;
+
         async function loadNews() {
             const container = document.getElementById('articleList');
             const carouselInner = document.getElementById('carouselInner');
             const carouselDots = document.getElementById('carouselDots');
             const carousel = document.getElementById('newsCarousel');
+            const showMoreBtn = document.getElementById('showMoreNewsBtn');
             try {
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
                     carouselArticles = data.articles.slice(0, 5);
-                    // Limit to 5 more articles (10 total) to minimize height
-                    const remainingArticles = data.articles.slice(5, 10);
+                    // Store all remaining articles (up to 10 total in list)
+                    allListArticles = data.articles.slice(5, 15);
 
                     carouselInner.innerHTML = carouselArticles.map(article => {
                         const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
@@ -518,21 +515,17 @@
                     carousel.addEventListener('mouseleave', startCarousel);
                     startCarousel();
 
-                    if (remainingArticles.length > 0) {
-                        container.innerHTML = remainingArticles.map(article => {
-                            const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
-                            return `
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                                    <div class="article-info">
-                                        <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
-                                    </div>
-                                </a>
-                            `;
-                        }).join('');
-                    } else {
-                        container.innerHTML = '';
+                    // Show initial 5 articles
+                    renderArticleList(5);
+
+                    // Show "Show More" button if there are more articles
+                    if (allListArticles.length > 5) {
+                        showMoreBtn.style.display = 'block';
+                        showMoreBtn.onclick = function() {
+                            showingAllNews = true;
+                            renderArticleList(10);
+                            showMoreBtn.style.display = 'none';
+                        };
                     }
                 } else {
                     carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Drexel</span><h3 class="featured-title">No Drexel news available</h3></div></div></div>';
@@ -540,6 +533,27 @@
                 }
             } catch (e) {
                 carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127936;</div><div class="featured-content"><span class="article-tag">Drexel</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
+                container.innerHTML = '';
+            }
+        }
+
+        function renderArticleList(count) {
+            const container = document.getElementById('articleList');
+            const articlesToShow = allListArticles.slice(0, count);
+            if (articlesToShow.length > 0) {
+                container.innerHTML = articlesToShow.map(article => {
+                    const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
+                    return `
+                        <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
+                            <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                            <div class="article-info">
+                                <h4 class="article-title">${article.headline}</h4>
+                                <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else {
                 container.innerHTML = '';
             }
         }

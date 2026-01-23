@@ -210,33 +210,49 @@
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
 
-        /* All-Time Leaders Section */
-        .stats-section { grid-column: 1 / -1; margin-top: 1rem; }
+        /* All-Time Leaders Section - fits within center column */
+        .stats-section { margin-top: 1rem; }
         .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
-        .stats-header { padding: 1rem; background: linear-gradient(135deg, var(--team-color), #002428); color: #fff; display: flex; align-items: center; justify-content: space-between; }
-        .stats-header h2 { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-        .stats-attribution { font-size: 0.7rem; color: rgba(255,255,255,0.7); }
+        .stats-header { padding: 0.75rem 1rem; background: linear-gradient(135deg, var(--team-color), #002428); color: #fff; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .stats-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .stats-attribution { font-size: 0.65rem; color: rgba(255,255,255,0.7); }
         .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
 
-        .stats-tabs { display: flex; flex-wrap: wrap; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); }
-        .stats-tab { padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .stats-tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+        .stats-tabs::-webkit-scrollbar { height: 4px; }
+        .stats-tabs::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+        .stats-tab { padding: 0.5rem 0.75rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .stats-tab:hover { color: var(--team-color); background: rgba(0,76,84,0.05); }
         .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: var(--card-bg); }
 
-        .stats-table-container { overflow-x: auto; }
-        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .stats-table th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-        .stats-table th:first-child { width: 40px; text-align: center; }
-        .stats-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .stats-scroll-wrapper { position: relative; }
+        .stats-scroll-controls { display: flex; justify-content: flex-end; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); }
+        .stats-scroll-btn { width: 24px; height: 24px; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+        .stats-scroll-btn:hover { background: var(--team-color); color: #fff; border-color: var(--team-color); }
+        .stats-table-container { overflow: auto; max-height: 400px; scrollbar-width: thin; }
+        .stats-table-container::-webkit-scrollbar { width: 6px; height: 6px; }
+        .stats-table-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+        .stats-table-container::-webkit-scrollbar-corner { background: transparent; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .stats-table th { padding: 0.5rem 0.6rem; text-align: left; font-weight: 600; color: var(--text-secondary); background: #f5f2ed; border-bottom: 1px solid var(--border-color); white-space: nowrap; position: sticky; top: 0; z-index: 1; cursor: pointer; user-select: none; }
+        .stats-table th:hover { background: #e8e3d8; }
+        .stats-table th.sort-asc::after { content: ' ▲'; font-size: 0.6rem; }
+        .stats-table th.sort-desc::after { content: ' ▼'; font-size: 0.6rem; }
+        .stats-table th:first-child { width: 32px; text-align: center; }
+        .stats-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         .stats-table td:first-child { text-align: center; font-weight: 600; color: var(--text-muted); }
         .stats-table tr:hover { background: rgba(0,76,84,0.03); }
         .stats-table tr:last-child td { border-bottom: none; }
         .stats-table .player-name { font-weight: 600; color: var(--text-primary); }
-        .stats-table .player-years { font-size: 0.7rem; color: var(--text-muted); }
+        .stats-table .player-years { font-size: 0.65rem; color: var(--text-muted); display: block; }
         .stats-table .stat-highlight { font-weight: 700; color: var(--team-color); }
 
-        .stats-footer { padding: 0.75rem 1rem; background: #f5f2ed; font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+        .stats-footer { padding: 0.5rem 1rem; background: #f5f2ed; font-size: 0.65rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
         .stats-loading { padding: 2rem; text-align: center; color: var(--text-muted); }
+
+        [data-theme="dark"] .stats-table th { background: #2a2a2a; }
+        [data-theme="dark"] .stats-table th:hover { background: #333; }
+        [data-theme="dark"] .stats-footer { background: #2a2a2a; }
 
         @media (max-width: 900px) {
             .main-container { grid-template-columns: 1fr; }
@@ -270,10 +286,7 @@
             <!-- Recent Scores Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <div class="widget-header-content">
-                        <h3 class="widget-title">Recent Scores</h3>
-                        <span class="widget-subtitle">click game for boxscore</span>
-                    </div>
+                    <h3 class="widget-title">Recent Scores</h3>
                 </div>
                 <div class="widget-content" id="scoresContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading scores...</div>
@@ -284,7 +297,6 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3 class="widget-title">Upcoming Games</h3>
-                    <div style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">click below games for tickets</div>
                 </div>
                 <div class="widget-content" id="scheduleContainer">
                     <div class="loading-text" style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Loading schedule...</div>
@@ -345,7 +357,45 @@
                 <div class="carousel-controls" id="carouselDots"></div>
             </div>
             <div class="article-list" id="articleList"></div>
+            <div id="showMoreContainer" style="display:none;text-align:center;padding:0.75rem;">
+                <button id="showMoreBtn" style="background:var(--team-color);color:#fff;border:none;padding:0.5rem 1.5rem;border-radius:4px;font-weight:600;cursor:pointer;font-size:0.85rem;">Show More News</button>
+            </div>
 
+            <!-- All-Time Leaders Section -->
+            <section class="stats-section">
+                <div class="stats-container">
+                    <div class="stats-header">
+                        <h2><span>&#127942;</span> All-Time Eagles Leaders</h2>
+                        <span class="stats-attribution">Data: <a href="https://www.pro-football-reference.com/teams/phi/" target="_blank">Pro-Football-Reference</a></span>
+                    </div>
+                    <div class="stats-tabs" id="statsTabs">
+                        <button class="stats-tab active" data-category="currentSeason">2025</button>
+                        <button class="stats-tab" data-category="passing">Pass</button>
+                        <button class="stats-tab" data-category="rushing">Rush</button>
+                        <button class="stats-tab" data-category="receiving">Rec</button>
+                        <button class="stats-tab" data-category="scoring">Pts</button>
+                        <button class="stats-tab" data-category="defense">Def</button>
+                        <button class="stats-tab" data-category="returns">Ret</button>
+                        <button class="stats-tab" data-category="kicking">Kick</button>
+                        <button class="stats-tab" data-category="punting">Punt</button>
+                    </div>
+                    <div class="stats-scroll-wrapper">
+                        <div class="stats-scroll-controls">
+                            <button class="stats-scroll-btn" onclick="scrollStats('left')" title="Scroll left">◀</button>
+                            <button class="stats-scroll-btn" onclick="scrollStats('right')" title="Scroll right">▶</button>
+                            <button class="stats-scroll-btn" onclick="scrollStats('up')" title="Scroll up">▲</button>
+                            <button class="stats-scroll-btn" onclick="scrollStats('down')" title="Scroll down">▼</button>
+                        </div>
+                        <div class="stats-table-container" id="statsTableContainer">
+                            <div class="stats-loading">Loading stats...</div>
+                        </div>
+                    </div>
+                    <div class="stats-footer">
+                        <span id="statsUpdated">Updated: --</span>
+                        <span>Click headers to sort</span>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <aside class="sidebar">
@@ -353,7 +403,6 @@
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Eagles Trivia</span>
-                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-widget-body" id="triviaWidget">
                     <div class="trivia-promo-body">
@@ -434,34 +483,6 @@
                 </div>
             </div>
         </aside>
-
-        <!-- All-Time Leaders Section -->
-        <section class="stats-section">
-            <div class="stats-container">
-                <div class="stats-header">
-                    <h2><span>&#127942;</span> All-Time Eagles Leaders</h2>
-                    <span class="stats-attribution">Data from <a href="https://www.pro-football-reference.com/teams/phi/" target="_blank">Pro-Football-Reference.com</a></span>
-                </div>
-                <div class="stats-tabs" id="statsTabs">
-                    <button class="stats-tab active" data-category="currentSeason">2025 Season</button>
-                    <button class="stats-tab" data-category="passing">Passing</button>
-                    <button class="stats-tab" data-category="rushing">Rushing</button>
-                    <button class="stats-tab" data-category="receiving">Receiving</button>
-                    <button class="stats-tab" data-category="scoring">Scoring</button>
-                    <button class="stats-tab" data-category="defense">Defense</button>
-                    <button class="stats-tab" data-category="returns">Returns</button>
-                    <button class="stats-tab" data-category="kicking">Kicking</button>
-                    <button class="stats-tab" data-category="punting">Punting</button>
-                </div>
-                <div class="stats-table-container" id="statsTableContainer">
-                    <div class="stats-loading">Loading stats...</div>
-                </div>
-                <div class="stats-footer">
-                    <span id="statsUpdated">Last updated: --</span>
-                    <span>Top 10 career leaders</span>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer class="footer">
@@ -603,10 +624,8 @@
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
-                    // First 4 articles go to carousel
+                    allArticles = data.articles;
                     carouselArticles = data.articles.slice(0, 4);
-                    // Limit to 5 more articles (10 total) to minimize height
-                    const listArticles = data.articles.slice(4, 9);
 
                     // Populate carousel
                     carouselInner.innerHTML = carouselArticles.map(article => {
@@ -632,23 +651,8 @@
                     carousel.addEventListener('mouseleave', startCarousel);
                     startCarousel();
 
-                    // Remaining articles in list
-                    if (listArticles.length > 0) {
-                        container.innerHTML = listArticles.map(article => {
-                            const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
-                            return `
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                                    <div class="article-info">
-                                        <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
-                                    </div>
-                                </a>
-                            `;
-                        }).join('');
-                    } else {
-                        container.innerHTML = '';
-                    }
+                    // Render article list with show more functionality
+                    renderArticleList();
                 } else {
                     carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#127944;</div><div class="featured-content"><span class="article-tag">Eagles</span><h3 class="featured-title">No Eagles news available</h3></div></div></div>';
                     container.innerHTML = '';
@@ -757,6 +761,55 @@
             }
         }
 
+        // Stats scroll controls
+        function scrollStats(direction) {
+            const container = document.getElementById('statsTableContainer');
+            const scrollAmount = 100;
+            switch(direction) {
+                case 'left': container.scrollLeft -= scrollAmount; break;
+                case 'right': container.scrollLeft += scrollAmount; break;
+                case 'up': container.scrollTop -= scrollAmount; break;
+                case 'down': container.scrollTop += scrollAmount; break;
+            }
+        }
+
+        // Show More news functionality
+        let allArticles = [];
+        let showingAll = false;
+        function setupShowMore() {
+            const showMoreBtn = document.getElementById('showMoreBtn');
+            const showMoreContainer = document.getElementById('showMoreContainer');
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', function() {
+                    showingAll = !showingAll;
+                    renderArticleList();
+                    this.textContent = showingAll ? 'Show Less' : 'Show More News';
+                });
+            }
+        }
+        function renderArticleList() {
+            const container = document.getElementById('articleList');
+            const showMoreContainer = document.getElementById('showMoreContainer');
+            const listArticles = showingAll ? allArticles.slice(4, 14) : allArticles.slice(4, 9);
+            if (listArticles.length > 0) {
+                container.innerHTML = listArticles.map(article => {
+                    const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
+                    return `
+                        <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
+                            <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                            <div class="article-info">
+                                <h4 class="article-title">${article.headline}</h4>
+                                <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            }
+            if (showMoreContainer && allArticles.length > 9) {
+                showMoreContainer.style.display = 'block';
+            }
+        }
+
         loadDiehardLeaderboard();
         loadSourceLeaderboard();
         loadNews();
@@ -764,6 +817,7 @@
         loadSchedule();
         loadRoster();
         loadStandings();
+        setupShowMore();
 
         // All-Time Leaders Stats
         let statsData = null;
@@ -907,6 +961,43 @@
         document.querySelectorAll('.stats-tab').forEach(tab => {
             tab.addEventListener('click', () => switchStatsTab(tab.dataset.category));
         });
+
+        // Column sorting
+        let sortColumn = null;
+        let sortDirection = 'desc';
+        function setupSorting() {
+            document.getElementById('statsTableContainer').addEventListener('click', function(e) {
+                const th = e.target.closest('th');
+                if (!th || th.cellIndex === undefined) return;
+                const colIndex = th.cellIndex;
+                if (sortColumn === colIndex) {
+                    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn = colIndex;
+                    sortDirection = 'desc';
+                }
+                const table = th.closest('table');
+                const tbody = table.querySelector('tbody');
+                if (!tbody) return;
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                rows.sort((a, b) => {
+                    const aVal = a.cells[colIndex]?.textContent?.replace(/[,%]/g, '') || '';
+                    const bVal = b.cells[colIndex]?.textContent?.replace(/[,%]/g, '') || '';
+                    const aNum = parseFloat(aVal.replace(/,/g, ''));
+                    const bNum = parseFloat(bVal.replace(/,/g, ''));
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+                    }
+                    return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                });
+                rows.forEach(row => tbody.appendChild(row));
+                table.querySelectorAll('th').forEach((h, i) => {
+                    h.classList.remove('sort-asc', 'sort-desc');
+                    if (i === colIndex) h.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                });
+            });
+        }
+        setupSorting();
 
         loadStats();
 
