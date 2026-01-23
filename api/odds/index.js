@@ -152,6 +152,30 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
 
     const dateToUse = targetDate || new Date().toISOString().split('T')[0];
 
+    // First fetch games to get team names (odds endpoint may not have them)
+    let gamesLookup = {};
+    try {
+        const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${dateToUse}?key=${SPORTSDATA_API_KEY}`;
+        const gamesResponse = await fetch(gamesUrl);
+        if (gamesResponse.ok) {
+            const gamesData = await gamesResponse.json();
+            for (const g of gamesData) {
+                const gameId = g.GameID || g.ScoreID;
+                if (gameId) {
+                    gamesLookup[gameId] = {
+                        homeTeam: g.HomeTeam,
+                        awayTeam: g.AwayTeam,
+                        homeTeamName: g.HomeTeamName,
+                        awayTeamName: g.AwayTeamName
+                    };
+                }
+            }
+            console.log(`Loaded ${Object.keys(gamesLookup).length} games for team name lookup`);
+        }
+    } catch (e) {
+        console.error('Failed to fetch games for team lookup:', e.message);
+    }
+
     // Get current week for NFL, target date for others
     let url;
     if (sport === 'NFL') {
@@ -208,12 +232,15 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
     }
     // If phillyOnly is false and no team specified, return all games
 
-    // Transform to unified format
-    return games.map(game => transformSportsDataGame(game, sport));
+    // Transform to unified format, using games lookup for team names
+    return games.map(game => transformSportsDataGame(game, sport, gamesLookup));
 }
 
 // Transform SportsDataIO game to unified format
-function transformSportsDataGame(game, sport) {
+function transformSportsDataGame(game, sport, gamesLookup = {}) {
+    const gameId = game.GameId || game.ScoreID;
+    const gameLookup = gamesLookup[gameId] || {};
+
     const pregameOdds = game.PregameOdds || [];
     const consensus = pregameOdds.find(o => o.Sportsbook === 'Consensus') ||
                       pregameOdds.find(o => o.Sportsbook === 'DraftKings') ||
@@ -247,11 +274,11 @@ function transformSportsDataGame(game, sport) {
     }
 
     return {
-        id: game.GameId || game.ScoreID,
+        id: gameId,
         sport,
         commenceTime: game.DateTime || game.Day,
-        homeTeam: game.HomeTeam || game.HomeTeamName || game.Home || 'Home',
-        awayTeam: game.AwayTeam || game.AwayTeamName || game.Away || 'Away',
+        homeTeam: game.HomeTeam || gameLookup.homeTeam || gameLookup.homeTeamName || 'Home',
+        awayTeam: game.AwayTeam || gameLookup.awayTeam || gameLookup.awayTeamName || 'Away',
         bookmaker: consensus.Sportsbook || 'Consensus',
         odds: Object.keys(odds).length > 0 ? odds : null,
         status: game.Status,
