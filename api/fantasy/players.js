@@ -62,7 +62,11 @@ export default async function handler(req, res) {
             sport: sportUpper,
             date: targetDate,
             source: 'sportsdata',
-            totalPlayers: players.length
+            totalPlayers: players.length,
+            debug: {
+                apiKeyPresent: !!SPORTSDATA_API_KEY,
+                apiKeyLength: SPORTSDATA_API_KEY?.length || 0
+            }
         });
     } catch (error) {
         console.error('Fantasy players error:', error);
