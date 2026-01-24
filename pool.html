@@ -103,12 +103,12 @@
         .score-value { font-size: 2.5rem; font-weight: 800; }
         .score-divider { font-size: 1.5rem; color: var(--text-muted); }
 
-        .grid-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1.5rem; overflow-x: auto; }
+        .grid-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1rem; overflow-x: auto; }
         .grid-title { font-weight: 700; margin-bottom: 1rem; text-align: center; }
 
-        .squares-grid { display: inline-block; }
+        .squares-grid { display: inline-block; width: 100%; max-width: calc(11 * 65px); }
         .grid-row { display: flex; }
-        .grid-cell { width: 50px; height: 50px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; cursor: pointer; transition: all 0.15s; position: relative; }
+        .grid-cell { width: 65px; height: 65px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: all 0.15s; position: relative; text-align: center; line-height: 1.1; padding: 2px; word-break: break-all; }
         .grid-cell:hover:not(.taken):not(.header-cell) { background: rgba(139,0,0,0.1); }
         .grid-cell.header-cell { background: var(--header-bg); font-weight: 700; cursor: default; }
         .grid-cell.corner { background: var(--dark-bg); }
@@ -140,8 +140,13 @@
         .message.success { background: rgba(46,125,50,0.1); color: var(--success-color); }
         .message.error { background: rgba(211,47,47,0.1); color: #d32f2f; }
 
+        @media (max-width: 768px) {
+            .squares-grid { max-width: calc(11 * 55px); }
+            .grid-cell { width: 55px; height: 55px; font-size: 0.55rem; }
+        }
         @media (max-width: 600px) {
-            .grid-cell { width: 35px; height: 35px; font-size: 0.6rem; }
+            .squares-grid { max-width: calc(11 * 45px); }
+            .grid-cell { width: 45px; height: 45px; font-size: 0.5rem; }
             .score-display { gap: 1rem; }
             .score-value { font-size: 1.75rem; }
         }
@@ -316,10 +321,11 @@
                         classes.push('taken');
                         if (cell.isHouse) {
                             classes.push('house');
-                            content = 'H';
+                            content = 'House';
                             tooltip = 'House';
                         } else {
-                            content = cell.username.substring(0, 2).toUpperCase();
+                            // Show up to 8 characters of username
+                            content = cell.username.length > 8 ? cell.username.substring(0, 7) + '…' : cell.username;
                             tooltip = cell.username;
                             if (currentUser && cell.userId === currentUser._id) {
                                 classes.push('mine');
