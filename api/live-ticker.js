@@ -10,6 +10,7 @@ import {
     formatGameStatus,
     getOrdinal
 } from './lib/sportsdata.js';
+import { getTodayET, getYesterdayET, hoursSince } from './lib/timezone.js';
 
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
@@ -46,15 +47,9 @@ export default async function handler(req, res) {
 
     try {
         const liveGames = [];
-        // Use Eastern time for date since all Philly games are ET
-        const now = new Date();
-        const etOffset = -5 * 60; // EST is UTC-5
-        const etNow = new Date(now.getTime() + (now.getTimezoneOffset() + etOffset) * 60000);
-        const today = etNow.toISOString().split('T')[0];
+        const today = getTodayET();
+        const yesterday = getYesterdayET();
         const sports = ['NFL', 'NBA', 'NHL', 'MLB'];
-
-        // Also check yesterday for games that started late
-        const yesterday = new Date(etNow.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
         // Fetch all sports in parallel for both today and yesterday
         const results = await Promise.all(
@@ -83,10 +78,7 @@ export default async function handler(req, res) {
                 // Only include live or recently finished games
                 if (!isInProgress && !isFinal) continue;
                 if (isFinal) {
-                    const gameDate = new Date(game.DateTime);
-                    const now = new Date();
-                    const hoursSinceStart = (now - gameDate) / (1000 * 60 * 60);
-                    if (hoursSinceStart > 3) continue;
+                    if (hoursSince(game.DateTime) > 3) continue;
                 }
 
                 const gameData = {

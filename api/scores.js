@@ -1,6 +1,8 @@
 // Vercel Serverless Function - Fetch Philly Sports Scores
 // Uses SportsDataIO as primary, ESPN as fallback
 
+import { getTodayET, getYesterdayET, hoursSince } from './lib/timezone.js';
+
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 // Team configurations
@@ -158,11 +160,13 @@ async function fetchFromSportsDataIO(sport) {
     const endpoint = SPORTSDATA_ENDPOINTS[sport];
     if (!endpoint) return null;
 
-    // Get recent games - use ScoresByDate for last few days
-    const today = new Date();
-    const dates = [];
-    for (let i = 0; i < 5; i++) {
-        const d = new Date(today);
+    // Get recent games in Eastern Time - use ScoresByDate for last few days
+    const today = getTodayET();
+    const dates = [today];
+    // Add previous days
+    const todayDate = new Date(today + 'T12:00:00');
+    for (let i = 1; i < 5; i++) {
+        const d = new Date(todayDate);
         d.setDate(d.getDate() - i);
         dates.push(d.toISOString().split('T')[0]);
     }
