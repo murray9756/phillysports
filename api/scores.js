@@ -80,6 +80,15 @@ export default async function handler(req, res) {
 
                     const config = Object.values(TEAM_CONFIG).find(c => c.sport === sport);
 
+                    // ESPN boxscore URL patterns
+                    const espnSportPath = {
+                        NFL: 'nfl',
+                        NBA: 'nba',
+                        MLB: 'mlb',
+                        NHL: 'nhl'
+                    };
+                    const boxscoreLink = `https://www.espn.com/${espnSportPath[sport]}/boxscore/_/gameId/${recentGame.id}`;
+
                     scores.push({
                         sport,
                         team: config?.name || sport,
@@ -91,7 +100,8 @@ export default async function handler(req, res) {
                         isHome: phillyIsHome,
                         date: recentGame.date,
                         gameId: recentGame.id,
-                        status: comp.status?.type?.shortDetail || 'Final'
+                        status: comp.status?.type?.shortDetail || 'Final',
+                        link: boxscoreLink
                     });
                 }
             } catch (e) {
@@ -118,7 +128,9 @@ export default async function handler(req, res) {
                     awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
                     awayScore: String(awayTeam?.score?.displayValue || awayTeam?.score || '0'),
                     isHome: homeTeam?.team?.displayName?.includes('Philadelphia'),
-                    date: recentUnionGame.date
+                    date: recentUnionGame.date,
+                    gameId: recentUnionGame.id,
+                    link: `https://www.espn.com/soccer/match/_/gameId/${recentUnionGame.id}`
                 });
             }
         } catch (e) { console.error('MLS fetch error:', e); }
