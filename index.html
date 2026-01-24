@@ -2685,11 +2685,6 @@
                         const matchup = game.isHome ? `${game.team} vs ${game.opponent}` : `${game.team} @ ${game.opponent}`;
                         const broadcast = game.broadcast ? ` - ${game.broadcast}` : '';
                         const searchQuery = encodeURIComponent(`${game.team} ${game.opponent} tickets`);
-                        // Map team to sport for game preview
-                        const sportMap = { 'Eagles': 'NFL', '76ers': 'NBA', 'Phillies': 'MLB', 'Flyers': 'NHL', 'Union': 'MLS' };
-                        const gameSport = sportMap[game.team] || 'NFL';
-                        // Link to game preview page if we have gameId, otherwise link to ESPN
-                        const previewUrl = game.gameId ? `/game-preview.html?id=${game.gameId}&sport=${gameSport}` : `https://www.espn.com/${gameSport.toLowerCase()}/schedule`;
                         return `
                             <div class="schedule-item">
                                 <div class="schedule-date">
@@ -2703,7 +2698,6 @@
                                     </div>
                                     <div class="schedule-time">${dateInfo.dayName} ${dateInfo.time}${broadcast}</div>
                                     <div class="schedule-links" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem;">
-                                        <a href="${previewUrl}" class="ticket-link" style="background:var(--accent-color);color:#fff;">Preview</a>
                                         <a href="https://www.vividseats.com/search?searchTerm=${searchQuery}" target="_blank" class="ticket-link">Tickets</a>
                                     </div>
                                 </div>
