@@ -2,6 +2,8 @@
 import { getCollection } from '../lib/mongodb.js';
 
 // Scoring rules by sport
+const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+
 const SCORING = {
     NFL: {
         passingYards: 0.04,
@@ -56,6 +58,109 @@ const SCORING = {
         shutout: 3
     }
 };
+
+// Fetch player stats from SportsDataIO
+async function fetchPlayerStats(sport, date) {
+    if (!SPORTSDATA_API_KEY) {
+        console.log('No SportsDataIO API key, using simulated stats');
+        return {};
+    }
+
+    const sportEndpoints = {
+        NFL: 'nfl',
+        NBA: 'nba',
+        MLB: 'mlb',
+        NHL: 'nhl'
+    };
+
+    const endpoint = sportEndpoints[sport];
+    if (!endpoint) return {};
+
+    try {
+        // Fetch box scores for the date
+        const url = `https://api.sportsdata.io/v3/${endpoint}/stats/json/PlayerGameStatsByDate/${date}?key=${SPORTSDATA_API_KEY}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            console.error(`Failed to fetch ${sport} stats:`, response.status);
+            return {};
+        }
+
+        const stats = await response.json();
+
+        // Index by player ID
+        const playerStats = {};
+        for (const player of stats) {
+            const playerId = player.PlayerID?.toString();
+            if (playerId) {
+                playerStats[playerId] = player;
+            }
+        }
+
+        return playerStats;
+    } catch (error) {
+        console.error(`Error fetching ${sport} stats:`, error.message);
+        return {};
+    }
+}
+
+// Calculate fantasy points from player stats
+function calculateFantasyPoints(sport, stats) {
+    if (!stats) return 0;
+
+    const rules = SCORING[sport];
+    if (!rules) return 0;
+
+    let points = 0;
+
+    if (sport === 'NBA') {
+        points += (stats.Points || 0) * rules.points;
+        points += (stats.Rebounds || stats.TotalRebounds || 0) * rules.rebounds;
+        points += (stats.Assists || 0) * rules.assists;
+        points += (stats.Steals || 0) * rules.steals;
+        points += (stats.BlockedShots || 0) * rules.blocks;
+        points += (stats.Turnovers || 0) * rules.turnovers;
+        points += (stats.ThreePointersMade || 0) * rules.threePointersMade;
+    } else if (sport === 'NFL') {
+        points += (stats.PassingYards || 0) * rules.passingYards;
+        points += (stats.PassingTouchdowns || 0) * rules.passingTD;
+        points += (stats.PassingInterceptions || 0) * rules.interception;
+        points += (stats.RushingYards || 0) * rules.rushingYards;
+        points += (stats.RushingTouchdowns || 0) * rules.rushingTD;
+        points += (stats.ReceivingYards || 0) * rules.receivingYards;
+        points += (stats.ReceivingTouchdowns || 0) * rules.receivingTD;
+        points += (stats.Receptions || 0) * rules.reception;
+        points += (stats.FumblesLost || 0) * rules.fumbleLost;
+    } else if (sport === 'MLB') {
+        points += (stats.Singles || 0) * rules.single;
+        points += (stats.Doubles || 0) * rules.double;
+        points += (stats.Triples || 0) * rules.triple;
+        points += (stats.HomeRuns || 0) * rules.homeRun;
+        points += (stats.RunsBattedIn || 0) * rules.rbi;
+        points += (stats.Runs || 0) * rules.run;
+        points += (stats.Walks || 0) * rules.walk;
+        points += (stats.StolenBases || 0) * rules.stolenBase;
+        points += (stats.HitByPitch || 0) * rules.hitByPitch;
+        // Pitching stats
+        points += (stats.Wins || 0) * rules.win;
+        points += (stats.EarnedRuns || 0) * rules.earnedRun;
+        points += (stats.PitcherStrikeouts || 0) * rules.strikeoutPitcher;
+        points += (stats.InningsPitchedFull || 0) * rules.inningPitched;
+    } else if (sport === 'NHL') {
+        points += (stats.Goals || 0) * rules.goal;
+        points += (stats.Assists || 0) * rules.assist;
+        points += (stats.ShotsOnGoal || 0) * rules.shot;
+        points += (stats.BlockedShots || 0) * rules.blockedShot;
+        points += (stats.PlusMinus || 0) * rules.plusMinus;
+        // Goalie stats
+        points += (stats.Wins || 0) * rules.win;
+        points += (stats.Saves || 0) * rules.save;
+        points += (stats.GoalsAgainst || 0) * rules.goalAgainst;
+        points += (stats.Shutouts || 0) * rules.shutout;
+    }
+
+    return points;
+}
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -153,30 +258,28 @@ export default async function handler(req, res) {
                     }
                 }
 
-                // For live contests, we would normally fetch live stats
-                // For now, generate sample scores (in production, integrate with live stats API)
+                // For live contests, fetch real stats from SportsDataIO
                 if (contest.status === 'live') {
                     const entries = await entriesCollection.find({ contestId: contest._id }).toArray();
 
+                    // Fetch player stats from SportsDataIO
+                    const gameDate = contest.gameDateString || new Date(contest.gameDate || contest.locksAt).toISOString().split('T')[0];
+                    const playerStats = await fetchPlayerStats(contest.sport, gameDate);
+
                     for (const entry of entries) {
-                        // Calculate points based on lineup
-                        // In production, fetch real stats from ESPN boxscore API
-                        // For now, use a deterministic formula based on player salary
                         let totalPoints = 0;
                         const playerPoints = [];
 
                         for (const player of entry.lineup) {
-                            // Simulate points based on salary (higher salary = higher expected points)
-                            // Add some variance based on player name for consistency
-                            const basePoints = player.salary / 1000;
-                            const hash = player.playerName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-                            const variance = ((hash % 100) - 50) / 10;
-                            const points = Math.max(0, basePoints + variance);
+                            // Find player stats from API response
+                            const stats = playerStats[player.playerId] || null;
+                            const points = calculateFantasyPoints(contest.sport, stats);
 
                             playerPoints.push({
                                 playerId: player.playerId,
                                 playerName: player.playerName,
-                                points: Math.round(points * 10) / 10
+                                points: Math.round(points * 10) / 10,
+                                stats: stats // Store the raw stats for display
                             });
                             totalPoints += points;
                         }

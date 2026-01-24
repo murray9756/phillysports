@@ -95,17 +95,18 @@ export default async function handler(req, res) {
         const now = new Date();
         const isLocked = now >= new Date(contest.locksAt);
 
-        // Format user entry with player points
+        // Format user entry with player points and stats
         let formattedUserEntry = null;
         if (userEntry) {
             formattedUserEntry = {
                 ...userEntry,
                 totalPoints: userEntry.totalPoints || 0,
                 lineup: userEntry.lineup.map(p => {
-                    const pts = userEntry.playerPoints?.find(pp => pp.playerId === p.playerId);
+                    const playerPts = userEntry.playerPoints?.find(pp => pp.playerId === p.playerId);
                     return {
                         ...p,
-                        points: pts?.points || 0
+                        points: playerPts?.points || 0,
+                        stats: playerPts?.stats || null // Include the raw stats for display
                     };
                 })
             };

@@ -319,11 +319,20 @@
 
         .entry-player-row {
             display: grid;
-            grid-template-columns: 50px 1fr 80px;
-            gap: 0.5rem;
-            padding: 0.75rem;
+            grid-template-columns: 50px minmax(150px, 1fr) repeat(8, 60px) 80px;
+            gap: 0.25rem;
+            padding: 0.75rem 0.5rem;
             border-bottom: 1px solid var(--border-color);
             align-items: center;
+            font-size: 0.85rem;
+        }
+        .entry-player-row.header {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            background: var(--dark-bg);
+            border-radius: 4px 4px 0 0;
         }
         .entry-player-row .pos-badge {
             background: var(--accent-color);
@@ -338,16 +347,31 @@
             font-weight: 600;
             color: var(--text-primary);
         }
-        .entry-player-row .player-pos {
-            font-size: 0.75rem;
+        .entry-player-row .player-team {
+            font-size: 0.7rem;
             color: var(--text-muted);
+        }
+        .entry-player-row .stat-cell {
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .entry-player-row .stat-cell.has-value {
+            color: var(--text-primary);
         }
         .entry-player-row .player-pts {
             font-weight: 700;
-            text-align: right;
+            text-align: center;
             color: var(--text-primary);
+            font-size: 1rem;
+            background: var(--dark-bg);
+            padding: 0.35rem;
+            border-radius: 4px;
         }
-        .entry-player-row .player-pts.scoring { color: var(--success-color); }
+        .entry-player-row .player-pts.scoring {
+            color: var(--success-color);
+            background: rgba(46,125,50,0.1);
+        }
         .my-entry-score {
             font-size: 2rem;
             font-weight: 800;
@@ -454,13 +478,15 @@
         </div>
 
         <div id="myentryTab" style="display: none;">
-            <div class="leaderboard-panel">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="leaderboard-panel" style="max-width: 100%; overflow-x: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
                     <h3 class="leaderboard-header" style="margin: 0;">My Entry</h3>
-                    <div id="myEntryRank" style="font-size: 0.9rem; color: var(--text-muted);"></div>
+                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                        <div id="myEntryRank" style="font-size: 0.9rem; color: var(--text-muted);"></div>
+                        <div id="myEntryScore" class="my-entry-score" style="margin: 0; font-size: 1.5rem;">0 pts</div>
+                    </div>
                 </div>
-                <div id="myEntryScore" class="my-entry-score">0 pts</div>
-                <div id="myEntryLineup"></div>
+                <div id="myEntryLineup" style="min-width: 800px;"></div>
                 <div id="myEntryStatus" style="margin-top: 1rem; padding: 0.75rem; border-radius: 6px; text-align: center;"></div>
             </div>
         </div>
@@ -946,16 +972,99 @@
             document.getElementById('myEntryScore').textContent = `${totalPoints} pts`;
 
             const container = document.getElementById('myEntryLineup');
-            container.innerHTML = userEntry.lineup.map(player => {
+
+            // Determine sport-specific stat columns
+            const isNBA = contest.sport === 'NBA';
+            const isNFL = contest.sport === 'NFL';
+            const isMLB = contest.sport === 'MLB';
+            const isNHL = contest.sport === 'NHL';
+
+            let statHeaders = [];
+            if (isNBA) {
+                statHeaders = ['PTS', 'REB', 'AST', 'STL', 'BLK', '3PM', 'TO', 'MIN'];
+            } else if (isNFL) {
+                statHeaders = ['Pass Yds', 'Pass TD', 'Rush Yds', 'Rush TD', 'Rec', 'Rec Yds', 'Rec TD', 'INT'];
+            } else if (isMLB) {
+                statHeaders = ['H', 'R', 'RBI', 'HR', 'SB', 'IP', 'K', 'W'];
+            } else if (isNHL) {
+                statHeaders = ['G', 'A', 'SOG', '+/-', 'PIM', 'PPG', 'SHG', 'BLK'];
+            } else {
+                statHeaders = ['Stat1', 'Stat2', 'Stat3', 'Stat4', 'Stat5', 'Stat6', 'Stat7', 'Stat8'];
+            }
+
+            // Header row
+            let html = `
+                <div class="entry-player-row header">
+                    <span>POS</span>
+                    <span>PLAYER</span>
+                    ${statHeaders.map(h => `<span style="text-align:center;">${h}</span>`).join('')}
+                    <span style="text-align:center;">FPTS</span>
+                </div>
+            `;
+
+            html += userEntry.lineup.map(player => {
                 const pts = player.points || 0;
+                const stats = player.stats || {};
+
+                // Get stat values based on sport
+                let statValues = [];
+                if (isNBA) {
+                    statValues = [
+                        stats.points || stats.Points || '-',
+                        stats.rebounds || stats.Rebounds || stats.TotalRebounds || '-',
+                        stats.assists || stats.Assists || '-',
+                        stats.steals || stats.Steals || '-',
+                        stats.blocks || stats.BlockedShots || '-',
+                        stats.threePointersMade || stats.ThreePointersMade || '-',
+                        stats.turnovers || stats.Turnovers || '-',
+                        stats.minutes || stats.Minutes || '-'
+                    ];
+                } else if (isNFL) {
+                    statValues = [
+                        stats.passingYards || stats.PassingYards || '-',
+                        stats.passingTouchdowns || stats.PassingTouchdowns || '-',
+                        stats.rushingYards || stats.RushingYards || '-',
+                        stats.rushingTouchdowns || stats.RushingTouchdowns || '-',
+                        stats.receptions || stats.Receptions || '-',
+                        stats.receivingYards || stats.ReceivingYards || '-',
+                        stats.receivingTouchdowns || stats.ReceivingTouchdowns || '-',
+                        stats.interceptions || stats.Interceptions || '-'
+                    ];
+                } else if (isMLB) {
+                    statValues = [
+                        stats.hits || stats.Hits || '-',
+                        stats.runs || stats.Runs || '-',
+                        stats.runsBattedIn || stats.RunsBattedIn || '-',
+                        stats.homeRuns || stats.HomeRuns || '-',
+                        stats.stolenBases || stats.StolenBases || '-',
+                        stats.inningsPitched || stats.InningsPitched || '-',
+                        stats.strikeouts || stats.PitcherStrikeouts || '-',
+                        stats.wins || stats.Wins || '-'
+                    ];
+                } else if (isNHL) {
+                    statValues = [
+                        stats.goals || stats.Goals || '-',
+                        stats.assists || stats.Assists || '-',
+                        stats.shotsOnGoal || stats.ShotsOnGoal || '-',
+                        stats.plusMinus || stats.PlusMinus || '-',
+                        stats.penaltyMinutes || stats.PenaltyMinutes || '-',
+                        stats.powerPlayGoals || stats.PowerPlayGoals || '-',
+                        stats.shortHandedGoals || stats.ShortHandedGoals || '-',
+                        stats.blockedShots || stats.BlockedShots || '-'
+                    ];
+                } else {
+                    statValues = ['-', '-', '-', '-', '-', '-', '-', '-'];
+                }
+
                 return `
                     <div class="entry-player-row">
                         <span class="pos-badge">${player.position}</span>
                         <div>
                             <div class="player-name">${player.playerName}</div>
-                            <div class="player-pos">${player.playerPosition}</div>
+                            <div class="player-team">${player.playerPosition}${player.team ? ' - ' + player.team : ''}</div>
                         </div>
-                        <span class="player-pts ${pts > 0 ? 'scoring' : ''}">${pts} pts</span>
+                        ${statValues.map(v => `<span class="stat-cell ${v !== '-' ? 'has-value' : ''}">${v}</span>`).join('')}
+                        <span class="player-pts ${pts > 0 ? 'scoring' : ''}">${pts}</span>
                     </div>
                 `;
             }).join('');
