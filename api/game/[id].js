@@ -478,15 +478,39 @@ async function fetchTeamSeasonStats(endpoint, sport, homeTeam, awayTeam) {
 }
 
 async function fetchEspnTeamStats(sportPath, teamAbbr, sport) {
-    // ESPN team ID mapping (common teams)
-    const espnTeamIds = {
-        // NBA
-        PHI: sport === 'NBA' ? '20' : (sport === 'NFL' ? '21' : (sport === 'MLB' ? '22' : '4')),
-        BOS: '2', NYK: '18', MIL: '15', CLE: '5', OKC: '25', LAL: '13', DEN: '7', MEM: '29', SAC: '23',
-        // Add more as needed
+    // ESPN team ID mappings by sport
+    const NBA_TEAM_IDS = {
+        ATL: '1', BOS: '2', BKN: '17', CHA: '30', CHI: '4', CLE: '5', DAL: '6', DEN: '7',
+        DET: '8', GS: '9', GSW: '9', HOU: '10', IND: '11', LAC: '12', LAL: '13', MEM: '29',
+        MIA: '14', MIL: '15', MIN: '16', NO: '3', NOP: '3', NY: '18', NYK: '18', OKC: '25',
+        ORL: '19', PHI: '20', PHX: '21', POR: '22', SAC: '23', SA: '24', SAS: '24',
+        TOR: '28', UTA: '26', WAS: '27', UTAH: '26'
+    };
+    const NFL_TEAM_IDS = {
+        ARI: '22', ATL: '1', BAL: '33', BUF: '2', CAR: '29', CHI: '3', CIN: '4', CLE: '5',
+        DAL: '6', DEN: '7', DET: '8', GB: '9', HOU: '34', IND: '11', JAX: '30', KC: '12',
+        LAC: '24', LAR: '14', LV: '13', MIA: '15', MIN: '16', NE: '17', NO: '18', NYG: '19',
+        NYJ: '20', PHI: '21', PIT: '23', SEA: '26', SF: '25', TB: '27', TEN: '10', WAS: '28'
+    };
+    const NHL_TEAM_IDS = {
+        ANA: '25', ARI: '53', BOS: '1', BUF: '2', CGY: '3', CAR: '7', CHI: '4', COL: '17',
+        CBJ: '29', DAL: '9', DET: '5', EDM: '6', FLA: '8', LA: '26', LAK: '26', MIN: '30',
+        MTL: '10', NSH: '18', NJ: '11', NYI: '12', NYR: '13', OTT: '14', PHI: '4', PIT: '15',
+        SJ: '28', SEA: '55', STL: '19', TB: '20', TOR: '21', VAN: '22', VGK: '54', WAS: '23', WSH: '23', WPG: '52'
+    };
+    const MLB_TEAM_IDS = {
+        ARI: '29', ATL: '15', BAL: '1', BOS: '2', CHC: '16', CWS: '4', CIN: '17', CLE: '5',
+        COL: '27', DET: '6', HOU: '18', KC: '7', LAA: '3', LAD: '19', MIA: '28', MIL: '8',
+        MIN: '9', NYM: '21', NYY: '10', OAK: '11', PHI: '22', PIT: '23', SD: '25', SF: '26',
+        SEA: '12', STL: '24', TB: '30', TEX: '13', TOR: '14', WAS: '20', WSH: '20'
     };
 
-    const teamId = espnTeamIds[teamAbbr];
+    const teamIdMap = sport === 'NBA' ? NBA_TEAM_IDS :
+                      sport === 'NFL' ? NFL_TEAM_IDS :
+                      sport === 'NHL' ? NHL_TEAM_IDS :
+                      sport === 'MLB' ? MLB_TEAM_IDS : {};
+
+    const teamId = teamIdMap[teamAbbr];
     if (!teamId) {
         console.log('No ESPN team ID for:', teamAbbr);
         return null;
@@ -506,12 +530,19 @@ async function fetchEspnTeamStats(sportPath, teamAbbr, sport) {
 }
 
 function formatEspnTeamStats(data, sport) {
-    if (!data?.results?.stats) return null;
+    if (!data?.results?.stats?.categories) return null;
 
-    const stats = data.results.stats;
+    // Flatten all stats from all categories into one array
+    const allStats = [];
+    for (const category of data.results.stats.categories) {
+        if (category.stats) {
+            allStats.push(...category.stats);
+        }
+    }
+
     const getStat = (name) => {
-        const stat = stats.find(s => s.name === name || s.displayName === name);
-        return stat?.value || stat?.displayValue || null;
+        const stat = allStats.find(s => s.name === name || s.abbreviation === name);
+        return stat?.value ?? stat?.displayValue ?? null;
     };
 
     if (sport === 'NBA') {
