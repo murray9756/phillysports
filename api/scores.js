@@ -200,3 +200,4 @@ export default async function handler(req, res) {
         res.status(500).json({ error: 'Failed to fetch scores', message: error.message });
     }
 }
+// Deploy Fri Jan 23 19:26:23 EST 2026
