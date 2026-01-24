@@ -18,8 +18,8 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1980537474373781" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Membership | PhillySports.com</title>
-    <meta name="description" content="Upgrade to Diehard+ or Diehard Pro for exclusive benefits, 2x daily coins, ad-free experience, and more.">
+    <title>Diehard Premium | PhillySports.com</title>
+    <meta name="description" content="Upgrade to Diehard Premium for 2x earnings on everything, 500 DD monthly grant, exclusive raffles, private poker games, and more.">
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="manifest" href="/public/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,93 +40,70 @@
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
         a { color: inherit; text-decoration: none; }
 
-        /* Feedback Modal */
-        .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-        .feedback-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
-        .feedback-nav-btn { background: none; border: none; color: var(--nav-text); font-size: 0.75rem; font-weight: 600; cursor: pointer; padding: 0.75rem 1rem; transition: color 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
-        .feedback-nav-btn:hover { color: var(--accent-color); }
-        .feedback-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .feedback-modal-overlay.active { display: flex; }
-        .feedback-modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; }
-        .feedback-modal h3 { margin: 0 0 1rem 0; color: var(--accent-color); }
-        .feedback-modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
-        .feedback-type-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
-        .feedback-type-option { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .feedback-type-option:hover { border-color: var(--accent-color); }
-        .feedback-type-option.selected { border-color: var(--accent-color); background: rgba(139, 0, 0, 0.1); }
-        .feedback-type-option input { display: none; }
-        .feedback-textarea { width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: inherit; font-size: 0.9rem; resize: vertical; margin-bottom: 1rem; }
-        .feedback-textarea:focus { outline: none; border-color: var(--accent-color); }
-        .feedback-submit { width: 100%; padding: 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-        .feedback-submit:hover { opacity: 0.9; }
-        .feedback-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-        .feedback-reward { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; }
-        .feedback-reward span { color: #b8860b; font-weight: 600; }
-        .feedback-success { text-align: center; padding: 1rem; }
-        .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
-
         /* Hero Section */
-        .page-hero { background: linear-gradient(135deg, #8b0000, #5c0000); padding: 3rem 1.5rem; text-align: center; color: white; }
+        .page-hero { background: linear-gradient(135deg, #b8860b, #8b6914); padding: 3rem 1.5rem; text-align: center; color: white; }
         .page-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
-        .page-hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        .page-hero p { font-size: 1.1rem; opacity: 0.95; max-width: 600px; margin: 0 auto; }
 
         /* Current Status Banner */
         .status-banner { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 1rem 1.5rem; text-align: center; }
         .status-banner.premium { background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,152,0,0.1)); border-color: var(--gold); }
         .status-text { font-size: 0.9rem; color: var(--text-secondary); }
-        .status-text strong { color: var(--accent-color); }
-        .status-banner.premium .status-text strong { color: #b8860b; }
+        .status-text strong { color: #b8860b; }
 
         /* Main Content */
-        .main-container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .main-container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
 
-        /* Pricing Grid */
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .pricing-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; }
-        .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-        .pricing-card.popular { border-color: var(--accent-color); }
-        .pricing-card.current { border-color: var(--success); background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(34,197,94,0.02)); }
-        .popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-color); color: white; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .current-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 0.35rem 1rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .tier-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .tier-name { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
-        .tier-price { font-size: 2.5rem; font-weight: 800; color: var(--accent-color); margin-bottom: 0.25rem; }
-        .tier-price span { font-size: 1rem; font-weight: 500; color: var(--text-muted); }
-        .tier-annual { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
-        .tier-annual strong { color: var(--success); }
-        .benefits-list { list-style: none; margin-bottom: 1.5rem; }
-        .benefits-list li { padding: 0.5rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .benefits-list li:last-child { border-bottom: none; }
-        .benefits-list .check { color: var(--success); font-weight: bold; }
-        .benefits-list .x { color: var(--text-muted); }
-        .subscribe-btn { width: 100%; padding: 1rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-        .subscribe-btn.primary { background: var(--accent-color); color: white; }
-        .subscribe-btn.primary:hover { opacity: 0.9; transform: scale(1.02); }
-        .subscribe-btn.secondary { background: var(--border-color); color: var(--text-primary); }
-        .subscribe-btn.current { background: var(--success); color: white; cursor: default; }
-        .subscribe-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        /* Pricing Card */
+        .pricing-card { background: var(--card-bg); border: 3px solid #b8860b; border-radius: 20px; padding: 2.5rem; position: relative; margin-bottom: 2rem; box-shadow: 0 8px 32px rgba(184, 134, 11, 0.2); }
+        .premium-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ffd700, #b8860b); color: #1a1a1a; padding: 0.5rem 1.5rem; border-radius: 25px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .tier-header { text-align: center; margin-bottom: 2rem; }
+        .tier-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+        .tier-name { font-size: 2rem; font-weight: 800; color: #b8860b; margin-bottom: 0.25rem; }
+        .tier-tagline { color: var(--text-secondary); font-size: 0.95rem; }
 
-        /* Billing Toggle */
-        .billing-toggle { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; align-items: center; }
-        .billing-toggle label { font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; padding: 0.5rem 1rem; border-radius: 20px; transition: all 0.2s; }
-        .billing-toggle label.active { background: var(--accent-color); color: white; }
-        .billing-toggle .save-badge { background: var(--success); color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+        /* Pricing */
+        .pricing-section { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .price-option { text-align: center; padding: 1.5rem; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: all 0.2s; min-width: 160px; }
+        .price-option:hover { border-color: #b8860b; }
+        .price-option.selected { border-color: #b8860b; background: rgba(184, 134, 11, 0.1); }
+        .price-amount { font-size: 2rem; font-weight: 800; color: #b8860b; }
+        .price-period { color: var(--text-muted); font-size: 0.85rem; }
+        .price-savings { color: var(--success); font-weight: 600; font-size: 0.8rem; margin-top: 0.5rem; }
+
+        /* Value Proposition */
+        .value-prop { background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(184, 134, 11, 0.05)); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem; text-align: center; }
+        .value-prop-title { font-weight: 700; color: #b8860b; margin-bottom: 0.25rem; }
+        .value-prop-text { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* Benefits Grid */
+        .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .benefit-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem; background: var(--dark-bg); border-radius: 10px; }
+        .benefit-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .benefit-content h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .benefit-content p { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Subscribe Button */
+        .subscribe-btn { width: 100%; padding: 1.25rem; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; background: linear-gradient(135deg, #b8860b, #8b6914); color: white; }
+        .subscribe-btn:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(184, 134, 11, 0.4); }
+        .subscribe-btn.current { background: var(--success); cursor: default; }
+        .subscribe-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         /* Manage Section */
-        .manage-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
+        .manage-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
         .manage-section h3 { font-size: 1.1rem; margin-bottom: 1rem; }
         .manage-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
         .manage-btn { padding: 0.75rem 1.5rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-        .manage-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+        .manage-btn:hover { border-color: #b8860b; color: #b8860b; }
         .manage-btn.danger { border-color: #dc2626; color: #dc2626; }
         .manage-btn.danger:hover { background: #dc2626; color: white; }
 
         /* FAQ Section */
-        .faq-section { margin-top: 3rem; }
+        .faq-section { margin-top: 2rem; }
         .faq-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
         .faq-item { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.75rem; }
         .faq-question { padding: 1rem 1.25rem; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .faq-question:hover { color: var(--accent-color); }
+        .faq-question:hover { color: #b8860b; }
         .faq-answer { padding: 0 1.25rem 1rem; font-size: 0.9rem; color: var(--text-secondary); display: none; }
         .faq-item.open .faq-answer { display: block; }
         .faq-item.open .faq-arrow { transform: rotate(180deg); }
@@ -140,13 +117,10 @@
         .toast.success { background: #4caf50; }
         .toast.error { background: #f44336; }
 
-        /* Loading */
-        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
-
         @media (max-width: 768px) {
             .page-hero h1 { font-size: 1.75rem; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .tier-price { font-size: 2rem; }
+            .pricing-section { flex-direction: column; align-items: center; }
+            .price-option { min-width: 100%; }
         }
     </style>
 </head>
@@ -156,8 +130,8 @@
     <script src="/js/header.js"></script>
 
     <section class="page-hero">
-        <h1>&#11088; Premium Membership</h1>
-        <p>Unlock exclusive benefits, earn 2x daily coins, and support PhillySports.com</p>
+        <h1>Diehard Premium</h1>
+        <p>The membership that pays for itself. Get 2x earnings, 500 DD monthly, exclusive raffles, and more.</p>
     </section>
 
     <div class="status-banner" id="statusBanner" style="display: none;">
@@ -165,66 +139,94 @@
     </div>
 
     <main class="main-container">
-        <div class="billing-toggle">
-            <label id="monthlyLabel" class="active" onclick="setBilling('month')">Monthly</label>
-            <label id="annualLabel" onclick="setBilling('year')">Annual <span class="save-badge">Save 25%</span></label>
-        </div>
+        <div class="pricing-card">
+            <span class="premium-badge">Best Value</span>
 
-        <div class="pricing-grid" id="pricingGrid">
-            <!-- Free Tier -->
-            <div class="pricing-card" id="freeTier">
-                <div class="tier-icon">&#127941;</div>
-                <h2 class="tier-name">Free</h2>
-                <div class="tier-price">$0<span>/month</span></div>
-                <div class="tier-annual">&nbsp;</div>
-                <ul class="benefits-list">
-                    <li><span class="check">&#10003;</span> Access to all content</li>
-                    <li><span class="check">&#10003;</span> Daily login bonus (10 DD)</li>
-                    <li><span class="check">&#10003;</span> Forums & community</li>
-                    <li><span class="check">&#10003;</span> Poker & gaming</li>
-                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">Ad-free experience</span></li>
-                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">2x daily coin bonus</span></li>
-                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">Exclusive badges</span></li>
-                </ul>
-                <button class="subscribe-btn secondary" id="freeBtn" disabled>Current Plan</button>
-            </div>
-
-            <!-- Diehard+ Tier -->
-            <div class="pricing-card popular" id="plusTier">
-                <span class="popular-badge">Most Popular</span>
+            <div class="tier-header">
                 <div class="tier-icon">&#11088;</div>
-                <h2 class="tier-name">Diehard+</h2>
-                <div class="tier-price" id="plusPrice">$4.99<span>/month</span></div>
-                <div class="tier-annual" id="plusAnnual">or $44.90/year <strong>(Save $15)</strong></div>
-                <ul class="benefits-list">
-                    <li><span class="check">&#10003;</span> Everything in Free</li>
-                    <li><span class="check">&#10003;</span> <strong>Ad-free experience</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>2x daily coin bonus (20 DD)</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>Exclusive Diehard+ badge</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>Early access to raffles</strong></li>
-                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">Exclusive forums</span></li>
-                    <li><span class="x">&#10005;</span> <span style="color: var(--text-muted)">@phillysports.com email</span></li>
-                </ul>
-                <button class="subscribe-btn primary" id="plusBtn" onclick="subscribe('diehard_plus')">Subscribe to Diehard+</button>
+                <h2 class="tier-name">Diehard Premium</h2>
+                <p class="tier-tagline">Everything you need to be the ultimate Philly fan</p>
             </div>
 
-            <!-- Diehard Pro Tier -->
-            <div class="pricing-card" id="proTier">
-                <div class="tier-icon">&#128293;</div>
-                <h2 class="tier-name">Diehard Pro</h2>
-                <div class="tier-price" id="proPrice">$9.99<span>/month</span></div>
-                <div class="tier-annual" id="proAnnual">or $89/year <strong>(Save $31)</strong></div>
-                <ul class="benefits-list">
-                    <li><span class="check">&#10003;</span> Everything in Diehard+</li>
-                    <li><span class="check">&#10003;</span> <strong>Exclusive Pro forums</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>Priority poker tables</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>10% merch discount</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>Exclusive Diehard Pro badge</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>@phillysports.com email</strong></li>
-                    <li><span class="check">&#10003;</span> <strong>Priority support</strong></li>
-                </ul>
-                <button class="subscribe-btn primary" id="proBtn" onclick="subscribe('diehard_pro')">Subscribe to Diehard Pro</button>
+            <div class="pricing-section">
+                <div class="price-option selected" id="monthlyOption" onclick="setBilling('month')">
+                    <div class="price-amount">$4.99</div>
+                    <div class="price-period">per month</div>
+                </div>
+                <div class="price-option" id="yearlyOption" onclick="setBilling('year')">
+                    <div class="price-amount">$39.99</div>
+                    <div class="price-period">per year</div>
+                    <div class="price-savings">Save 33%!</div>
+                </div>
             </div>
+
+            <div class="value-prop">
+                <div class="value-prop-title">This membership pays for itself!</div>
+                <div class="value-prop-text">500 DD monthly grant + 2x earnings = ~$10+/month value for just $4.99</div>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#128176;</span>
+                    <div class="benefit-content">
+                        <h4>500 DD Monthly Grant</h4>
+                        <p>Automatic monthly bonus worth ~$5</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#10006;2</span>
+                    <div class="benefit-content">
+                        <h4>2x ALL Earnings</h4>
+                        <p>Double DD on logins, comments, trivia, referrals</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#127920;</span>
+                    <div class="benefit-content">
+                        <h4>1 Free Contest Entry/Week</h4>
+                        <p>Access paid fantasy contests for free</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#127915;</span>
+                    <div class="benefit-content">
+                        <h4>Exclusive Raffles</h4>
+                        <p>Premium-only raffles with better prizes</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#9993;</span>
+                    <div class="benefit-content">
+                        <h4>@phillysports.com Email</h4>
+                        <p>Your own custom email address</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#127183;</span>
+                    <div class="benefit-content">
+                        <h4>Private Poker Games</h4>
+                        <p>Host games for friends with settlement tracking</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#127942;</span>
+                    <div class="benefit-content">
+                        <h4>Premium Badge</h4>
+                        <p>Gold badge on your profile & comments</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">&#128722;</span>
+                    <div class="benefit-content">
+                        <h4>No Seller Fees</h4>
+                        <p>Sell in marketplace without 5% fee</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="subscribe-btn" id="subscribeBtn" onclick="subscribe()">
+                Get Diehard Premium
+            </button>
         </div>
 
         <!-- Subscription Management (shown when subscribed) -->
@@ -233,7 +235,7 @@
             <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;" id="manageInfo"></p>
             <div class="manage-buttons">
                 <button class="manage-btn" onclick="openPortal()">Manage Billing</button>
-                <button class="manage-btn" id="cancelBtn" onclick="cancelSubscription()">Cancel Subscription</button>
+                <button class="manage-btn danger" id="cancelBtn" onclick="cancelSubscription()">Cancel Subscription</button>
                 <button class="manage-btn" id="reactivateBtn" onclick="reactivateSubscription()" style="display: none;">Reactivate Subscription</button>
             </div>
         </div>
@@ -244,21 +246,41 @@
 
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    What are Diehard Dollars?
+                    How does the 2x earnings work?
                     <span class="faq-arrow">&#9660;</span>
                 </div>
                 <div class="faq-answer">
-                    Diehard Dollars (DD) are our virtual currency. Earn them through daily logins, community participation, and predictions. Spend them on badges, raffle entries, and marketplace items.
+                    Premium members earn double Diehard Dollars on ALL site earnings - daily logins, comments, trivia answers, referrals, and any future earning methods. It's automatically applied!
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    Can I cancel anytime?
+                    When do I get my 500 DD monthly grant?
                     <span class="faq-arrow">&#9660;</span>
                 </div>
                 <div class="faq-answer">
-                    Yes! You can cancel your subscription at any time. You'll keep your benefits until the end of your current billing period.
+                    Your monthly grant is awarded on your first daily login of each month. Just log in and claim your daily bonus - you'll get the monthly grant automatically!
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What are exclusive raffles?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    We run special raffles only for Premium members with better prizes like signed memorabilia, game tickets, and exclusive merch. Fewer entrants = better odds!
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    How do private poker games work?
+                    <span class="faq-arrow">&#9660;</span>
+                </div>
+                <div class="faq-answer">
+                    Create a private game, get an invite code, and share with friends. Set your buy-in, blinds, and play Texas Hold'em. After the game, see a settlement summary showing exactly who owes who based on your exchange rate (e.g., 100 DD = $1).
                 </div>
             </div>
 
@@ -268,27 +290,17 @@
                     <span class="faq-arrow">&#9660;</span>
                 </div>
                 <div class="faq-answer">
-                    Diehard Pro members get a custom email address (yourname@phillysports.com) powered by Zoho Mail. It's a real email you can use anywhere!
+                    Get a real email address like yourname@phillysports.com! Use it anywhere, forward to your main email, or access via webmail. It's yours as long as you're a Premium member.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    How does the 2x coin bonus work?
+                    Can I cancel anytime?
                     <span class="faq-arrow">&#9660;</span>
                 </div>
                 <div class="faq-answer">
-                    Premium members earn double Diehard Dollars on their daily login bonus. Free users get 10 DD base + streak bonus, while premium members get 20 DD base + streak bonus.
-                </div>
-            </div>
-
-            <div class="faq-item">
-                <div class="faq-question" onclick="toggleFaq(this)">
-                    Do you offer refunds?
-                    <span class="faq-arrow">&#9660;</span>
-                </div>
-                <div class="faq-answer">
-                    We don't offer refunds for partial billing periods, but you can cancel anytime and keep benefits until your period ends. Contact us for special circumstances.
+                    Yes! Cancel anytime and keep your benefits until the end of your billing period. No commitments, no hassles.
                 </div>
             </div>
         </section>
@@ -301,19 +313,15 @@
     </footer>
 
     <script>
-        // Theme is handled by header.js
-
-        // State
         let currentUser = null;
         let subscriptionStatus = null;
         let billingInterval = 'month';
 
-        // Check auth and subscription status
         async function init() {
             // Check URL params for success/cancel
             const params = new URLSearchParams(window.location.search);
             if (params.get('success') === 'true') {
-                showToast('Subscription activated! Welcome to the club!', 'success');
+                showToast('Welcome to Diehard Premium! Enjoy your benefits!', 'success');
                 window.history.replaceState({}, '', '/membership.html');
             } else if (params.get('canceled') === 'true') {
                 showToast('Checkout canceled', 'error');
@@ -323,41 +331,16 @@
             try {
                 const authRes = await fetch('/api/auth/me');
                 const authData = await authRes.json();
-
                 if (authData.user) {
                     currentUser = authData.user;
-                    updateHeader();
                 }
 
-                // Get subscription status
                 const subRes = await fetch('/api/subscriptions/status');
                 subscriptionStatus = await subRes.json();
 
                 updateUI();
             } catch (e) {
                 console.error('Init error:', e);
-            }
-        }
-
-        function updateHeader() {
-            const headerAuth = document.getElementById('headerAuth');
-            if (currentUser) {
-                const premiumBadge = currentUser.isSubscribed
-                    ? `<a href="/membership.html" class="premium-badge">${currentUser.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                    : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
-                const adminLink = currentUser.isAdmin
-                    ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
-                    : '';
-                headerAuth.innerHTML = `
-                    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" onclick="toggleTheme()">
-                        <span class="theme-icon-light">&#9790;</span>
-                        <span class="theme-icon-dark">&#9728;</span>
-                    </button>
-                    ${premiumBadge}
-                    ${adminLink}
-                    <a href="/profile.html">${currentUser.username}</a>
-                    <a href="#" onclick="logout()">Logout</a>
-                `;
             }
         }
 
@@ -368,18 +351,24 @@
             const statusText = document.getElementById('statusText');
             const manageSection = document.getElementById('manageSection');
             const manageInfo = document.getElementById('manageInfo');
+            const subscribeBtn = document.getElementById('subscribeBtn');
 
-            // Update status banner
-            if (subscriptionStatus.tier !== 'free' && subscriptionStatus.isActive) {
+            // Check if user is premium (handle legacy tiers too)
+            const isPremium = subscriptionStatus.tier === 'premium' ||
+                             subscriptionStatus.tier === 'diehard_plus' ||
+                             subscriptionStatus.tier === 'diehard_pro';
+
+            if (isPremium && subscriptionStatus.isActive) {
+                // Show status banner
                 statusBanner.style.display = 'block';
                 statusBanner.classList.add('premium');
 
                 const endDate = subscriptionStatus.endDate ? new Date(subscriptionStatus.endDate).toLocaleDateString() : '';
 
                 if (subscriptionStatus.status === 'canceling') {
-                    statusText.innerHTML = `You're currently on <strong>${subscriptionStatus.tierName}</strong>. Your subscription will end on ${endDate}.`;
+                    statusText.innerHTML = `You're a <strong>Diehard Premium</strong> member! Your subscription will end on ${endDate}.`;
                 } else {
-                    statusText.innerHTML = `You're currently on <strong>${subscriptionStatus.tierName}</strong>. Next billing date: ${endDate}`;
+                    statusText.innerHTML = `You're a <strong>Diehard Premium</strong> member! Next billing: ${endDate}`;
                 }
 
                 // Show management section
@@ -391,114 +380,48 @@
                 // Show/hide buttons based on status
                 document.getElementById('cancelBtn').style.display = subscriptionStatus.status === 'canceling' ? 'none' : 'inline-block';
                 document.getElementById('reactivateBtn').style.display = subscriptionStatus.status === 'canceling' ? 'inline-block' : 'none';
-            }
 
-            // Update pricing cards
-            updatePricingCards();
-        }
-
-        function updatePricingCards() {
-            const currentTier = subscriptionStatus?.tier || 'free';
-
-            // Reset all cards
-            document.querySelectorAll('.pricing-card').forEach(card => {
-                card.classList.remove('current');
-                const badge = card.querySelector('.current-badge');
-                if (badge) badge.remove();
-            });
-
-            // Mark current tier
-            if (currentTier === 'free') {
-                document.getElementById('freeBtn').textContent = 'Current Plan';
-                document.getElementById('freeBtn').disabled = true;
-                document.getElementById('freeBtn').classList.remove('current');
-            } else if (currentTier === 'diehard_plus') {
-                document.getElementById('plusTier').classList.add('current');
-                document.getElementById('plusTier').classList.remove('popular');
-                const badge = document.querySelector('#plusTier .popular-badge');
-                if (badge) badge.outerHTML = '<span class="current-badge">Current Plan</span>';
-                document.getElementById('plusBtn').textContent = 'Current Plan';
-                document.getElementById('plusBtn').disabled = true;
-                document.getElementById('plusBtn').classList.add('current');
-                document.getElementById('plusBtn').classList.remove('primary');
-
-                // Enable Pro tier button for upgrade
-                document.getElementById('proBtn').textContent = 'Upgrade to Pro';
-                document.getElementById('proBtn').disabled = false;
-                document.getElementById('proBtn').onclick = () => upgradeTier('diehard_pro');
-
-                // Enable free tier button for downgrade info
-                document.getElementById('freeBtn').textContent = 'Downgrade';
-                document.getElementById('freeBtn').disabled = false;
-            } else if (currentTier === 'diehard_pro') {
-                document.getElementById('proTier').classList.add('current');
-                const proTier = document.getElementById('proTier');
-                proTier.insertAdjacentHTML('afterbegin', '<span class="current-badge">Current Plan</span>');
-                document.getElementById('proBtn').textContent = 'Current Plan';
-                document.getElementById('proBtn').disabled = true;
-                document.getElementById('proBtn').classList.add('current');
-                document.getElementById('proBtn').classList.remove('primary');
-
-                // Enable other tiers for downgrade
-                document.getElementById('freeBtn').textContent = 'Cancel';
-                document.getElementById('freeBtn').disabled = false;
-                document.getElementById('freeBtn').onclick = () => downgradeTier('free');
-                document.getElementById('plusBtn').textContent = 'Downgrade to Plus';
-                document.getElementById('plusBtn').disabled = false;
-                document.getElementById('plusBtn').onclick = () => downgradeTier('diehard_plus');
+                // Update subscribe button
+                subscribeBtn.textContent = 'You\'re a Premium Member!';
+                subscribeBtn.classList.add('current');
+                subscribeBtn.disabled = true;
             }
         }
 
         function setBilling(interval) {
             billingInterval = interval;
-
-            document.getElementById('monthlyLabel').classList.toggle('active', interval === 'month');
-            document.getElementById('annualLabel').classList.toggle('active', interval === 'year');
-
-            if (interval === 'year') {
-                document.getElementById('plusPrice').innerHTML = '$44.90<span>/year</span>';
-                document.getElementById('plusAnnual').innerHTML = 'Just $3.74/month <strong>(Save 25%)</strong>';
-                document.getElementById('proPrice').innerHTML = '$89<span>/year</span>';
-                document.getElementById('proAnnual').innerHTML = 'Just $7.42/month <strong>(Save 26%)</strong>';
-            } else {
-                document.getElementById('plusPrice').innerHTML = '$4.99<span>/month</span>';
-                document.getElementById('plusAnnual').innerHTML = 'or $44.90/year <strong>(Save $15)</strong>';
-                document.getElementById('proPrice').innerHTML = '$9.99<span>/month</span>';
-                document.getElementById('proAnnual').innerHTML = 'or $89/year <strong>(Save $31)</strong>';
-            }
+            document.getElementById('monthlyOption').classList.toggle('selected', interval === 'month');
+            document.getElementById('yearlyOption').classList.toggle('selected', interval === 'year');
         }
 
-        async function subscribe(tier) {
+        async function subscribe() {
             if (!currentUser) {
                 window.location.href = '/login.html?redirect=/membership.html';
                 return;
             }
 
-            try {
-                const btn = tier === 'diehard_plus' ? document.getElementById('plusBtn') : document.getElementById('proBtn');
-                btn.disabled = true;
-                btn.textContent = 'Loading...';
+            const btn = document.getElementById('subscribeBtn');
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
 
+            try {
                 const res = await fetch('/api/subscriptions/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({
-                        tier,
+                        tier: 'premium',
                         interval: billingInterval
                     })
                 });
 
                 const data = await res.json();
-                console.log('Checkout response:', data);
 
                 if (!res.ok) {
                     throw new Error(data.error || 'Checkout failed');
                 }
 
                 const redirectUrl = data.checkoutUrl || data.url;
-                console.log('Redirecting to:', redirectUrl);
-
                 if (redirectUrl) {
                     window.location.href = redirectUrl;
                 } else {
@@ -507,74 +430,8 @@
             } catch (e) {
                 console.error('Checkout error:', e);
                 showToast(e.message || 'Failed to start checkout', 'error');
-                // Reset buttons
-                updatePricingCards();
-            }
-        }
-
-        async function upgradeTier(newTier) {
-            const tierNames = { 'diehard_plus': 'Diehard+', 'diehard_pro': 'Diehard Pro' };
-            if (!confirm(`Upgrade to ${tierNames[newTier]}? You'll be charged a prorated amount for the remainder of your billing period.`)) {
-                return;
-            }
-
-            try {
-                const btn = document.getElementById('proBtn');
-                btn.disabled = true;
-                btn.textContent = 'Upgrading...';
-
-                const res = await fetch('/api/subscriptions/upgrade', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ newTier })
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    throw new Error(data.error || 'Upgrade failed');
-                }
-
-                const chargeMsg = data.proratedCharge
-                    ? ` You were charged $${data.proratedCharge.toFixed(2)} for the prorated difference.`
-                    : '';
-                showToast(`Upgraded to ${tierNames[newTier]}!${chargeMsg}`, 'success');
-                setTimeout(() => location.reload(), 2000);
-            } catch (e) {
-                showToast(e.message || 'Failed to upgrade', 'error');
-                updatePricingCards();
-            }
-        }
-
-        async function downgradeTier(newTier) {
-            const tierNames = { 'diehard_plus': 'Diehard+', 'free': 'Free' };
-            const msg = newTier === 'free'
-                ? 'Cancel your subscription? You\'ll keep your benefits until the end of your billing period.'
-                : `Downgrade to ${tierNames[newTier]}? You'll keep Pro benefits until your next billing date, then switch to Plus.`;
-
-            if (!confirm(msg)) {
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/subscriptions/downgrade', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ newTier })
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) {
-                    throw new Error(data.error || 'Downgrade failed');
-                }
-
-                showToast(data.message, 'success');
-                setTimeout(() => location.reload(), 2000);
-            } catch (e) {
-                showToast(e.message || 'Failed to downgrade', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Get Diehard Premium';
             }
         }
 
@@ -645,11 +502,6 @@
             el.parentElement.classList.toggle('open');
         }
 
-        async function logout() {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            window.location.href = '/';
-        }
-
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -658,28 +510,9 @@
             setTimeout(() => toast.style.display = 'none', 4000);
         }
 
-        // Initialize
         init();
     </script>
-<!-- Feedback Modal -->
-<div class="feedback-modal-overlay" id="feedbackModalOverlay">
-    <div class="feedback-modal">
-        <button class="feedback-modal-close" id="feedbackModalClose">&times;</button>
-        <h3>Report an Issue</h3>
-        <form id="feedbackForm">
-            <div class="feedback-type-group">
-                <label class="feedback-type-option selected"><input type="radio" name="feedbackType" value="bug" checked><span>Bug Report</span></label>
-                <label class="feedback-type-option"><input type="radio" name="feedbackType" value="feature"><span>Feature Request</span></label>
-            </div>
-            <textarea class="feedback-textarea" name="description" placeholder="Please describe the issue or feature in detail..." required minlength="10" maxlength="2000"></textarea>
-            <button type="submit" class="feedback-submit">Submit</button>
-        </form>
-        <div class="feedback-reward">Earn <span>100 Diehard Dollars</span> for each submission!</div>
-    </div>
-</div>
-<script>
-(function(){const o=document.getElementById('feedbackModalOverlay'),f=document.getElementById('feedbackForm'),c=document.getElementById('feedbackModalClose'),t=document.querySelectorAll('.feedback-type-option');window.openFeedbackModal=function(){o.classList.add('active');document.body.style.overflow='hidden'};function close(){o.classList.remove('active');document.body.style.overflow=''}c.addEventListener('click',close);o.addEventListener('click',function(e){if(e.target===o)close()});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&o.classList.contains('active'))close()});t.forEach(opt=>{opt.addEventListener('click',function(){t.forEach(x=>x.classList.remove('selected'));this.classList.add('selected')})});f.addEventListener('submit',async function(e){e.preventDefault();const btn=f.querySelector('.feedback-submit'),orig=btn.textContent;btn.disabled=true;btn.textContent='Submitting...';try{const fd=new FormData(f),res=await fetch('/api/feedback/submit',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({type:fd.get('feedbackType'),description:fd.get('description'),page:window.location.pathname})});const data=await res.json();if(res.ok){document.querySelector('.feedback-modal').innerHTML='<button class="feedback-modal-close" onclick="document.getElementById(\'feedbackModalOverlay\').classList.remove(\'active\');document.body.style.overflow=\'\';location.reload()">×</button><div class="feedback-success"><h4>Thank You!</h4><p>'+data.message+'</p>'+(data.coinsAwarded>0?'<p style="color:#b8860b;font-weight:600">+'+data.coinsAwarded+' Diehard Dollars earned!</p>':'')+(data.isLoggedIn?'':'<p style="font-size:0.85rem;color:var(--text-muted)">Log in to earn rewards!</p>')+'</div>'}else{alert(data.error||'Failed');btn.disabled=false;btn.textContent=orig}}catch(err){alert('Error submitting');btn.disabled=false;btn.textContent=orig}})})();
-</script>
+
     <!-- Live Ticker -->
     <script src="/js/live-ticker.js"></script>
 </body>

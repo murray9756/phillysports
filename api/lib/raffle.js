@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from './mongodb.js';
 import { addCoins, spendCoins } from './coins.js';
+import { getUserBenefits } from './subscriptions.js';
 
 // Default configuration
 export const DEFAULT_TICKET_PRICE = 10;
@@ -181,6 +182,14 @@ export async function purchaseTickets(userId, raffleId, quantity) {
     // Get user
     const user = await users.findOne({ _id: userIdObj });
     if (!user) throw new Error('User not found');
+
+    // Check if raffle is premium-only
+    if (raffle.isPremiumOnly) {
+        const benefits = await getUserBenefits(userIdObj);
+        if (!benefits.exclusiveRaffles) {
+            throw new Error('This raffle is exclusive to Diehard Premium members');
+        }
+    }
 
     // Check max tickets per user
     if (raffle.maxTicketsPerUser) {

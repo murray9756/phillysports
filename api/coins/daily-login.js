@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
-import { addCoins, DAILY_LOGIN_BASE, STREAK_BONUS_PER_DAY, MAX_STREAK_BONUS } from '../lib/coins.js';
+import { addCoins, grantCoins, DAILY_LOGIN_BASE, STREAK_BONUS_PER_DAY, MAX_STREAK_BONUS } from '../lib/coins.js';
 import { rateLimit } from '../lib/rateLimit.js';
-import { getDailyCoinMultiplier } from '../lib/subscriptions.js';
+import { getSubscriptionStatus, getUserBenefits } from '../lib/subscriptions.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -61,14 +61,40 @@ export default async function handler(req, res) {
         }
         // else: streak resets to 1
 
-        // Calculate bonus with premium multiplier
+        // Get subscription status and benefits
+        const subscriptionStatus = await getSubscriptionStatus(decoded.userId);
+        const benefits = subscriptionStatus?.benefits || { coinMultiplier: 1, monthlyBonusCoins: 0 };
+        const isPremium = subscriptionStatus?.isPremium || false;
+        const multiplier = benefits.coinMultiplier || 1;
+
+        // Calculate bonus (multiplier is now applied by addCoins)
         const streakBonus = Math.min((newStreak - 1) * STREAK_BONUS_PER_DAY, MAX_STREAK_BONUS);
         const baseTotal = DAILY_LOGIN_BASE + streakBonus;
 
-        // Get premium multiplier (2x for Diehard+ and Diehard Pro)
-        const multiplier = await getDailyCoinMultiplier(decoded.userId);
-        const totalBonus = baseTotal * multiplier;
-        const isPremium = multiplier > 1;
+        // Check if user qualifies for monthly bonus (premium only)
+        let monthlyBonusAwarded = 0;
+        if (isPremium && benefits.monthlyBonusCoins > 0) {
+            const currentMonth = now.toISOString().slice(0, 7); // "2026-01"
+            const lastMonthlyBonus = user.lastMonthlyBonus;
+
+            if (lastMonthlyBonus !== currentMonth) {
+                // Award monthly bonus (no multiplier on grants)
+                await grantCoins(
+                    decoded.userId,
+                    benefits.monthlyBonusCoins,
+                    'monthly_bonus',
+                    'Monthly Premium Bonus',
+                    { month: currentMonth }
+                );
+                monthlyBonusAwarded = benefits.monthlyBonusCoins;
+
+                // Update last monthly bonus timestamp
+                await users.updateOne(
+                    { _id: new ObjectId(decoded.userId) },
+                    { $set: { lastMonthlyBonus: currentMonth } }
+                );
+            }
+        }
 
         // Update user streak info
         await users.updateOne(
@@ -82,24 +108,33 @@ export default async function handler(req, res) {
             }
         );
 
-        // Award coins
-        const newBalance = await addCoins(
+        // Award daily login coins (multiplier applied by addCoins)
+        const loginResult = await addCoins(
             decoded.userId,
-            totalBonus,
+            baseTotal,
             'daily_login',
             `Daily login bonus (Day ${newStreak})`,
             { streak: newStreak, baseBonus: DAILY_LOGIN_BASE, streakBonus }
         );
 
+        const totalEarned = loginResult.amountEarned + monthlyBonusAwarded;
+
         res.status(200).json({
-            message: isPremium ? 'Premium daily bonus claimed!' : 'Daily bonus claimed!',
-            coinsEarned: totalBonus,
+            message: monthlyBonusAwarded > 0
+                ? 'Premium daily bonus + Monthly bonus claimed!'
+                : (isPremium ? 'Premium daily bonus claimed!' : 'Daily bonus claimed!'),
+            coinsEarned: totalEarned,
+            dailyBonus: loginResult.amountEarned,
             baseBonus: DAILY_LOGIN_BASE,
             streakBonus,
-            premiumMultiplier: multiplier,
+            premiumMultiplier: loginResult.multiplier,
             isPremium,
+            monthlyBonus: monthlyBonusAwarded > 0 ? {
+                amount: monthlyBonusAwarded,
+                message: `${monthlyBonusAwarded} DD Monthly Premium Grant!`
+            } : null,
             streak: newStreak,
-            newBalance,
+            newBalance: loginResult.newBalance,
             nextClaimAt: new Date(today.getTime() + 24 * 60 * 60 * 1000).toISOString()
         });
     } catch (error) {

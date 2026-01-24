@@ -34,7 +34,8 @@ export default async function handler(req, res) {
                 maxTicketsPerUser: r.maxTicketsPerUser,
                 totalTicketsSold: r.totalTicketsSold || 0,
                 drawDate: r.drawDate,
-                status: r.status
+                status: r.status,
+                isPremiumOnly: r.isPremiumOnly || false
             })),
             count: activeRaffles.length
         });

@@ -1,65 +1,75 @@
 // Subscription Management Library
-// Handles Diehard+ and Diehard Pro membership tiers
+// Handles Diehard Premium membership (single tier)
 
 import { ObjectId } from 'mongodb';
 import { getCollection } from './mongodb.js';
 import { getStripeInstance } from './payments/stripe.js';
 
-// Subscription tiers
+// Subscription tiers - simplified to just Free and Premium
 export const SUBSCRIPTION_TIERS = {
     FREE: 'free',
-    DIEHARD_PLUS: 'diehard_plus',
-    DIEHARD_PRO: 'diehard_pro'
+    PREMIUM: 'premium',
+    // Legacy mappings for existing users
+    DIEHARD_PLUS: 'premium',
+    DIEHARD_PRO: 'premium'
 };
 
 // Tier benefits
 export const TIER_BENEFITS = {
-    [SUBSCRIPTION_TIERS.FREE]: {
+    free: {
         name: 'Free',
         price: 0,
-        dailyCoinMultiplier: 1,
-        adFree: false,
-        exclusiveBadges: false,
-        earlyRaffleAccess: false,
-        exclusiveForums: false,
-        priorityPoker: false,
-        monthlyMerchDiscount: null,
-        customEmail: false
+        coinMultiplier: 1,              // 1x on all earnings
+        monthlyBonusCoins: 0,           // No monthly grant
+        freeContestEntriesPerWeek: 0,   // No free contest entries
+        exclusiveRaffles: false,        // No exclusive raffles
+        premiumBadge: false,            // No premium badge
+        noSellerFees: false,            // Pay 5% seller fee
+        customEmail: false,             // No @phillysports.com email
+        canCreatePrivatePoker: false,   // Cannot create private poker games
+        adFree: false
     },
-    [SUBSCRIPTION_TIERS.DIEHARD_PLUS]: {
-        name: 'Diehard+',
-        priceMonthly: 499, // cents
-        priceAnnual: 4490, // cents ($44.90/year = ~$3.74/mo)
-        dailyCoinMultiplier: 2,
-        adFree: true,
-        exclusiveBadges: true,
-        earlyRaffleAccess: true,
-        exclusiveForums: false,
-        priorityPoker: false,
-        monthlyMerchDiscount: null,
-        customEmail: false
+    premium: {
+        name: 'Diehard Premium',
+        priceMonthly: 499,              // $4.99/month
+        priceYearly: 3999,              // $39.99/year (~33% savings)
+        coinMultiplier: 2,              // 2x on ALL earnings (login, comments, trivia, referrals)
+        monthlyBonusCoins: 500,         // 500 DD monthly grant
+        freeContestEntriesPerWeek: 1,   // 1 free premium contest entry per week
+        exclusiveRaffles: true,         // Access to premium-only raffles
+        premiumBadge: true,             // Gold premium badge
+        noSellerFees: true,             // No marketplace seller fees
+        customEmail: true,              // @phillysports.com email
+        canCreatePrivatePoker: true,    // Can create/host private poker games
+        adFree: true
     },
-    [SUBSCRIPTION_TIERS.DIEHARD_PRO]: {
-        name: 'Diehard Pro',
-        priceMonthly: 999, // cents
-        priceAnnual: 8900, // cents ($89/year = ~$7.42/mo)
-        dailyCoinMultiplier: 2,
-        adFree: true,
-        exclusiveBadges: true,
-        earlyRaffleAccess: true,
-        exclusiveForums: true,
-        priorityPoker: true,
-        monthlyMerchDiscount: 10, // 10% off
-        customEmail: true // @phillysports.com
-    }
+    // Legacy tier mappings (redirect to premium benefits)
+    diehard_plus: null,  // Mapped to premium
+    diehard_pro: null    // Mapped to premium
 };
 
-// Stripe Price IDs (set these in environment variables after creating products in Stripe)
+// Helper to get actual benefits (handles legacy tier names)
+export function getTierBenefits(tier) {
+    // Normalize tier name
+    const normalizedTier = tier?.toLowerCase() || 'free';
+
+    // Legacy tier mapping
+    if (normalizedTier === 'diehard_plus' || normalizedTier === 'diehard_pro') {
+        return TIER_BENEFITS.premium;
+    }
+
+    return TIER_BENEFITS[normalizedTier] || TIER_BENEFITS.free;
+}
+
+// Stripe Price IDs (single product with monthly/yearly options)
 const STRIPE_PRICE_IDS = {
-    diehard_plus_monthly: process.env.STRIPE_PRICE_DIEHARD_PLUS_MONTHLY,
-    diehard_plus_annual: process.env.STRIPE_PRICE_DIEHARD_PLUS_ANNUAL,
-    diehard_pro_monthly: process.env.STRIPE_PRICE_DIEHARD_PRO_MONTHLY,
-    diehard_pro_annual: process.env.STRIPE_PRICE_DIEHARD_PRO_ANNUAL
+    premium_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
+    premium_yearly: process.env.STRIPE_PRICE_PREMIUM_YEARLY,
+    // Legacy support
+    diehard_plus_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
+    diehard_plus_annual: process.env.STRIPE_PRICE_PREMIUM_YEARLY,
+    diehard_pro_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
+    diehard_pro_annual: process.env.STRIPE_PRICE_PREMIUM_YEARLY
 };
 
 /**
@@ -86,8 +96,10 @@ export async function getSubscriptionStatus(userId) {
 
     if (!user) return null;
 
-    const tier = user.subscriptionTier || SUBSCRIPTION_TIERS.FREE;
-    const benefits = TIER_BENEFITS[tier];
+    const rawTier = user.subscriptionTier || 'free';
+    // Normalize legacy tiers to 'premium'
+    const tier = (rawTier === 'diehard_plus' || rawTier === 'diehard_pro') ? 'premium' : rawTier;
+    const benefits = getTierBenefits(tier);
 
     return {
         tier,
@@ -97,7 +109,8 @@ export async function getSubscriptionStatus(userId) {
         endDate: user.subscriptionEndDate,
         interval: user.subscriptionInterval,
         benefits,
-        isActive: user.subscriptionStatus === 'active' || tier === SUBSCRIPTION_TIERS.FREE
+        isActive: user.subscriptionStatus === 'active' || tier === 'free',
+        isPremium: tier === 'premium' && user.subscriptionStatus === 'active'
     };
 }
 
@@ -178,7 +191,9 @@ export async function activateSubscription(userId, subscriptionData) {
     const users = await getCollection('users');
     const userIdObj = typeof userId === 'string' ? new ObjectId(userId) : userId;
 
-    const tier = subscriptionData.metadata?.tier || SUBSCRIPTION_TIERS.DIEHARD_PLUS;
+    // Always use 'premium' tier now (normalize legacy tiers)
+    const rawTier = subscriptionData.metadata?.tier || 'premium';
+    const tier = (rawTier === 'diehard_plus' || rawTier === 'diehard_pro') ? 'premium' : rawTier;
     const interval = subscriptionData.items?.data[0]?.price?.recurring?.interval || 'month';
 
     await users.updateOne(
@@ -198,7 +213,7 @@ export async function activateSubscription(userId, subscriptionData) {
 
     // Award premium badge if not already awarded
     const badges = await getCollection('user_badges');
-    const badgeName = tier === SUBSCRIPTION_TIERS.DIEHARD_PRO ? 'Diehard Pro' : 'Diehard+';
+    const badgeName = 'Diehard Premium';
 
     const existingBadge = await badges.findOne({
         userId: userIdObj,
@@ -249,7 +264,7 @@ export async function expireSubscription(userId) {
         { _id: userIdObj },
         {
             $set: {
-                subscriptionTier: SUBSCRIPTION_TIERS.FREE,
+                subscriptionTier: 'free',
                 subscriptionStatus: 'expired',
                 stripeSubscriptionId: null,
                 updatedAt: new Date()
@@ -257,7 +272,7 @@ export async function expireSubscription(userId) {
         }
     );
 
-    return { tier: SUBSCRIPTION_TIERS.FREE, status: 'expired' };
+    return { tier: 'free', status: 'expired' };
 }
 
 /**
@@ -326,13 +341,16 @@ export async function reactivateSubscription(userId) {
 }
 
 /**
- * Get daily coin multiplier for user
+ * Get coin multiplier for user (applies to ALL earnings)
  */
-export async function getDailyCoinMultiplier(userId) {
+export async function getCoinMultiplier(userId) {
     const status = await getSubscriptionStatus(userId);
     if (!status || !status.isActive) return 1;
-    return status.benefits.dailyCoinMultiplier;
+    return status.benefits.coinMultiplier || 1;
 }
+
+// Alias for backward compatibility
+export const getDailyCoinMultiplier = getCoinMultiplier;
 
 /**
  * Check if user has specific benefit
@@ -341,6 +359,23 @@ export async function hasBenefit(userId, benefit) {
     const status = await getSubscriptionStatus(userId);
     if (!status || !status.isActive) return false;
     return status.benefits[benefit] === true;
+}
+
+/**
+ * Get all benefits for a user
+ */
+export async function getUserBenefits(userId) {
+    const status = await getSubscriptionStatus(userId);
+    if (!status || !status.isActive) return getTierBenefits('free');
+    return status.benefits;
+}
+
+/**
+ * Check if user is a premium subscriber
+ */
+export async function isPremiumUser(userId) {
+    const status = await getSubscriptionStatus(userId);
+    return status?.isPremium || false;
 }
 
 /**

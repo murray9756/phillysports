@@ -59,6 +59,7 @@ export default async function handler(req, res) {
                 totalTicketsSold: raffle.totalTicketsSold || 0,
                 drawDate: raffle.drawDate,
                 status: raffle.status,
+                isPremiumOnly: raffle.isPremiumOnly || false,
                 winnerId: raffle.winnerId?.toString() || null,
                 winnerUsername: raffle.winnerUsername || null
             },

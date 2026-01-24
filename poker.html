@@ -229,8 +229,26 @@
                 <a href="/login.html" class="btn btn-primary">Login to Play</a>
             </div>
 
-            <!-- Cash Games -->
+            <!-- Private Games (Premium Feature) -->
             <div class="section-header">
+                <h2 class="section-title"><span>&#127183;</span> Private Games</h2>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <button class="btn btn-secondary" onclick="showJoinPrivateModal()" style="padding: 0.5rem 0.75rem; font-size: 0.8rem;">Join Game</button>
+                    <button class="btn btn-primary" id="createPrivateBtn" onclick="showCreatePrivateModal()" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; display: none;">
+                        <span style="color: #ffd700;">&#11088;</span> Create Game
+                    </button>
+                </div>
+            </div>
+            <div class="tournament-grid" id="privateGamesGrid">
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <div class="empty-state-icon">&#127183;</div>
+                    <h3>No Private Games</h3>
+                    <p id="privateGamesMessage">Create a private game to play with friends!</p>
+                </div>
+            </div>
+
+            <!-- Cash Games -->
+            <div class="section-header" style="margin-top: 2rem;">
                 <h2 class="section-title"><span>&#128176;</span> Cash Games - Heads Up</h2>
                 <span style="color: var(--text-muted); font-size: 0.85rem;">10/20 Blinds | 1,000 DD Buy-in</span>
             </div>
@@ -301,6 +319,87 @@
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-primary" id="modalConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Private Game Modal -->
+    <div class="modal-overlay" id="createPrivateModal">
+        <div class="modal" style="max-width: 450px;">
+            <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span style="color: #ffd700;">&#11088;</span> Create Private Game</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Host a private poker game for you and your friends. Share the invite code to let them join!</p>
+            <form id="createPrivateForm">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">Game Name</label>
+                    <input type="text" name="gameName" placeholder="e.g., Eagles Watch Party" required maxlength="40" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 0.9rem;">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">Max Players</label>
+                        <select name="maxPlayers" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 0.9rem;">
+                            <option value="2">2 Players</option>
+                            <option value="4">4 Players</option>
+                            <option value="6" selected>6 Players</option>
+                            <option value="8">8 Players</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">Buy-In (DD)</label>
+                        <input type="number" name="buyIn" value="100" min="0" max="10000" step="10" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 0.9rem;">
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">Small Blind</label>
+                        <input type="number" name="smallBlind" value="5" min="1" max="100" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">Big Blind</label>
+                        <input type="number" name="bigBlind" value="10" min="2" max="200" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 0.9rem;">
+                    </div>
+                </div>
+                <div style="background: rgba(255,215,0,0.1); border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem;">
+                    <strong style="color: #ffd700;">Settlement Tracking:</strong> After the game, you'll see a summary of who owes who based on the DD exchange rate you set with friends.
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCreatePrivateModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Game</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Join Private Game Modal -->
+    <div class="modal-overlay" id="joinPrivateModal">
+        <div class="modal">
+            <h3>Join Private Game</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Enter the invite code shared by the game host.</p>
+            <form id="joinPrivateForm">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">Invite Code</label>
+                    <input type="text" name="inviteCode" placeholder="e.g., ABC123" required maxlength="10" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 1.2rem; text-transform: uppercase; text-align: center; letter-spacing: 4px;">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeJoinPrivateModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Join Game</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invite Code Display Modal -->
+    <div class="modal-overlay" id="inviteCodeModal">
+        <div class="modal" style="text-align: center;">
+            <h3 style="color: var(--poker-green);">&#127881; Game Created!</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Share this invite code with your friends:</p>
+            <div style="background: var(--dark-bg); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+                <div id="inviteCodeDisplay" style="font-size: 2.5rem; font-weight: 800; letter-spacing: 8px; color: var(--gold);"></div>
+            </div>
+            <button class="btn btn-secondary" onclick="copyInviteCode()" style="margin-bottom: 1rem;">
+                &#128203; Copy Code
+            </button>
+            <div class="modal-actions" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="closeInviteCodeModal()">Got It</button>
             </div>
         </div>
     </div>
@@ -680,8 +779,284 @@
             );
         }
 
+        // ========== PRIVATE GAMES ==========
+        let userIsPremium = false;
+
+        async function checkPremiumStatus() {
+            try {
+                const response = await fetch('/api/subscriptions/status');
+                const data = await response.json();
+                userIsPremium = data.isPremium ||
+                    data.tier === 'premium' ||
+                    data.tier === 'diehard_plus' ||
+                    data.tier === 'diehard_pro';
+
+                if (userIsPremium) {
+                    document.getElementById('createPrivateBtn').style.display = 'inline-flex';
+                }
+            } catch (e) {
+                console.log('Could not check premium status');
+            }
+        }
+
+        function showCreatePrivateModal() {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+            if (!userIsPremium) {
+                alert('Creating private games is a Premium member feature. Upgrade to unlock!');
+                window.location.href = '/membership.html';
+                return;
+            }
+            document.getElementById('createPrivateModal').classList.add('active');
+        }
+
+        function closeCreatePrivateModal() {
+            document.getElementById('createPrivateModal').classList.remove('active');
+        }
+
+        function showJoinPrivateModal() {
+            if (!currentUser) {
+                window.location.href = '/login.html';
+                return;
+            }
+            document.getElementById('joinPrivateModal').classList.add('active');
+        }
+
+        function closeJoinPrivateModal() {
+            document.getElementById('joinPrivateModal').classList.remove('active');
+        }
+
+        function closeInviteCodeModal() {
+            document.getElementById('inviteCodeModal').classList.remove('active');
+            loadPrivateGames();
+        }
+
+        function copyInviteCode() {
+            const code = document.getElementById('inviteCodeDisplay').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Invite code copied!');
+            });
+        }
+
+        // Create Private Game Form Handler
+        document.getElementById('createPrivateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/api/poker/private/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        name: formData.get('gameName'),
+                        maxPlayers: parseInt(formData.get('maxPlayers')),
+                        buyIn: parseInt(formData.get('buyIn')),
+                        smallBlind: parseInt(formData.get('smallBlind')),
+                        bigBlind: parseInt(formData.get('bigBlind'))
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    closeCreatePrivateModal();
+                    document.getElementById('inviteCodeDisplay').textContent = data.inviteCode;
+                    document.getElementById('inviteCodeModal').classList.add('active');
+                    form.reset();
+                } else {
+                    alert(data.error || 'Failed to create game');
+                }
+            } catch (error) {
+                alert('Failed to create game. Please try again.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Game';
+        });
+
+        // Join Private Game Form Handler
+        document.getElementById('joinPrivateForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Joining...';
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/api/poker/private/join', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        inviteCode: formData.get('inviteCode').toUpperCase().trim()
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    closeJoinPrivateModal();
+                    loadPrivateGames();
+                    form.reset();
+                    alert(`Joined "${data.gameName}"!`);
+                } else {
+                    alert(data.error || 'Failed to join game');
+                }
+            } catch (error) {
+                alert('Failed to join game. Please try again.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Join Game';
+        });
+
+        // Load Private Games
+        async function loadPrivateGames() {
+            const grid = document.getElementById('privateGamesGrid');
+
+            if (!currentUser) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">&#127183;</div>
+                        <h3>Login to Play</h3>
+                        <p>Login to create or join private games with friends</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/poker/private/my-games');
+                const data = await response.json();
+
+                if (data.success && data.games.length > 0) {
+                    grid.innerHTML = data.games.map(g => renderPrivateGame(g)).join('');
+                } else {
+                    const premiumMessage = userIsPremium
+                        ? 'Create a private game to play with friends!'
+                        : '<a href="/membership.html" style="color: #ffd700;">Upgrade to Premium</a> to create games, or enter an invite code to join.';
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <div class="empty-state-icon">&#127183;</div>
+                            <h3>No Private Games</h3>
+                            <p>${premiumMessage}</p>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">&#9888;</div>
+                        <h3>Unable to Load</h3>
+                        <p>Please try refreshing the page</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderPrivateGame(g) {
+            const isHost = g.createdBy === currentUser._id || g.createdBy === currentUser.id;
+            const statusClass = g.status === 'waiting' ? 'status-registration' :
+                               g.status === 'in_progress' ? 'status-running' : 'status-completed';
+            const statusText = g.status === 'waiting' ? 'Waiting' :
+                              g.status === 'in_progress' ? 'In Progress' : 'Finished';
+
+            let actionButton = '';
+            if (g.status === 'waiting') {
+                if (isHost) {
+                    actionButton = `
+                        <button class="btn btn-primary" onclick="startPrivateGame('${g._id}')" ${g.playerCount < 2 ? 'disabled' : ''}>
+                            Start Game ${g.playerCount < 2 ? '(Need 2+)' : ''}
+                        </button>
+                    `;
+                } else {
+                    actionButton = `<span style="color: var(--text-muted); font-size: 0.85rem;">Waiting for host to start...</span>`;
+                }
+            } else if (g.status === 'in_progress') {
+                actionButton = `<a href="/poker-table.html?private=${g._id}" class="btn btn-primary">Join Table</a>`;
+            } else {
+                actionButton = `<button class="btn btn-secondary" onclick="viewSettlement('${g._id}')">View Settlement</button>`;
+            }
+
+            return `
+                <div class="tournament-card">
+                    <div class="tournament-header" style="background: linear-gradient(135deg, #b8860b, #8b6914);">
+                        <div class="tournament-name">${g.name}</div>
+                        <div class="tournament-type">${isHost ? 'Host' : 'Player'}</div>
+                    </div>
+                    <div class="tournament-body">
+                        <div class="tournament-stats">
+                            <div class="tournament-stat">
+                                <div class="stat-value">${g.settings.buyIn || 'Free'}</div>
+                                <div class="stat-label">Buy-In</div>
+                            </div>
+                            <div class="tournament-stat">
+                                <div class="stat-value">${g.settings.smallBlind}/${g.settings.bigBlind}</div>
+                                <div class="stat-label">Blinds</div>
+                            </div>
+                            <div class="tournament-stat">
+                                <div class="stat-value">${g.playerCount}/${g.settings.maxPlayers}</div>
+                                <div class="stat-label">Players</div>
+                            </div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-info-row">
+                                <span>Status</span>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                            ${g.status === 'waiting' && isHost ? `
+                            <div class="tournament-info-row">
+                                <span>Invite Code</span>
+                                <span style="font-family: monospace; font-weight: bold; color: var(--gold);">${g.inviteCode}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="tournament-actions">
+                            ${actionButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function startPrivateGame(gameId) {
+            if (!confirm('Start the game? No more players can join once started.')) return;
+
+            try {
+                const response = await fetch(`/api/poker/private/${gameId}/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = `/poker-table.html?private=${gameId}`;
+                } else {
+                    alert(data.error || 'Failed to start game');
+                }
+            } catch (e) {
+                alert('Failed to start game. Please try again.');
+            }
+        }
+
+        async function viewSettlement(gameId) {
+            window.location.href = `/poker-settlement.html?game=${gameId}`;
+        }
+
         // Initialize
         checkAuth().then(() => {
+            checkPremiumStatus();
+            loadPrivateGames();
             loadCashGames();
             loadTournaments();
         });

@@ -65,6 +65,12 @@ export default async function handler(req, res) {
         if (error.message === 'Raffle is not active') {
             return res.status(400).json({ error: 'This raffle is no longer accepting tickets' });
         }
+        if (error.message.includes('exclusive to Diehard Premium')) {
+            return res.status(403).json({
+                error: 'This raffle is exclusive to Diehard Premium members',
+                upgradeCta: true
+            });
+        }
         if (error.message.includes('Maximum')) {
             return res.status(400).json({ error: error.message });
         }

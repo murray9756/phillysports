@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from './mongodb.js';
+import { getCoinMultiplier } from './subscriptions.js';
 
 // Earning limits
 export const DAILY_COMMENT_COIN_LIMIT = 50;
@@ -10,20 +11,41 @@ export const MAX_STREAK_BONUS = 35;
 
 /**
  * Add coins to a user's balance
+ * @param {string|ObjectId} userId - User ID
+ * @param {number} amount - Base amount to add
+ * @param {string} category - Category of earning (e.g., 'daily_login', 'comment', 'trivia')
+ * @param {string} description - Human-readable description
+ * @param {object} metadata - Additional metadata
+ * @param {object} options - Options
+ * @param {boolean} options.skipMultiplier - Skip premium multiplier (default: false)
  */
-export async function addCoins(userId, amount, category, description, metadata = {}) {
+export async function addCoins(userId, amount, category, description, metadata = {}, options = {}) {
     const users = await getCollection('users');
     const transactions = await getCollection('transactions');
 
     const userIdObj = typeof userId === 'string' ? new ObjectId(userId) : userId;
+
+    // Apply premium multiplier (2x for premium members) unless skipped
+    let finalAmount = amount;
+    let multiplier = 1;
+
+    if (!options.skipMultiplier && amount > 0) {
+        try {
+            multiplier = await getCoinMultiplier(userId);
+            finalAmount = Math.floor(amount * multiplier);
+        } catch (e) {
+            // If subscription check fails, use base amount
+            console.error('Failed to get coin multiplier:', e.message);
+        }
+    }
 
     // Update user balance atomically
     const result = await users.findOneAndUpdate(
         { _id: userIdObj },
         {
             $inc: {
-                coinBalance: amount,
-                lifetimeCoins: amount > 0 ? amount : 0
+                coinBalance: finalAmount,
+                lifetimeCoins: finalAmount > 0 ? finalAmount : 0
             },
             $set: { updatedAt: new Date() }
         },
@@ -32,19 +54,21 @@ export async function addCoins(userId, amount, category, description, metadata =
 
     if (!result) throw new Error('User not found');
 
-    // Log transaction
+    // Log transaction with multiplier info
     await transactions.insertOne({
         userId: userIdObj,
-        type: amount > 0 ? 'earn' : 'adjustment',
+        type: finalAmount > 0 ? 'earn' : 'adjustment',
         category,
-        amount,
+        amount: finalAmount,
+        baseAmount: amount,
+        multiplier,
         balance: result.coinBalance,
-        description,
-        metadata,
+        description: multiplier > 1 ? `${description} (${multiplier}x Premium Bonus)` : description,
+        metadata: { ...metadata, multiplierApplied: multiplier > 1 },
         createdAt: new Date()
     });
 
-    return result.coinBalance;
+    return { newBalance: result.coinBalance, amountEarned: finalAmount, multiplier };
 }
 
 /**
@@ -290,7 +314,7 @@ export async function getDailyEarnings(userId, category) {
 }
 
 /**
- * Admin award coins
+ * Admin award coins (no multiplier applied)
  */
 export async function adminAwardCoins(adminUserId, targetUserId, amount, note) {
     const users = await getCollection('users');
@@ -303,7 +327,7 @@ export async function adminAwardCoins(adminUserId, targetUserId, amount, note) {
     const admin = await users.findOne({ _id: adminId });
     if (!admin?.isAdmin) throw new Error('Admin access required');
 
-    // Award coins
+    // Award coins (no multiplier for admin awards)
     const result = await users.findOneAndUpdate(
         { _id: targetId },
         {
@@ -324,11 +348,27 @@ export async function adminAwardCoins(adminUserId, targetUserId, amount, note) {
         type: 'admin_award',
         category: 'admin',
         amount,
+        baseAmount: amount,
+        multiplier: 1, // Admin awards don't get multiplier
         balance: result.coinBalance,
         description: `Admin award: ${note}`,
-        metadata: { adminUserId: adminId, adminNote: note },
+        metadata: { adminUserId: adminId, adminNote: note, multiplierApplied: false },
         createdAt: new Date()
     });
 
     return result.coinBalance;
+}
+
+/**
+ * Add coins with premium multiplier (convenience wrapper)
+ */
+export async function earnCoins(userId, amount, category, description, metadata = {}) {
+    return addCoins(userId, amount, category, description, metadata, { skipMultiplier: false });
+}
+
+/**
+ * Add coins WITHOUT premium multiplier (for admin awards, monthly grants, etc.)
+ */
+export async function grantCoins(userId, amount, category, description, metadata = {}) {
+    return addCoins(userId, amount, category, description, metadata, { skipMultiplier: true });
 }

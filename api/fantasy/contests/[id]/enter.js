@@ -1,7 +1,32 @@
 // Fantasy Contest Entry - Submit Lineup
 import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
+import { getUserBenefits } from '../../../lib/subscriptions.js';
 import { ObjectId } from 'mongodb';
+
+// Helper to get start of current week (Sunday)
+function getWeekStart() {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - dayOfWeek);
+    weekStart.setHours(0, 0, 0, 0);
+    return weekStart;
+}
+
+// Helper to get free entries used this week
+async function getFreeEntriesThisWeek(userId) {
+    const entries = await getCollection('fantasy_entries');
+    const weekStart = getWeekStart();
+
+    const count = await entries.countDocuments({
+        userId: typeof userId === 'string' ? new ObjectId(userId) : userId,
+        usedFreeEntry: true,
+        createdAt: { $gte: weekStart }
+    });
+
+    return count;
+}
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -121,20 +146,40 @@ export default async function handler(req, res) {
             });
         }
 
-        // Check entry fee
+        // Check entry fee and free entry eligibility
         const usersCollection = await getCollection('users');
+        let usedFreeEntry = false;
+        let entryFeeDeducted = 0;
+
         if (contest.entryFee > 0) {
-            if ((user.coinBalance || 0) < contest.entryFee) {
-                return res.status(400).json({
-                    error: `Insufficient Diehard Dollars. Required: ${contest.entryFee}, Balance: ${user.coinBalance || 0}`
-                });
+            // Check if user has free entries available (premium perk)
+            const benefits = await getUserBenefits(user._id || user.userId);
+            const freeEntriesAllowed = benefits.freeContestEntriesPerWeek || 0;
+
+            if (freeEntriesAllowed > 0) {
+                const freeEntriesUsed = await getFreeEntriesThisWeek(user._id || user.userId);
+
+                if (freeEntriesUsed < freeEntriesAllowed) {
+                    // Use free entry
+                    usedFreeEntry = true;
+                }
             }
 
-            // Deduct entry fee
-            await usersCollection.updateOne(
-                { _id: user._id },
-                { $inc: { coinBalance: -contest.entryFee } }
-            );
+            if (!usedFreeEntry) {
+                // Regular entry - deduct coins
+                if ((user.coinBalance || 0) < contest.entryFee) {
+                    return res.status(400).json({
+                        error: `Insufficient Diehard Dollars. Required: ${contest.entryFee}, Balance: ${user.coinBalance || 0}`
+                    });
+                }
+
+                // Deduct entry fee
+                await usersCollection.updateOne(
+                    { _id: user._id },
+                    { $inc: { coinBalance: -contest.entryFee } }
+                );
+                entryFeeDeducted = contest.entryFee;
+            }
         }
 
         // Create entry
@@ -148,6 +193,8 @@ export default async function handler(req, res) {
             playerPoints: [],
             finalRank: null,
             payout: 0,
+            usedFreeEntry,
+            entryFeeDeducted,
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -166,7 +213,10 @@ export default async function handler(req, res) {
                 _id: result.insertedId,
                 ...entry
             },
-            message: 'Lineup submitted successfully!'
+            usedFreeEntry,
+            message: usedFreeEntry
+                ? 'Lineup submitted using your free Premium entry!'
+                : 'Lineup submitted successfully!'
         });
     } catch (error) {
         console.error('Enter contest error:', error);

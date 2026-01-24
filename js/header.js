@@ -1589,8 +1589,13 @@
                 const headerAuth = document.getElementById('headerAuth');
                 const mobileMenuAuth = document.getElementById('mobileMenuAuth');
 
-                const premiumBadge = data.user.isSubscribed
-                    ? `<a href="/membership.html" class="premium-badge" title="${data.user.subscriptionTierName || 'Premium'}">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
+                // Premium badge - handles new single tier and legacy tiers
+                const isPremium = data.user.isSubscribed ||
+                    data.user.subscriptionTier === 'premium' ||
+                    data.user.subscriptionTier === 'diehard_plus' ||
+                    data.user.subscriptionTier === 'diehard_pro';
+                const premiumBadge = isPremium
+                    ? `<a href="/membership.html" class="premium-badge" title="Diehard Premium">PREMIUM</a>`
                     : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
 
                 const adminLink = data.user.isAdmin
