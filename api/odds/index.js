@@ -71,9 +71,9 @@ export default async function handler(req, res) {
         let games = [];
 
         if (!sportUpper) {
-            // Fetch all sports - filter to Philly teams only
+            // Fetch all sports - show all games
             const [proGames, collegeGames] = await Promise.all([
-                fetchProSportsOdds(team, targetDate, true),  // phillyOnly=true
+                fetchProSportsOdds(team, targetDate, false),  // phillyOnly=false - show all games
                 fetchCollegeSportsOdds()
             ]);
             games = [...proGames, ...collegeGames];
