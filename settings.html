@@ -171,6 +171,59 @@
                 </form>
             </section>
 
+            <!-- Premium Email Section -->
+            <section class="settings-section" id="premiumEmailSection" style="display: none;">
+                <h2 class="settings-section-title">
+                    <span class="icon">📧</span>
+                    @phillysports.com Email
+                    <span style="margin-left: auto; background: linear-gradient(135deg, #b8860b, #daa520); color: white; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 4px;">PREMIUM</span>
+                </h2>
+                <div class="error-message" id="emailError"></div>
+                <div class="success-message" id="emailSuccess"></div>
+
+                <!-- Not eligible state -->
+                <div id="emailNotEligible" style="display: none;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Get your own @phillysports.com email address with Diehard Premium!</p>
+                    <a href="/membership.html" class="btn btn-primary" style="display: inline-block;">Upgrade to Premium</a>
+                </div>
+
+                <!-- Eligible but not claimed -->
+                <div id="emailClaimSection" style="display: none;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Claim your free @phillysports.com email address!</p>
+                    <div class="form-group">
+                        <label for="emailPrefix">Choose your email address</label>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="text" id="emailPrefix" placeholder="yourname" style="flex: 1;">
+                            <span style="color: var(--text-muted); font-weight: 500;">@phillysports.com</span>
+                        </div>
+                        <p class="hint" id="emailAvailability"></p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="checkEmailBtn">Check Availability</button>
+                        <button type="button" class="btn btn-primary" id="claimEmailBtn" disabled>Claim Email</button>
+                    </div>
+                </div>
+
+                <!-- Already has email -->
+                <div id="emailActiveSection" style="display: none;">
+                    <div style="background: var(--dark-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Your email address</p>
+                        <p style="font-size: 1.25rem; font-weight: 700; color: #1a5c3a;" id="currentPremiumEmail"></p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="background: var(--dark-bg); padding: 0.75rem; border-radius: 8px;">
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">Webmail</p>
+                            <a href="https://mail.zoho.com" target="_blank" style="color: var(--sixers-blue); font-weight: 500;">mail.zoho.com</a>
+                        </div>
+                        <div style="background: var(--dark-bg); padding: 0.75rem; border-radius: 8px;">
+                            <p style="font-size: 0.75rem; color: var(--text-muted);">IMAP Server</p>
+                            <p style="font-weight: 500;">imap.zoho.com</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="resetEmailPasswordBtn">Reset Email Password</button>
+                </div>
+            </section>
+
             <!-- Password Section -->
             <section class="settings-section">
                 <h2 class="settings-section-title">
@@ -796,6 +849,187 @@
 
         // Initialize push notifications after auth check
         setTimeout(initPushNotifications, 500);
+
+        // Premium Email functionality
+        let emailAvailable = false;
+        let suggestedPrefix = '';
+
+        async function loadPremiumEmailStatus() {
+            try {
+                const response = await fetch('/api/premium/email', { credentials: 'include' });
+                const data = await response.json();
+
+                document.getElementById('premiumEmailSection').style.display = 'block';
+
+                if (!data.eligible) {
+                    // Not premium
+                    document.getElementById('emailNotEligible').style.display = 'block';
+                    document.getElementById('emailClaimSection').style.display = 'none';
+                    document.getElementById('emailActiveSection').style.display = 'none';
+                } else if (data.hasEmail) {
+                    // Has email
+                    document.getElementById('emailNotEligible').style.display = 'none';
+                    document.getElementById('emailClaimSection').style.display = 'none';
+                    document.getElementById('emailActiveSection').style.display = 'block';
+                    document.getElementById('currentPremiumEmail').textContent = data.email;
+                } else {
+                    // Eligible but hasn't claimed
+                    document.getElementById('emailNotEligible').style.display = 'none';
+                    document.getElementById('emailClaimSection').style.display = 'block';
+                    document.getElementById('emailActiveSection').style.display = 'none';
+                    suggestedPrefix = data.suggestedEmail?.split('@')[0] || currentUser.username;
+                    document.getElementById('emailPrefix').value = suggestedPrefix;
+                    document.getElementById('emailPrefix').placeholder = suggestedPrefix;
+                }
+            } catch (error) {
+                console.error('Failed to load email status:', error);
+            }
+        }
+
+        // Check email availability
+        document.getElementById('checkEmailBtn')?.addEventListener('click', async () => {
+            const prefix = document.getElementById('emailPrefix').value.trim();
+            const availabilityEl = document.getElementById('emailAvailability');
+            const claimBtn = document.getElementById('claimEmailBtn');
+            const errorEl = document.getElementById('emailError');
+            const successEl = document.getElementById('emailSuccess');
+
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+            availabilityEl.textContent = 'Checking...';
+            availabilityEl.style.color = 'var(--text-muted)';
+
+            if (!prefix) {
+                availabilityEl.textContent = 'Please enter an email prefix';
+                availabilityEl.style.color = '#dc2626';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/premium/email/check?prefix=${encodeURIComponent(prefix)}`, {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+
+                if (data.available) {
+                    availabilityEl.textContent = `${data.email} is available!`;
+                    availabilityEl.style.color = '#16a34a';
+                    claimBtn.disabled = false;
+                    emailAvailable = true;
+                } else {
+                    availabilityEl.textContent = data.error || `${data.email} is not available`;
+                    availabilityEl.style.color = '#dc2626';
+                    claimBtn.disabled = true;
+                    emailAvailable = false;
+                }
+            } catch (error) {
+                availabilityEl.textContent = 'Failed to check availability';
+                availabilityEl.style.color = '#dc2626';
+                claimBtn.disabled = true;
+            }
+        });
+
+        // Claim email
+        document.getElementById('claimEmailBtn')?.addEventListener('click', async () => {
+            if (!emailAvailable) return;
+
+            const prefix = document.getElementById('emailPrefix').value.trim();
+            const errorEl = document.getElementById('emailError');
+            const successEl = document.getElementById('emailSuccess');
+            const claimBtn = document.getElementById('claimEmailBtn');
+
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+            claimBtn.disabled = true;
+            claimBtn.textContent = 'Creating...';
+
+            try {
+                const response = await fetch('/api/premium/email/claim', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ prefix })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    successEl.innerHTML = `
+                        <strong>Email created!</strong><br>
+                        Your email: <strong>${data.email}</strong><br>
+                        Temporary password: <strong>${data.temporaryPassword}</strong><br>
+                        <small>Check your inbox for full login details. Please change your password after logging in.</small>
+                    `;
+                    successEl.classList.add('show');
+
+                    // Refresh the section
+                    setTimeout(() => loadPremiumEmailStatus(), 2000);
+                } else {
+                    errorEl.textContent = data.error || 'Failed to claim email';
+                    errorEl.classList.add('show');
+                    claimBtn.disabled = false;
+                    claimBtn.textContent = 'Claim Email';
+                }
+            } catch (error) {
+                errorEl.textContent = 'Failed to claim email';
+                errorEl.classList.add('show');
+                claimBtn.disabled = false;
+                claimBtn.textContent = 'Claim Email';
+            }
+        });
+
+        // Reset email password
+        document.getElementById('resetEmailPasswordBtn')?.addEventListener('click', async () => {
+            const errorEl = document.getElementById('emailError');
+            const successEl = document.getElementById('emailSuccess');
+            const btn = document.getElementById('resetEmailPasswordBtn');
+
+            if (!confirm('Are you sure you want to reset your @phillysports.com email password?')) {
+                return;
+            }
+
+            errorEl.classList.remove('show');
+            successEl.classList.remove('show');
+            btn.disabled = true;
+            btn.textContent = 'Resetting...';
+
+            try {
+                const response = await fetch('/api/premium/email/reset-password', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    successEl.innerHTML = `
+                        <strong>Password reset!</strong><br>
+                        New password: <strong>${data.temporaryPassword}</strong><br>
+                        <small>A copy has been sent to your personal email. Please change it after logging in.</small>
+                    `;
+                    successEl.classList.add('show');
+                } else {
+                    errorEl.textContent = data.error || 'Failed to reset password';
+                    errorEl.classList.add('show');
+                }
+            } catch (error) {
+                errorEl.textContent = 'Failed to reset password';
+                errorEl.classList.add('show');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Reset Email Password';
+        });
+
+        // Re-check availability when prefix changes
+        document.getElementById('emailPrefix')?.addEventListener('input', () => {
+            emailAvailable = false;
+            document.getElementById('claimEmailBtn').disabled = true;
+            document.getElementById('emailAvailability').textContent = '';
+        });
+
+        // Load email status after auth
+        setTimeout(loadPremiumEmailStatus, 600);
     </script>
     <script src="/js/mobile-menu.js"></script>
 <!-- Feedback Modal -->
