@@ -162,18 +162,98 @@ async function fetchCollegeSportsOdds() {
     return allGames;
 }
 
-// Fetch odds for pro sports - tries SportsDataIO first, falls back to TheOddsAPI
+// Team name mapping for duplicate detection across different data sources
+const TEAM_NAME_MAPPING = {
+    // NFL
+    'PHI': 'eagles', 'philadelphia eagles': 'eagles', 'eagles': 'eagles',
+    'DAL': 'cowboys', 'dallas cowboys': 'cowboys', 'cowboys': 'cowboys',
+    'NYG': 'giants', 'new york giants': 'giants', 'giants': 'giants',
+    'WSH': 'commanders', 'washington commanders': 'commanders', 'commanders': 'commanders',
+    // NBA
+    'philadelphia 76ers': 'sixers', '76ers': 'sixers', 'sixers': 'sixers',
+    // MLB
+    'philadelphia phillies': 'phillies', 'phillies': 'phillies',
+    // NHL
+    'philadelphia flyers': 'flyers', 'flyers': 'flyers',
+    'colorado avalanche': 'avalanche', 'avalanche': 'avalanche', 'COL': 'avalanche',
+    'pittsburgh penguins': 'penguins', 'penguins': 'penguins', 'PIT': 'penguins',
+    'new york rangers': 'rangers', 'rangers': 'rangers', 'NYR': 'rangers',
+    'new jersey devils': 'devils', 'devils': 'devils', 'NJD': 'devils', 'NJ': 'devils',
+    'boston bruins': 'bruins', 'bruins': 'bruins', 'BOS': 'bruins',
+    'washington capitals': 'capitals', 'capitals': 'capitals', 'WSH': 'capitals',
+    'carolina hurricanes': 'hurricanes', 'hurricanes': 'hurricanes', 'CAR': 'hurricanes',
+    'florida panthers': 'panthers', 'panthers': 'panthers', 'FLA': 'panthers',
+    'tampa bay lightning': 'lightning', 'lightning': 'lightning', 'TB': 'lightning', 'TBL': 'lightning',
+    'toronto maple leafs': 'maple leafs', 'maple leafs': 'maple leafs', 'TOR': 'maple leafs',
+    'montreal canadiens': 'canadiens', 'canadiens': 'canadiens', 'MTL': 'canadiens',
+    'ottawa senators': 'senators', 'senators': 'senators', 'OTT': 'senators',
+    'buffalo sabres': 'sabres', 'sabres': 'sabres', 'BUF': 'sabres',
+    'detroit red wings': 'red wings', 'red wings': 'red wings', 'DET': 'red wings',
+    'chicago blackhawks': 'blackhawks', 'blackhawks': 'blackhawks', 'CHI': 'blackhawks',
+    'st. louis blues': 'blues', 'st louis blues': 'blues', 'blues': 'blues', 'STL': 'blues',
+    'nashville predators': 'predators', 'predators': 'predators', 'NSH': 'predators',
+    'dallas stars': 'stars', 'stars': 'stars',
+    'minnesota wild': 'wild', 'wild': 'wild', 'MIN': 'wild',
+    'winnipeg jets': 'jets', 'jets': 'jets', 'WPG': 'jets',
+    'vegas golden knights': 'golden knights', 'golden knights': 'golden knights', 'VGK': 'golden knights', 'VEG': 'golden knights',
+    'seattle kraken': 'kraken', 'kraken': 'kraken', 'SEA': 'kraken',
+    'edmonton oilers': 'oilers', 'oilers': 'oilers', 'EDM': 'oilers',
+    'calgary flames': 'flames', 'flames': 'flames', 'CGY': 'flames',
+    'vancouver canucks': 'canucks', 'canucks': 'canucks', 'VAN': 'canucks',
+    'san jose sharks': 'sharks', 'sharks': 'sharks', 'SJ': 'sharks', 'SJS': 'sharks',
+    'los angeles kings': 'kings', 'kings': 'kings', 'LA': 'kings', 'LAK': 'kings',
+    'anaheim ducks': 'ducks', 'ducks': 'ducks', 'ANA': 'ducks',
+    'arizona coyotes': 'coyotes', 'coyotes': 'coyotes', 'ARI': 'coyotes', 'utah hockey club': 'utah', 'utah': 'utah', 'UTA': 'utah',
+    'columbus blue jackets': 'blue jackets', 'blue jackets': 'blue jackets', 'CBJ': 'blue jackets'
+};
+
+function normalizeTeamName(teamName) {
+    if (!teamName) return '';
+    const lower = teamName.toLowerCase().trim();
+    return TEAM_NAME_MAPPING[lower] || lower;
+}
+
+// Fetch odds for pro sports - merge data from SportsDataIO and TheOddsAPI
 async function fetchSportsDataOdds(sport, team, targetDate, phillyOnly = true) {
-    // Try SportsDataIO first
-    let games = await fetchFromSportsDataIO(sport, team, targetDate, phillyOnly);
+    // Fetch from both sources in parallel
+    const [sportsDataGames, oddsApiGames] = await Promise.all([
+        fetchFromSportsDataIO(sport, team, targetDate, phillyOnly).catch(e => {
+            console.error(`SportsDataIO ${sport} error:`, e.message);
+            return [];
+        }),
+        ODDS_API_KEY ? fetchTheOddsAPIData(sport, phillyOnly).catch(e => {
+            console.error(`TheOddsAPI ${sport} error:`, e.message);
+            return [];
+        }) : Promise.resolve([])
+    ]);
 
-    // If no results from SportsDataIO, fall back to TheOddsAPI
-    if (games.length === 0 && ODDS_API_KEY) {
-        console.log(`SportsDataIO returned no ${sport} odds, trying TheOddsAPI fallback`);
-        games = await fetchTheOddsAPIData(sport, phillyOnly);
-    }
+    console.log(`${sport}: SportsDataIO=${sportsDataGames.length} games, TheOddsAPI=${oddsApiGames.length} games`);
 
-    return games;
+    // Merge results, preferring SportsDataIO data but adding unique games from TheOddsAPI
+    const gameIds = new Set(sportsDataGames.map(g => g.id?.toString()));
+    const uniqueOddsApiGames = oddsApiGames.filter(g => !gameIds.has(g.id?.toString()));
+
+    // Use normalized team names for duplicate detection (handles PHI vs Philadelphia Flyers)
+    const normalizedMatchups = new Set(sportsDataGames.map(g => {
+        const home = normalizeTeamName(g.homeTeam);
+        const away = normalizeTeamName(g.awayTeam);
+        return `${home}-${away}`;
+    }));
+
+    const filteredOddsApiGames = uniqueOddsApiGames.filter(g => {
+        const home = normalizeTeamName(g.homeTeam);
+        const away = normalizeTeamName(g.awayTeam);
+        const matchup = `${home}-${away}`;
+        const isDuplicate = normalizedMatchups.has(matchup);
+        if (isDuplicate) {
+            console.log(`Filtering duplicate from TheOddsAPI: ${g.awayTeam} @ ${g.homeTeam}`);
+        }
+        return !isDuplicate;
+    });
+
+    console.log(`${sport}: Adding ${filteredOddsApiGames.length} unique games from TheOddsAPI`);
+
+    return [...sportsDataGames, ...filteredOddsApiGames];
 }
 
 // Fetch from SportsDataIO (primary source for pro sports)
@@ -193,7 +273,8 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
     const endpoint = endpoints[sport];
     if (!endpoint) return [];
 
-    const dateToUse = targetDate || new Date().toISOString().split('T')[0];
+    const dateToUse = targetDate || getLocalDate();
+    console.log(`fetchFromSportsDataIO: sport=${sport}, dateToUse=${dateToUse}, targetDate passed=${targetDate}`);
 
     // First fetch games to get team names (odds endpoint may not have them)
     let gamesLookup = {};

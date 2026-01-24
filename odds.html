@@ -362,8 +362,8 @@
         // Theme is handled by header.js
 
         let selectedSport = 'all';
-        // Use local date, not UTC
-        let selectedDate = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format in local time
+        // Use EST date explicitly
+        let selectedDate = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }); // YYYY-MM-DD format in EST
         let currentUser = null;
         let betSlip = [];
         let gamesData = {};
@@ -385,8 +385,15 @@
         // Format helpers
         function formatGameTime(isoString) {
             const date = new Date(isoString);
-            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
-            return date.toLocaleDateString('en-US', options);
+            const options = {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZone: 'America/New_York'
+            };
+            return date.toLocaleDateString('en-US', options) + ' ET';
         }
 
         function formatOdds(value) {
@@ -623,7 +630,12 @@
             });
         });
 
-        // Date navigation
+        // Date navigation - using EST consistently
+        function getESTDate(date = new Date()) {
+            // Convert to EST string and parse back
+            return date.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+        }
+
         function initDateSelector() {
             const dateInput = document.getElementById('dateInput');
             const dateLabel = document.getElementById('dateLabel');
@@ -640,27 +652,30 @@
             });
 
             prevBtn.addEventListener('click', () => {
-                const date = new Date(selectedDate);
+                // Parse the date at noon to avoid timezone issues
+                const date = new Date(selectedDate + 'T12:00:00');
                 date.setDate(date.getDate() - 1);
-                selectedDate = date.toISOString().split('T')[0];
+                selectedDate = date.toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
                 dateInput.value = selectedDate;
                 updateDateLabel();
                 loadOdds();
             });
 
             nextBtn.addEventListener('click', () => {
-                const date = new Date(selectedDate);
+                // Parse the date at noon to avoid timezone issues
+                const date = new Date(selectedDate + 'T12:00:00');
                 date.setDate(date.getDate() + 1);
-                selectedDate = date.toISOString().split('T')[0];
+                selectedDate = date.toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
                 dateInput.value = selectedDate;
                 updateDateLabel();
                 loadOdds();
             });
 
             function updateDateLabel() {
-                const today = new Date().toISOString().split('T')[0];
-                const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                // Get today/tomorrow/yesterday in EST
+                const today = getESTDate();
+                const tomorrow = getESTDate(new Date(Date.now() + 86400000));
+                const yesterday = getESTDate(new Date(Date.now() - 86400000));
 
                 if (selectedDate === today) {
                     dateLabel.textContent = 'Today';
