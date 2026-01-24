@@ -208,12 +208,243 @@ export function validateEmailPrefix(prefix) {
     return { valid: true };
 }
 
+// ============================================
+// MAIL API FUNCTIONS (for reading/sending mail)
+// ============================================
+
+const MAIL_API_URL = 'https://mail.zoho.com/api/accounts';
+
+// Make a request to the Zoho Mail API (user-level, not admin)
+async function mailRequest(accountId, endpoint, method = 'GET', body = null) {
+    const token = await getAccessToken();
+
+    const options = {
+        method,
+        headers: {
+            'Authorization': `Zoho-oauthtoken ${token}`,
+            'Content-Type': 'application/json'
+        }
+    };
+
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    const url = `${MAIL_API_URL}/${accountId}${endpoint}`;
+    const response = await fetch(url, options);
+
+    // Handle empty responses
+    const text = await response.text();
+    let data = {};
+    if (text) {
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            data = { raw: text };
+        }
+    }
+
+    if (!response.ok) {
+        console.error('Zoho Mail API error:', data);
+        throw new Error(data.data?.errorMessage || data.message || 'Mail API request failed');
+    }
+
+    return data;
+}
+
+// Get mail folders (Inbox, Sent, Drafts, Trash, etc.)
+export async function getMailFolders(accountId) {
+    try {
+        const result = await mailRequest(accountId, '/folders');
+        return {
+            success: true,
+            folders: (result.data || []).map(f => ({
+                id: f.folderId,
+                name: f.folderName,
+                path: f.folderPath,
+                unreadCount: f.unreadCount || 0,
+                messageCount: f.messageCount || 0,
+                isSystemFolder: f.isSystemFolder
+            }))
+        };
+    } catch (error) {
+        console.error('Get folders error:', error);
+        return { success: false, error: error.message, folders: [] };
+    }
+}
+
+// Get messages in a folder
+export async function getMessages(accountId, folderId = 'inbox', options = {}) {
+    const { limit = 25, start = 0 } = options;
+
+    try {
+        const params = new URLSearchParams({
+            limit: limit.toString(),
+            start: start.toString(),
+            sortBy: 'date',
+            sortOrder: 'desc'
+        });
+
+        const result = await mailRequest(accountId, `/folders/${folderId}/messages?${params}`);
+
+        return {
+            success: true,
+            messages: (result.data || []).map(m => ({
+                id: m.messageId,
+                folderId: m.folderId,
+                subject: m.subject || '(No Subject)',
+                summary: m.summary || '',
+                from: m.fromAddress,
+                fromName: m.sender || m.fromAddress,
+                to: m.toAddress,
+                date: m.receivedTime || m.sentDateInGMT,
+                isRead: m.isRead || m.readStatus === 'read',
+                hasAttachment: m.hasAttachment || false,
+                isStarred: m.isFlagged || false,
+                size: m.size
+            })),
+            total: result.data?.length || 0,
+            hasMore: (result.data?.length || 0) === limit
+        };
+    } catch (error) {
+        console.error('Get messages error:', error);
+        return { success: false, error: error.message, messages: [] };
+    }
+}
+
+// Get a single message with full content
+export async function getMessage(accountId, messageId) {
+    try {
+        const result = await mailRequest(accountId, `/messages/${messageId}`);
+        const m = result.data || {};
+
+        return {
+            success: true,
+            message: {
+                id: m.messageId,
+                folderId: m.folderId,
+                subject: m.subject || '(No Subject)',
+                from: m.fromAddress,
+                fromName: m.sender || m.fromAddress,
+                to: m.toAddress,
+                cc: m.ccAddress,
+                bcc: m.bccAddress,
+                date: m.receivedTime || m.sentDateInGMT,
+                content: m.content || '',
+                htmlContent: m.htmlContent || m.content || '',
+                isRead: m.isRead || m.readStatus === 'read',
+                hasAttachment: m.hasAttachment || false,
+                attachments: (m.attachments || []).map(a => ({
+                    id: a.attachmentId,
+                    name: a.attachmentName,
+                    size: a.attachmentSize,
+                    contentType: a.contentType
+                }))
+            }
+        };
+    } catch (error) {
+        console.error('Get message error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Send an email
+export async function sendEmail(accountId, options) {
+    const { to, cc, bcc, subject, content, inReplyTo, isHtml = true } = options;
+
+    try {
+        const emailData = {
+            toAddress: to,
+            subject: subject || '',
+            content: content || '',
+            mailFormat: isHtml ? 'html' : 'plaintext'
+        };
+
+        if (cc) emailData.ccAddress = cc;
+        if (bcc) emailData.bccAddress = bcc;
+        if (inReplyTo) emailData.inReplyTo = inReplyTo;
+
+        const result = await mailRequest(accountId, '/messages', 'POST', emailData);
+
+        return {
+            success: true,
+            messageId: result.data?.messageId,
+            message: 'Email sent successfully'
+        };
+    } catch (error) {
+        console.error('Send email error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Move message to trash
+export async function trashMessage(accountId, messageId) {
+    try {
+        // Get trash folder ID first
+        const foldersResult = await getMailFolders(accountId);
+        const trashFolder = foldersResult.folders.find(f =>
+            f.name.toLowerCase() === 'trash' || f.path.toLowerCase().includes('trash')
+        );
+
+        if (!trashFolder) {
+            throw new Error('Trash folder not found');
+        }
+
+        await mailRequest(accountId, `/messages/${messageId}/movefolder`, 'PUT', {
+            destfolderId: trashFolder.id
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Trash message error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Mark message as read/unread
+export async function markMessageRead(accountId, messageId, isRead = true) {
+    try {
+        await mailRequest(accountId, `/messages/${messageId}`, 'PUT', {
+            mode: isRead ? 'markAsRead' : 'markAsUnread'
+        });
+        return { success: true };
+    } catch (error) {
+        console.error('Mark read error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Get unread count for inbox
+export async function getUnreadCount(accountId) {
+    try {
+        const result = await getMailFolders(accountId);
+        const inbox = result.folders.find(f =>
+            f.name.toLowerCase() === 'inbox' || f.path.toLowerCase() === 'inbox'
+        );
+        return {
+            success: true,
+            unreadCount: inbox?.unreadCount || 0
+        };
+    } catch (error) {
+        return { success: false, unreadCount: 0 };
+    }
+}
+
 export default {
+    // Admin functions
     isEmailAvailable,
     createEmailAccount,
     deleteEmailAccount,
     getEmailAccount,
     resetEmailPassword,
     generatePassword,
-    validateEmailPrefix
+    validateEmailPrefix,
+    // Mail functions
+    getMailFolders,
+    getMessages,
+    getMessage,
+    sendEmail,
+    trashMessage,
+    markMessageRead,
+    getUnreadCount
 };

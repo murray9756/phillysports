@@ -860,6 +860,27 @@
             background: linear-gradient(180deg, #ffe44d 0%, #ffd700 100%) !important;
         }
 
+        /* ----- Mail Link ----- */
+        .mail-link {
+            background: linear-gradient(180deg, #1a5c3a 0%, #0d3320 100%) !important;
+            color: #F5F0E1 !important;
+            font-family: Georgia, serif !important;
+            font-size: 0.65rem !important;
+            font-weight: 700 !important;
+            padding: 0.25rem 0.6rem !important;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            border: 2px solid #F5F0E1;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .mail-link:hover {
+            background: linear-gradient(180deg, #2d8659 0%, #1a5c3a 100%) !important;
+        }
+
         /* ----- Admin Link ----- */
         .admin-link {
             background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
@@ -1398,11 +1419,11 @@
             border: 3px solid #1A2744;
         }
 
-        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link) {
+        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):not(.mail-link) {
             color: #1A2744 !important;
         }
 
-        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):hover {
+        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):not(.mail-link):hover {
             color: #8B1A28 !important;
         }
 
@@ -1598,6 +1619,10 @@
                     ? `<a href="/membership.html" class="premium-badge" title="Diehard Premium">PREMIUM</a>`
                     : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
 
+                const mailLink = isPremium
+                    ? `<a href="/mail.html" class="mail-link" title="Your @phillysports.com inbox">📧 Mail</a>`
+                    : '';
+
                 const adminLink = data.user.isAdmin
                     ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
                     : '';
@@ -1620,6 +1645,7 @@
                         <div class="user-actions-stack" style="display: flex; flex-direction: column; align-items: stretch;">
                             <a href="/profile.html">${data.user.username}</a>
                             ${premiumBadge}
+                            ${mailLink}
                             ${adminLink}
                             <a href="#" id="logoutBtn">Logout</a>
                         </div>

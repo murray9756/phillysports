@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail | PhillySports.com</title>
+    <meta name="description" content="Access your @phillysports.com email inbox">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #f0ebe3;
+            --card-bg: #ffffff;
+            --border-color: #e0dcd4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555555;
+            --text-muted: #888888;
+            --accent-color: #1a5c3a;
+            --accent-hover: #2d8659;
+            --danger-color: #dc2626;
+            --unread-bg: #f0f7f4;
+        }
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --unread-bg: #1a2e24;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+        a { color: inherit; text-decoration: none; }
+
+        .mail-container { flex: 1; display: flex; flex-direction: column; max-width: 1200px; margin: 0 auto; width: 100%; padding: 1rem; }
+
+        /* Header */
+        .mail-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--card-bg); border-radius: 12px; margin-bottom: 1rem; border: 1px solid var(--border-color); }
+        .mail-header h1 { font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        .mail-header .email-address { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+        .mail-actions { display: flex; gap: 0.5rem; }
+
+        /* Main layout */
+        .mail-layout { display: flex; gap: 1rem; flex: 1; min-height: 0; }
+
+        /* Sidebar */
+        .mail-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+        .compose-btn { background: var(--accent-color); color: white; border: none; padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.9rem; transition: background 0.2s; }
+        .compose-btn:hover { background: var(--accent-hover); }
+        .folder-list { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
+        .folder-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; cursor: pointer; transition: background 0.2s; border-bottom: 1px solid var(--border-color); }
+        .folder-item:last-child { border-bottom: none; }
+        .folder-item:hover { background: var(--dark-bg); }
+        .folder-item.active { background: var(--unread-bg); border-left: 3px solid var(--accent-color); }
+        .folder-name { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+        .folder-icon { font-size: 1rem; }
+        .folder-count { background: var(--accent-color); color: white; font-size: 0.7rem; padding: 0.15rem 0.4rem; border-radius: 10px; font-weight: 600; }
+
+        /* Message list */
+        .mail-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .message-list { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); flex: 1; overflow-y: auto; }
+        .message-item { display: flex; align-items: center; gap: 1rem; padding: 0.875rem 1rem; cursor: pointer; transition: background 0.2s; border-bottom: 1px solid var(--border-color); }
+        .message-item:last-child { border-bottom: none; }
+        .message-item:hover { background: var(--dark-bg); }
+        .message-item.unread { background: var(--unread-bg); font-weight: 600; }
+        .message-item.selected { background: rgba(26, 92, 58, 0.1); border-left: 3px solid var(--accent-color); }
+        .message-checkbox { width: 18px; height: 18px; cursor: pointer; }
+        .message-from { width: 180px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.9rem; }
+        .message-content { flex: 1; min-width: 0; }
+        .message-subject { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.9rem; }
+        .message-preview { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
+        .message-meta { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .message-attachment { font-size: 1rem; }
+        .message-date { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; }
+
+        /* Message view */
+        .message-view { display: none; flex-direction: column; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); flex: 1; overflow: hidden; }
+        .message-view.active { display: flex; }
+        .message-view-header { padding: 1rem; border-bottom: 1px solid var(--border-color); }
+        .message-view-subject { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .message-view-meta { display: flex; gap: 1rem; font-size: 0.85rem; color: var(--text-secondary); flex-wrap: wrap; }
+        .message-view-meta strong { color: var(--text-primary); }
+        .message-view-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+        .message-view-body { flex: 1; padding: 1rem; overflow-y: auto; }
+        .message-view-body iframe { width: 100%; height: 100%; border: none; background: white; border-radius: 8px; }
+
+        /* Buttons */
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem; transition: all 0.2s; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: var(--dark-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: var(--border-color); }
+        .btn-danger { background: var(--danger-color); color: white; }
+        .btn-danger:hover { opacity: 0.9; }
+        .btn-icon { padding: 0.5rem; }
+
+        /* Compose modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .compose-modal { background: var(--card-bg); border-radius: 12px; width: 90%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column; }
+        .compose-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid var(--border-color); }
+        .compose-header h3 { font-size: 1.1rem; }
+        .compose-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .compose-body { flex: 1; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; overflow-y: auto; }
+        .compose-field { display: flex; align-items: center; gap: 0.5rem; }
+        .compose-field label { width: 50px; font-size: 0.85rem; color: var(--text-muted); }
+        .compose-field input { flex: 1; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.9rem; background: var(--card-bg); color: var(--text-primary); }
+        .compose-field input:focus { outline: none; border-color: var(--accent-color); }
+        .compose-editor { flex: 1; min-height: 200px; border: 1px solid var(--border-color); border-radius: 6px; padding: 0.75rem; font-size: 0.9rem; resize: none; background: var(--card-bg); color: var(--text-primary); font-family: inherit; }
+        .compose-editor:focus { outline: none; border-color: var(--accent-color); }
+        .compose-footer { display: flex; justify-content: space-between; padding: 1rem; border-top: 1px solid var(--border-color); }
+
+        /* Loading & Empty states */
+        .loading { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* Not setup state */
+        .not-setup { text-align: center; padding: 3rem; }
+        .not-setup h2 { margin-bottom: 1rem; }
+        .not-setup p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mail-layout { flex-direction: column; }
+            .mail-sidebar { width: 100%; flex-direction: row; overflow-x: auto; }
+            .folder-list { display: flex; flex-direction: row; }
+            .folder-item { white-space: nowrap; border-bottom: none; border-right: 1px solid var(--border-color); }
+            .message-from { width: 120px; }
+            .message-preview { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="site-header"></div>
+    <script src="/js/header.js"></script>
+
+    <main class="mail-container">
+        <!-- Loading state -->
+        <div class="loading" id="loadingState">Loading your inbox...</div>
+
+        <!-- Not setup state -->
+        <div class="not-setup" id="notSetupState" style="display: none;">
+            <h2>Set Up Your Email</h2>
+            <p>You haven't claimed your @phillysports.com email address yet.</p>
+            <a href="/settings.html" class="btn btn-primary">Claim Your Email</a>
+        </div>
+
+        <!-- Not premium state -->
+        <div class="not-setup" id="notPremiumState" style="display: none;">
+            <h2>Premium Feature</h2>
+            <p>Get your own @phillysports.com email address with Diehard Premium!</p>
+            <a href="/membership.html" class="btn btn-primary">Upgrade to Premium</a>
+        </div>
+
+        <!-- Main mail UI -->
+        <div id="mailUI" style="display: none;">
+            <header class="mail-header">
+                <h1>
+                    <span>📧</span> Mail
+                    <span class="email-address" id="userEmail"></span>
+                </h1>
+                <div class="mail-actions">
+                    <button class="btn btn-secondary" onclick="loadInbox()">Refresh</button>
+                    <a href="https://mail.zoho.com" target="_blank" class="btn btn-secondary">Open in Zoho</a>
+                </div>
+            </header>
+
+            <div class="mail-layout">
+                <aside class="mail-sidebar">
+                    <button class="compose-btn" onclick="openCompose()">
+                        <span>✏️</span> Compose
+                    </button>
+                    <div class="folder-list" id="folderList">
+                        <div class="folder-item active" data-folder="inbox">
+                            <span class="folder-name"><span class="folder-icon">📥</span> Inbox</span>
+                            <span class="folder-count" id="inboxCount" style="display: none;">0</span>
+                        </div>
+                        <div class="folder-item" data-folder="sent">
+                            <span class="folder-name"><span class="folder-icon">📤</span> Sent</span>
+                        </div>
+                        <div class="folder-item" data-folder="drafts">
+                            <span class="folder-name"><span class="folder-icon">📝</span> Drafts</span>
+                        </div>
+                        <div class="folder-item" data-folder="trash">
+                            <span class="folder-name"><span class="folder-icon">🗑️</span> Trash</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <div class="mail-content">
+                    <!-- Message list -->
+                    <div class="message-list" id="messageList">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>No messages</p>
+                        </div>
+                    </div>
+
+                    <!-- Message view (hidden by default) -->
+                    <div class="message-view" id="messageView">
+                        <div class="message-view-header">
+                            <div class="message-view-subject" id="viewSubject"></div>
+                            <div class="message-view-meta">
+                                <span><strong>From:</strong> <span id="viewFrom"></span></span>
+                                <span><strong>To:</strong> <span id="viewTo"></span></span>
+                                <span><strong>Date:</strong> <span id="viewDate"></span></span>
+                            </div>
+                            <div class="message-view-actions">
+                                <button class="btn btn-primary" onclick="replyToMessage()">Reply</button>
+                                <button class="btn btn-secondary" onclick="closeMessageView()">Back</button>
+                                <button class="btn btn-danger" onclick="deleteCurrentMessage()">Delete</button>
+                            </div>
+                        </div>
+                        <div class="message-view-body">
+                            <iframe id="viewBody" sandbox="allow-same-origin"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Compose Modal -->
+    <div class="modal-overlay" id="composeModal">
+        <div class="compose-modal">
+            <div class="compose-header">
+                <h3 id="composeTitle">New Message</h3>
+                <button class="compose-close" onclick="closeCompose()">&times;</button>
+            </div>
+            <div class="compose-body">
+                <div class="compose-field">
+                    <label>To:</label>
+                    <input type="email" id="composeTo" placeholder="recipient@example.com">
+                </div>
+                <div class="compose-field">
+                    <label>Cc:</label>
+                    <input type="email" id="composeCc" placeholder="(optional)">
+                </div>
+                <div class="compose-field">
+                    <label>Subject:</label>
+                    <input type="text" id="composeSubject" placeholder="Subject">
+                </div>
+                <textarea class="compose-editor" id="composeBody" placeholder="Write your message..."></textarea>
+            </div>
+            <div class="compose-footer">
+                <button class="btn btn-secondary" onclick="closeCompose()">Discard</button>
+                <button class="btn btn-primary" id="sendBtn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFolder = 'inbox';
+        let currentMessage = null;
+        let replyTo = null;
+
+        // Check auth
+        async function init() {
+            try {
+                const response = await fetch('/api/premium/email', { credentials: 'include' });
+                const data = await response.json();
+
+                document.getElementById('loadingState').style.display = 'none';
+
+                if (!data.eligible) {
+                    document.getElementById('notPremiumState').style.display = 'block';
+                    return;
+                }
+
+                if (!data.hasEmail) {
+                    document.getElementById('notSetupState').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('mailUI').style.display = 'block';
+                document.getElementById('userEmail').textContent = data.email;
+
+                // Load folders and inbox
+                loadFolders();
+                loadInbox();
+
+            } catch (error) {
+                console.error('Init error:', error);
+                document.getElementById('loadingState').innerHTML = '<p>Failed to load. <a href="/login.html">Please log in</a></p>';
+            }
+        }
+
+        async function loadFolders() {
+            try {
+                const response = await fetch('/api/premium/email/folders', { credentials: 'include' });
+                const data = await response.json();
+
+                if (data.folders) {
+                    const inbox = data.folders.find(f => f.name.toLowerCase() === 'inbox');
+                    if (inbox && inbox.unreadCount > 0) {
+                        const countEl = document.getElementById('inboxCount');
+                        countEl.textContent = inbox.unreadCount;
+                        countEl.style.display = 'inline';
+                    }
+                }
+            } catch (error) {
+                console.error('Load folders error:', error);
+            }
+        }
+
+        async function loadInbox(folder = currentFolder) {
+            currentFolder = folder;
+            const listEl = document.getElementById('messageList');
+            listEl.innerHTML = '<div class="loading">Loading messages...</div>';
+
+            // Update active folder
+            document.querySelectorAll('.folder-item').forEach(el => {
+                el.classList.toggle('active', el.dataset.folder === folder);
+            });
+
+            // Hide message view, show list
+            document.getElementById('messageView').classList.remove('active');
+            listEl.style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/premium/email/inbox?folder=${folder}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!data.success || !data.messages?.length) {
+                    listEl.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>No messages in ${folder}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = data.messages.map(msg => `
+                    <div class="message-item ${msg.isRead ? '' : 'unread'}" data-id="${msg.id}" onclick="openMessage('${msg.id}')">
+                        <div class="message-from" title="${escapeHtml(msg.from)}">${escapeHtml(msg.fromName || msg.from)}</div>
+                        <div class="message-content">
+                            <div class="message-subject">${escapeHtml(msg.subject)}</div>
+                            <div class="message-preview">${escapeHtml(msg.summary || '')}</div>
+                        </div>
+                        <div class="message-meta">
+                            ${msg.hasAttachment ? '<span class="message-attachment">📎</span>' : ''}
+                            <span class="message-date">${formatDate(msg.date)}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Load inbox error:', error);
+                listEl.innerHTML = '<div class="empty-state"><p>Failed to load messages</p></div>';
+            }
+        }
+
+        async function openMessage(id) {
+            const listEl = document.getElementById('messageList');
+            const viewEl = document.getElementById('messageView');
+
+            // Mark as selected
+            document.querySelectorAll('.message-item').forEach(el => {
+                el.classList.toggle('selected', el.dataset.id === id);
+            });
+
+            try {
+                const response = await fetch(`/api/premium/email/message/${id}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!data.success) {
+                    alert('Failed to load message');
+                    return;
+                }
+
+                currentMessage = data.message;
+
+                document.getElementById('viewSubject').textContent = data.message.subject;
+                document.getElementById('viewFrom').textContent = data.message.fromName || data.message.from;
+                document.getElementById('viewTo').textContent = data.message.to;
+                document.getElementById('viewDate').textContent = formatDate(data.message.date, true);
+
+                // Load HTML content in iframe
+                const iframe = document.getElementById('viewBody');
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 1rem; margin: 0; font-size: 14px; line-height: 1.5; color: #333; }
+                            a { color: #1a5c3a; }
+                            img { max-width: 100%; height: auto; }
+                        </style>
+                    </head>
+                    <body>${data.message.htmlContent || data.message.content || ''}</body>
+                    </html>
+                `);
+                doc.close();
+
+                // Show message view
+                listEl.style.display = 'none';
+                viewEl.classList.add('active');
+
+                // Update list to show as read
+                const listItem = document.querySelector(`.message-item[data-id="${id}"]`);
+                if (listItem) listItem.classList.remove('unread');
+
+            } catch (error) {
+                console.error('Open message error:', error);
+                alert('Failed to load message');
+            }
+        }
+
+        function closeMessageView() {
+            document.getElementById('messageList').style.display = 'block';
+            document.getElementById('messageView').classList.remove('active');
+            currentMessage = null;
+        }
+
+        function openCompose(prefill = {}) {
+            document.getElementById('composeTo').value = prefill.to || '';
+            document.getElementById('composeCc').value = prefill.cc || '';
+            document.getElementById('composeSubject').value = prefill.subject || '';
+            document.getElementById('composeBody').value = prefill.body || '';
+            document.getElementById('composeTitle').textContent = prefill.title || 'New Message';
+            replyTo = prefill.inReplyTo || null;
+            document.getElementById('composeModal').classList.add('active');
+            document.getElementById('composeTo').focus();
+        }
+
+        function closeCompose() {
+            document.getElementById('composeModal').classList.remove('active');
+            replyTo = null;
+        }
+
+        function replyToMessage() {
+            if (!currentMessage) return;
+
+            const replySubject = currentMessage.subject.startsWith('Re:')
+                ? currentMessage.subject
+                : `Re: ${currentMessage.subject}`;
+
+            const replyBody = `\n\n\n--- Original Message ---\nFrom: ${currentMessage.from}\nDate: ${formatDate(currentMessage.date, true)}\n\n${stripHtml(currentMessage.content || currentMessage.htmlContent || '')}`;
+
+            openCompose({
+                to: currentMessage.from,
+                subject: replySubject,
+                body: replyBody,
+                title: 'Reply',
+                inReplyTo: currentMessage.id
+            });
+        }
+
+        async function sendMessage() {
+            const to = document.getElementById('composeTo').value.trim();
+            const cc = document.getElementById('composeCc').value.trim();
+            const subject = document.getElementById('composeSubject').value.trim();
+            const content = document.getElementById('composeBody').value;
+
+            if (!to) {
+                alert('Please enter a recipient');
+                return;
+            }
+
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch('/api/premium/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        to,
+                        cc: cc || undefined,
+                        subject,
+                        content: content.replace(/\n/g, '<br>'),
+                        inReplyTo: replyTo
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeCompose();
+                    alert('Message sent!');
+                    if (currentFolder === 'sent') loadInbox();
+                } else {
+                    alert(data.error || 'Failed to send message');
+                }
+            } catch (error) {
+                console.error('Send error:', error);
+                alert('Failed to send message');
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send';
+        }
+
+        async function deleteCurrentMessage() {
+            if (!currentMessage) return;
+
+            if (!confirm('Move this message to trash?')) return;
+
+            try {
+                const response = await fetch(`/api/premium/email/message/${currentMessage.id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeMessageView();
+                    loadInbox();
+                } else {
+                    alert(data.error || 'Failed to delete message');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Failed to delete message');
+            }
+        }
+
+        // Folder click handlers
+        document.querySelectorAll('.folder-item').forEach(el => {
+            el.addEventListener('click', () => loadInbox(el.dataset.folder));
+        });
+
+        // Utility functions
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+
+        function formatDate(dateStr, full = false) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const isToday = date.toDateString() === now.toDateString();
+
+            if (full) {
+                return date.toLocaleString('en-US', {
+                    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+                    hour: 'numeric', minute: '2-digit'
+                });
+            }
+
+            if (isToday) {
+                return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            }
+
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('composeModal').classList.contains('active')) {
+                    closeCompose();
+                } else if (document.getElementById('messageView').classList.contains('active')) {
+                    closeMessageView();
+                }
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
