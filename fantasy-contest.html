@@ -1148,6 +1148,8 @@
                 `;
             }).join('');
 
+            container.innerHTML = html;
+
             // Show status message
             const statusEl = document.getElementById('myEntryStatus');
             if (contest.status === 'completed') {

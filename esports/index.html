@@ -315,7 +315,115 @@
 
             <div class="widget">
                 <div class="widget-header">
-                    <h3 class="widget-title">Quick Links</h3>
+                    <h3 class="widget-title">Popular Games</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <a href="https://www.leagueoflegends.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#9876;</span>
+                        <span>League of Legends</span>
+                    </a>
+                    <a href="https://playvalorant.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128299;</span>
+                        <span>Valorant</span>
+                    </a>
+                    <a href="https://www.counter-strike.net" target="_blank" class="game-link">
+                        <span class="game-icon">&#128163;</span>
+                        <span>Counter-Strike 2</span>
+                    </a>
+                    <a href="https://overwatch.blizzard.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#127919;</span>
+                        <span>Overwatch 2</span>
+                    </a>
+                    <a href="https://www.dota2.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128737;</span>
+                        <span>Dota 2</span>
+                    </a>
+                    <a href="https://www.rocketleague.com" target="_blank" class="game-link">
+                        <span class="game-icon">&#128663;</span>
+                        <span>Rocket League</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Upcoming Tournaments</h3>
+                </div>
+                <div class="widget-content" style="padding: 0;">
+                    <div class="tournament-item">
+                        <div class="tournament-date">
+                            <div class="tournament-day">TBD</div>
+                            <div class="tournament-month">2025</div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-name">VCT Americas</div>
+                            <div class="tournament-game">Valorant</div>
+                        </div>
+                    </div>
+                    <div class="tournament-item">
+                        <div class="tournament-date">
+                            <div class="tournament-day">TBD</div>
+                            <div class="tournament-month">2025</div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-name">LCS Spring Split</div>
+                            <div class="tournament-game">League of Legends</div>
+                        </div>
+                    </div>
+                    <div class="tournament-item">
+                        <div class="tournament-date">
+                            <div class="tournament-day">TBD</div>
+                            <div class="tournament-month">2025</div>
+                        </div>
+                        <div class="tournament-info">
+                            <div class="tournament-name">CS2 Major</div>
+                            <div class="tournament-game">Counter-Strike 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget trivia-promo-widget">
+                <div class="trivia-promo-header">
+                    <span class="trivia-promo-icon">&#129504;</span>
+                    <span class="trivia-promo-title">Gaming Trivia</span>
+                </div>
+                <div class="trivia-promo-body">
+                    <p class="trivia-promo-tagline">Test Your eSports Knowledge!</p>
+                    <div class="trivia-promo-stats">
+                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
+                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
+                    </div>
+                    <a href="/trivia.html?team=eSports" class="trivia-promo-btn">Play Now</a>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Latest eSports News</h2>
+            </div>
+
+            <!-- Content Filters -->
+            <div class="content-filters" id="contentFilters">
+                <div class="filter-group">
+                    <span class="filter-label">Type:</span>
+                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
+                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
+                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
+                </div>
+            </div>
+
+            <div class="article-list" id="articleList">
+                <div style="text-align:center;color:var(--text-muted);padding:1rem;">Loading news...</div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3 class="widget-title">Esports Links</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
                     <a href="https://overwatchleague.com" target="_blank" class="game-link">
@@ -358,152 +466,16 @@
                 </div>
                 <a href="/source-leaderboard.html" style="display:block;text-align:center;padding:0.5rem;font-size:0.75rem;color:var(--accent-color);border-top:1px solid var(--border-color);">View Full Rankings →</a>
             </div>
-        </aside>
-
-        <div class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">Latest eSports News</h2>
-            </div>
-
-            <!-- Content Filters -->
-            <div class="content-filters" id="contentFilters">
-                <div class="filter-group">
-                    <span class="filter-label">Type:</span>
-                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
-                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
-                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
-                </div>
-            </div>
-
-            <div class="article-list" id="articleList">
-                <div style="text-align:center;color:var(--text-muted);padding:1rem;">Loading news...</div>
-            </div>
-        </div>
-
-        <aside class="sidebar">
-            <div class="widget">
-                <div class="widget-header">
-                    <h3 class="widget-title">Popular Games</h3>
-                </div>
-                <div class="widget-content" style="padding: 0;">
-                    <a href="https://www.leagueoflegends.com" target="_blank" class="game-link">
-                        <span class="game-icon">&#9876;</span>
-                        <span>League of Legends</span>
-                    </a>
-                    <a href="https://playvalorant.com" target="_blank" class="game-link">
-                        <span class="game-icon">&#128299;</span>
-                        <span>Valorant</span>
-                    </a>
-                    <a href="https://www.counter-strike.net" target="_blank" class="game-link">
-                        <span class="game-icon">&#128163;</span>
-                        <span>Counter-Strike 2</span>
-                    </a>
-                    <a href="https://overwatch.blizzard.com" target="_blank" class="game-link">
-                        <span class="game-icon">&#127919;</span>
-                        <span>Overwatch 2</span>
-                    </a>
-                    <a href="https://www.dota2.com" target="_blank" class="game-link">
-                        <span class="game-icon">&#128737;</span>
-                        <span>Dota 2</span>
-                    </a>
-                    <a href="https://www.rocketleague.com" target="_blank" class="game-link">
-                        <span class="game-icon">&#128663;</span>
-                        <span>Rocket League</span>
-                    </a>
-                </div>
-            </div>
 
             <div class="widget">
                 <div class="widget-header">
-                    <h3 class="widget-title">Philadelphia Fusion</h3>
-                </div>
-                <div class="widget-content">
-                    <div style="text-align:center;padding:0.5rem;">
-                        <div style="font-size:2rem;margin-bottom:0.5rem;">&#127919;</div>
-                        <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">Overwatch League Team</div>
-                        <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.75rem;">Philadelphia's Professional OW Team</div>
-                        <a href="https://twitter.com/PhilaFusion" target="_blank" style="display:inline-block;padding:0.4rem 0.75rem;background:var(--team-color);color:#fff;border-radius:4px;font-size:0.75rem;font-weight:600;">Follow @PhilaFusion</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <h3 class="widget-title">Upcoming Tournaments</h3>
-                </div>
-                <div class="widget-content" style="padding: 0;">
-                    <div class="tournament-item">
-                        <div class="tournament-date">
-                            <div class="tournament-day">TBD</div>
-                            <div class="tournament-month">2025</div>
-                        </div>
-                        <div class="tournament-info">
-                            <div class="tournament-name">VCT Americas</div>
-                            <div class="tournament-game">Valorant</div>
-                        </div>
-                    </div>
-                    <div class="tournament-item">
-                        <div class="tournament-date">
-                            <div class="tournament-day">TBD</div>
-                            <div class="tournament-month">2025</div>
-                        </div>
-                        <div class="tournament-info">
-                            <div class="tournament-name">LCS Spring Split</div>
-                            <div class="tournament-game">League of Legends</div>
-                        </div>
-                    </div>
-                    <div class="tournament-item">
-                        <div class="tournament-date">
-                            <div class="tournament-day">TBD</div>
-                            <div class="tournament-month">2025</div>
-                        </div>
-                        <div class="tournament-info">
-                            <div class="tournament-name">CS2 Major</div>
-                            <div class="tournament-game">Counter-Strike 2</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-header">
-                    <h3 class="widget-title">Quick Links</h3>
+                    <h3 class="widget-title">Streaming</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
                     <a href="https://www.twitch.tv" target="_blank" class="quick-links-item">Twitch</a>
                     <a href="https://gaming.youtube.com" target="_blank" class="quick-links-item">YouTube Gaming</a>
-                    <a href="https://www.esportsearnings.com" target="_blank" class="quick-links-item">Esports Earnings</a>
                     <a href="https://liquipedia.net" target="_blank" class="quick-links-item">Liquipedia</a>
                     <a href="https://dotesports.com" target="_blank" class="quick-links-item">Dot Esports</a>
-                </div>
-            </div>
-
-            <!-- AdSense Ad Unit -->
-            <div class="widget">
-                <div class="widget-content" style="padding: 0.5rem; min-height: 250px;">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-1980537474373781"
-                         data-ad-slot="auto"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                </div>
-            </div>
-
-            <div class="widget trivia-promo-widget">
-                <div class="trivia-promo-header">
-                    <span class="trivia-promo-icon">&#129504;</span>
-                    <span class="trivia-promo-title">Gaming Trivia</span>
-                </div>
-                <div class="trivia-promo-body">
-                    <p class="trivia-promo-tagline">Test Your eSports Knowledge!</p>
-                    <div class="trivia-promo-stats">
-                        <div class="trivia-stat"><span class="stat-number">20</span><span class="stat-label">Questions</span></div>
-                        <div class="trivia-stat"><span class="stat-number">&#129689;10</span><span class="stat-label">Per Correct</span></div>
-                    </div>
-                    <a href="/trivia.html?team=eSports" class="trivia-promo-btn">Play Now</a>
                 </div>
             </div>
         </aside>
