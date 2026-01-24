@@ -201,7 +201,26 @@
                 align-items: center;
                 justify-content: center;
                 padding: 0 12px;
-                min-width: 70px;
+                min-width: 90px;
+                gap: 4px;
+            }
+
+            .game-details-btn {
+                background: linear-gradient(135deg, #e94560, #d63850);
+                color: white;
+                border: none;
+                padding: 4px 10px;
+                border-radius: 4px;
+                font-size: 10px;
+                font-weight: 600;
+                cursor: pointer;
+                text-transform: uppercase;
+                transition: background 0.2s;
+                white-space: nowrap;
+            }
+
+            .game-details-btn:hover {
+                background: linear-gradient(135deg, #ff6b6b, #e94560);
             }
 
             .game-period {
@@ -406,9 +425,11 @@
                 }
             }
 
+            const buttonText = game.status.isInProgress ? 'Game Details' : (game.status.isFinal ? 'Box Score' : 'Game Preview');
+
             return `
                 <div class="ticker-game" data-sport="${game.sport}" data-game-id="${game.id}">
-                    <div class="game-score-section" onclick="window.liveTicker.openGame('${game.sport}', '${game.id}')">
+                    <div class="game-score-section">
                         <div class="team-block ${game.awayTeam.isPhilly ? 'philly' : ''}">
                             <img class="team-logo" src="${game.awayTeam.logo}" alt="${game.awayTeam.shortName}" onerror="this.style.display='none'">
                             <span class="team-abbr">${game.awayTeam.shortName}</span>
@@ -416,6 +437,7 @@
                         <span class="team-score-value">${game.awayTeam.score}</span>
                         <div class="game-status-block">
                             ${statusHtml}
+                            <button class="game-details-btn" onclick="window.liveTicker.openGame('${game.sport}', '${game.id}')">${buttonText}</button>
                         </div>
                         <span class="team-score-value">${game.homeTeam.score}</span>
                         <div class="team-block ${game.homeTeam.isPhilly ? 'philly' : ''}">
@@ -482,8 +504,8 @@
         },
 
         openGame: function(sport, gameId) {
-            // Open game preview page with game details
-            window.location.href = `/game-preview.html?id=${gameId}&sport=${sport}`;
+            // Open game preview page with ESPN game data
+            window.location.href = `/game-preview.html?id=${gameId}&sport=${sport}&source=espn`;
         },
 
         destroy: function() {

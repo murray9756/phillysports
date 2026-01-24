@@ -352,6 +352,7 @@
         const params = new URLSearchParams(window.location.search);
         const gameId = params.get('id');
         const sport = params.get('sport') || 'NFL';
+        const source = params.get('source') || 'espn';
 
         function formatDateTime(dateStr) {
             if (!dateStr) return 'TBD';
@@ -403,7 +404,7 @@
             }
 
             try {
-                const response = await fetch(`/api/game/${gameId}?sport=${sport}`);
+                const response = await fetch(`/api/game/${gameId}?sport=${sport}&source=${source}`);
                 const data = await response.json();
 
                 if (!data.success || !data.game) {
