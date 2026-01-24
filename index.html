@@ -2719,20 +2719,19 @@
             const container = document.getElementById('diehardLeaderboardWidget');
             if (!container) return;
             try {
-                const response = await fetch('/api/predictions/leaderboard');
+                const response = await fetch('/api/users/leaderboard?limit=5');
                 const data = await response.json();
 
                 if (data.success && data.leaderboard && data.leaderboard.length > 0) {
-                    const top5 = data.leaderboard.slice(0, 5);
-                    container.innerHTML = top5.map((user, i) => {
+                    container.innerHTML = data.leaderboard.map((user, i) => {
                         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
                         return `
                             <div class="leaderboard-row" style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
                                 <span style="display:flex;align-items:center;gap:0.4rem;">
                                     <span class="leaderboard-rank" style="width:1.5rem;text-align:center;">${medal}</span>
-                                    <a href="/profile.html?username=${user.username}" class="leaderboard-username" style="font-weight:500;">${user.username}</a>
+                                    <a href="/profile.html?username=${user.username}" class="leaderboard-username" style="font-weight:500;">${user.displayName || user.username}</a>
                                 </span>
-                                <span class="leaderboard-coins" style="color:#ff9800;font-size:1rem;font-weight:900;font-family:var(--ps-font-headline,'Arial Black',sans-serif);">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
+                                <span class="leaderboard-coins" style="color:#ff9800;font-size:1rem;font-weight:900;font-family:var(--ps-font-headline,'Arial Black',sans-serif);">🪙 ${Math.round(user.coins).toLocaleString()}</span>
                             </div>
                         `;
                     }).join('');

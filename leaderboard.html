@@ -186,7 +186,7 @@
             content.innerHTML = '<div class="empty-state">Loading...</div>';
 
             try {
-                const response = await fetch('/api/predictions/leaderboard');
+                const response = await fetch('/api/users/leaderboard?limit=50');
                 const data = await response.json();
 
                 if (!data.success || !data.leaderboard || data.leaderboard.length === 0) {
@@ -206,12 +206,13 @@
                         <tbody>
                 `;
 
-                data.leaderboard.forEach(entry => {
+                data.leaderboard.forEach((entry, index) => {
+                    const rank = index + 1;
                     html += `
                         <tr>
-                            <td class="rank-cell rank-${entry.rank}">${getRankEmoji(entry.rank)}</td>
-                            <td class="user-cell">${entry.username}</td>
-                            <td class="coins-cell">&#129689; ${Math.round(entry.coinBalance).toLocaleString()}</td>
+                            <td class="rank-cell rank-${rank}">${getRankEmoji(rank)}</td>
+                            <td class="user-cell">${entry.displayName || entry.username}</td>
+                            <td class="coins-cell">&#129689; ${Math.round(entry.coins).toLocaleString()}</td>
                         </tr>
                     `;
                 });

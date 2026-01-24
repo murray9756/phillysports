@@ -121,7 +121,6 @@
                             <a href="/pools.html">Pools</a>
                             <a href="/poker.html">Poker</a>
                             <a href="/trivia.html">Trivia</a>
-                            <a href="/predictions.html">Predictions</a>
                         </div>
                     </div>
 
@@ -215,7 +214,6 @@
                         <a href="/pools.html">Pools</a>
                         <a href="/poker.html">Poker</a>
                         <a href="/trivia.html">Trivia</a>
-                        <a href="/predictions.html">Predictions</a>
                     </div>
                 </div>
 
