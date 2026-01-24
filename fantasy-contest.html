@@ -95,7 +95,7 @@
         .feedback-reward span { color: #b8860b; font-weight: 600; }
         .feedback-success { text-align: center; padding: 1rem; }
         .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
-        .main-container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
+        .main-container { max-width: 1400px; margin: 0 auto; padding: 1rem; overflow-x: auto; }
 
         .contest-header {
             background: var(--card-bg);
@@ -495,8 +495,8 @@
             </div>
         </div>
 
-        <div id="myentryTab" style="display: none;">
-            <div style="background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1rem; width: 100%; overflow-x: auto;">
+        <div id="myentryTab" style="display: none; width: 100%; overflow-x: auto;">
+            <div style="background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1rem; min-width: 1100px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
                     <h3 style="font-weight: 700; margin: 0;">My Entry</h3>
                     <div style="display: flex; align-items: center; gap: 1.5rem;">
@@ -504,7 +504,7 @@
                         <div id="myEntryScore" class="my-entry-score" style="margin: 0; font-size: 1.5rem;">0 pts</div>
                     </div>
                 </div>
-                <div id="myEntryLineup"></div>
+                <div id="myEntryLineup" style="min-width: 1100px; width: max-content;"></div>
                 <div id="myEntryStatus" style="margin-top: 1rem; padding: 0.75rem; border-radius: 6px; text-align: center;"></div>
             </div>
         </div>
