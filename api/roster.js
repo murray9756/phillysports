@@ -75,21 +75,28 @@ export default async function handler(req, res) {
                 // Use SportsDataIO for pro sports
                 const rosterData = await fetchTeamRoster(config.sport, config.abbr);
 
-                players = rosterData.map(player => ({
-                    name: `${player.FirstName || ''} ${player.LastName || ''}`.trim() || player.Name,
-                    firstName: player.FirstName,
-                    lastName: player.LastName,
-                    number: player.Jersey || player.Number || '',
-                    position: player.Position || '',
-                    positionFull: player.PositionCategory || player.Position || '',
-                    headshot: player.PhotoUrl || null,
-                    status: player.Status || 'Active',
-                    college: player.College || '',
-                    experience: player.Experience || 0,
-                    height: player.Height ? formatHeight(player.Height) : '',
-                    weight: player.Weight ? `${player.Weight} lbs` : '',
-                    playerId: player.PlayerID?.toString()
-                }));
+                players = rosterData.map(player => {
+                    const fullName = `${player.FirstName || ''} ${player.LastName || ''}`.trim() || player.Name;
+                    // Generate ESPN player profile link
+                    const espnLink = generateESPNPlayerLink(config.sport, fullName);
+
+                    return {
+                        name: fullName,
+                        firstName: player.FirstName,
+                        lastName: player.LastName,
+                        number: player.Jersey || player.Number || '',
+                        position: player.Position || '',
+                        positionFull: player.PositionCategory || player.Position || '',
+                        headshot: player.PhotoUrl || null,
+                        status: player.Status || 'Active',
+                        college: player.College || '',
+                        experience: player.Experience || 0,
+                        height: player.Height ? formatHeight(player.Height) : '',
+                        weight: player.Weight ? `${player.Weight} lbs` : '',
+                        playerId: player.PlayerID?.toString(),
+                        link: espnLink
+                    };
+                });
             }
         } else if (collegeConfig) {
             // College team roster
@@ -101,21 +108,27 @@ export default async function handler(req, res) {
 
             if (response.ok) {
                 const rosterData = await response.json();
-                players = rosterData.map(player => ({
-                    name: `${player.FirstName || ''} ${player.LastName || ''}`.trim(),
-                    firstName: player.FirstName,
-                    lastName: player.LastName,
-                    number: player.Jersey || '',
-                    position: player.Position || '',
-                    positionFull: player.Position || '',
-                    headshot: player.PhotoUrl || null,
-                    status: player.Status || 'Active',
-                    college: '',
-                    experience: player.Class || '',
-                    height: player.Height ? formatHeight(player.Height) : '',
-                    weight: player.Weight ? `${player.Weight} lbs` : '',
-                    playerId: player.PlayerID?.toString()
-                }));
+                players = rosterData.map(player => {
+                    const fullName = `${player.FirstName || ''} ${player.LastName || ''}`.trim();
+                    const espnLink = generateESPNPlayerLink('NCAAB', fullName);
+
+                    return {
+                        name: fullName,
+                        firstName: player.FirstName,
+                        lastName: player.LastName,
+                        number: player.Jersey || '',
+                        position: player.Position || '',
+                        positionFull: player.Position || '',
+                        headshot: player.PhotoUrl || null,
+                        status: player.Status || 'Active',
+                        college: '',
+                        experience: player.Class || '',
+                        height: player.Height ? formatHeight(player.Height) : '',
+                        weight: player.Weight ? `${player.Weight} lbs` : '',
+                        playerId: player.PlayerID?.toString(),
+                        link: espnLink
+                    };
+                });
             }
         }
 
@@ -153,6 +166,38 @@ function formatHeight(inches) {
     const feet = Math.floor(inches / 12);
     const remainingInches = inches % 12;
     return `${feet}'${remainingInches}"`;
+}
+
+/**
+ * Generate ESPN player profile link from name and sport
+ */
+function generateESPNPlayerLink(sport, playerName) {
+    if (!playerName) return null;
+
+    // ESPN sport path mapping
+    const sportPaths = {
+        'NFL': 'nfl',
+        'NBA': 'nba',
+        'MLB': 'mlb',
+        'NHL': 'nhl',
+        'NCAAB': 'mens-college-basketball',
+        'NCAAF': 'college-football'
+    };
+
+    const sportPath = sportPaths[sport];
+    if (!sportPath) return null;
+
+    // Convert name to ESPN URL format: "Jalen Hurts" -> "jalen-hurts"
+    const slugName = playerName
+        .toLowerCase()
+        .replace(/[^a-z\s-]/g, '')  // Remove special characters
+        .replace(/\s+/g, '-')        // Replace spaces with hyphens
+        .replace(/-+/g, '-')         // Collapse multiple hyphens
+        .trim();
+
+    if (!slugName) return null;
+
+    return `https://www.espn.com/${sportPath}/player/_/name/${slugName}`;
 }
 
 function extractESPNPlayer(player) {
