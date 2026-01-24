@@ -496,15 +496,15 @@
         </div>
 
         <div id="myentryTab" style="display: none;">
-            <div class="leaderboard-panel" style="max-width: 100%; overflow-x: auto;">
+            <div style="background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 1rem; width: 100%; overflow-x: auto;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-                    <h3 class="leaderboard-header" style="margin: 0;">My Entry</h3>
+                    <h3 style="font-weight: 700; margin: 0;">My Entry</h3>
                     <div style="display: flex; align-items: center; gap: 1.5rem;">
                         <div id="myEntryRank" style="font-size: 0.9rem; color: var(--text-muted);"></div>
                         <div id="myEntryScore" class="my-entry-score" style="margin: 0; font-size: 1.5rem;">0 pts</div>
                     </div>
                 </div>
-                <div id="myEntryLineup" style="min-width: 1100px;"></div>
+                <div id="myEntryLineup"></div>
                 <div id="myEntryStatus" style="margin-top: 1rem; padding: 0.75rem; border-radius: 6px; text-align: center;"></div>
             </div>
         </div>
@@ -1018,9 +1018,10 @@
                 statHeaders = ['Stat1', 'Stat2', 'Stat3', 'Stat4', 'Stat5', 'Stat6', 'Stat7', 'Stat8'];
             }
 
-            // Header row
+            // Header row - inline grid styles to ensure they always work
+            const gridStyle = 'display:grid; grid-template-columns: 50px 200px repeat(8, 70px) 80px; gap:0.75rem; padding:0.75rem 0.5rem; align-items:center;';
             let html = `
-                <div class="entry-player-row header">
+                <div style="${gridStyle} font-weight:700; font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; background:var(--dark-bg); border-radius:4px 4px 0 0;">
                     <span>POS</span>
                     <span>PLAYER</span>
                     ${statHeaders.map(h => `<span style="text-align:center;">${h}</span>`).join('')}
@@ -1133,21 +1134,21 @@
                 };
 
                 return `
-                    <div class="entry-player-row">
-                        <span class="pos-badge">${player.position}</span>
-                        <div>
-                            <div class="player-name">${player.playerName}</div>
-                            <div class="player-team">${player.playerPosition}${player.team ? ' - ' + player.team : ''}</div>
+                    <div style="${gridStyle} border-bottom:1px solid var(--border-color); font-size:0.85rem;">
+                        <span style="background:var(--accent-color); color:white; padding:0.25rem 0.5rem; border-radius:4px; font-size:0.75rem; font-weight:700; text-align:center;">${player.position}</span>
+                        <div style="overflow:hidden;">
+                            <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${player.playerName}</div>
+                            <div style="font-size:0.7rem; color:var(--text-muted);">${player.playerPosition}${player.team ? ' - ' + player.team : ''}</div>
                         </div>
                         ${statValues.map((v, i) => {
                             const ptContrib = pointBreakdown[i];
                             const hasValue = v !== '-' && v !== 0;
                             const ptDisplay = formatPts(ptContrib);
-                            return `<span class="stat-cell ${hasValue ? 'has-value' : ''}" title="${ptDisplay ? ptDisplay + ' pts' : ''}">
-                                ${v}${ptDisplay ? `<span class="pt-contrib ${ptContrib < 0 ? 'negative' : ''}">${ptDisplay}</span>` : ''}
+                            return `<span style="display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; ${hasValue ? 'color:var(--text-primary);' : 'color:var(--text-secondary);'}">
+                                ${v}${ptDisplay ? `<span style="font-size:0.65rem; font-weight:600; color:${ptContrib < 0 ? 'var(--error-color)' : 'var(--success-color)'};">${ptDisplay}</span>` : ''}
                             </span>`;
                         }).join('')}
-                        <span class="player-pts ${pts > 0 ? 'scoring' : ''}">${pts}</span>
+                        <span style="font-weight:700; text-align:center; font-size:1rem; ${pts > 0 ? 'color:var(--success-color); background:rgba(46,125,50,0.1);' : 'background:var(--dark-bg);'} padding:0.35rem; border-radius:4px;">${pts}</span>
                     </div>
                 `;
             }).join('');
