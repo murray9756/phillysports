@@ -124,4 +124,13 @@ export async function fetchAllScoreboards() {
     return results;
 }
 
+/**
+ * Check if a game has started based on commence time
+ */
+export function hasGameStarted(commenceTime) {
+    if (!commenceTime) return false;
+    const gameTime = new Date(commenceTime);
+    return new Date() >= gameTime;
+}
+
 export { SCOREBOARD_URLS };
