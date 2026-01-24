@@ -446,10 +446,20 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
         console.log(`After team filter: ${games.length} games`);
     } else if (phillyOnly) {
         // Filter to Philly teams when viewing "all sports"
-        games = games.filter(g =>
-            g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI'
-        );
-        console.log(`After Philly filter: ${games.length} games`);
+        // SportsDataIO uses different codes per sport
+        const phillyTeamCodes = {
+            NFL: ['PHI'],
+            NBA: ['PHI'],
+            MLB: ['PHI'],
+            NHL: ['PHI']  // Flyers use PHI
+        };
+        const codes = phillyTeamCodes[sport] || ['PHI'];
+        games = games.filter(g => {
+            const homeTeam = (g.HomeTeam || '').toUpperCase();
+            const awayTeam = (g.AwayTeam || '').toUpperCase();
+            return codes.some(code => homeTeam === code || awayTeam === code);
+        });
+        console.log(`After Philly filter (${codes.join(',')}): ${games.length} games`);
     } else {
         console.log(`No filter applied, returning all ${games.length} games`);
     }
