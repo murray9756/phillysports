@@ -377,7 +377,8 @@
         });
 
         let selectedSport = 'all';
-        let selectedDate = new Date().toISOString().split('T')[0];
+        // Use local date, not UTC
+        let selectedDate = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format in local time
         let currentUser = null;
         let betSlip = [];
         let gamesData = {};

@@ -8,6 +8,17 @@ import { fetchGamesByDate } from '../lib/sportsdata.js';
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 const ODDS_API_KEY = process.env.ODDS_API_KEY;
 
+// Get today's date in US Eastern time (YYYY-MM-DD format)
+function getLocalDate() {
+    const now = new Date();
+    // Convert to US Eastern time
+    const eastern = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const year = eastern.getFullYear();
+    const month = String(eastern.getMonth() + 1).padStart(2, '0');
+    const day = String(eastern.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 // Cache duration: 15 minutes
 const CACHE_DURATION_MS = 15 * 60 * 1000;
 
@@ -42,7 +53,10 @@ export default async function handler(req, res) {
 
     const { sport, team, date } = req.query;
     const sportUpper = sport?.toUpperCase();
-    const targetDate = date || new Date().toISOString().split('T')[0];
+    // Use provided date or today's date in US Eastern time
+    const targetDate = date || getLocalDate();
+
+    console.log(`Odds API called: sport=${sportUpper || 'all'}, date=${targetDate}, phillyOnly=${!sportUpper}`);
 
     // Validate sport parameter
     const validSports = [...PRO_SPORTS, ...COLLEGE_SPORTS];
@@ -65,7 +79,9 @@ export default async function handler(req, res) {
             games = [...proGames, ...collegeGames];
         } else if (PRO_SPORTS.includes(sportUpper)) {
             // Specific pro sport selected - show all games for that sport
+            console.log(`Fetching ${sportUpper} with phillyOnly=false (all games)`);
             games = await fetchSportsDataOdds(sportUpper, team, targetDate, false);  // phillyOnly=false
+            console.log(`Got ${games.length} games for ${sportUpper}`);
         } else if (COLLEGE_SPORTS.includes(sportUpper)) {
             // College sport - use TheOddsAPI
             games = await fetchTheOddsAPIData(sportUpper);
@@ -221,17 +237,22 @@ async function fetchFromSportsDataIO(sport, team, targetDate, phillyOnly = true)
     }
 
     // Filter by team if specified
+    console.log(`Filtering ${sport} games: team=${team}, phillyOnly=${phillyOnly}, beforeFilter=${games.length}`);
     if (team) {
         const teamUpper = team.toUpperCase();
         games = games.filter(g =>
             g.HomeTeam?.toUpperCase() === teamUpper ||
             g.AwayTeam?.toUpperCase() === teamUpper
         );
+        console.log(`After team filter: ${games.length} games`);
     } else if (phillyOnly) {
         // Filter to Philly teams when viewing "all sports"
         games = games.filter(g =>
             g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI'
         );
+        console.log(`After Philly filter: ${games.length} games`);
+    } else {
+        console.log(`No filter applied, returning all ${games.length} games`);
     }
     // If phillyOnly is false and no team specified, return all games
 
