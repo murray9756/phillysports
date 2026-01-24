@@ -10,9 +10,12 @@ export default async function handler(req, res) {
 
     const today = getTodayET();
     const yesterday = getYesterdayET();
+    const serverNow = new Date();
 
     const results = {
-        dates: { today, yesterday },
+        serverDate: serverNow.toISOString(),
+        serverDateLocal: serverNow.toString(),
+        calculatedDates: { today, yesterday },
         sports: {}
     };
 
