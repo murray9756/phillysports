@@ -87,12 +87,24 @@ export default async function handler(req, res) {
             games = await fetchTheOddsAPIData(sportUpper);
         }
 
+        // Filter out games that have already started
+        const now = new Date();
+        const upcomingGames = games.filter(game => {
+            const gameTime = new Date(game.commenceTime);
+            // Also check status field if available
+            const isStarted = game.status === 'InProgress' || game.status === 'Final' ||
+                              game.status === 'F' || game.status === 'F/OT';
+            return gameTime > now && !isStarted;
+        });
+
+        console.log(`Filtered to ${upcomingGames.length} upcoming games (removed ${games.length - upcomingGames.length} started/completed)`);
+
         // Sort by commence time
-        games.sort((a, b) => new Date(a.commenceTime) - new Date(b.commenceTime));
+        upcomingGames.sort((a, b) => new Date(a.commenceTime) - new Date(b.commenceTime));
 
         return res.status(200).json({
             success: true,
-            games,
+            games: upcomingGames,
             sport: sportUpper || 'all',
             lastUpdated: new Date().toISOString()
         });
