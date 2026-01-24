@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    if (localStorage.getItem('isAdmin') !== 'true') {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-KRBRNKNC97';
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KRBRNKNC97');
+    }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Preview | PhillySports.com</title>
+    <meta name="description" content="Game preview, odds, and matchup details">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme-vintage.css">
+    <link rel="stylesheet" href="/css/body-theme.css">
+    <link rel="stylesheet" href="/css/mobile-menu.css">
+    <style>
+        :root {
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #444444;
+            --text-muted: #777777;
+            --accent-color: #8b0000;
+        }
+        [data-theme="dark"] {
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-primary: #e8e8e8;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        a { color: inherit; text-decoration: none; }
+
+        .main-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+
+        .game-header {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .matchup {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 120px;
+        }
+
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            background: var(--dark-bg);
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+
+        .team-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .team-record {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .team-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-color);
+        }
+
+        .vs-divider {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .game-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .game-status {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-scheduled { background: #e3f2fd; color: #1976d2; }
+        .status-inprogress { background: #e8f5e9; color: #388e3c; }
+        .status-final { background: #fce4ec; color: #c2185b; }
+        [data-theme="dark"] .status-scheduled { background: rgba(25,118,210,0.2); }
+        [data-theme="dark"] .status-inprogress { background: rgba(56,142,60,0.2); }
+        [data-theme="dark"] .status-final { background: rgba(194,24,91,0.2); }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--accent-color);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body { padding: 1rem; }
+
+        .odds-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .odds-row:last-child { border-bottom: none; }
+
+        .odds-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .odds-value {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .odds-value.favorite { color: #388e3c; }
+        .odds-value.underdog { color: var(--accent-color); }
+
+        .stat-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .stat-comparison:last-child { border-bottom: none; }
+
+        .stat-home, .stat-away {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .stat-home { text-align: right; }
+        .stat-away { text-align: left; }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .venue-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .weather-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            padding: 0.75rem 0;
+        }
+
+        .ticket-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .ticket-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--accent-color);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .ticket-btn:hover { opacity: 0.9; }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+        }
+
+        .error {
+            text-align: center;
+            padding: 2rem;
+            color: var(--accent-color);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--accent-color); }
+
+        @media (max-width: 600px) {
+            .matchup { flex-direction: column; gap: 1rem; }
+            .team-side { flex-direction: row; }
+            .team-logo { width: 50px; height: 50px; }
+            .vs-divider { display: none; }
+        }
+    </style>
+</head>
+<body class="ps-theme">
+    <div id="site-header"></div>
+    <script src="/js/header.js"></script>
+
+    <main class="main-container">
+        <a href="javascript:history.back()" class="back-link">&larr; Back</a>
+
+        <div id="content">
+            <div class="loading">Loading game preview...</div>
+        </div>
+    </main>
+
+    <script>
+        // Get game ID and sport from URL
+        const params = new URLSearchParams(window.location.search);
+        const gameId = params.get('id');
+        const sport = params.get('sport') || 'NFL';
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return 'TBD';
+            const date = new Date(dateStr);
+            const options = {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function getStatusClass(status) {
+            if (!status) return 'status-scheduled';
+            const s = status.toLowerCase();
+            if (s === 'final' || s === 'f/ot' || s.includes('final')) return 'status-final';
+            if (s === 'inprogress' || s.includes('progress') || s.includes('q') || s.includes('half')) return 'status-inprogress';
+            return 'status-scheduled';
+        }
+
+        function formatSpread(spread) {
+            if (spread === null || spread === undefined) return 'N/A';
+            if (spread > 0) return `+${spread}`;
+            return spread.toString();
+        }
+
+        function formatMoneyLine(ml) {
+            if (ml === null || ml === undefined) return 'N/A';
+            if (ml > 0) return `+${ml}`;
+            return ml.toString();
+        }
+
+        async function loadGamePreview() {
+            const container = document.getElementById('content');
+
+            if (!gameId) {
+                container.innerHTML = '<div class="error">No game ID provided</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/game/${gameId}?sport=${sport}`);
+                const data = await response.json();
+
+                if (!data.success || !data.game) {
+                    container.innerHTML = `<div class="error">${data.error || 'Game not found'}</div>`;
+                    return;
+                }
+
+                const game = data.game;
+                document.title = `${game.awayTeam.abbr} @ ${game.homeTeam.abbr} - Game Preview | PhillySports.com`;
+
+                const homeRecord = game.homeTeam.record ?
+                    `${game.homeTeam.record.wins}-${game.homeTeam.record.losses}${game.homeTeam.record.ties ? `-${game.homeTeam.record.ties}` : ''}` : '';
+                const awayRecord = game.awayTeam.record ?
+                    `${game.awayTeam.record.wins}-${game.awayTeam.record.losses}${game.awayTeam.record.ties ? `-${game.awayTeam.record.ties}` : ''}` : '';
+
+                const searchQuery = encodeURIComponent(`${game.homeTeam.name || game.homeTeam.abbr} ${game.awayTeam.name || game.awayTeam.abbr} tickets`);
+
+                let html = `
+                    <div class="game-header">
+                        <div class="matchup">
+                            <div class="team-side">
+                                ${game.awayTeam.logo ? `<img src="${game.awayTeam.logo}" alt="${game.awayTeam.abbr}" class="team-logo" onerror="this.style.display='none'">` : ''}
+                                <div class="team-name">${game.awayTeam.name || game.awayTeam.abbr}</div>
+                                ${awayRecord ? `<div class="team-record">${awayRecord}</div>` : ''}
+                                ${game.status !== 'Scheduled' ? `<div class="team-score">${game.awayTeam.score || 0}</div>` : ''}
+                            </div>
+                            <div class="vs-divider">@</div>
+                            <div class="team-side">
+                                ${game.homeTeam.logo ? `<img src="${game.homeTeam.logo}" alt="${game.homeTeam.abbr}" class="team-logo" onerror="this.style.display='none'">` : ''}
+                                <div class="team-name">${game.homeTeam.name || game.homeTeam.abbr}</div>
+                                ${homeRecord ? `<div class="team-record">${homeRecord}</div>` : ''}
+                                ${game.status !== 'Scheduled' ? `<div class="team-score">${game.homeTeam.score || 0}</div>` : ''}
+                            </div>
+                        </div>
+                        <div class="game-meta">${formatDateTime(game.dateTime)}</div>
+                        <span class="game-status ${getStatusClass(game.status)}">${game.status || 'Scheduled'}</span>
+                        ${game.quarter ? `<div class="game-meta" style="margin-top:0.5rem;">${game.quarter} - ${game.timeRemaining || ''}</div>` : ''}
+                    </div>
+
+                    <div class="info-grid">
+                `;
+
+                // Odds card
+                if (game.odds) {
+                    html += `
+                        <div class="info-card">
+                            <div class="card-header">Betting Lines</div>
+                            <div class="card-body">
+                                <div class="odds-row">
+                                    <span class="odds-label">Spread</span>
+                                    <span class="odds-value">${game.homeTeam.abbr} ${formatSpread(game.odds.spread)}</span>
+                                </div>
+                                <div class="odds-row">
+                                    <span class="odds-label">Over/Under</span>
+                                    <span class="odds-value">${game.odds.overUnder || 'N/A'}</span>
+                                </div>
+                                <div class="odds-row">
+                                    <span class="odds-label">${game.homeTeam.abbr} ML</span>
+                                    <span class="odds-value ${game.odds.homeMoneyLine < 0 ? 'favorite' : 'underdog'}">${formatMoneyLine(game.odds.homeMoneyLine)}</span>
+                                </div>
+                                <div class="odds-row">
+                                    <span class="odds-label">${game.awayTeam.abbr} ML</span>
+                                    <span class="odds-value ${game.odds.awayMoneyLine < 0 ? 'favorite' : 'underdog'}">${formatMoneyLine(game.odds.awayMoneyLine)}</span>
+                                </div>
+                                ${game.odds.sportsbook ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;">via ${game.odds.sportsbook}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Game info card
+                html += `
+                    <div class="info-card">
+                        <div class="card-header">Game Info</div>
+                        <div class="card-body">
+                            ${game.venue ? `
+                                <div class="venue-info" style="padding:0.5rem 0;border-bottom:1px solid var(--border-color);">
+                                    <span style="font-size:1.2rem;">&#127951;</span>
+                                    <span>${game.venue}</span>
+                                </div>
+                            ` : ''}
+                            ${game.channel ? `
+                                <div class="venue-info" style="padding:0.5rem 0;border-bottom:1px solid var(--border-color);">
+                                    <span style="font-size:1.2rem;">&#128250;</span>
+                                    <span>${game.channel}</span>
+                                </div>
+                            ` : ''}
+                            ${game.weather ? `
+                                <div class="weather-info">
+                                    <span style="font-size:1.2rem;">&#127780;</span>
+                                    <span>${game.weather}</span>
+                                </div>
+                            ` : ''}
+                            <div class="ticket-links">
+                                <a href="https://www.vividseats.com/search?searchTerm=${searchQuery}" target="_blank" class="ticket-btn">VividSeats</a>
+                                <a href="https://www.stubhub.com/secure/search?q=${searchQuery}" target="_blank" class="ticket-btn">StubHub</a>
+                                <a href="https://www.ticketmaster.com/search?q=${searchQuery}" target="_blank" class="ticket-btn">Ticketmaster</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Box score stats (if game in progress or final)
+                if (game.boxScore && (game.boxScore.home.totalYards || game.boxScore.home.rebounds)) {
+                    html += `
+                        <div class="info-card" style="grid-column: 1 / -1;">
+                            <div class="card-header">Game Stats</div>
+                            <div class="card-body">
+                    `;
+
+                    if (sport === 'NFL' && game.boxScore.home.totalYards !== undefined) {
+                        html += `
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.totalYards || 0}</span>
+                                <span class="stat-label">Total Yards</span>
+                                <span class="stat-away">${game.boxScore.away.totalYards || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.passingYards || 0}</span>
+                                <span class="stat-label">Passing</span>
+                                <span class="stat-away">${game.boxScore.away.passingYards || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.rushingYards || 0}</span>
+                                <span class="stat-label">Rushing</span>
+                                <span class="stat-away">${game.boxScore.away.rushingYards || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.turnovers || 0}</span>
+                                <span class="stat-label">Turnovers</span>
+                                <span class="stat-away">${game.boxScore.away.turnovers || 0}</span>
+                            </div>
+                        `;
+                    } else if (sport === 'NBA' && game.boxScore.home.rebounds !== undefined) {
+                        html += `
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.rebounds || 0}</span>
+                                <span class="stat-label">Rebounds</span>
+                                <span class="stat-away">${game.boxScore.away.rebounds || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.assists || 0}</span>
+                                <span class="stat-label">Assists</span>
+                                <span class="stat-away">${game.boxScore.away.assists || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.steals || 0}</span>
+                                <span class="stat-label">Steals</span>
+                                <span class="stat-away">${game.boxScore.away.steals || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home.blocks || 0}</span>
+                                <span class="stat-label">Blocks</span>
+                                <span class="stat-away">${game.boxScore.away.blocks || 0}</span>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += '</div>';
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('Load game preview error:', error);
+                container.innerHTML = `<div class="error">Failed to load game preview: ${error.message}</div>`;
+            }
+        }
+
+        loadGamePreview();
+    </script>
+    <script src="/js/mobile-menu.js"></script>
+</body>
+</html>

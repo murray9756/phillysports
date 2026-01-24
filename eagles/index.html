@@ -555,7 +555,7 @@
             const container = document.getElementById('diehardLeaderboardWidget');
             if (!container) return;
             try {
-                const response = await fetch('/api/predictions/leaderboard');
+                const response = await fetch('/api/users/leaderboard?limit=5');
                 const data = await response.json();
 
                 if (data.success && data.leaderboard && data.leaderboard.length > 0) {
@@ -685,6 +685,7 @@
                 if (data.players && data.players.length > 0) {
                     container.innerHTML = data.players.map(player => `
                         <div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
+                            ${player.headshot ? `<img src="${player.headshot}" alt="${player.name}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--border-color);" onerror="this.style.display='none'">` : `<div style="width:32px;height:32px;border-radius:50%;background:var(--team-color);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:700;">${(player.name || '').split(' ').map(n => n[0]).join('').slice(0,2)}</div>`}
                             <span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${player.number || '-'}</span>
                             ${player.link ? `<a href="${player.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${player.name}</a>` : `<span style="flex:1;font-weight:500;">${player.name}</span>`}
                             <span style="color:var(--text-muted);font-size:0.75rem;">${player.position}</span>

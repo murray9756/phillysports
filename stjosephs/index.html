@@ -575,7 +575,7 @@
             const container = document.getElementById('diehardLeaderboardWidget');
             if (!container) return;
             try {
-                const response = await fetch('/api/predictions/leaderboard');
+                const response = await fetch('/api/users/leaderboard?limit=5');
                 const data = await response.json();
 
                 if (data.success && data.leaderboard && data.leaderboard.length > 0) {

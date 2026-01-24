@@ -695,6 +695,7 @@
             container.innerHTML = filtered.map(player => `
                 <div class="player-row ${selectedIds.has(player.id) ? 'selected' : ''}" data-id="${player.id}">
                     <div class="player-info">
+                        ${player.imageUrl ? `<img src="${player.imageUrl}" alt="${player.name}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;background:var(--border-color);flex-shrink:0;" onerror="this.style.display='none'">` : `<div style="width:36px;height:36px;border-radius:50%;background:var(--accent-color);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:700;flex-shrink:0;">${(player.name || '').split(' ').map(n => n[0]).join('').slice(0,2)}</div>`}
                         <div>
                             <div class="player-name">${player.name}</div>
                             <div class="player-team">${player.teamAbbreviation}</div>
