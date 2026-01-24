@@ -46,20 +46,27 @@ export default async function handler(req, res) {
 
     try {
         const liveGames = [];
-        const today = new Date().toISOString().split('T')[0];
+        // Use Eastern time for date since all Philly games are ET
+        const now = new Date();
+        const etOffset = -5 * 60; // EST is UTC-5
+        const etNow = new Date(now.getTime() + (now.getTimezoneOffset() + etOffset) * 60000);
+        const today = etNow.toISOString().split('T')[0];
         const sports = ['NFL', 'NBA', 'NHL', 'MLB'];
 
-        // Fetch all sports in parallel
+        // Also check yesterday for games that started late
+        const yesterday = new Date(etNow.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+        // Fetch all sports in parallel for both today and yesterday
         const results = await Promise.all(
-            sports.map(async (sport) => {
-                try {
-                    const games = await fetchScoresByDate(sport, today);
-                    return { sport, games: games || [] };
-                } catch (e) {
-                    console.error(`SportsDataIO ${sport} error:`, e.message);
+            sports.flatMap((sport) => [
+                fetchScoresByDate(sport, today).then(games => ({ sport, games: games || [] })).catch(e => {
+                    console.error(`SportsDataIO ${sport} today error:`, e.message);
                     return { sport, games: [] };
-                }
-            })
+                }),
+                fetchScoresByDate(sport, yesterday).then(games => ({ sport, games: games || [] })).catch(e => {
+                    return { sport, games: [] };
+                })
+            ])
         );
 
         // Process each sport's games
