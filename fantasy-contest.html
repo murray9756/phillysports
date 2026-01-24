@@ -372,6 +372,20 @@
             color: var(--success-color);
             background: rgba(46,125,50,0.1);
         }
+        .entry-player-row .stat-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .entry-player-row .pt-contrib {
+            font-size: 0.65rem;
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        .entry-player-row .pt-contrib.negative {
+            color: var(--error-color);
+        }
         .my-entry-score {
             font-size: 2rem;
             font-weight: 800;
@@ -973,11 +987,19 @@
 
             const container = document.getElementById('myEntryLineup');
 
-            // Determine sport-specific stat columns
+            // Determine sport-specific stat columns and scoring rules
             const isNBA = contest.sport === 'NBA';
             const isNFL = contest.sport === 'NFL';
             const isMLB = contest.sport === 'MLB';
             const isNHL = contest.sport === 'NHL';
+
+            // Scoring multipliers for display
+            const SCORING = {
+                NBA: { pts: 1, reb: 1.2, ast: 1.5, stl: 3, blk: 3, tpm: 0.5, to: -1 },
+                NFL: { passYds: 0.04, passTD: 4, rushYds: 0.1, rushTD: 6, rec: 1, recYds: 0.1, recTD: 6, int: -1 },
+                MLB: { hit: 3, run: 2, rbi: 2, hr: 10, sb: 5, ip: 2.25, k: 2, win: 4 },
+                NHL: { goal: 8, ast: 5, sog: 1.5, pm: 1, blk: 1.3, win: 6 }
+            };
 
             let statHeaders = [];
             if (isNBA) {
@@ -1005,56 +1027,106 @@
             html += userEntry.lineup.map(player => {
                 const pts = player.points || 0;
                 const stats = player.stats || {};
+                const breakdown = stats.breakdown || {};
 
-                // Get stat values based on sport
+                // Get stat values and point contributions based on sport
                 let statValues = [];
+                let pointBreakdown = [];
+
                 if (isNBA) {
+                    const ptsVal = stats.Points || 0;
+                    const rebVal = stats.Rebounds || 0;
+                    const astVal = stats.Assists || 0;
+                    const stlVal = stats.Steals || 0;
+                    const blkVal = stats.BlockedShots || 0;
+                    const tpmVal = stats.ThreePointersMade || 0;
+                    const toVal = stats.Turnovers || 0;
+                    const minVal = stats.Minutes || 0;
+
                     statValues = [
-                        stats.points || stats.Points || '-',
-                        stats.rebounds || stats.Rebounds || stats.TotalRebounds || '-',
-                        stats.assists || stats.Assists || '-',
-                        stats.steals || stats.Steals || '-',
-                        stats.blocks || stats.BlockedShots || '-',
-                        stats.threePointersMade || stats.ThreePointersMade || '-',
-                        stats.turnovers || stats.Turnovers || '-',
-                        stats.minutes || stats.Minutes || '-'
+                        ptsVal || '-',
+                        rebVal || '-',
+                        astVal || '-',
+                        stlVal || '-',
+                        blkVal || '-',
+                        tpmVal || '-',
+                        toVal || '-',
+                        minVal || '-'
+                    ];
+
+                    // Calculate point contributions
+                    const rules = SCORING.NBA;
+                    pointBreakdown = [
+                        breakdown.pts !== undefined ? breakdown.pts : (ptsVal * rules.pts),
+                        breakdown.reb !== undefined ? breakdown.reb : (rebVal * rules.reb),
+                        breakdown.ast !== undefined ? breakdown.ast : (astVal * rules.ast),
+                        breakdown.stl !== undefined ? breakdown.stl : (stlVal * rules.stl),
+                        breakdown.blk !== undefined ? breakdown.blk : (blkVal * rules.blk),
+                        breakdown.tpm !== undefined ? breakdown.tpm : (tpmVal * rules.tpm),
+                        breakdown.to !== undefined ? breakdown.to : (toVal * rules.to),
+                        null // Minutes don't score points
                     ];
                 } else if (isNFL) {
+                    const passYds = stats.PassingYards || 0;
+                    const passTD = stats.PassingTouchdowns || 0;
+                    const rushYds = stats.RushingYards || 0;
+                    const rushTD = stats.RushingTouchdowns || 0;
+                    const rec = stats.Receptions || 0;
+                    const recYds = stats.ReceivingYards || 0;
+                    const recTD = stats.ReceivingTouchdowns || 0;
+                    const intVal = stats.Interceptions || 0;
+
                     statValues = [
-                        stats.passingYards || stats.PassingYards || '-',
-                        stats.passingTouchdowns || stats.PassingTouchdowns || '-',
-                        stats.rushingYards || stats.RushingYards || '-',
-                        stats.rushingTouchdowns || stats.RushingTouchdowns || '-',
-                        stats.receptions || stats.Receptions || '-',
-                        stats.receivingYards || stats.ReceivingYards || '-',
-                        stats.receivingTouchdowns || stats.ReceivingTouchdowns || '-',
-                        stats.interceptions || stats.Interceptions || '-'
+                        passYds || '-', passTD || '-', rushYds || '-', rushTD || '-',
+                        rec || '-', recYds || '-', recTD || '-', intVal || '-'
+                    ];
+
+                    const rules = SCORING.NFL;
+                    pointBreakdown = [
+                        breakdown.passYds !== undefined ? breakdown.passYds : (passYds * rules.passYds),
+                        breakdown.passTD !== undefined ? breakdown.passTD : (passTD * rules.passTD),
+                        breakdown.rushYds !== undefined ? breakdown.rushYds : (rushYds * rules.rushYds),
+                        breakdown.rushTD !== undefined ? breakdown.rushTD : (rushTD * rules.rushTD),
+                        breakdown.rec !== undefined ? breakdown.rec : (rec * rules.rec),
+                        breakdown.recYds !== undefined ? breakdown.recYds : (recYds * rules.recYds),
+                        breakdown.recTD !== undefined ? breakdown.recTD : (recTD * rules.recTD),
+                        breakdown.int !== undefined ? breakdown.int : (intVal * rules.int)
                     ];
                 } else if (isMLB) {
                     statValues = [
-                        stats.hits || stats.Hits || '-',
-                        stats.runs || stats.Runs || '-',
-                        stats.runsBattedIn || stats.RunsBattedIn || '-',
-                        stats.homeRuns || stats.HomeRuns || '-',
-                        stats.stolenBases || stats.StolenBases || '-',
-                        stats.inningsPitched || stats.InningsPitched || '-',
-                        stats.strikeouts || stats.PitcherStrikeouts || '-',
-                        stats.wins || stats.Wins || '-'
+                        stats.Hits || '-',
+                        stats.Runs || '-',
+                        stats.RunsBattedIn || '-',
+                        stats.HomeRuns || '-',
+                        stats.StolenBases || '-',
+                        stats.InningsPitched || '-',
+                        stats.PitcherStrikeouts || '-',
+                        stats.Wins || '-'
                     ];
+                    pointBreakdown = [null, null, null, null, null, null, null, null]; // TODO: Add MLB breakdown
                 } else if (isNHL) {
                     statValues = [
-                        stats.goals || stats.Goals || '-',
-                        stats.assists || stats.Assists || '-',
-                        stats.shotsOnGoal || stats.ShotsOnGoal || '-',
-                        stats.plusMinus || stats.PlusMinus || '-',
-                        stats.penaltyMinutes || stats.PenaltyMinutes || '-',
-                        stats.powerPlayGoals || stats.PowerPlayGoals || '-',
-                        stats.shortHandedGoals || stats.ShortHandedGoals || '-',
-                        stats.blockedShots || stats.BlockedShots || '-'
+                        stats.Goals || '-',
+                        stats.Assists || '-',
+                        stats.ShotsOnGoal || '-',
+                        stats.PlusMinus || '-',
+                        stats.PenaltyMinutes || '-',
+                        stats.PowerPlayGoals || '-',
+                        stats.ShortHandedGoals || '-',
+                        stats.BlockedShots || '-'
                     ];
+                    pointBreakdown = [null, null, null, null, null, null, null, null]; // TODO: Add NHL breakdown
                 } else {
                     statValues = ['-', '-', '-', '-', '-', '-', '-', '-'];
+                    pointBreakdown = [null, null, null, null, null, null, null, null];
                 }
+
+                // Format point contribution (show + or - and round to 1 decimal)
+                const formatPts = (val) => {
+                    if (val === null || val === undefined || val === 0) return '';
+                    const rounded = Math.round(val * 10) / 10;
+                    return rounded > 0 ? `+${rounded}` : `${rounded}`;
+                };
 
                 return `
                     <div class="entry-player-row">
@@ -1063,7 +1135,14 @@
                             <div class="player-name">${player.playerName}</div>
                             <div class="player-team">${player.playerPosition}${player.team ? ' - ' + player.team : ''}</div>
                         </div>
-                        ${statValues.map(v => `<span class="stat-cell ${v !== '-' ? 'has-value' : ''}">${v}</span>`).join('')}
+                        ${statValues.map((v, i) => {
+                            const ptContrib = pointBreakdown[i];
+                            const hasValue = v !== '-' && v !== 0;
+                            const ptDisplay = formatPts(ptContrib);
+                            return `<span class="stat-cell ${hasValue ? 'has-value' : ''}" title="${ptDisplay ? ptDisplay + ' pts' : ''}">
+                                ${v}${ptDisplay ? `<span class="pt-contrib ${ptContrib < 0 ? 'negative' : ''}">${ptDisplay}</span>` : ''}
+                            </span>`;
+                        }).join('')}
                         <span class="player-pts ${pts > 0 ? 'scoring' : ''}">${pts}</span>
                     </div>
                 `;

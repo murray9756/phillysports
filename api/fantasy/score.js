@@ -104,6 +104,91 @@ async function fetchPlayerStats(sport, date) {
     }
 }
 
+// Extract display stats with point breakdowns for UI
+function extractDisplayStats(sport, stats) {
+    if (!stats) return null;
+
+    const rules = SCORING[sport];
+    if (!rules) return null;
+
+    if (sport === 'NBA') {
+        const pts = stats.Points || 0;
+        const reb = stats.Rebounds || stats.TotalRebounds || 0;
+        const ast = stats.Assists || 0;
+        const stl = stats.Steals || 0;
+        const blk = stats.BlockedShots || 0;
+        const tpm = stats.ThreePointersMade || 0;
+        const to = stats.Turnovers || 0;
+        const min = stats.Minutes || 0;
+
+        return {
+            Points: pts,
+            Rebounds: reb,
+            Assists: ast,
+            Steals: stl,
+            BlockedShots: blk,
+            ThreePointersMade: tpm,
+            Turnovers: to,
+            Minutes: min,
+            // Point contributions
+            breakdown: {
+                pts: pts * rules.points,
+                reb: reb * rules.rebounds,
+                ast: ast * rules.assists,
+                stl: stl * rules.steals,
+                blk: blk * rules.blocks,
+                tpm: tpm * rules.threePointersMade,
+                to: to * rules.turnovers
+            }
+        };
+    } else if (sport === 'NFL') {
+        return {
+            PassingYards: stats.PassingYards || 0,
+            PassingTouchdowns: stats.PassingTouchdowns || 0,
+            RushingYards: stats.RushingYards || 0,
+            RushingTouchdowns: stats.RushingTouchdowns || 0,
+            Receptions: stats.Receptions || 0,
+            ReceivingYards: stats.ReceivingYards || 0,
+            ReceivingTouchdowns: stats.ReceivingTouchdowns || 0,
+            Interceptions: stats.PassingInterceptions || 0,
+            breakdown: {
+                passYds: (stats.PassingYards || 0) * rules.passingYards,
+                passTD: (stats.PassingTouchdowns || 0) * rules.passingTD,
+                rushYds: (stats.RushingYards || 0) * rules.rushingYards,
+                rushTD: (stats.RushingTouchdowns || 0) * rules.rushingTD,
+                rec: (stats.Receptions || 0) * rules.reception,
+                recYds: (stats.ReceivingYards || 0) * rules.receivingYards,
+                recTD: (stats.ReceivingTouchdowns || 0) * rules.receivingTD,
+                int: (stats.PassingInterceptions || 0) * rules.interception
+            }
+        };
+    } else if (sport === 'MLB') {
+        return {
+            Hits: stats.Hits || 0,
+            Runs: stats.Runs || 0,
+            RunsBattedIn: stats.RunsBattedIn || 0,
+            HomeRuns: stats.HomeRuns || 0,
+            StolenBases: stats.StolenBases || 0,
+            InningsPitched: stats.InningsPitchedFull || 0,
+            PitcherStrikeouts: stats.PitcherStrikeouts || 0,
+            Wins: stats.Wins || 0
+        };
+    } else if (sport === 'NHL') {
+        return {
+            Goals: stats.Goals || 0,
+            Assists: stats.Assists || 0,
+            ShotsOnGoal: stats.ShotsOnGoal || 0,
+            PlusMinus: stats.PlusMinus || 0,
+            PenaltyMinutes: stats.PenaltyMinutes || 0,
+            PowerPlayGoals: stats.PowerPlayGoals || 0,
+            ShortHandedGoals: stats.ShortHandedGoals || 0,
+            BlockedShots: stats.BlockedShots || 0
+        };
+    }
+
+    return stats;
+}
+
 // Calculate fantasy points from player stats
 function calculateFantasyPoints(sport, stats) {
     if (!stats) return 0;
@@ -264,22 +349,34 @@ export default async function handler(req, res) {
 
                     // Fetch player stats from SportsDataIO
                     const gameDate = contest.gameDateString || new Date(contest.gameDate || contest.locksAt).toISOString().split('T')[0];
+                    console.log(`Fetching ${contest.sport} stats for date: ${gameDate}`);
                     const playerStats = await fetchPlayerStats(contest.sport, gameDate);
+                    const playerCount = Object.keys(playerStats).length;
+                    console.log(`Got ${playerCount} player stats from SportsDataIO`);
 
                     for (const entry of entries) {
                         let totalPoints = 0;
                         const playerPoints = [];
 
                         for (const player of entry.lineup) {
-                            // Find player stats from API response
-                            const stats = playerStats[player.playerId] || null;
+                            // Try both string and number formats for player ID
+                            const playerId = player.playerId?.toString();
+                            const stats = playerStats[playerId] || playerStats[parseInt(playerId)] || null;
+
+                            if (!stats) {
+                                console.log(`No stats found for player ${player.playerName} (ID: ${playerId})`);
+                            }
+
                             const points = calculateFantasyPoints(contest.sport, stats);
 
+                            // Extract key stats for display
+                            const displayStats = stats ? extractDisplayStats(contest.sport, stats) : null;
+
                             playerPoints.push({
-                                playerId: player.playerId,
+                                playerId: playerId,
                                 playerName: player.playerName,
                                 points: Math.round(points * 10) / 10,
-                                stats: stats // Store the raw stats for display
+                                stats: displayStats
                             });
                             totalPoints += points;
                         }
