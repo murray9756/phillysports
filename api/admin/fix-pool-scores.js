@@ -224,3 +224,4 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Failed to fix scores', message: error.message });
     }
 }
+// Deploy Fri Jan 23 19:47:40 EST 2026
