@@ -1,31 +1,24 @@
-// Live Ticker API - Get live Philly games with play-by-play
+// Live Ticker API - Get live Philly games
 // GET /api/live-ticker
-// Uses SportsDataIO for all live scores
+// Uses ESPN for live scores
 
-import {
-    fetchScoresByDate,
-    fetchPlayByPlay,
-    getCurrentSeason,
-    getTeamLogo,
-    formatGameStatus,
-    getOrdinal
-} from './lib/sportsdata.js';
-import { getTodayET, getYesterdayET, hoursSince } from './lib/timezone.js';
+import { hoursSince } from './lib/timezone.js';
 
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
-
-// Philly teams identification
-const PHILLY_TEAMS = {
-    NFL: ['PHI'],
-    NBA: ['PHI'],
-    MLB: ['PHI'],
-    NHL: ['PHI']
+// ESPN API endpoints
+const ESPN_ENDPOINTS = {
+    NFL: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
+    NBA: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
+    MLB: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
+    NHL: 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard'
 };
 
-function isPhillyTeam(teamAbbr, sport) {
-    if (!teamAbbr) return false;
-    return PHILLY_TEAMS[sport]?.includes(teamAbbr.toUpperCase());
-}
+// Philly team IDs in ESPN
+const PHILLY_TEAM_IDS = {
+    NFL: '21',  // Eagles
+    NBA: '20',  // 76ers
+    MLB: '22',  // Phillies
+    NHL: '4'    // Flyers
+};
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -37,114 +30,80 @@ export default async function handler(req, res) {
         return res.status(200).end();
     }
 
-    if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
-    if (!SPORTSDATA_API_KEY) {
-        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-    }
-
     try {
         const liveGames = [];
-        const today = getTodayET();
-        const yesterday = getYesterdayET();
-        const sports = ['NFL', 'NBA', 'NHL', 'MLB'];
 
-        // Fetch all sports in parallel for both today and yesterday
+        // Fetch all sports in parallel from ESPN
         const results = await Promise.all(
-            sports.flatMap((sport) => [
-                fetchScoresByDate(sport, today).then(games => ({ sport, games: games || [] })).catch(e => {
-                    console.error(`SportsDataIO ${sport} today error:`, e.message);
+            Object.entries(ESPN_ENDPOINTS).map(async ([sport, url]) => {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) return { sport, games: [] };
+                    const data = await response.json();
+                    return { sport, games: data.events || [] };
+                } catch (e) {
+                    console.error(`ESPN ${sport} error:`, e.message);
                     return { sport, games: [] };
-                }),
-                fetchScoresByDate(sport, yesterday).then(games => ({ sport, games: games || [] })).catch(e => {
-                    return { sport, games: [] };
-                })
-            ])
+                }
+            })
         );
 
         // Process each sport's games
         for (const { sport, games } of results) {
+            const phillyTeamId = PHILLY_TEAM_IDS[sport];
+
             for (const game of games) {
+                const competitors = game.competitions?.[0]?.competitors || [];
+                const homeTeam = competitors.find(c => c.homeAway === 'home');
+                const awayTeam = competitors.find(c => c.homeAway === 'away');
+
+                if (!homeTeam || !awayTeam) continue;
+
                 // Check if Philly team is playing
-                const homeIsPhilly = isPhillyTeam(game.HomeTeam, sport);
-                const awayIsPhilly = isPhillyTeam(game.AwayTeam, sport);
+                const homeIsPhilly = homeTeam.team?.id === phillyTeamId;
+                const awayIsPhilly = awayTeam.team?.id === phillyTeamId;
                 if (!homeIsPhilly && !awayIsPhilly) continue;
 
-                // Log Philly game status for debugging
-                console.log(`[${sport}] Philly game found: ${game.AwayTeam} @ ${game.HomeTeam}, Status: "${game.Status}"`);
-
-                // Check for in-progress status - SportsDataIO uses various strings
-                const status = (game.Status || '').toLowerCase();
-                const isInProgress = status === 'inprogress' ||
-                    status.includes('period') ||
-                    status.includes('quarter') ||
-                    status.includes('half') ||
-                    status.includes('inning') ||
-                    status === 'halftime' ||
-                    status === 'intermission';
-                const isFinal = status === 'final' || status === 'f/ot' || status.includes('final');
+                const status = game.status?.type;
+                const isInProgress = status?.state === 'in';
+                const isFinal = status?.state === 'post';
+                const isScheduled = status?.state === 'pre';
 
                 // Only include live or recently finished games
-                if (!isInProgress && !isFinal) {
-                    console.log(`[${sport}] Skipping game - status "${game.Status}" not live or final`);
-                    continue;
-                }
-                if (isFinal) {
-                    if (hoursSince(game.DateTime) > 3) continue;
-                }
+                if (!isInProgress && !isFinal) continue;
+                if (isFinal && hoursSince(game.date) > 3) continue;
 
                 const gameData = {
-                    id: (game.GameID || game.ScoreID)?.toString(),
+                    id: game.id,
                     sport,
                     homeTeam: {
-                        name: game.HomeTeam,
-                        shortName: game.HomeTeam,
-                        score: game.HomeScore || game.HomeTeamScore || 0,
-                        logo: getTeamLogo(sport, game.HomeTeam),
+                        name: homeTeam.team?.displayName || homeTeam.team?.name,
+                        shortName: homeTeam.team?.abbreviation,
+                        score: parseInt(homeTeam.score) || 0,
+                        logo: homeTeam.team?.logo,
                         isPhilly: homeIsPhilly
                     },
                     awayTeam: {
-                        name: game.AwayTeam,
-                        shortName: game.AwayTeam,
-                        score: game.AwayScore || game.AwayTeamScore || 0,
-                        logo: getTeamLogo(sport, game.AwayTeam),
+                        name: awayTeam.team?.displayName || awayTeam.team?.name,
+                        shortName: awayTeam.team?.abbreviation,
+                        score: parseInt(awayTeam.score) || 0,
+                        logo: awayTeam.team?.logo,
                         isPhilly: awayIsPhilly
                     },
                     status: {
-                        state: isInProgress ? 'in' : (isFinal ? 'post' : 'pre'),
-                        description: formatGameStatus(game, sport),
-                        detail: game.Status,
-                        period: game.Period || game.Inning || game.Quarter,
-                        clock: game.TimeRemainingMinutes ?
-                            `${game.TimeRemainingMinutes}:${String(game.TimeRemainingSeconds || 0).padStart(2, '0')}` : null,
+                        state: status?.state,
+                        description: status?.shortDetail || status?.detail,
+                        detail: status?.description,
+                        period: game.status?.period,
+                        clock: game.status?.displayClock,
                         isInProgress,
                         isFinal
                     },
-                    gameTime: game.DateTime,
-                    venue: game.StadiumDetails?.Name || game.Stadium,
-                    broadcast: game.Channel,
-                    recentPlays: [],
+                    gameTime: game.date,
+                    venue: game.competitions?.[0]?.venue?.fullName,
+                    broadcast: game.competitions?.[0]?.broadcasts?.[0]?.names?.[0],
                     situation: getSituation(game, sport)
                 };
-
-                // Get play-by-play if available and game is in progress
-                if (isInProgress && game.GameID) {
-                    try {
-                        const pbpData = await fetchPlayByPlay(sport, game.GameID);
-                        if (pbpData) {
-                            const plays = pbpData.Plays || pbpData.PlayByPlays || [];
-                            gameData.recentPlays = plays.slice(-3).map(play => ({
-                                text: play.Description || play.PlayDescription || play.Text,
-                                clock: play.TimeRemaining,
-                                type: play.PlayType
-                            })).filter(p => p.text);
-                        }
-                    } catch (e) {
-                        // Play-by-play not available, continue without it
-                    }
-                }
 
                 liveGames.push(gameData);
             }
@@ -162,7 +121,7 @@ export default async function handler(req, res) {
             games: liveGames,
             count: liveGames.length,
             timestamp: new Date().toISOString(),
-            source: 'sportsdata'
+            source: 'espn'
         });
 
     } catch (error) {
@@ -173,23 +132,30 @@ export default async function handler(req, res) {
 
 function getSituation(game, sport) {
     const situation = {};
+    const comp = game.competitions?.[0];
 
-    if (sport === 'NFL' && game.Status === 'InProgress') {
-        if (game.Down && game.Distance) {
-            situation.down = game.Down;
-            situation.distance = game.Distance;
-            situation.yardLine = game.YardLine;
-            situation.possession = game.Possession;
-            situation.display = `${game.Down}${getOrdinal(game.Down)} & ${game.Distance}`;
+    if (sport === 'NFL' && comp?.situation) {
+        const sit = comp.situation;
+        if (sit.down) {
+            situation.down = sit.down;
+            situation.distance = sit.distance;
+            situation.yardLine = sit.yardLine;
+            situation.possession = sit.possession?.team?.abbreviation;
+            situation.display = `${sit.down}${getOrdinal(sit.down)} & ${sit.distance}`;
         }
-    } else if (sport === 'MLB' && game.Status === 'InProgress') {
-        if (game.Balls !== undefined) {
-            situation.balls = game.Balls;
-            situation.strikes = game.Strikes;
-            situation.outs = game.Outs;
-            situation.display = `${game.Balls}-${game.Strikes}, ${game.Outs} out${game.Outs !== 1 ? 's' : ''}`;
-        }
+    } else if (sport === 'MLB' && comp?.situation) {
+        const sit = comp.situation;
+        situation.balls = sit.balls;
+        situation.strikes = sit.strikes;
+        situation.outs = sit.outs;
+        situation.display = `${sit.balls}-${sit.strikes}, ${sit.outs} out${sit.outs !== 1 ? 's' : ''}`;
     }
 
     return situation;
+}
+
+function getOrdinal(n) {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return s[(v - 20) % 10] || s[v] || s[0];
 }
