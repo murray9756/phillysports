@@ -174,6 +174,19 @@ export default async function handler(req, res) {
             console.log('Fetching from ESPN, gameId:', id, 'sport:', sport);
             const espnData = await fetchFromEspn(id, sport);
             if (espnData) {
+                // Also fetch season stats for the teams
+                const sportEndpoint = { NFL: 'nfl', NBA: 'nba', MLB: 'mlb', NHL: 'nhl' }[sport];
+                if (sportEndpoint && espnData.homeTeam?.abbr && espnData.awayTeam?.abbr) {
+                    try {
+                        const teamStats = await fetchTeamSeasonStats(sportEndpoint, sport, espnData.homeTeam.abbr, espnData.awayTeam.abbr);
+                        if (teamStats) {
+                            espnData.homeTeam.seasonStats = teamStats.home;
+                            espnData.awayTeam.seasonStats = teamStats.away;
+                        }
+                    } catch (statsErr) {
+                        console.log('Season stats fetch failed:', statsErr.message);
+                    }
+                }
                 return res.status(200).json({ success: true, game: espnData });
             } else {
                 console.log('ESPN returned no data for gameId:', id);
