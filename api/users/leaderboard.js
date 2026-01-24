@@ -18,9 +18,16 @@ export default async function handler(req, res) {
         const { limit = 10 } = req.query;
         const users = await getCollection('users');
 
-        // Get top users by coin balance
+        // Get top users by coin balance (excluding bots and test accounts)
         const leaderboard = await users.find(
-            { coinBalance: { $gt: 0 } },
+            {
+                coinBalance: { $gt: 0 },
+                isBot: { $ne: true },
+                // Exclude common bot/test username patterns
+                username: {
+                    $not: /^(bot_|test_|admin_test|testuser)/i
+                }
+            },
             {
                 projection: {
                     username: 1,

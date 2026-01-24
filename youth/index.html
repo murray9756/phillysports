@@ -150,8 +150,7 @@
         .news-attribution strong { color: var(--text-secondary); }
 
         .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
-        .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
-        .widget-header span { font-size: 1rem; }
+        .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); }
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .widget-content { padding: 0.75rem; }
         .trivia-promo-widget { padding: 0; overflow: hidden; }
@@ -175,22 +174,13 @@
         .article-title { font-size: 1rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
         .article-meta { font-size: 0.75rem; color: var(--text-muted); }
 
-        .carousel { position: relative; width: 100%; overflow: hidden; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
-        .carousel-inner { display: flex; transition: transform 0.5s ease-in-out; will-change: transform; }
-        .carousel-slide { width: 100%; flex: 0 0 100%; }
-        .carousel-slide .featured-article { display: block; background: var(--card-bg); }
-        .carousel-slide .featured-image { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
-        .carousel-slide .featured-content { padding: 1rem; }
-        .carousel-slide .featured-title { font-size: 1.1rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
-        .carousel-slide .article-tag { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border-radius: 3px; background: var(--team-color); color: #fff; margin-bottom: 0.5rem; }
-        .carousel-controls { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.4rem; z-index: 10; }
-        .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; border: none; transition: background 0.3s; }
-        .carousel-dot:hover { background: rgba(255,255,255,0.7); }
-        .carousel-dot.active { background: #fff; }
-        .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; z-index: 10; }
-        .carousel-arrow:hover { background: rgba(0,0,0,0.8); }
-        .carousel-arrow.prev { left: 0.5rem; }
-        .carousel-arrow.next { right: 0.5rem; }
+        /* Featured Story (no carousel) */
+        .featured-hero { border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; background: var(--card-bg); margin-bottom: 1rem; }
+        .featured-hero-image { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: var(--team-color); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .featured-hero-content { padding: 1rem; }
+        .featured-hero-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: 0.75rem; color: var(--text-muted); }
+        .featured-hero-title { font-size: 1.35rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; color: var(--text-primary); }
+        .article-tag { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border-radius: 3px; background: var(--team-color); color: #fff; }
 
         .game-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; transition: background 0.2s; }
         .game-link:last-child { border-bottom: none; }
@@ -237,7 +227,6 @@
         <aside class="left-sidebar">
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#9917;</span>
                     <h3 class="widget-title">Buying Sandlot</h3>
                 </div>
                 <div class="org-info">
@@ -263,7 +252,6 @@
 
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127941;</span>
                     <h3 class="widget-title">Local Leagues</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
@@ -289,7 +277,6 @@
             <!-- Diehard Dollar Leaderboard Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#129689;</span>
                     <h3 class="widget-title">Top Diehards</h3>
                 </div>
                 <div class="widget-content" id="diehardLeaderboardWidget" style="padding:0.5rem;">
@@ -301,7 +288,6 @@
             <!-- Source Leaderboard Widget -->
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#128240;</span>
                     <h3 class="widget-title">Top Sources</h3>
                 </div>
                 <div class="widget-content" id="sourceLeaderboardWidget" style="padding:0.5rem;">
@@ -316,22 +302,22 @@
                 <h2 class="section-title">Latest Youth Sports News</h2>
                 <a href="https://www.buyingsandlot.com" target="_blank" class="news-attribution">Powered by <strong>Buying Sandlot</strong> &#8599;</a>
             </div>
-            <div class="carousel" id="newsCarousel">
-                <div class="carousel-inner" id="carouselInner">
-                    <div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#9917;</div><div class="featured-content"><span class="article-tag">Loading</span><h3 class="featured-title">Loading news...</h3></div></div></div>
+            <a href="#" class="featured-hero" id="featuredHero">
+                <div class="featured-hero-image" id="featuredImage"></div>
+                <div class="featured-hero-content">
+                    <div class="featured-hero-meta">
+                        <span class="article-tag" id="featuredTag">Loading</span>
+                        <span id="featuredTime"></span>
+                    </div>
+                    <h3 class="featured-hero-title" id="featuredTitle">Loading news...</h3>
                 </div>
-                <button class="carousel-arrow prev" onclick="prevSlide()">&#10094;</button>
-                <button class="carousel-arrow next" onclick="nextSlide()">&#10095;</button>
-                <div class="carousel-controls" id="carouselDots"></div>
-            </div>
+            </a>
             <div class="article-list" id="articleList"></div>
-
         </div>
 
         <aside class="sidebar">
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#127942;</span>
                     <h3 class="widget-title">Popular Sports</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
@@ -364,7 +350,6 @@
 
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#128218;</span>
                     <h3 class="widget-title">High School Sports</h3>
                 </div>
                 <div class="widget-content">
@@ -379,7 +364,6 @@
 
             <div class="widget">
                 <div class="widget-header">
-                    <span>&#128279;</span>
                     <h3 class="widget-title">Resources</h3>
                 </div>
                 <div class="widget-content" style="padding: 0;">
@@ -428,32 +412,6 @@
         // Theme is handled by header.js
 
         const TEAM = 'youth';
-        let currentSlide = 0;
-        let carouselInterval = null;
-        let carouselArticles = [];
-
-        function goToSlide(index) {
-            const inner = document.getElementById('carouselInner');
-            const dots = document.querySelectorAll('.carousel-dot');
-            currentSlide = index;
-            if (currentSlide >= carouselArticles.length) currentSlide = 0;
-            if (currentSlide < 0) currentSlide = carouselArticles.length - 1;
-            inner.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
-        }
-        function nextSlide() { goToSlide(currentSlide + 1); }
-        function prevSlide() { goToSlide(currentSlide - 1); }
-        function startCarousel() { stopCarousel(); carouselInterval = setInterval(nextSlide, 5000); }
-        function stopCarousel() { if (carouselInterval) { clearInterval(carouselInterval); carouselInterval = null; } }
-
-        const sourceLogos = {
-            'Buying Sandlot': 'https://buyingsandlot.com/wp-content/uploads/2023/01/cropped-Buying-Sandlot-Logo.png',
-            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
-        };
-        function getSourceLogo(source) {
-            const logo = source && sourceLogos[source] ? sourceLogos[source] : sourceLogos['ESPN'];
-            return `<img src="${logo}" alt="${source || 'News'}" style="max-width:60%;max-height:60%;object-fit:contain;" onerror="this.parentElement.innerHTML='&#9917;'">`;
-        }
 
         function timeAgo(dateString) {
             const now = new Date();
@@ -470,41 +428,29 @@
 
         async function loadNews() {
             const container = document.getElementById('articleList');
-            const carouselInner = document.getElementById('carouselInner');
-            const carouselDots = document.getElementById('carouselDots');
-            const carousel = document.getElementById('newsCarousel');
+            const featuredHero = document.getElementById('featuredHero');
+            const featuredImage = document.getElementById('featuredImage');
+            const featuredTag = document.getElementById('featuredTag');
+            const featuredTime = document.getElementById('featuredTime');
+            const featuredTitle = document.getElementById('featuredTitle');
+
             try {
                 const response = await fetch(`/api/news?team=${TEAM}`);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
-                    // First 4 articles go to carousel
-                    carouselArticles = data.articles.slice(0, 4);
-                    // Limit to 10 total articles (4 in carousel + 6 in list)
-                    const listArticles = data.articles.slice(4, 10);
+                    // First article is featured
+                    const featured = data.articles[0];
+                    const listArticles = data.articles.slice(1, 10);
 
-                    // Populate carousel
-                    carouselInner.innerHTML = carouselArticles.map(article => {
-                        const imgStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : 'background:var(--team-color);';
-                        return `
-                            <div class="carousel-slide">
-                                <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="featured-article">
-                                    <div class="featured-image" style="${imgStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
-                                    <div class="featured-content">
-                                        <span class="article-tag">${article.team || 'Youth Sports'}</span>
-                                        <h3 class="featured-title">${article.headline}</h3>
-                                    </div>
-                                </a>
-                            </div>
-                        `;
-                    }).join('');
-
-                    // Add carousel dots
-                    carouselDots.innerHTML = carouselArticles.map((_, i) => `<button class="carousel-dot${i === 0 ? ' active' : ''}" onclick="goToSlide(${i})"></button>`).join('');
-
-                    // Setup carousel auto-rotation
-                    carousel.addEventListener('mouseenter', stopCarousel);
-                    carousel.addEventListener('mouseleave', startCarousel);
-                    startCarousel();
+                    // Populate featured hero
+                    featuredHero.href = `/article.html?url=${encodeURIComponent(featured.link)}&title=${encodeURIComponent(featured.headline)}&image=${encodeURIComponent(featured.image || '')}&source=${encodeURIComponent(featured.source || '')}`;
+                    if (featured.image) {
+                        featuredImage.style.backgroundImage = `url('${featured.image}')`;
+                        featuredImage.innerHTML = '';
+                    }
+                    featuredTag.textContent = featured.team || 'Youth Sports';
+                    featuredTime.textContent = timeAgo(featured.published);
+                    featuredTitle.textContent = featured.headline;
 
                     // Remaining articles in list
                     if (listArticles.length > 0) {
@@ -512,10 +458,10 @@
                             const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
                             return `
                                 <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item">
-                                    <div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div>
+                                    <div class="article-thumb" style="${thumbStyle}"></div>
                                     <div class="article-info">
                                         <h4 class="article-title">${article.headline}</h4>
-                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div>
+                                        <div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''}</div>
                                     </div>
                                 </a>
                             `;
@@ -524,11 +470,13 @@
                         container.innerHTML = '';
                     }
                 } else {
-                    carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#9917;</div><div class="featured-content"><span class="article-tag">Youth Sports</span><h3 class="featured-title">No youth sports news available</h3></div></div></div>';
+                    featuredTag.textContent = 'Youth Sports';
+                    featuredTitle.textContent = 'No youth sports news available';
                     container.innerHTML = '';
                 }
             } catch (e) {
-                carouselInner.innerHTML = '<div class="carousel-slide"><div class="featured-article"><div class="featured-image">&#9917;</div><div class="featured-content"><span class="article-tag">Youth Sports</span><h3 class="featured-title">Unable to load news</h3></div></div></div>';
+                featuredTag.textContent = 'Youth Sports';
+                featuredTitle.textContent = 'Unable to load news';
                 container.innerHTML = '';
             }
         }
@@ -579,20 +527,19 @@
             const container = document.getElementById('diehardLeaderboardWidget');
             if (!container) return;
             try {
-                const response = await fetch('/api/predictions/leaderboard');
+                const response = await fetch('/api/users/leaderboard?limit=5');
                 const data = await response.json();
 
                 if (data.success && data.leaderboard && data.leaderboard.length > 0) {
-                    const top5 = data.leaderboard.slice(0, 5);
-                    container.innerHTML = top5.map((user, i) => {
+                    container.innerHTML = data.leaderboard.map((user, i) => {
                         const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
                         return `
                             <div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0;border-bottom:1px solid var(--border-color);font-size:0.8rem;">
                                 <span style="display:flex;align-items:center;gap:0.4rem;">
                                     <span style="width:1.5rem;text-align:center;">${medal}</span>
-                                    <a href="/profile.html?username=${user.username}" style="font-weight:500;color:var(--text-primary);">${user.username}</a>
+                                    <a href="/profile.html?username=${user.username}" style="font-weight:500;color:var(--text-primary);">${user.displayName || user.username}</a>
                                 </span>
-                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${Math.round(user.coinBalance).toLocaleString()}</span>
+                                <span style="color:#ff9800;font-size:0.75rem;font-weight:600;">🪙 ${Math.round(user.coins).toLocaleString()}</span>
                             </div>
                         `;
                     }).join('');
