@@ -482,8 +482,8 @@
         },
 
         openGame: function(sport, gameId) {
-            // Try to find game thread, otherwise go to scores page
-            window.location.href = `/scores/?sport=${sport.toLowerCase()}`;
+            // Open game preview page with game details
+            window.location.href = `/game-preview.html?id=${gameId}&sport=${sport}`;
         },
 
         destroy: function() {
