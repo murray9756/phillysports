@@ -558,28 +558,32 @@ function formatEspnTeamStats(data, sport) {
         return stat?.value ?? stat?.displayValue ?? null;
     };
 
+    // Round to 1 decimal place
+    const round1 = (val) => val !== null && val !== undefined ? parseFloat(val).toFixed(1) : null;
+
     if (sport === 'NBA') {
         return {
-            pointsPerGame: getStat('avgPoints') || getStat('pointsPerGame'),
-            reboundsPerGame: getStat('avgRebounds') || getStat('reboundsPerGame'),
-            assistsPerGame: getStat('avgAssists') || getStat('assistsPerGame'),
-            fieldGoalPct: getStat('fieldGoalPct'),
-            threePointPct: getStat('threePointFieldGoalPct')
+            pointsPerGame: round1(getStat('avgPoints') || getStat('pointsPerGame')),
+            reboundsPerGame: round1(getStat('avgRebounds') || getStat('reboundsPerGame')),
+            assistsPerGame: round1(getStat('avgAssists') || getStat('assistsPerGame')),
+            fieldGoalPct: round1(getStat('fieldGoalPct')),
+            threePointPct: round1(getStat('threePointFieldGoalPct'))
         };
     } else if (sport === 'NFL') {
         return {
-            pointsPerGame: getStat('avgPointsFor') || getStat('pointsPerGame'),
-            yardsPerGame: getStat('totalYardsPerGame'),
-            passingYardsPerGame: getStat('netPassingYardsPerGame'),
-            rushingYardsPerGame: getStat('rushingYardsPerGame'),
-            pointsAllowedPerGame: getStat('avgPointsAgainst')
+            pointsPerGame: round1(getStat('avgPointsFor') || getStat('pointsPerGame')),
+            yardsPerGame: round1(getStat('totalYardsPerGame')),
+            passingYardsPerGame: round1(getStat('netPassingYardsPerGame')),
+            rushingYardsPerGame: round1(getStat('rushingYardsPerGame')),
+            pointsAllowedPerGame: round1(getStat('avgPointsAgainst'))
         };
     } else if (sport === 'NHL') {
+        const gamesPlayed = parseFloat(getStat('gamesPlayed')) || 1;
         return {
-            goalsPerGame: getStat('goalsFor') ? (parseFloat(getStat('goalsFor')) / parseFloat(getStat('gamesPlayed') || 1)).toFixed(2) : null,
-            goalsAgainstPerGame: getStat('goalsAgainst') ? (parseFloat(getStat('goalsAgainst')) / parseFloat(getStat('gamesPlayed') || 1)).toFixed(2) : null,
-            powerPlayPct: getStat('powerPlayPct'),
-            penaltyKillPct: getStat('penaltyKillPct')
+            goalsPerGame: getStat('goalsFor') ? (parseFloat(getStat('goalsFor')) / gamesPlayed).toFixed(1) : null,
+            goalsAgainstPerGame: getStat('goalsAgainst') ? (parseFloat(getStat('goalsAgainst')) / gamesPlayed).toFixed(1) : null,
+            powerPlayPct: round1(getStat('powerPlayPct')),
+            penaltyKillPct: round1(getStat('penaltyKillPct'))
         };
     }
 
