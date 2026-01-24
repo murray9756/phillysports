@@ -461,14 +461,25 @@ async function fetchTeamSeasonStats(endpoint, sport, homeTeam, awayTeam) {
         (new Date().getMonth() >= 9 ? year + 1 : year) : year;
 
     const url = `https://api.sportsdata.io/v3/${endpoint}/scores/json/TeamSeasonStats/${season}?key=${SPORTSDATA_API_KEY}`;
+    console.log('Fetching team season stats from:', url);
 
     const response = await fetch(url);
-    if (!response.ok) return null;
+    if (!response.ok) {
+        console.log('TeamSeasonStats fetch failed:', response.status);
+        return null;
+    }
 
     const allStats = await response.json();
+    console.log('TeamSeasonStats returned', allStats?.length, 'teams');
 
     const homeStats = allStats.find(t => t.Team === homeTeam);
     const awayStats = allStats.find(t => t.Team === awayTeam);
+
+    // Debug: log what fields we actually have
+    if (homeStats) {
+        console.log('Home team stats keys:', Object.keys(homeStats).slice(0, 20));
+        console.log('Home team sample values - Games:', homeStats.Games, 'Points:', homeStats.Points, 'Score:', homeStats.Score);
+    }
 
     return {
         home: formatTeamStats(homeStats, sport),
@@ -479,35 +490,72 @@ async function fetchTeamSeasonStats(endpoint, sport, homeTeam, awayTeam) {
 function formatTeamStats(stats, sport) {
     if (!stats) return null;
 
+    // Helper to get value from multiple possible field names
+    const getVal = (...keys) => {
+        for (const key of keys) {
+            if (stats[key] !== undefined && stats[key] !== null) {
+                return stats[key];
+            }
+        }
+        return null;
+    };
+
+    const games = getVal('Games', 'GamesPlayed') || 1;
+
     if (sport === 'NFL') {
+        const score = getVal('Score', 'PointsFor', 'Points');
+        const offYards = getVal('OffensiveYards', 'TotalYards', 'Yards');
+        const passYards = getVal('PassingYards', 'NetPassingYards');
+        const rushYards = getVal('RushingYards');
+        const oppScore = getVal('OpponentScore', 'PointsAgainst');
+
         return {
-            pointsPerGame: stats.Score ? (stats.Score / (stats.Games || 1)).toFixed(1) : null,
-            yardsPerGame: stats.OffensiveYards ? (stats.OffensiveYards / (stats.Games || 1)).toFixed(1) : null,
-            passingYardsPerGame: stats.PassingYards ? (stats.PassingYards / (stats.Games || 1)).toFixed(1) : null,
-            rushingYardsPerGame: stats.RushingYards ? (stats.RushingYards / (stats.Games || 1)).toFixed(1) : null,
-            pointsAllowedPerGame: stats.OpponentScore ? (stats.OpponentScore / (stats.Games || 1)).toFixed(1) : null
+            pointsPerGame: score ? (score / games).toFixed(1) : null,
+            yardsPerGame: offYards ? (offYards / games).toFixed(1) : null,
+            passingYardsPerGame: passYards ? (passYards / games).toFixed(1) : null,
+            rushingYardsPerGame: rushYards ? (rushYards / games).toFixed(1) : null,
+            pointsAllowedPerGame: oppScore ? (oppScore / games).toFixed(1) : null
         };
     } else if (sport === 'NBA') {
+        const points = getVal('Points', 'PointsPerGame');
+        const rebounds = getVal('Rebounds', 'TotalRebounds', 'ReboundsPerGame');
+        const assists = getVal('Assists', 'AssistsPerGame');
+        const fgPct = getVal('FieldGoalsPercentage', 'FieldGoalPercentage', 'FGPct');
+        const threePct = getVal('ThreePointersPercentage', 'ThreePointerPercentage', 'ThreePct');
+
+        // Check if values are per-game already (less than a reasonable max) or season totals
+        const isPerGame = points && points < 200;
+
         return {
-            pointsPerGame: stats.Points ? (stats.Points / (stats.Games || 1)).toFixed(1) : null,
-            reboundsPerGame: stats.Rebounds ? (stats.Rebounds / (stats.Games || 1)).toFixed(1) : null,
-            assistsPerGame: stats.Assists ? (stats.Assists / (stats.Games || 1)).toFixed(1) : null,
-            fieldGoalPct: stats.FieldGoalsPercentage ? stats.FieldGoalsPercentage.toFixed(1) : null,
-            threePointPct: stats.ThreePointersPercentage ? stats.ThreePointersPercentage.toFixed(1) : null
+            pointsPerGame: points ? (isPerGame ? points.toFixed(1) : (points / games).toFixed(1)) : null,
+            reboundsPerGame: rebounds ? (isPerGame ? rebounds.toFixed(1) : (rebounds / games).toFixed(1)) : null,
+            assistsPerGame: assists ? (isPerGame ? assists.toFixed(1) : (assists / games).toFixed(1)) : null,
+            fieldGoalPct: fgPct ? fgPct.toFixed(1) : null,
+            threePointPct: threePct ? threePct.toFixed(1) : null
         };
     } else if (sport === 'MLB') {
+        const runs = getVal('Runs', 'RunsScored');
+        const avg = getVal('BattingAverage', 'AVG');
+        const era = getVal('EarnedRunAverage', 'ERA');
+        const hr = getVal('HomeRuns', 'HR');
+
         return {
-            runsPerGame: stats.Runs ? (stats.Runs / (stats.Games || 1)).toFixed(2) : null,
-            battingAverage: stats.BattingAverage ? stats.BattingAverage.toFixed(3) : null,
-            era: stats.EarnedRunAverage ? stats.EarnedRunAverage.toFixed(2) : null,
-            homeRuns: stats.HomeRuns || null
+            runsPerGame: runs ? (runs / games).toFixed(2) : null,
+            battingAverage: avg ? (avg < 1 ? avg.toFixed(3) : (avg / 1000).toFixed(3)) : null,
+            era: era ? era.toFixed(2) : null,
+            homeRuns: hr || null
         };
     } else if (sport === 'NHL') {
+        const goals = getVal('Goals', 'GoalsFor');
+        const goalsAgainst = getVal('GoalsAgainst', 'GoalsAllowed');
+        const ppPct = getVal('PowerPlayPercentage', 'PPPct');
+        const pkPct = getVal('PenaltyKillPercentage', 'PKPct');
+
         return {
-            goalsPerGame: stats.Goals ? (stats.Goals / (stats.Games || 1)).toFixed(2) : null,
-            goalsAgainstPerGame: stats.GoalsAgainst ? (stats.GoalsAgainst / (stats.Games || 1)).toFixed(2) : null,
-            powerPlayPct: stats.PowerPlayPercentage ? stats.PowerPlayPercentage.toFixed(1) : null,
-            penaltyKillPct: stats.PenaltyKillPercentage ? stats.PenaltyKillPercentage.toFixed(1) : null
+            goalsPerGame: goals ? (goals / games).toFixed(2) : null,
+            goalsAgainstPerGame: goalsAgainst ? (goalsAgainst / games).toFixed(2) : null,
+            powerPlayPct: ppPct ? ppPct.toFixed(1) : null,
+            penaltyKillPct: pkPct ? pkPct.toFixed(1) : null
         };
     }
 

@@ -517,6 +517,11 @@
                         <div class="info-card">
                             <div class="card-header">Season Stats</div>
                             <div class="card-body">
+                                <div class="season-stat-row" style="border-bottom:2px solid var(--border-color);padding-bottom:0.75rem;margin-bottom:0.5rem;">
+                                    <span class="season-stat-value home" style="font-size:0.9rem;font-weight:600;">${game.homeTeam.abbr}</span>
+                                    <span class="season-stat-label"></span>
+                                    <span class="season-stat-value away" style="font-size:0.9rem;font-weight:600;">${game.awayTeam.abbr}</span>
+                                </div>
                     `;
 
                     if (sport === 'NFL') {
@@ -677,6 +682,11 @@
                         <div class="info-card full-width">
                             <div class="card-header">Live Game Stats</div>
                             <div class="card-body">
+                                <div class="stat-comparison" style="border-bottom:2px solid var(--border-color);padding-bottom:0.75rem;margin-bottom:0.5rem;">
+                                    <span class="stat-home" style="font-size:0.9rem;">${game.homeTeam.abbr}</span>
+                                    <span class="stat-label"></span>
+                                    <span class="stat-away" style="font-size:0.9rem;">${game.awayTeam.abbr}</span>
+                                </div>
                     `;
 
                     if (sport === 'NFL') {
