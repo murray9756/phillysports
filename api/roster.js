@@ -52,12 +52,20 @@ export default async function handler(req, res) {
         let teamName = '';
 
         if (config) {
-            // Pro team roster
+            // Pro team roster - use ESPN for headshots
             teamName = config.name;
 
-            // MLS not supported by SportsDataIO, fall back to ESPN
-            if (config.sport === 'MLS') {
-                const url = 'https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/phi/roster';
+            const espnSportPaths = {
+                NFL: 'football/nfl',
+                NBA: 'basketball/nba',
+                MLB: 'baseball/mlb',
+                NHL: 'hockey/nhl',
+                MLS: 'soccer/usa.1'
+            };
+
+            const sportPath = espnSportPaths[config.sport];
+            if (sportPath) {
+                const url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/teams/phi/roster`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -71,32 +79,6 @@ export default async function handler(req, res) {
                         players.push(extractESPNPlayer(item));
                     }
                 }
-            } else {
-                // Use SportsDataIO for pro sports
-                const rosterData = await fetchTeamRoster(config.sport, config.abbr);
-
-                players = rosterData.map(player => {
-                    const fullName = `${player.FirstName || ''} ${player.LastName || ''}`.trim() || player.Name;
-                    // Generate ESPN player profile link
-                    const espnLink = generateESPNPlayerLink(config.sport, fullName);
-
-                    return {
-                        name: fullName,
-                        firstName: player.FirstName,
-                        lastName: player.LastName,
-                        number: player.Jersey || player.Number || '',
-                        position: player.Position || '',
-                        positionFull: player.PositionCategory || player.Position || '',
-                        headshot: player.PhotoUrl || null,
-                        status: player.Status || 'Active',
-                        college: player.College || '',
-                        experience: player.Experience || 0,
-                        height: player.Height ? formatHeight(player.Height) : '',
-                        weight: player.Weight ? `${player.Weight} lbs` : '',
-                        playerId: player.PlayerID?.toString(),
-                        link: espnLink
-                    };
-                });
             }
         } else if (collegeConfig) {
             // College team roster
