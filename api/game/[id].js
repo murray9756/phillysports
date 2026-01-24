@@ -486,8 +486,8 @@ function formatTeamStats(stats, sport) {
             pointsPerGame: stats.Points ? (stats.Points / (stats.Games || 1)).toFixed(1) : null,
             reboundsPerGame: stats.Rebounds ? (stats.Rebounds / (stats.Games || 1)).toFixed(1) : null,
             assistsPerGame: stats.Assists ? (stats.Assists / (stats.Games || 1)).toFixed(1) : null,
-            fieldGoalPct: stats.FieldGoalsPercentage ? (stats.FieldGoalsPercentage * 100).toFixed(1) : null,
-            threePointPct: stats.ThreePointersPercentage ? (stats.ThreePointersPercentage * 100).toFixed(1) : null
+            fieldGoalPct: stats.FieldGoalsPercentage ? stats.FieldGoalsPercentage.toFixed(1) : null,
+            threePointPct: stats.ThreePointersPercentage ? stats.ThreePointersPercentage.toFixed(1) : null
         };
     } else if (sport === 'MLB') {
         return {
@@ -500,8 +500,8 @@ function formatTeamStats(stats, sport) {
         return {
             goalsPerGame: stats.Goals ? (stats.Goals / (stats.Games || 1)).toFixed(2) : null,
             goalsAgainstPerGame: stats.GoalsAgainst ? (stats.GoalsAgainst / (stats.Games || 1)).toFixed(2) : null,
-            powerPlayPct: stats.PowerPlayPercentage ? (stats.PowerPlayPercentage * 100).toFixed(1) : null,
-            penaltyKillPct: stats.PenaltyKillPercentage ? (stats.PenaltyKillPercentage * 100).toFixed(1) : null
+            powerPlayPct: stats.PowerPlayPercentage ? stats.PowerPlayPercentage.toFixed(1) : null,
+            penaltyKillPct: stats.PenaltyKillPercentage ? stats.PenaltyKillPercentage.toFixed(1) : null
         };
     }
 
