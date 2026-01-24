@@ -79,8 +79,10 @@ async function fetchFromEspn(gameId, sport) {
 function extractEspnBoxScore(data, sport) {
     if (!data.boxscore?.teams) return null;
 
-    const homeStats = data.boxscore.teams.find(t => t.homeAway === 'home')?.statistics || [];
-    const awayStats = data.boxscore.teams.find(t => t.homeAway === 'away')?.statistics || [];
+    const homeTeam = data.boxscore.teams.find(t => t.homeAway === 'home');
+    const awayTeam = data.boxscore.teams.find(t => t.homeAway === 'away');
+    const homeStats = homeTeam?.statistics || [];
+    const awayStats = awayTeam?.statistics || [];
 
     const getStatValue = (stats, name) => {
         const stat = stats.find(s => s.name === name || s.label === name);
@@ -90,6 +92,7 @@ function extractEspnBoxScore(data, sport) {
     if (sport === 'NFL') {
         return {
             home: {
+                teamName: homeTeam?.team?.displayName || homeTeam?.team?.abbreviation,
                 totalYards: getStatValue(homeStats, 'totalYards') || getStatValue(homeStats, 'Total Yards'),
                 passingYards: getStatValue(homeStats, 'netPassingYards') || getStatValue(homeStats, 'Passing'),
                 rushingYards: getStatValue(homeStats, 'rushingYards') || getStatValue(homeStats, 'Rushing'),
@@ -97,6 +100,7 @@ function extractEspnBoxScore(data, sport) {
                 firstDowns: getStatValue(homeStats, 'firstDowns') || getStatValue(homeStats, 'First Downs')
             },
             away: {
+                teamName: awayTeam?.team?.displayName || awayTeam?.team?.abbreviation,
                 totalYards: getStatValue(awayStats, 'totalYards') || getStatValue(awayStats, 'Total Yards'),
                 passingYards: getStatValue(awayStats, 'netPassingYards') || getStatValue(awayStats, 'Passing'),
                 rushingYards: getStatValue(awayStats, 'rushingYards') || getStatValue(awayStats, 'Rushing'),
@@ -107,6 +111,7 @@ function extractEspnBoxScore(data, sport) {
     } else if (sport === 'NBA') {
         return {
             home: {
+                teamName: homeTeam?.team?.displayName || homeTeam?.team?.abbreviation,
                 rebounds: getStatValue(homeStats, 'rebounds'),
                 assists: getStatValue(homeStats, 'assists'),
                 steals: getStatValue(homeStats, 'steals'),
@@ -115,6 +120,7 @@ function extractEspnBoxScore(data, sport) {
                 fieldGoalPct: getStatValue(homeStats, 'fieldGoalPct')
             },
             away: {
+                teamName: awayTeam?.team?.displayName || awayTeam?.team?.abbreviation,
                 rebounds: getStatValue(awayStats, 'rebounds'),
                 assists: getStatValue(awayStats, 'assists'),
                 steals: getStatValue(awayStats, 'steals'),
