@@ -454,37 +454,92 @@ async function fetchStandings(endpoint, sport) {
     return await response.json();
 }
 
-// Fetch team season stats for comparison
+// Fetch team season stats from ESPN
 async function fetchTeamSeasonStats(endpoint, sport, homeTeam, awayTeam) {
-    const year = new Date().getFullYear();
-    const season = sport === 'NBA' || sport === 'NHL' ?
-        (new Date().getMonth() >= 9 ? year + 1 : year) : year;
+    try {
+        // Use ESPN for more reliable stats
+        const sportPath = ESPN_SPORT_PATHS[sport];
+        if (!sportPath) return null;
 
-    const url = `https://api.sportsdata.io/v3/${endpoint}/scores/json/TeamSeasonStats/${season}?key=${SPORTSDATA_API_KEY}`;
-    console.log('Fetching team season stats from:', url);
+        // Fetch both teams' stats in parallel
+        const [homeData, awayData] = await Promise.all([
+            fetchEspnTeamStats(sportPath, homeTeam, sport),
+            fetchEspnTeamStats(sportPath, awayTeam, sport)
+        ]);
 
-    const response = await fetch(url);
-    if (!response.ok) {
-        console.log('TeamSeasonStats fetch failed:', response.status);
+        return {
+            home: homeData,
+            away: awayData
+        };
+    } catch (e) {
+        console.error('ESPN team stats error:', e.message);
+        return null;
+    }
+}
+
+async function fetchEspnTeamStats(sportPath, teamAbbr, sport) {
+    // ESPN team ID mapping (common teams)
+    const espnTeamIds = {
+        // NBA
+        PHI: sport === 'NBA' ? '20' : (sport === 'NFL' ? '21' : (sport === 'MLB' ? '22' : '4')),
+        BOS: '2', NYK: '18', MIL: '15', CLE: '5', OKC: '25', LAL: '13', DEN: '7', MEM: '29', SAC: '23',
+        // Add more as needed
+    };
+
+    const teamId = espnTeamIds[teamAbbr];
+    if (!teamId) {
+        console.log('No ESPN team ID for:', teamAbbr);
         return null;
     }
 
-    const allStats = await response.json();
-    console.log('TeamSeasonStats returned', allStats?.length, 'teams');
+    const url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/teams/${teamId}/statistics`;
+    console.log('ESPN team stats URL:', url);
 
-    const homeStats = allStats.find(t => t.Team === homeTeam);
-    const awayStats = allStats.find(t => t.Team === awayTeam);
-
-    // Debug: log what fields we actually have
-    if (homeStats) {
-        console.log('Home team stats keys:', Object.keys(homeStats).slice(0, 20));
-        console.log('Home team sample values - Games:', homeStats.Games, 'Points:', homeStats.Points, 'Score:', homeStats.Score);
+    const response = await fetch(url);
+    if (!response.ok) {
+        console.log('ESPN team stats failed:', response.status);
+        return null;
     }
 
-    return {
-        home: formatTeamStats(homeStats, sport),
-        away: formatTeamStats(awayStats, sport)
+    const data = await response.json();
+    return formatEspnTeamStats(data, sport);
+}
+
+function formatEspnTeamStats(data, sport) {
+    if (!data?.results?.stats) return null;
+
+    const stats = data.results.stats;
+    const getStat = (name) => {
+        const stat = stats.find(s => s.name === name || s.displayName === name);
+        return stat?.value || stat?.displayValue || null;
     };
+
+    if (sport === 'NBA') {
+        return {
+            pointsPerGame: getStat('avgPoints') || getStat('pointsPerGame'),
+            reboundsPerGame: getStat('avgRebounds') || getStat('reboundsPerGame'),
+            assistsPerGame: getStat('avgAssists') || getStat('assistsPerGame'),
+            fieldGoalPct: getStat('fieldGoalPct'),
+            threePointPct: getStat('threePointFieldGoalPct')
+        };
+    } else if (sport === 'NFL') {
+        return {
+            pointsPerGame: getStat('avgPointsFor') || getStat('pointsPerGame'),
+            yardsPerGame: getStat('totalYardsPerGame'),
+            passingYardsPerGame: getStat('netPassingYardsPerGame'),
+            rushingYardsPerGame: getStat('rushingYardsPerGame'),
+            pointsAllowedPerGame: getStat('avgPointsAgainst')
+        };
+    } else if (sport === 'NHL') {
+        return {
+            goalsPerGame: getStat('goalsFor') ? (parseFloat(getStat('goalsFor')) / parseFloat(getStat('gamesPlayed') || 1)).toFixed(2) : null,
+            goalsAgainstPerGame: getStat('goalsAgainst') ? (parseFloat(getStat('goalsAgainst')) / parseFloat(getStat('gamesPlayed') || 1)).toFixed(2) : null,
+            powerPlayPct: getStat('powerPlayPct'),
+            penaltyKillPct: getStat('penaltyKillPct')
+        };
+    }
+
+    return null;
 }
 
 function formatTeamStats(stats, sport) {
