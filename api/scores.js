@@ -18,7 +18,6 @@ const TEAM_CONFIG = {
     '76ers': { sport: 'NBA', abbr: 'PHI', name: '76ers', color: '#006BB6' },
     phillies: { sport: 'MLB', abbr: 'PHI', name: 'Phillies', color: '#E81828' },
     flyers: { sport: 'NHL', abbr: 'PHI', name: 'Flyers', color: '#F74902' },
-    union: { sport: 'MLS', abbr: 'PHI', name: 'Union', color: '#B49759' }
 };
 
 // College team configurations
@@ -109,32 +108,6 @@ export default async function handler(req, res) {
             }
         }));
 
-        // Fetch MLS (Union) - SportsDataIO may not have MLS, keep ESPN fallback
-        try {
-            const mlsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/soccer/usa.1/teams/phi/schedule');
-            const mlsData = await mlsRes.json();
-            const unionGames = mlsData.events?.filter(e => e.competitions?.[0]?.status?.type?.completed) || [];
-            const recentUnionGame = unionGames[unionGames.length - 1];
-            if (recentUnionGame) {
-                const comp = recentUnionGame.competitions[0];
-                const homeTeam = comp.competitors.find(c => c.homeAway === 'home');
-                const awayTeam = comp.competitors.find(c => c.homeAway === 'away');
-                scores.push({
-                    sport: 'MLS',
-                    team: 'Union',
-                    teamColor: '#B49759',
-                    homeTeam: homeTeam?.team?.shortDisplayName || 'Home',
-                    homeScore: String(homeTeam?.score?.displayValue || homeTeam?.score || '0'),
-                    awayTeam: awayTeam?.team?.shortDisplayName || 'Away',
-                    awayScore: String(awayTeam?.score?.displayValue || awayTeam?.score || '0'),
-                    isHome: homeTeam?.team?.displayName?.includes('Philadelphia'),
-                    date: recentUnionGame.date,
-                    gameId: recentUnionGame.id,
-                    link: `https://www.espn.com/soccer/match/_/gameId/${recentUnionGame.id}`
-                });
-            }
-        } catch (e) { console.error('MLS fetch error:', e); }
-
         // Fetch college basketball scores if requested
         if (teamFilter && COLLEGE_CONFIG[teamFilter]) {
             const college = COLLEGE_CONFIG[teamFilter];
@@ -191,7 +164,6 @@ export default async function handler(req, res) {
                 'sixers': '76ers',
                 '76ers': '76ers',
                 'flyers': 'Flyers',
-                'union': 'Union',
                 ...Object.fromEntries(
                     Object.entries(COLLEGE_CONFIG).map(([key, val]) => [key, val.name])
                 )
