@@ -446,22 +446,7 @@
     </main>
     <footer class="footer"><p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p></footer>
     <script>
-        // Dark Mode Toggle
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-        initTheme();
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-        });
+        // Theme is handled by header.js
 
         const TEAM = 'sixers';
         const sourceLogos={'Crossing Broad':'https://www.crossingbroad.com/app/themes/bramble/public/build/assets/cb-logo-AC5c2OGU.svg','On Pattison':'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png?v=2','ESPN':'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'};

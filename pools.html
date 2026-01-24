@@ -198,12 +198,7 @@
     </main>
 
     <script>
-        // Dark Mode - init only, header.js handles toggle
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        initTheme();
+        // Theme is handled by header.js
 
         const sportEmojis = { NFL: '🏈', MLB: '⚾', NBA: '🏀', NHL: '🏒' };
 

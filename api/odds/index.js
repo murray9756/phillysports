@@ -89,12 +89,26 @@ export default async function handler(req, res) {
 
         // Filter out games that have already started
         const now = new Date();
+        console.log(`Current time (UTC): ${now.toISOString()}`);
+
         const upcomingGames = games.filter(game => {
             const gameTime = new Date(game.commenceTime);
-            // Also check status field if available
-            const isStarted = game.status === 'InProgress' || game.status === 'Final' ||
-                              game.status === 'F' || game.status === 'F/OT';
-            return gameTime > now && !isStarted;
+            // Only filter out games that are actively in progress or completed
+            const isCompleted = game.status === 'Final' || game.status === 'F' || game.status === 'F/OT';
+            const isInProgress = game.status === 'InProgress';
+
+            // Allow games that haven't started yet OR are scheduled
+            // Even if game time has passed slightly, show it if status is still 'Scheduled'
+            const isScheduled = game.status === 'Scheduled' || !game.status;
+            const timeOk = gameTime > now || isScheduled;
+
+            const shouldShow = !isCompleted && !isInProgress && timeOk;
+
+            if (!shouldShow) {
+                console.log(`Filtering out: ${game.homeTeam} vs ${game.awayTeam}, time=${game.commenceTime}, status=${game.status}, timeOk=${timeOk}`);
+            }
+
+            return shouldShow;
         });
 
         console.log(`Filtered to ${upcomingGames.length} upcoming games (removed ${games.length - upcomingGames.length} started/completed)`);

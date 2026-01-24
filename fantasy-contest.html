@@ -467,13 +467,7 @@
     </main>
 
     <script>
-        // Theme
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        initTheme();
-        // Theme toggle is handled by header.js
+        // Theme is handled by header.js
 
         const contestId = new URLSearchParams(window.location.search).get('id');
         let contest = null;

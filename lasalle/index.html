@@ -425,34 +425,7 @@
     </footer>
 
     <script>
-        // Dark Mode Toggle
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        function toggleTheme() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            // Update Twitter widget theme
-            updateTwitterTheme(newTheme);
-        }
-
-        function updateTwitterTheme(theme) {
-            const twitterTimeline = document.querySelector('.twitter-timeline');
-            if (twitterTimeline) {
-                twitterTimeline.setAttribute('data-theme', theme);
-                if (window.twttr && window.twttr.widgets) {
-                    window.twttr.widgets.load();
-                }
-            }
-        }
-        initTheme();
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-        });
+        // Theme is handled by header.js
 
         const TEAM = 'lasalle';
         const ESPN_TEAM_ID = 2325;
