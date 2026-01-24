@@ -16,7 +16,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Preview | PhillySports.com</title>
-    <meta name="description" content="Game preview, odds, and matchup details">
+    <meta name="description" content="Game preview, odds, team stats, injuries, and matchup details">
     <link rel="icon" type="image/png" href="/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/theme-vintage.css">
@@ -31,6 +31,8 @@
             --text-secondary: #444444;
             --text-muted: #777777;
             --accent-color: #8b0000;
+            --success-color: #388e3c;
+            --warning-color: #f57c00;
         }
         [data-theme="dark"] {
             --dark-bg: #121212;
@@ -44,7 +46,7 @@
         body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
         a { color: inherit; text-decoration: none; }
 
-        .main-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+        .main-container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
 
         .game-header {
             background: var(--card-bg);
@@ -68,12 +70,12 @@
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
-            min-width: 120px;
+            min-width: 140px;
         }
 
         .team-logo {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             object-fit: contain;
             background: var(--dark-bg);
             border-radius: 50%;
@@ -81,38 +83,43 @@
         }
 
         .team-name {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 700;
         }
 
         .team-record {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
+        .team-record .streak {
+            font-size: 0.8rem;
+            color: var(--success-color);
+        }
+
         .team-score {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 800;
             color: var(--accent-color);
         }
 
         .vs-divider {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--text-muted);
         }
 
         .game-meta {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
         }
 
         .game-status {
             display: inline-block;
-            padding: 0.35rem 0.75rem;
+            padding: 0.4rem 1rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -126,8 +133,15 @@
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 900px) {
+            .info-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .info-grid { grid-template-columns: 1fr; }
         }
 
         .info-card {
@@ -137,12 +151,16 @@
             overflow: hidden;
         }
 
+        .info-card.full-width {
+            grid-column: 1 / -1;
+        }
+
         .card-header {
             background: var(--accent-color);
             color: #fff;
             padding: 0.75rem 1rem;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -153,7 +171,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
+            padding: 0.6rem 0;
             border-bottom: 1px solid var(--border-color);
         }
         .odds-row:last-child { border-bottom: none; }
@@ -182,53 +200,101 @@
         .stat-comparison:last-child { border-bottom: none; }
 
         .stat-home, .stat-away {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 700;
         }
         .stat-home { text-align: right; }
         .stat-away { text-align: left; }
 
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
             text-align: center;
+            padding: 0 0.5rem;
         }
 
-        .venue-info {
-            display: flex;
+        .season-stat-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 80px;
+            gap: 0.5rem;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .season-stat-row:last-child { border-bottom: none; }
+
+        .season-stat-value {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .season-stat-value.home { text-align: right; }
+        .season-stat-value.away { text-align: left; }
+
+        .season-stat-label {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
-        .weather-info {
+        .injury-list {
+            list-style: none;
+        }
+
+        .injury-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            padding: 0.75rem 0;
-        }
-
-        .ticket-links {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-top: 1rem;
-        }
-
-        .ticket-btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: var(--accent-color);
-            color: #fff;
-            border-radius: 6px;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
             font-size: 0.85rem;
-            font-weight: 600;
-            transition: opacity 0.2s;
         }
-        .ticket-btn:hover { opacity: 0.9; }
+        .injury-item:last-child { border-bottom: none; }
+
+        .injury-player {
+            font-weight: 600;
+        }
+
+        .injury-player span {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 0.8rem;
+        }
+
+        .injury-status {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .injury-status.out { background: #ffebee; color: #c62828; }
+        .injury-status.doubtful { background: #fff3e0; color: #e65100; }
+        .injury-status.questionable { background: #fff8e1; color: #f9a825; }
+        .injury-status.probable { background: #e8f5e9; color: #2e7d32; }
+
+        [data-theme="dark"] .injury-status.out { background: rgba(198,40,40,0.2); }
+        [data-theme="dark"] .injury-status.doubtful { background: rgba(230,81,0,0.2); }
+        [data-theme="dark"] .injury-status.questionable { background: rgba(249,168,37,0.2); }
+        [data-theme="dark"] .injury-status.probable { background: rgba(46,125,50,0.2); }
+
+        .venue-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+        .venue-row:last-child { border-bottom: none; }
+
+        .venue-icon {
+            font-size: 1.25rem;
+            width: 28px;
+            text-align: center;
+        }
 
         .loading {
             text-align: center;
@@ -253,11 +319,19 @@
         }
         .back-link:hover { color: var(--accent-color); }
 
+        .no-data {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
         @media (max-width: 600px) {
             .matchup { flex-direction: column; gap: 1rem; }
-            .team-side { flex-direction: row; }
-            .team-logo { width: 50px; height: 50px; }
+            .team-side { flex-direction: row; gap: 1rem; }
+            .team-logo { width: 60px; height: 60px; }
             .vs-divider { display: none; }
+            .team-score { font-size: 2rem; }
         }
     </style>
 </head>
@@ -274,7 +348,6 @@
     </main>
 
     <script>
-        // Get game ID and sport from URL
         const params = new URLSearchParams(window.location.search);
         const gameId = params.get('id');
         const sport = params.get('sport') || 'NFL';
@@ -282,15 +355,14 @@
         function formatDateTime(dateStr) {
             if (!dateStr) return 'TBD';
             const date = new Date(dateStr);
-            const options = {
+            return date.toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'long',
                 day: 'numeric',
                 hour: 'numeric',
                 minute: '2-digit',
                 timeZoneName: 'short'
-            };
-            return date.toLocaleDateString('en-US', options);
+            });
         }
 
         function getStatusClass(status) {
@@ -303,14 +375,22 @@
 
         function formatSpread(spread) {
             if (spread === null || spread === undefined) return 'N/A';
-            if (spread > 0) return `+${spread}`;
-            return spread.toString();
+            return spread > 0 ? `+${spread}` : spread.toString();
         }
 
         function formatMoneyLine(ml) {
             if (ml === null || ml === undefined) return 'N/A';
-            if (ml > 0) return `+${ml}`;
-            return ml.toString();
+            return ml > 0 ? `+${ml}` : ml.toString();
+        }
+
+        function getInjuryStatusClass(status) {
+            if (!status) return '';
+            const s = status.toLowerCase();
+            if (s.includes('out') || s === 'ir') return 'out';
+            if (s.includes('doubtful')) return 'doubtful';
+            if (s.includes('questionable')) return 'questionable';
+            if (s.includes('probable') || s.includes('day-to-day')) return 'probable';
+            return '';
         }
 
         async function loadGamePreview() {
@@ -338,22 +418,27 @@
                 const awayRecord = game.awayTeam.record ?
                     `${game.awayTeam.record.wins}-${game.awayTeam.record.losses}${game.awayTeam.record.ties ? `-${game.awayTeam.record.ties}` : ''}` : '';
 
-                const searchQuery = encodeURIComponent(`${game.homeTeam.name || game.homeTeam.abbr} ${game.awayTeam.name || game.awayTeam.abbr} tickets`);
+                const homeStreak = game.homeTeam.record?.streak;
+                const awayStreak = game.awayTeam.record?.streak;
 
                 let html = `
                     <div class="game-header">
                         <div class="matchup">
                             <div class="team-side">
                                 ${game.awayTeam.logo ? `<img src="${game.awayTeam.logo}" alt="${game.awayTeam.abbr}" class="team-logo" onerror="this.style.display='none'">` : ''}
-                                <div class="team-name">${game.awayTeam.name || game.awayTeam.abbr}</div>
-                                ${awayRecord ? `<div class="team-record">${awayRecord}</div>` : ''}
+                                <div>
+                                    <div class="team-name">${game.awayTeam.name || game.awayTeam.abbr}</div>
+                                    ${awayRecord ? `<div class="team-record">${awayRecord}${awayStreak ? ` <span class="streak">${awayStreak}</span>` : ''}</div>` : ''}
+                                </div>
                                 ${game.status !== 'Scheduled' ? `<div class="team-score">${game.awayTeam.score || 0}</div>` : ''}
                             </div>
                             <div class="vs-divider">@</div>
                             <div class="team-side">
                                 ${game.homeTeam.logo ? `<img src="${game.homeTeam.logo}" alt="${game.homeTeam.abbr}" class="team-logo" onerror="this.style.display='none'">` : ''}
-                                <div class="team-name">${game.homeTeam.name || game.homeTeam.abbr}</div>
-                                ${homeRecord ? `<div class="team-record">${homeRecord}</div>` : ''}
+                                <div>
+                                    <div class="team-name">${game.homeTeam.name || game.homeTeam.abbr}</div>
+                                    ${homeRecord ? `<div class="team-record">${homeRecord}${homeStreak ? ` <span class="streak">${homeStreak}</span>` : ''}</div>` : ''}
+                                </div>
                                 ${game.status !== 'Scheduled' ? `<div class="team-score">${game.homeTeam.score || 0}</div>` : ''}
                             </div>
                         </div>
@@ -365,7 +450,7 @@
                     <div class="info-grid">
                 `;
 
-                // Odds card
+                // Betting Lines card
                 if (game.odds) {
                     html += `
                         <div class="info-card">
@@ -387,91 +472,300 @@
                                     <span class="odds-label">${game.awayTeam.abbr} ML</span>
                                     <span class="odds-value ${game.odds.awayMoneyLine < 0 ? 'favorite' : 'underdog'}">${formatMoneyLine(game.odds.awayMoneyLine)}</span>
                                 </div>
-                                ${game.odds.sportsbook ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.5rem;">via ${game.odds.sportsbook}</div>` : ''}
+                                ${game.odds.sportsbook ? `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;text-align:right;">via ${game.odds.sportsbook}</div>` : ''}
                             </div>
                         </div>
                     `;
                 }
 
-                // Game info card
+                // Game Info card
                 html += `
                     <div class="info-card">
                         <div class="card-header">Game Info</div>
                         <div class="card-body">
                             ${game.venue ? `
-                                <div class="venue-info" style="padding:0.5rem 0;border-bottom:1px solid var(--border-color);">
-                                    <span style="font-size:1.2rem;">&#127951;</span>
+                                <div class="venue-row">
+                                    <span class="venue-icon">&#127951;</span>
                                     <span>${game.venue}</span>
                                 </div>
                             ` : ''}
                             ${game.channel ? `
-                                <div class="venue-info" style="padding:0.5rem 0;border-bottom:1px solid var(--border-color);">
-                                    <span style="font-size:1.2rem;">&#128250;</span>
+                                <div class="venue-row">
+                                    <span class="venue-icon">&#128250;</span>
                                     <span>${game.channel}</span>
                                 </div>
                             ` : ''}
                             ${game.weather ? `
-                                <div class="weather-info">
-                                    <span style="font-size:1.2rem;">&#127780;</span>
+                                <div class="venue-row">
+                                    <span class="venue-icon">&#127780;</span>
                                     <span>${game.weather}</span>
                                 </div>
                             ` : ''}
+                            ${!game.venue && !game.channel && !game.weather ? '<div class="no-data">No game info available</div>' : ''}
                         </div>
                     </div>
                 `;
 
-                // Box score stats (if game in progress or final)
-                if (game.boxScore && (game.boxScore.home.totalYards || game.boxScore.home.rebounds)) {
+                // Season Stats Comparison card
+                const homeStats = game.homeTeam.seasonStats;
+                const awayStats = game.awayTeam.seasonStats;
+                if (homeStats || awayStats) {
                     html += `
-                        <div class="info-card" style="grid-column: 1 / -1;">
-                            <div class="card-header">Game Stats</div>
+                        <div class="info-card">
+                            <div class="card-header">Season Stats</div>
                             <div class="card-body">
                     `;
 
-                    if (sport === 'NFL' && game.boxScore.home.totalYards !== undefined) {
+                    if (sport === 'NFL') {
                         html += `
-                            <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.totalYards || 0}</span>
-                                <span class="stat-label">Total Yards</span>
-                                <span class="stat-away">${game.boxScore.away.totalYards || 0}</span>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.pointsPerGame || '-'}</span>
+                                <span class="season-stat-label">PPG</span>
+                                <span class="season-stat-value away">${awayStats?.pointsPerGame || '-'}</span>
                             </div>
-                            <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.passingYards || 0}</span>
-                                <span class="stat-label">Passing</span>
-                                <span class="stat-away">${game.boxScore.away.passingYards || 0}</span>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.yardsPerGame || '-'}</span>
+                                <span class="season-stat-label">YPG</span>
+                                <span class="season-stat-value away">${awayStats?.yardsPerGame || '-'}</span>
                             </div>
-                            <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.rushingYards || 0}</span>
-                                <span class="stat-label">Rushing</span>
-                                <span class="stat-away">${game.boxScore.away.rushingYards || 0}</span>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.passingYardsPerGame || '-'}</span>
+                                <span class="season-stat-label">Pass YPG</span>
+                                <span class="season-stat-value away">${awayStats?.passingYardsPerGame || '-'}</span>
                             </div>
-                            <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.turnovers || 0}</span>
-                                <span class="stat-label">Turnovers</span>
-                                <span class="stat-away">${game.boxScore.away.turnovers || 0}</span>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.rushingYardsPerGame || '-'}</span>
+                                <span class="season-stat-label">Rush YPG</span>
+                                <span class="season-stat-value away">${awayStats?.rushingYardsPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.pointsAllowedPerGame || '-'}</span>
+                                <span class="season-stat-label">Pts Allowed</span>
+                                <span class="season-stat-value away">${awayStats?.pointsAllowedPerGame || '-'}</span>
                             </div>
                         `;
-                    } else if (sport === 'NBA' && game.boxScore.home.rebounds !== undefined) {
+                    } else if (sport === 'NBA') {
+                        html += `
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.pointsPerGame || '-'}</span>
+                                <span class="season-stat-label">PPG</span>
+                                <span class="season-stat-value away">${awayStats?.pointsPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.reboundsPerGame || '-'}</span>
+                                <span class="season-stat-label">RPG</span>
+                                <span class="season-stat-value away">${awayStats?.reboundsPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.assistsPerGame || '-'}</span>
+                                <span class="season-stat-label">APG</span>
+                                <span class="season-stat-value away">${awayStats?.assistsPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.fieldGoalPct || '-'}%</span>
+                                <span class="season-stat-label">FG%</span>
+                                <span class="season-stat-value away">${awayStats?.fieldGoalPct || '-'}%</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.threePointPct || '-'}%</span>
+                                <span class="season-stat-label">3P%</span>
+                                <span class="season-stat-value away">${awayStats?.threePointPct || '-'}%</span>
+                            </div>
+                        `;
+                    } else if (sport === 'MLB') {
+                        html += `
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.runsPerGame || '-'}</span>
+                                <span class="season-stat-label">Runs/G</span>
+                                <span class="season-stat-value away">${awayStats?.runsPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.battingAverage || '-'}</span>
+                                <span class="season-stat-label">AVG</span>
+                                <span class="season-stat-value away">${awayStats?.battingAverage || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.era || '-'}</span>
+                                <span class="season-stat-label">ERA</span>
+                                <span class="season-stat-value away">${awayStats?.era || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.homeRuns || '-'}</span>
+                                <span class="season-stat-label">HR</span>
+                                <span class="season-stat-value away">${awayStats?.homeRuns || '-'}</span>
+                            </div>
+                        `;
+                    } else if (sport === 'NHL') {
+                        html += `
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.goalsPerGame || '-'}</span>
+                                <span class="season-stat-label">Goals/G</span>
+                                <span class="season-stat-value away">${awayStats?.goalsPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.goalsAgainstPerGame || '-'}</span>
+                                <span class="season-stat-label">GA/G</span>
+                                <span class="season-stat-value away">${awayStats?.goalsAgainstPerGame || '-'}</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.powerPlayPct || '-'}%</span>
+                                <span class="season-stat-label">PP%</span>
+                                <span class="season-stat-value away">${awayStats?.powerPlayPct || '-'}%</span>
+                            </div>
+                            <div class="season-stat-row">
+                                <span class="season-stat-value home">${homeStats?.penaltyKillPct || '-'}%</span>
+                                <span class="season-stat-label">PK%</span>
+                                <span class="season-stat-value away">${awayStats?.penaltyKillPct || '-'}%</span>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Injuries cards (home and away)
+                if (game.injuries) {
+                    const homeInjuries = game.injuries.home || [];
+                    const awayInjuries = game.injuries.away || [];
+
+                    if (homeInjuries.length > 0) {
+                        html += `
+                            <div class="info-card">
+                                <div class="card-header">${game.homeTeam.abbr} Injuries</div>
+                                <div class="card-body">
+                                    <ul class="injury-list">
+                                        ${homeInjuries.map(inj => `
+                                            <li class="injury-item">
+                                                <span class="injury-player">${inj.player} <span>${inj.position}</span></span>
+                                                <span class="injury-status ${getInjuryStatusClass(inj.status)}">${inj.status}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    if (awayInjuries.length > 0) {
+                        html += `
+                            <div class="info-card">
+                                <div class="card-header">${game.awayTeam.abbr} Injuries</div>
+                                <div class="card-body">
+                                    <ul class="injury-list">
+                                        ${awayInjuries.map(inj => `
+                                            <li class="injury-item">
+                                                <span class="injury-player">${inj.player} <span>${inj.position}</span></span>
+                                                <span class="injury-status ${getInjuryStatusClass(inj.status)}">${inj.status}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Live Game Stats (box score) - only for in-progress/completed
+                if (game.boxScore && game.status !== 'Scheduled') {
+                    html += `
+                        <div class="info-card full-width">
+                            <div class="card-header">Live Game Stats</div>
+                            <div class="card-body">
+                    `;
+
+                    if (sport === 'NFL') {
                         html += `
                             <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.rebounds || 0}</span>
+                                <span class="stat-home">${game.boxScore.home?.firstDowns || 0}</span>
+                                <span class="stat-label">First Downs</span>
+                                <span class="stat-away">${game.boxScore.away?.firstDowns || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.totalYards || 0}</span>
+                                <span class="stat-label">Total Yards</span>
+                                <span class="stat-away">${game.boxScore.away?.totalYards || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.passingYards || 0}</span>
+                                <span class="stat-label">Passing</span>
+                                <span class="stat-away">${game.boxScore.away?.passingYards || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.rushingYards || 0}</span>
+                                <span class="stat-label">Rushing</span>
+                                <span class="stat-away">${game.boxScore.away?.rushingYards || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.turnovers || 0}</span>
+                                <span class="stat-label">Turnovers</span>
+                                <span class="stat-away">${game.boxScore.away?.turnovers || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.timeOfPossession || '-'}</span>
+                                <span class="stat-label">Time of Poss.</span>
+                                <span class="stat-away">${game.boxScore.away?.timeOfPossession || '-'}</span>
+                            </div>
+                        `;
+                    } else if (sport === 'NBA') {
+                        html += `
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.rebounds || 0}</span>
                                 <span class="stat-label">Rebounds</span>
-                                <span class="stat-away">${game.boxScore.away.rebounds || 0}</span>
+                                <span class="stat-away">${game.boxScore.away?.rebounds || 0}</span>
                             </div>
                             <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.assists || 0}</span>
+                                <span class="stat-home">${game.boxScore.home?.assists || 0}</span>
                                 <span class="stat-label">Assists</span>
-                                <span class="stat-away">${game.boxScore.away.assists || 0}</span>
+                                <span class="stat-away">${game.boxScore.away?.assists || 0}</span>
                             </div>
                             <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.steals || 0}</span>
+                                <span class="stat-home">${game.boxScore.home?.steals || 0}</span>
                                 <span class="stat-label">Steals</span>
-                                <span class="stat-away">${game.boxScore.away.steals || 0}</span>
+                                <span class="stat-away">${game.boxScore.away?.steals || 0}</span>
                             </div>
                             <div class="stat-comparison">
-                                <span class="stat-home">${game.boxScore.home.blocks || 0}</span>
+                                <span class="stat-home">${game.boxScore.home?.blocks || 0}</span>
                                 <span class="stat-label">Blocks</span>
-                                <span class="stat-away">${game.boxScore.away.blocks || 0}</span>
+                                <span class="stat-away">${game.boxScore.away?.blocks || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.turnovers || 0}</span>
+                                <span class="stat-label">Turnovers</span>
+                                <span class="stat-away">${game.boxScore.away?.turnovers || 0}</span>
+                            </div>
+                        `;
+                    } else if (sport === 'MLB') {
+                        html += `
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.hits || 0}</span>
+                                <span class="stat-label">Hits</span>
+                                <span class="stat-away">${game.boxScore.away?.hits || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.errors || 0}</span>
+                                <span class="stat-label">Errors</span>
+                                <span class="stat-away">${game.boxScore.away?.errors || 0}</span>
+                            </div>
+                        `;
+                    } else if (sport === 'NHL') {
+                        html += `
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.shots || 0}</span>
+                                <span class="stat-label">Shots</span>
+                                <span class="stat-away">${game.boxScore.away?.shots || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.powerPlayGoals || 0}</span>
+                                <span class="stat-label">PP Goals</span>
+                                <span class="stat-away">${game.boxScore.away?.powerPlayGoals || 0}</span>
+                            </div>
+                            <div class="stat-comparison">
+                                <span class="stat-home">${game.boxScore.home?.penaltyMinutes || 0}</span>
+                                <span class="stat-label">PIM</span>
+                                <span class="stat-away">${game.boxScore.away?.penaltyMinutes || 0}</span>
                             </div>
                         `;
                     }

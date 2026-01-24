@@ -79,14 +79,8 @@ export default async function handler(req, res) {
 
                     const config = Object.values(TEAM_CONFIG).find(c => c.sport === sport);
 
-                    // ESPN boxscore URL patterns
-                    const espnSportPath = {
-                        NFL: 'nfl',
-                        NBA: 'nba',
-                        MLB: 'mlb',
-                        NHL: 'nhl'
-                    };
-                    const boxscoreLink = `https://www.espn.com/${espnSportPath[sport]}/boxscore/_/gameId/${recentGame.id}`;
+                    // Link to our game preview page instead of ESPN
+                    const boxscoreLink = `/game-preview.html?id=${recentGame.id}&sport=${sport}&source=espn`;
 
                     scores.push({
                         sport,
