@@ -72,11 +72,25 @@ export default async function handler(req, res) {
                 const awayIsPhilly = isPhillyTeam(game.AwayTeam, sport);
                 if (!homeIsPhilly && !awayIsPhilly) continue;
 
-                const isInProgress = game.Status === 'InProgress';
-                const isFinal = game.Status === 'Final' || game.Status === 'F/OT';
+                // Log Philly game status for debugging
+                console.log(`[${sport}] Philly game found: ${game.AwayTeam} @ ${game.HomeTeam}, Status: "${game.Status}"`);
+
+                // Check for in-progress status - SportsDataIO uses various strings
+                const status = (game.Status || '').toLowerCase();
+                const isInProgress = status === 'inprogress' ||
+                    status.includes('period') ||
+                    status.includes('quarter') ||
+                    status.includes('half') ||
+                    status.includes('inning') ||
+                    status === 'halftime' ||
+                    status === 'intermission';
+                const isFinal = status === 'final' || status === 'f/ot' || status.includes('final');
 
                 // Only include live or recently finished games
-                if (!isInProgress && !isFinal) continue;
+                if (!isInProgress && !isFinal) {
+                    console.log(`[${sport}] Skipping game - status "${game.Status}" not live or final`);
+                    continue;
+                }
                 if (isFinal) {
                     if (hoursSince(game.DateTime) > 3) continue;
                 }
