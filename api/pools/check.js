@@ -272,9 +272,10 @@ export default async function handler(req, res) {
                             const payoutPercent = currentPool.payouts?.[payoutKey] || 0;
                             const payoutAmount = Math.floor((currentPool.prizePool || 0) * (payoutPercent / 100));
 
-                            // Find winning square
-                            const homeDigit = game.homeScore % 10;
-                            const awayDigit = game.awayScore % 10;
+                            // Get the score at end of this specific period (not final score!)
+                            const periodScore = game.periodScores?.[period] || { home: game.homeScore, away: game.awayScore };
+                            const homeDigit = periodScore.home % 10;
+                            const awayDigit = periodScore.away % 10;
 
                             // Find row/col index for these digits
                             const rowIndex = currentPool.rowNumbers?.indexOf(homeDigit);
@@ -288,8 +289,8 @@ export default async function handler(req, res) {
                                 if (winningSquare) {
                                     const winner = {
                                         period,
-                                        homeScore: game.homeScore,
-                                        awayScore: game.awayScore,
+                                        homeScore: periodScore.home,
+                                        awayScore: periodScore.away,
                                         winningRow: rowIndex,
                                         winningCol: colIndex,
                                         winningDigits: { home: homeDigit, away: awayDigit },
