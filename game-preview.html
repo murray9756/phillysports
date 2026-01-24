@@ -411,7 +411,9 @@
                 }
 
                 const game = data.game;
-                document.title = `${game.awayTeam.abbr} @ ${game.homeTeam.abbr} - Game Preview | PhillySports.com`;
+                const isFinal = game.status?.toLowerCase().includes('final') || game.status === 'Final';
+                const pageType = isFinal ? 'Box Score' : 'Game Preview';
+                document.title = `${game.awayTeam.abbr} @ ${game.homeTeam.abbr} - ${pageType} | PhillySports.com`;
 
                 const homeRecord = game.homeTeam.record ?
                     `${game.homeTeam.record.wins}-${game.homeTeam.record.losses}${game.homeTeam.record.ties ? `-${game.homeTeam.record.ties}` : ''}` : '';

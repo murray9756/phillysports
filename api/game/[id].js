@@ -14,21 +14,36 @@ const ESPN_SPORT_PATHS = {
 // Fetch game data from ESPN API
 async function fetchFromEspn(gameId, sport) {
     const sportPath = ESPN_SPORT_PATHS[sport];
-    if (!sportPath) return null;
+    if (!sportPath) {
+        console.log('ESPN: Unknown sport path for', sport);
+        return null;
+    }
 
     const url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/summary?event=${gameId}`;
+    console.log('ESPN fetch URL:', url);
 
     const response = await fetch(url);
-    if (!response.ok) return null;
+    if (!response.ok) {
+        console.log('ESPN fetch failed with status:', response.status);
+        return null;
+    }
 
     const data = await response.json();
-    if (!data.header?.competitions?.[0]) return null;
+    console.log('ESPN data received, has header:', !!data.header);
+
+    if (!data.header?.competitions?.[0]) {
+        console.log('ESPN: No competitions found in header');
+        return null;
+    }
 
     const comp = data.header.competitions[0];
     const homeTeam = comp.competitors?.find(c => c.homeAway === 'home');
     const awayTeam = comp.competitors?.find(c => c.homeAway === 'away');
 
-    if (!homeTeam || !awayTeam) return null;
+    if (!homeTeam || !awayTeam) {
+        console.log('ESPN: Missing home or away team');
+        return null;
+    }
 
     // Extract box score stats from ESPN
     const boxScore = extractEspnBoxScore(data, sport);
@@ -147,15 +162,20 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Game ID is required' });
     }
 
-    // If ESPN source, try ESPN first
+    // If ESPN source, use ESPN data
     if (useEspn) {
         try {
+            console.log('Fetching from ESPN, gameId:', id, 'sport:', sport);
             const espnData = await fetchFromEspn(id, sport);
             if (espnData) {
                 return res.status(200).json({ success: true, game: espnData });
+            } else {
+                console.log('ESPN returned no data for gameId:', id);
+                return res.status(404).json({ error: 'Game not found in ESPN', gameId: id, sport });
             }
         } catch (e) {
-            console.log('ESPN fetch failed, trying SportsDataIO:', e.message);
+            console.error('ESPN fetch error:', e.message);
+            return res.status(500).json({ error: 'ESPN fetch failed', message: e.message });
         }
     }
 
