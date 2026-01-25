@@ -11,16 +11,16 @@
         <header class="header">
             <div class="header-top">
                 <!-- Left Column: Google Search + Theme Toggle -->
-                <div class="header-left" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; position: relative; z-index: 10;">
-                    <div class="header-search" style="display: flex; align-items: center;">
-                        <form action="https://www.google.com/search" method="GET" target="_blank" style="display: flex; align-items: center; gap: 0.5rem;">
+                <div class="header-left">
+                    <div class="header-search">
+                        <form action="https://www.google.com/search" method="GET" target="_blank">
                             <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" class="google-logo">
                             <input type="text" name="q" placeholder="Search the web..." required>
                             <button type="submit">Go</button>
                         </form>
                     </div>
-                    <div style="display: flex; gap: 0.5rem; align-items: stretch;">
-                        <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode" style="position: relative; z-index: 20; cursor: pointer;">
+                    <div class="header-left-buttons">
+                        <button type="button" class="theme-toggle" id="themeToggle" title="Toggle dark mode">
                             <span class="theme-icon-light">&#9790;</span>
                             <span class="theme-icon-dark">&#9728;</span>
                             <span class="theme-label">Dark Mode</span>
@@ -29,18 +29,6 @@
                             <span>&#9888;</span>
                             <span class="feedback-label">Report Issue</span>
                         </button>
-                    </div>
-                    <!-- Founders Club Progress -->
-                    <div class="founders-club-widget" id="foundersWidget" style="display: none;">
-                        <a href="/founders.html" class="founders-progress-link" id="foundersProgress" title="Join the Founders Club - Limited to 76 members!">
-                            <span class="founders-bell">&#128276;</span>
-                            <span class="founders-text">Founders Club</span>
-                            <span class="founders-bar">
-                                <span class="founders-bar-fill" id="foundersBarFill"></span>
-                            </span>
-                            <span class="founders-count" id="foundersCount">0/76</span>
-                        </a>
-                        <a href="/founders.html#about" class="founders-info-link" title="Learn more about the Founders Club">More Info</a>
                     </div>
                 </div>
                 <!-- Center Column: Logo -->
@@ -91,11 +79,22 @@
                         <div style="position: absolute; bottom: 8px; left: 70px; right: 20px; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
                     </div>
                 </a>
-                <!-- Right Column: Auth -->
-                <div class="header-right" style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 0.5rem; position: static; transform: none;">
-                    <div class="header-auth" id="headerAuth" style="display: flex; flex-direction: row; align-items: center; gap: 1rem; position: static; transform: none;">
+                <!-- Right Column: Auth + Founders Club -->
+                <div class="header-right">
+                    <div class="header-auth" id="headerAuth">
                         <a href="/login.html" class="sign-in-btn">Sign In</a>
                         <a href="/register.html" class="auth-btn">Sign Up</a>
+                    </div>
+                    <!-- Founders Club Progress (below user panel) -->
+                    <div class="founders-club-widget" id="foundersWidget" style="display: none;">
+                        <a href="/founders.html" class="founders-progress-link" id="foundersProgress" title="Join the Founders Club - Limited to 76 members!">
+                            <span class="founders-bell">&#128276;</span>
+                            <span class="founders-text">Founders Club</span>
+                            <span class="founders-bar">
+                                <span class="founders-bar-fill" id="foundersBarFill"></span>
+                            </span>
+                            <span class="founders-count" id="foundersCount">0/76</span>
+                        </a>
                     </div>
                 </div>
                 <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
@@ -578,7 +577,7 @@
         .header-top {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
-            align-items: center;
+            align-items: start;
             padding: 1rem 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
@@ -592,14 +591,17 @@
             gap: 0.5rem;
         }
 
+        .header-left-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
         .header-right {
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: center !important;
-            align-items: flex-end !important;
-            gap: 0.5rem !important;
-            position: static !important;
-            transform: none !important;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
         }
 
         /* ==========================================================================
