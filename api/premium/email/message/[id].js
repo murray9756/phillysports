@@ -35,15 +35,18 @@ export default async function handler(req, res) {
         }
 
         const accountId = currentUser.premiumEmail.zohoAccountId;
-        const { id } = req.query;
+        const { id, folderId } = req.query;
 
         if (!id) {
             return res.status(400).json({ error: 'Message ID required' });
         }
 
         if (req.method === 'GET') {
-            // Get message content
-            const result = await getMessage(accountId, id);
+            // Get message content (folderId required for Zoho API)
+            if (!folderId) {
+                return res.status(400).json({ error: 'Folder ID required' });
+            }
+            const result = await getMessage(accountId, id, folderId);
 
             if (!result.success) {
                 return res.status(500).json({ error: result.error || 'Failed to load message' });

@@ -334,7 +334,7 @@
                 }
 
                 listEl.innerHTML = data.messages.map(msg => `
-                    <div class="message-item ${msg.isRead ? '' : 'unread'}" data-id="${msg.id}" onclick="openMessage('${msg.id}')">
+                    <div class="message-item ${msg.isRead ? '' : 'unread'}" data-id="${msg.id}" onclick="openMessage('${msg.id}', '${msg.folderId}')">
                         <div class="message-from" title="${escapeHtml(msg.from)}">${escapeHtml(msg.fromName || msg.from)}</div>
                         <div class="message-content">
                             <div class="message-subject">${escapeHtml(msg.subject)}</div>
@@ -353,7 +353,7 @@
             }
         }
 
-        async function openMessage(id) {
+        async function openMessage(id, folderId) {
             const listEl = document.getElementById('messageList');
             const viewEl = document.getElementById('messageView');
 
@@ -363,7 +363,7 @@
             });
 
             try {
-                const response = await fetch(`/api/premium/email/message/${id}`, { credentials: 'include' });
+                const response = await fetch(`/api/premium/email/message/${id}?folderId=${folderId}`, { credentials: 'include' });
                 const data = await response.json();
 
                 if (!data.success) {
@@ -542,7 +542,9 @@
 
         function formatDate(dateStr, full = false) {
             if (!dateStr) return '';
-            const date = new Date(dateStr);
+            // Zoho returns timestamps as strings in milliseconds
+            const timestamp = typeof dateStr === 'string' ? parseInt(dateStr, 10) : dateStr;
+            const date = new Date(timestamp);
             const now = new Date();
             const isToday = date.toDateString() === now.toDateString();
 

@@ -59,6 +59,7 @@ export default async function handler(req, res) {
         }
 
         const result = await sendEmail(currentUser.premiumEmail.zohoAccountId, {
+            from: currentUser.premiumEmail.email,
             to,
             cc,
             bcc,

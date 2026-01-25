@@ -307,16 +307,17 @@ export async function getMessages(accountId, folderId = 'inbox', options = {}) {
 }
 
 // Get a single message with full content
-export async function getMessage(accountId, messageId) {
+export async function getMessage(accountId, messageId, folderId) {
     try {
-        const result = await mailRequest(accountId, `/messages/${messageId}`);
+        // Use the content endpoint which returns the message body
+        const result = await mailRequest(accountId, `/folders/${folderId}/messages/${messageId}/content`);
         const m = result.data || {};
 
         return {
             success: true,
             message: {
                 id: m.messageId,
-                folderId: m.folderId,
+                folderId: folderId,
                 subject: m.subject || '(No Subject)',
                 from: m.fromAddress,
                 fromName: m.sender || m.fromAddress,
@@ -325,15 +326,10 @@ export async function getMessage(accountId, messageId) {
                 bcc: m.bccAddress,
                 date: m.receivedTime || m.sentDateInGMT,
                 content: m.content || '',
-                htmlContent: m.htmlContent || m.content || '',
-                isRead: m.isRead || m.readStatus === 'read',
-                hasAttachment: m.hasAttachment || false,
-                attachments: (m.attachments || []).map(a => ({
-                    id: a.attachmentId,
-                    name: a.attachmentName,
-                    size: a.attachmentSize,
-                    contentType: a.contentType
-                }))
+                htmlContent: m.content || '',
+                isRead: true,
+                hasAttachment: false,
+                attachments: []
             }
         };
     } catch (error) {
@@ -344,10 +340,11 @@ export async function getMessage(accountId, messageId) {
 
 // Send an email
 export async function sendEmail(accountId, options) {
-    const { to, cc, bcc, subject, content, inReplyTo, isHtml = true } = options;
+    const { from, to, cc, bcc, subject, content, inReplyTo, isHtml = true } = options;
 
     try {
         const emailData = {
+            fromAddress: from,
             toAddress: to,
             subject: subject || '',
             content: content || '',
