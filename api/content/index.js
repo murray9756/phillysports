@@ -44,7 +44,16 @@ export default async function handler(req, res) {
         }
 
         if (type) {
-            filter.type = type;
+            // Map filter types to actual database types
+            if (type === 'video') {
+                // Videos can be youtube, tiktok, or video
+                filter.type = { $in: ['video', 'youtube', 'tiktok'] };
+            } else if (type === 'article') {
+                // Articles can be article or news
+                filter.type = { $in: ['article', 'news'] };
+            } else {
+                filter.type = type;
+            }
         }
 
         if (featured === 'true') {
@@ -70,7 +79,15 @@ export default async function handler(req, res) {
                 featuredFilter.teams = team;
             }
             // Apply type filter to featured item
-            if (type) featuredFilter.type = type;
+            if (type) {
+                if (type === 'video') {
+                    featuredFilter.type = { $in: ['video', 'youtube', 'tiktok'] };
+                } else if (type === 'article') {
+                    featuredFilter.type = { $in: ['article', 'news'] };
+                } else {
+                    featuredFilter.type = type;
+                }
+            }
 
             featuredItem = await curated.findOne(featuredFilter);
         }
