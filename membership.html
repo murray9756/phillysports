@@ -149,9 +149,10 @@
             </div>
 
             <div class="pricing-section">
-                <div class="price-option selected" id="monthlyOption" onclick="setBilling('month')">
-                    <div class="price-amount">$4.99</div>
-                    <div class="price-period">per month</div>
+                <div class="price-option selected" id="quarterlyOption" onclick="setBilling('quarter')">
+                    <div class="price-amount">$14.97</div>
+                    <div class="price-period">every 3 months</div>
+                    <div class="price-savings">$4.99/month</div>
                 </div>
                 <div class="price-option" id="yearlyOption" onclick="setBilling('year')">
                     <div class="price-amount">$39.99</div>
@@ -162,7 +163,7 @@
 
             <div class="value-prop">
                 <div class="value-prop-title">This membership pays for itself!</div>
-                <div class="value-prop-text">500 DD monthly grant + 2x earnings = ~$10+/month value for just $4.99</div>
+                <div class="value-prop-text">500 DD monthly grant + 2x earnings = ~$10+/month value</div>
             </div>
 
             <div class="benefits-grid">
@@ -315,7 +316,7 @@
     <script>
         let currentUser = null;
         let subscriptionStatus = null;
-        let billingInterval = 'month';
+        let billingInterval = 'quarter';
 
         async function init() {
             // Check URL params for success/cancel
@@ -390,7 +391,7 @@
 
         function setBilling(interval) {
             billingInterval = interval;
-            document.getElementById('monthlyOption').classList.toggle('selected', interval === 'month');
+            document.getElementById('quarterlyOption').classList.toggle('selected', interval === 'quarter');
             document.getElementById('yearlyOption').classList.toggle('selected', interval === 'year');
         }
 

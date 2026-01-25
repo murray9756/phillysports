@@ -61,14 +61,15 @@ export function getTierBenefits(tier) {
     return TIER_BENEFITS[normalizedTier] || TIER_BENEFITS.free;
 }
 
-// Stripe Price IDs (single product with monthly/yearly options)
+// Stripe Price IDs (quarterly and annual options only)
 const STRIPE_PRICE_IDS = {
-    premium_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
+    premium_quarterly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY,
     premium_yearly: process.env.STRIPE_PRICE_PREMIUM_YEARLY,
-    // Legacy support
-    diehard_plus_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
+    // Legacy support (map old tiers to new quarterly)
+    premium_monthly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY,
+    diehard_plus_monthly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY,
     diehard_plus_annual: process.env.STRIPE_PRICE_PREMIUM_YEARLY,
-    diehard_pro_monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY,
+    diehard_pro_monthly: process.env.STRIPE_PRICE_PREMIUM_QUARTERLY,
     diehard_pro_annual: process.env.STRIPE_PRICE_PREMIUM_YEARLY
 };
 

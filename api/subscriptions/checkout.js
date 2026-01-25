@@ -28,21 +28,16 @@ export default async function handler(req, res) {
             return res.status(401).json({ error: 'Authentication required' });
         }
 
-        const { tier, interval = 'month' } = req.body;
+        const { tier = 'premium', interval = 'quarter' } = req.body;
 
-        // Validate tier
-        if (!tier || ![SUBSCRIPTION_TIERS.DIEHARD_PLUS, SUBSCRIPTION_TIERS.DIEHARD_PRO].includes(tier)) {
-            return res.status(400).json({ error: 'Invalid subscription tier' });
+        // Validate interval (quarterly or yearly only)
+        if (!['quarter', 'year'].includes(interval)) {
+            return res.status(400).json({ error: 'Invalid billing interval. Choose quarterly or yearly.' });
         }
 
-        // Validate interval
-        if (!['month', 'year'].includes(interval)) {
-            return res.status(400).json({ error: 'Invalid billing interval' });
-        }
-
-        // Map tier to Stripe price key format
-        const tierKey = tier === SUBSCRIPTION_TIERS.DIEHARD_PLUS ? 'diehard_plus' : 'diehard_pro';
-        const intervalKey = interval === 'year' ? 'annual' : 'monthly';
+        // Single tier now - always premium
+        const tierKey = 'premium';
+        const intervalKey = interval === 'year' ? 'yearly' : 'quarterly';
 
         const returnUrl = process.env.SITE_URL
             ? `${process.env.SITE_URL}/membership.html`
