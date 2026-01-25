@@ -276,9 +276,7 @@ export async function getMessages(accountId, folderId = 'inbox', options = {}) {
     try {
         const params = new URLSearchParams({
             limit: limit.toString(),
-            start: start.toString(),
-            sortBy: 'date',
-            sortOrder: 'desc'
+            start: start.toString()
         });
 
         const result = await mailRequest(accountId, `/messages/view?folderId=${folderId}&${params}`);
