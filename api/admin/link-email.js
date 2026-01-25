@@ -43,6 +43,7 @@ export default async function handler(req, res) {
                     },
                     isSubscribed: true,
                     subscriptionTier: 'premium',
+                    subscriptionStatus: 'active',
                     updatedAt: new Date()
                 }
             }
