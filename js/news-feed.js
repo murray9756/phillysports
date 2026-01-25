@@ -144,22 +144,11 @@
             .story-curator-note::after { content: '"'; }
 
             .story-item-wrapper {
-                display: flex;
-                align-items: flex-start;
-                gap: 0.5rem;
-                padding: 0.75rem 0;
+                padding: 0.5rem 0;
                 border-bottom: 1px solid var(--border-color);
             }
             .story-item-wrapper:last-child {
                 border-bottom: none;
-            }
-            .story-item-wrapper .story-item {
-                order: 1;
-            }
-            .story-item-wrapper .vote-buttons {
-                flex-shrink: 0;
-                order: 2;
-                align-self: center;
             }
 
             .story-actions-row {
@@ -184,15 +173,15 @@
                 color: var(--accent-color, #8B1A28);
             }
 
-            /* Vote Buttons */
+            /* Vote Buttons - inside story card */
             .vote-buttons {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 0.15rem;
-                padding-left: 0.75rem;
                 flex-shrink: 0;
-                order: 3;
+                margin-left: auto;
+                padding-left: 0.5rem;
             }
             .vote-btn {
                 background: none;
@@ -294,6 +283,8 @@
             [data-theme="dark"] .vote-btn.downvote:hover,
             [data-theme="dark"] .vote-btn.downvote.active { color: #e57373 !important; }
             [data-theme="dark"] .story-item-wrapper { border-color: #333 !important; }
+            [data-theme="dark"] .story-title { color: #e8e8e8 !important; }
+            [data-theme="dark"] .story-title:hover { color: #ff6b6b !important; }
             [data-theme="dark"] .story-comment-btn:hover { background: rgba(255,255,255,0.1); }
         </style>
     `;
@@ -496,7 +487,7 @@
 
             return `
                 <div class="story-item-wrapper">
-                    <a href="${url}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                    <div class="story-item">
                         <div class="story-thumb" style="${thumbStyle};position:relative;" ${photoDataAttrs}>
                             ${thumbContent}
                             ${videoOverlay}
@@ -508,20 +499,20 @@
                                 <span>·</span>
                                 <span>${timeAgo(date)}</span>
                             </div>
-                            <div class="story-title">${escapeHtml(title)}</div>
+                            <a href="${url}" target="_blank" class="story-title" style="text-decoration:none;color:inherit;">${escapeHtml(title)}</a>
                             ${description ? `<div class="story-teaser">${escapeHtml(truncateText(description, 140))}</div>` : ''}
                             ${curatorReview ? `<div class="story-curator-note">${escapeHtml(curatorReview)}</div>` : ''}
                             <div class="story-actions-row">
-                                <a href="/article.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || '')}&image=${encodeURIComponent(thumbnail || '')}" class="story-comment-btn" title="Discuss this story" onclick="event.stopPropagation();">
+                                <a href="/article.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || '')}&image=${encodeURIComponent(thumbnail || '')}" class="story-comment-btn" title="Discuss this story">
                                     &#128172; Comments
                                 </a>
                             </div>
                         </div>
-                    </a>
-                    <div class="vote-buttons">
-                        <button class="vote-btn upvote" data-article="${itemId}" onclick="window.PhillySportsNewsFeed.vote('${itemId}', 1, event)">&#9650;</button>
-                        <span class="vote-score" id="score-${itemId}">0</span>
-                        <button class="vote-btn downvote" data-article="${itemId}" onclick="window.PhillySportsNewsFeed.vote('${itemId}', -1, event)">&#9660;</button>
+                        <div class="vote-buttons">
+                            <button class="vote-btn upvote" data-article="${itemId}" onclick="window.PhillySportsNewsFeed.vote('${itemId}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${itemId}">0</span>
+                            <button class="vote-btn downvote" data-article="${itemId}" onclick="window.PhillySportsNewsFeed.vote('${itemId}', -1, event)">&#9660;</button>
+                        </div>
                     </div>
                 </div>
             `;

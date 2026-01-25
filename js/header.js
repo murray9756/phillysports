@@ -740,13 +740,13 @@
         /* ----- User Panel (Consolidated) ----- */
         .user-panel {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.75rem;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.6rem 0.75rem;
-            min-width: 160px;
+            padding: 0.5rem 0.75rem;
             font-family: Georgia, serif;
         }
 
@@ -754,24 +754,23 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding-bottom: 0.4rem;
-            border-bottom: 1px solid rgba(26, 39, 68, 0.2);
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #F5F0E1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
             border: 2px solid #8B1A28;
             text-transform: uppercase;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .user-avatar img {
@@ -783,15 +782,16 @@
         .user-panel-info {
             display: flex;
             flex-direction: column;
-            gap: 0.1rem;
+            gap: 0.15rem;
         }
 
         .user-panel-name {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #1A2744;
             text-decoration: none;
             line-height: 1.2;
+            white-space: nowrap;
         }
 
         .user-panel-name:hover {
@@ -800,64 +800,65 @@
 
         .user-panel-badges {
             display: flex;
-            gap: 0.25rem;
+            gap: 0.2rem;
             flex-wrap: wrap;
         }
 
         .badge-premium {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 700;
-            padding: 0.1rem 0.3rem;
+            padding: 0.1rem 0.25rem;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             color: #1A2744;
             border-radius: 2px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .badge-founder {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 700;
-            padding: 0.1rem 0.3rem;
+            padding: 0.1rem 0.25rem;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #ffd700;
             border-radius: 2px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .badge-admin {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 700;
-            padding: 0.1rem 0.3rem;
+            padding: 0.1rem 0.25rem;
             background: linear-gradient(135deg, #8B1A28, #5a0f15);
             color: #F5F0E1;
             border-radius: 2px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         .user-panel-coins {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0.35rem 0;
+            gap: 0.5rem;
+            padding: 0 0.5rem;
+            border-left: 1px solid rgba(26, 39, 68, 0.2);
         }
 
         .coin-info {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.3rem;
         }
 
         .coin-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             border-radius: 50%;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 800;
             color: #1A2744;
             border: 2px solid #1A2744;
@@ -867,23 +868,21 @@
         .coin-balance {
             font-family: Georgia, serif;
             font-variant-numeric: tabular-nums;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #1A2744;
         }
 
         .coin-label {
-            font-size: 0.6rem;
-            color: #666;
-            font-weight: 500;
+            display: none;
         }
 
         .buy-coins-link {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 600;
             color: #8B1A28;
             text-decoration: none;
-            padding: 0.15rem 0.35rem;
+            padding: 0.15rem 0.3rem;
             border: 1px solid #8B1A28;
             border-radius: 2px;
             transition: all 0.2s;
@@ -896,17 +895,18 @@
 
         .user-panel-links {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem 0.5rem;
-            padding-top: 0.35rem;
-            border-top: 1px solid rgba(26, 39, 68, 0.2);
+            align-items: center;
+            gap: 0.4rem;
+            padding-left: 0.5rem;
+            border-left: 1px solid rgba(26, 39, 68, 0.2);
         }
 
         .user-panel-links a {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
+            white-space: nowrap;
         }
 
         .user-panel-links a:hover {
@@ -915,7 +915,7 @@
 
         .user-panel-links .link-sep {
             color: rgba(26, 39, 68, 0.3);
-            font-size: 0.6rem;
+            font-size: 0.5rem;
         }
 
         /* Legacy styles kept for backwards compatibility */
