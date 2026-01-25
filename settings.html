@@ -404,7 +404,7 @@
         // Check auth and redirect if not logged in
         async function checkAuth() {
             try {
-                const response = await fetch('/api/auth/me');
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
                 const data = await response.json();
                 if (data.user) {
                     currentUser = data.user;
