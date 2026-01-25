@@ -272,6 +272,7 @@
                         <button class="queue-filter-btn" data-filter="flyers" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Flyers</button>
                         <button class="queue-filter-btn" data-filter="college" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">College</button>
                         <button class="queue-filter-btn" data-filter="esports" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Esports</button>
+                        <button class="queue-filter-btn" data-filter="youth" style="padding: 0.35rem 0.75rem; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; background: var(--card-bg); color: var(--text-primary);">Youth</button>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
@@ -1891,6 +1892,9 @@
                                     <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="phillies" checked> Phillies</label>
                                     <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="sixers" checked> Sixers</label>
                                     <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="flyers" checked> Flyers</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="college"> College</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="esports"> Esports</label>
+                                    <label style="font-size: 0.8rem;"><input type="checkbox" class="discoverTeam" value="youth"> Youth</label>
                                 </div>
                             </div>
                             <button class="btn btn-success" onclick="addDiscoveredSource('${escapeHtml(src.name)}', '${src.type}', '${src.category}', '${escapeHtml(src.feedUrl)}')" style="font-size: 0.85rem;">Add This Source</button>
@@ -2056,5 +2060,8 @@
 </script>
     <!-- Live Ticker -->
     <script src="/js/live-ticker.js"></script>
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

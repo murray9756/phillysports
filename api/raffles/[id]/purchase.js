@@ -65,9 +65,9 @@ export default async function handler(req, res) {
         if (error.message === 'Raffle is not active') {
             return res.status(400).json({ error: 'This raffle is no longer accepting tickets' });
         }
-        if (error.message.includes('exclusive to Diehard Premium')) {
+        if (error.message.includes('Premium Raffles')) {
             return res.status(403).json({
-                error: 'This raffle is exclusive to Diehard Premium members',
+                error: 'Premium Raffles are exclusive to Diehard Premium members. Upgrade to enter raffles for graded cards, game tickets, and more!',
                 upgradeCta: true
             });
         }

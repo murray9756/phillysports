@@ -238,6 +238,21 @@
             line-height: 1.4;
         }
 
+        /* Question Stats */
+        .question-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        .question-stats-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
         .answer-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -349,6 +364,7 @@
                 <!-- Question Phase -->
                 <div id="questionPhase" style="display: none;">
                     <div class="category-display" id="categoryDisplay">Eagles</div>
+                    <div class="question-stats" id="questionStats"></div>
                     <div class="timer" id="timer">30</div>
                     <div class="question-text" id="questionText">Question goes here?</div>
                     <div class="answer-options" id="answerOptions"></div>
@@ -520,6 +536,23 @@
             const catDisplay = document.getElementById('categoryDisplay');
             catDisplay.textContent = category;
             catDisplay.className = 'category-display ' + CATEGORY_CLASSES[category];
+
+            // Set question stats
+            const statsContainer = document.getElementById('questionStats');
+            const usedCount = question.usedCount || 0;
+            const accuracy = question.accuracy || 0;
+            if (usedCount > 0) {
+                statsContainer.innerHTML = `
+                    <span class="question-stats-item" title="Times this question has been played">
+                        &#128202; ${usedCount} plays
+                    </span>
+                    <span class="question-stats-item" title="Percentage answered correctly">
+                        &#9989; ${accuracy}% correct
+                    </span>
+                `;
+            } else {
+                statsContainer.innerHTML = `<span class="question-stats-item">&#10024; New question!</span>`;
+            }
 
             // Set question
             document.getElementById('questionText').textContent = question.question;
@@ -704,5 +737,9 @@
     </script>
 
     <script src="/js/live-ticker.js"></script>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

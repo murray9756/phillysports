@@ -38,12 +38,14 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Not in matchmaking queue' });
         }
 
-        // Refund the locked wager
+        // Refund the locked wager (no multiplier - returning coins)
         await addCoins(
             userId,
             entry.wagerAmount,
             'trivia_wager_refund',
-            'Left matchmaking queue - wager refunded'
+            'Left matchmaking queue - wager refunded',
+            {},
+            { skipMultiplier: true }
         );
 
         res.status(200).json({

@@ -1,0 +1,4802 @@
+[
+  {
+    "question": "Which five schools make up the Big 5 basketball conference in Philadelphia?",
+    "options": [
+      "Villanova, Temple, Penn, La Salle, St. Joseph's",
+      "Villanova, Temple, Drexel, La Salle, St. Joseph's",
+      "Villanova, Temple, Penn, Drexel, St. Joseph's",
+      "Penn, Temple, La Salle, Drexel, Princeton"
+    ],
+    "answer": "Villanova, Temple, Penn, La Salle, St. Joseph's",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "In what year did Villanova win their first NCAA Men's Basketball Championship?",
+    "options": [
+      "1983",
+      "1985",
+      "1988",
+      "1990"
+    ],
+    "answer": "1985",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the historic arena where Big 5 games are traditionally played?",
+    "options": [
+      "The Spectrum",
+      "The Palestra",
+      "Wells Fargo Center",
+      "Liacouras Center"
+    ],
+    "answer": "The Palestra",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which legendary coach led Temple basketball for 24 seasons?",
+    "options": [
+      "Harry Litwack",
+      "John Chaney",
+      "Don Casey",
+      "Fran Dunphy"
+    ],
+    "answer": "John Chaney",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the nickname of the Temple University athletic teams?",
+    "options": [
+      "Eagles",
+      "Wildcats",
+      "Owls",
+      "Hawks"
+    ],
+    "answer": "Owls",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle basketball legend is the school's all-time leading scorer with 3,217 points?",
+    "options": [
+      "Tom Gola",
+      "Lionel Simmons",
+      "Michael Brooks",
+      "Rasual Butler"
+    ],
+    "answer": "Lionel Simmons",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Kris Jenkins hit the buzzer-beater to win Villanova's second NCAA championship?",
+    "options": [
+      "2014",
+      "2015",
+      "2016",
+      "2017"
+    ],
+    "answer": "2016",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which St. Joseph's guard was named National Player of the Year in 2004?",
+    "options": [
+      "Delonte West",
+      "Jameer Nelson",
+      "Pat Carroll",
+      "Marvin O'Connor"
+    ],
+    "answer": "Jameer Nelson",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What Ivy League school is part of the Big 5?",
+    "options": [
+      "Princeton",
+      "Columbia",
+      "Penn",
+      "Yale"
+    ],
+    "answer": "Penn",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova coach led the team to three NCAA tournament Final Fours?",
+    "options": [
+      "Rollie Massimino",
+      "Steve Lappas",
+      "Jay Wright",
+      "Kyle Neptune"
+    ],
+    "answer": "Jay Wright",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Tom Gola led La Salle to the NCAA Championship in which year?",
+    "options": [
+      "1952",
+      "1954",
+      "1956",
+      "1958"
+    ],
+    "answer": "1954",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the nickname of the Drexel University athletic teams?",
+    "options": [
+      "Dragons",
+      "Tigers",
+      "Lions",
+      "Griffins"
+    ],
+    "answer": "Dragons",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which coach led St. Joseph's for 24 seasons before leaving in 2019?",
+    "options": [
+      "Jim Boyle",
+      "Phil Martelli",
+      "John Griffin",
+      "Jim Lynam"
+    ],
+    "answer": "Phil Martelli",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "In what year was the Big 5 basketball round-robin founded?",
+    "options": [
+      "1955",
+      "1958",
+      "1960",
+      "1963"
+    ],
+    "answer": "1955",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which team did Villanova defeat in the 1985 NCAA Championship game?",
+    "options": [
+      "Georgetown",
+      "North Carolina",
+      "Duke",
+      "Louisville"
+    ],
+    "answer": "Georgetown",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was John Chaney's famous early-morning practice time at Temple?",
+    "options": [
+      "4:00 AM",
+      "5:00 AM",
+      "5:30 AM",
+      "6:00 AM"
+    ],
+    "answer": "5:30 AM",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player won the NCAA Tournament Most Outstanding Player award in 2016?",
+    "options": [
+      "Kris Jenkins",
+      "Josh Hart",
+      "Ryan Arcidiacono",
+      "Jalen Brunson"
+    ],
+    "answer": "Ryan Arcidiacono",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "The Palestra is located on which university's campus?",
+    "options": [
+      "Temple",
+      "Villanova",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Penn",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did Temple basketball reach the Elite Eight under John Chaney?",
+    "options": [
+      "1988",
+      "1991",
+      "1993",
+      "2001"
+    ],
+    "answer": "2001",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle player won the Naismith Award in 1990?",
+    "options": [
+      "Tom Gola",
+      "Lionel Simmons",
+      "Michael Brooks",
+      "Doug Overton"
+    ],
+    "answer": "Lionel Simmons",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What conference did Villanova basketball compete in before joining the Big East?",
+    "options": [
+      "Atlantic 10",
+      "Eastern 8",
+      "ECAC",
+      "Metro Atlantic"
+    ],
+    "answer": "Eastern 8",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Penn basketball player was a two-time Ivy League Player of the Year in the 1970s?",
+    "options": [
+      "Corky Calhoun",
+      "Dave Wohl",
+      "Bob Morse",
+      "Tony Price"
+    ],
+    "answer": "Tony Price",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did St. Joseph's go undefeated in the regular season?",
+    "options": [
+      "2002",
+      "2004",
+      "2006",
+      "2008"
+    ],
+    "answer": "2004",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Who hit the game-winning shot in Villanova's 2018 NCAA Championship victory?",
+    "options": [
+      "Jalen Brunson",
+      "Mikal Bridges",
+      "Donte DiVincenzo",
+      "Eric Paschall"
+    ],
+    "answer": "Donte DiVincenzo",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was Villanova's shooting percentage in the 1985 NCAA Championship game?",
+    "options": [
+      "68.4%",
+      "72.3%",
+      "78.6%",
+      "80.2%"
+    ],
+    "answer": "78.6%",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple player holds the school record for career assists?",
+    "options": [
+      "Mark Macon",
+      "Pepe Sanchez",
+      "Aaron McKie",
+      "Rick Brunson"
+    ],
+    "answer": "Pepe Sanchez",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Tom Gola played professionally for which NBA team after leaving La Salle?",
+    "options": [
+      "Philadelphia Warriors",
+      "New York Knicks",
+      "Boston Celtics",
+      "Syracuse Nationals"
+    ],
+    "answer": "Philadelphia Warriors",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year was The Palestra opened?",
+    "options": [
+      "1920",
+      "1927",
+      "1932",
+      "1938"
+    ],
+    "answer": "1927",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Villanova guard won back-to-back Big East Player of the Year awards?",
+    "options": [
+      "Kerry Kittles",
+      "Kyle Lowry",
+      "Jalen Brunson",
+      "Ryan Arcidiacono"
+    ],
+    "answer": "Jalen Brunson",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the capacity of The Palestra?",
+    "options": [
+      "6,500",
+      "7,800",
+      "8,722",
+      "9,500"
+    ],
+    "answer": "8,722",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which coach led Penn basketball to 9 Ivy League titles?",
+    "options": [
+      "Chuck Daly",
+      "Bob Weinhauer",
+      "Fran Dunphy",
+      "Steve Donahue"
+    ],
+    "answer": "Fran Dunphy",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Delonte West played college basketball at which Philadelphia school?",
+    "options": [
+      "Temple",
+      "La Salle",
+      "St. Joseph's",
+      "Villanova"
+    ],
+    "answer": "St. Joseph's",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What NFL team drafted Temple quarterback Michael Vick's brother Marcus?",
+    "options": [
+      "Eagles",
+      "Dolphins",
+      "Jets",
+      "He was undrafted"
+    ],
+    "answer": "Dolphins",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Drexel basketball player was named CAA Player of the Year in 2021?",
+    "options": [
+      "Camren Wynter",
+      "James Butler",
+      "Zach Walton",
+      "T.J. Bickerstaff"
+    ],
+    "answer": "Camren Wynter",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What conference does Temple football currently play in?",
+    "options": [
+      "Big East",
+      "American Athletic Conference",
+      "Big 12",
+      "Conference USA"
+    ],
+    "answer": "American Athletic Conference",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player was drafted 1st overall in the 1996 NBA Draft?",
+    "options": [
+      "Kerry Kittles",
+      "Tim Thomas",
+      "No Villanova player was drafted 1st",
+      "Allen Iverson"
+    ],
+    "answer": "No Villanova player was drafted 1st",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "John Chaney played college basketball at which school?",
+    "options": [
+      "Temple",
+      "Bethune-Cookman",
+      "Cheyney State",
+      "Lincoln University"
+    ],
+    "answer": "Bethune-Cookman",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle player was the first overall pick in the 1956 NBA Draft?",
+    "options": [
+      "Tom Gola",
+      "Alonzo Lewis",
+      "Nobody from La Salle",
+      "Charlie Singley"
+    ],
+    "answer": "Nobody from La Salle",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did Jay Wright retire from Villanova basketball?",
+    "options": [
+      "2020",
+      "2021",
+      "2022",
+      "2023"
+    ],
+    "answer": "2022",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which St. Joseph's player was nicknamed 'The Hawk Will Never Die'?",
+    "options": [
+      "The mascot, not a player",
+      "Jameer Nelson",
+      "Marvin O'Connor",
+      "Jack Ramsay"
+    ],
+    "answer": "The mascot, not a player",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's Liacouras Center opened in which year?",
+    "options": [
+      "1995",
+      "1997",
+      "2000",
+      "2002"
+    ],
+    "answer": "1997",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Penn player was drafted by the 76ers in 1971?",
+    "options": [
+      "Corky Calhoun",
+      "Dave Wohl",
+      "Steve Bilsky",
+      "Bob Morse"
+    ],
+    "answer": "Dave Wohl",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova's Finneran Pavilion opened in what year?",
+    "options": [
+      "1930",
+      "1932",
+      "1986",
+      "2018"
+    ],
+    "answer": "1932",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Who succeeded John Chaney as Temple's head basketball coach?",
+    "options": [
+      "Fran Dunphy",
+      "Don Casey",
+      "Aaron McKie",
+      "John DiJulius"
+    ],
+    "answer": "Fran Dunphy",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which La Salle player holds the school record for rebounds in a single game?",
+    "options": [
+      "Tom Gola",
+      "Lionel Simmons",
+      "Michael Brooks",
+      "Steve Black"
+    ],
+    "answer": "Tom Gola",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many NCAA tournament appearances did Temple make under John Chaney?",
+    "options": [
+      "13",
+      "15",
+      "17",
+      "19"
+    ],
+    "answer": "17",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player was the 2018 NCAA Tournament Most Outstanding Player?",
+    "options": [
+      "Jalen Brunson",
+      "Mikal Bridges",
+      "Donte DiVincenzo",
+      "Eric Paschall"
+    ],
+    "answer": "Donte DiVincenzo",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's University is located in which Philadelphia neighborhood?",
+    "options": [
+      "Center City",
+      "University City",
+      "City Avenue/Wynnewood",
+      "North Philadelphia"
+    ],
+    "answer": "City Avenue/Wynnewood",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is Penn's mascot name?",
+    "options": [
+      "The Quaker",
+      "Ben Franklin",
+      "The Red and Blue",
+      "Pennsylvania Pete"
+    ],
+    "answer": "The Quaker",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia college won the NIT Championship in 1969?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Temple",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Mikal Bridges was drafted by which NBA team from Villanova?",
+    "options": [
+      "Philadelphia 76ers",
+      "Phoenix Suns",
+      "Brooklyn Nets",
+      "Los Angeles Lakers"
+    ],
+    "answer": "Phoenix Suns",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did La Salle win the NIT Championship?",
+    "options": [
+      "1950",
+      "1952",
+      "1954",
+      "La Salle never won the NIT"
+    ],
+    "answer": "1952",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple football player was drafted by the Dallas Cowboys in the 2017 NFL Draft?",
+    "options": [
+      "Tyler Matakevich",
+      "Haason Reddick",
+      "Robby Anderson",
+      "Jahad Thomas"
+    ],
+    "answer": "Haason Reddick",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "The Big 5 trophy is named after which Philadelphia basketball legend?",
+    "options": [
+      "Tom Gola",
+      "Paul Arizin",
+      "Guy Rodgers",
+      "No specific name"
+    ],
+    "answer": "No specific name",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Kerry Kittles was drafted by which NBA team from Villanova?",
+    "options": [
+      "New Jersey Nets",
+      "New York Knicks",
+      "Philadelphia 76ers",
+      "Boston Celtics"
+    ],
+    "answer": "New Jersey Nets",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Penn State running back from the Philadelphia area won the Maxwell Award?",
+    "options": [
+      "Ki-Jana Carter",
+      "Larry Johnson",
+      "Saquon Barkley",
+      "Curtis Enis"
+    ],
+    "answer": "Saquon Barkley",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did Temple football play in their first bowl game?",
+    "options": [
+      "1935",
+      "1945",
+      "1979",
+      "2009"
+    ],
+    "answer": "1935",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which St. Joseph's coach led the team to the 1961 NCAA Tournament?",
+    "options": [
+      "Jack Ramsay",
+      "Jim Lynam",
+      "Jack McKinney",
+      "John Griffin"
+    ],
+    "answer": "Jack Ramsay",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel University plays in which basketball conference?",
+    "options": [
+      "Atlantic 10",
+      "Colonial Athletic Association",
+      "Patriot League",
+      "America East"
+    ],
+    "answer": "Colonial Athletic Association",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player holds the school record for most points in a single game?",
+    "options": [
+      "Kerry Kittles",
+      "Paul Arizin",
+      "Josh Hart",
+      "Donte DiVincenzo"
+    ],
+    "answer": "Paul Arizin",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple's football stadium is named after which former coach?",
+    "options": [
+      "Al Golden",
+      "Wayne Hardin",
+      "Nobody - it's Lincoln Financial Field",
+      "Pop Warner"
+    ],
+    "answer": "Nobody - it's Lincoln Financial Field",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Who was the first player from the Big 5 to be drafted #1 overall in the NBA Draft?",
+    "options": [
+      "Tom Gola",
+      "Paul Arizin",
+      "Guy Rodgers",
+      "No Big 5 player has been drafted #1"
+    ],
+    "answer": "No Big 5 player has been drafted #1",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle coach led them to the 1954 NCAA Championship?",
+    "options": [
+      "Ken Loeffler",
+      "Jim Harding",
+      "Dudey Moore",
+      "Tom Gola"
+    ],
+    "answer": "Ken Loeffler",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn basketball has won how many Ivy League championships?",
+    "options": [
+      "18",
+      "25",
+      "28",
+      "31"
+    ],
+    "answer": "28",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple player was the Big 5 Player of the Year in 1988?",
+    "options": [
+      "Tim Perry",
+      "Mark Macon",
+      "Nate Blackwell",
+      "Howard Evans"
+    ],
+    "answer": "Mark Macon",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's plays home games at which arena?",
+    "options": [
+      "The Palestra",
+      "Hagan Arena",
+      "Liacouras Center",
+      "Alumni Memorial Fieldhouse"
+    ],
+    "answer": "Hagan Arena",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova guard was nicknamed 'The Little General'?",
+    "options": [
+      "Kyle Lowry",
+      "Randy Foye",
+      "Allan Ray",
+      "Chris Charles"
+    ],
+    "answer": "Kyle Lowry",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Aaron McKie played college basketball at which school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "La Salle",
+      "St. Joseph's"
+    ],
+    "answer": "Temple",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What conference did La Salle basketball join after leaving the Atlantic 10?",
+    "options": [
+      "Big East",
+      "American Athletic Conference",
+      "America East",
+      "La Salle is still in Atlantic 10"
+    ],
+    "answer": "La Salle is still in Atlantic 10",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia area college athlete became an NFL Hall of Fame tight end?",
+    "options": [
+      "Pete Retzlaff from Penn",
+      "Mike Ditka from Pitt",
+      "Keith Jackson from Oklahoma",
+      "John Mackey from Syracuse"
+    ],
+    "answer": "Pete Retzlaff from Penn",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova's basketball arena on campus is named after whom?",
+    "options": [
+      "Jake Nevin",
+      "John du Pont",
+      "Chris Finneran",
+      "Rollie Massimino"
+    ],
+    "answer": "Jake Nevin",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Penn State quarterback from the Philadelphia area was a Heisman finalist?",
+    "options": [
+      "Kerry Collins",
+      "Todd Blackledge",
+      "Michael Robinson",
+      "Trace McSorley"
+    ],
+    "answer": "Michael Robinson",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple football joined which conference in 2012?",
+    "options": [
+      "Big East",
+      "American Athletic Conference",
+      "MAC",
+      "Sun Belt"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Big 5 school has the most NCAA Tournament appearances?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "St. Joseph's"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did St. Joseph's basketball move from the Palestra to on-campus play?",
+    "options": [
+      "1990",
+      "1997",
+      "2009",
+      "2019"
+    ],
+    "answer": "2009",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Drexel player was drafted by the Milwaukee Bucks in 2012?",
+    "options": [
+      "Frank Ntilikina",
+      "Samme Givens",
+      "Chris Fouch",
+      "Damion Lee"
+    ],
+    "answer": "Damion Lee",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn's nickname 'Quakers' refers to what?",
+    "options": [
+      "The Quaker Oats company",
+      "William Penn's religious beliefs",
+      "A Native American tribe",
+      "A Philadelphia tradition"
+    ],
+    "answer": "William Penn's religious beliefs",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple player was named Big 5 Player of the Year three times?",
+    "options": [
+      "Mark Macon",
+      "John Baum",
+      "Eddie Jones",
+      "No Temple player won it 3 times"
+    ],
+    "answer": "Mark Macon",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova basketball competes in which conference?",
+    "options": [
+      "Atlantic 10",
+      "Big East",
+      "ACC",
+      "American Athletic Conference"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle's Tom Gola Arena opened in which decade?",
+    "options": [
+      "1960s",
+      "1970s",
+      "1980s",
+      "1990s"
+    ],
+    "answer": "1990s",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which St. Joseph's player scored 42 points in an NCAA Tournament game in 1961?",
+    "options": [
+      "Jack Ramsay",
+      "Bob McNeill",
+      "Tom Wynne",
+      "Billy Hoy"
+    ],
+    "answer": "Bob McNeill",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple's John Chaney had a famous confrontation with which opposing coach?",
+    "options": [
+      "Jim Boeheim",
+      "John Calipari",
+      "Rick Pitino",
+      "Bob Huggins"
+    ],
+    "answer": "John Calipari",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Villanova player was the Big East Player of the Year in 1996?",
+    "options": [
+      "Kerry Kittles",
+      "Tim Thomas",
+      "Allen Iverson",
+      "Ray Allen"
+    ],
+    "answer": "Kerry Kittles",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the street that separates St. Joseph's University from Philadelphia?",
+    "options": [
+      "Broad Street",
+      "City Avenue",
+      "Market Street",
+      "Lancaster Avenue"
+    ],
+    "answer": "City Avenue",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Penn basketball player later became an NBA referee?",
+    "options": [
+      "Tony Price",
+      "James Littles",
+      "Jerome Allen",
+      "Matt Langel"
+    ],
+    "answer": "James Littles",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many NBA championships did La Salle's Tom Gola win?",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": "1",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple football coach led them to the 2016 AAC Championship?",
+    "options": [
+      "Al Golden",
+      "Steve Addazio",
+      "Matt Rhule",
+      "Geoff Collins"
+    ],
+    "answer": "Matt Rhule",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova's 2018 championship team featured how many future NBA players?",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": "4",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Drexel coach led them to their first NCAA Tournament in 1986?",
+    "options": [
+      "Bill Herrion",
+      "Eddie Burke",
+      "Bruiser Flint",
+      "James 'Zack' Clayton"
+    ],
+    "answer": "Eddie Burke",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's famous mascot, The Hawk, has been flapping continuously since what year?",
+    "options": [
+      "1952",
+      "1956",
+      "1960",
+      "1964"
+    ],
+    "answer": "1956",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn won how many NCAA Tournament games in their 1979 Final Four run?",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": "4",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle player was selected in the first round of the 1980 NBA Draft?",
+    "options": [
+      "Michael Brooks",
+      "Stan Williams",
+      "Mo Connolly",
+      "Kurt Kanaskie"
+    ],
+    "answer": "Michael Brooks",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball moved from The Palestra to which venue as their primary home?",
+    "options": [
+      "Liacouras Center",
+      "McGonigle Hall",
+      "The Spectrum",
+      "Lincoln Financial Field"
+    ],
+    "answer": "Liacouras Center",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player scored 31 points off the bench in the 2018 NCAA Championship game?",
+    "options": [
+      "Jalen Brunson",
+      "Donte DiVincenzo",
+      "Mikal Bridges",
+      "Eric Paschall"
+    ],
+    "answer": "Donte DiVincenzo",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What seed was Villanova when they upset Georgetown in the 1985 NCAA Championship?",
+    "options": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "answer": "8",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Penn State linebacker from the Philadelphia area was drafted by the Cowboys?",
+    "options": [
+      "NaVorro Bowman",
+      "Sean Lee",
+      "Paul Posluszny",
+      "Dan Connor"
+    ],
+    "answer": "Sean Lee",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Rollie Massimino coached at Villanova for how many seasons?",
+    "options": [
+      "15",
+      "17",
+      "19",
+      "21"
+    ],
+    "answer": "19",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Big 5 school has produced the most NBA players?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple football played home games at which stadium before Lincoln Financial Field?",
+    "options": [
+      "The Vet",
+      "Franklin Field",
+      "Temple Stadium",
+      "McGonigle Hall"
+    ],
+    "answer": "Franklin Field",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's 2004 team finished with what regular season record?",
+    "options": [
+      "24-0",
+      "26-0",
+      "27-0",
+      "30-0"
+    ],
+    "answer": "27-0",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which La Salle player holds the record for most career rebounds?",
+    "options": [
+      "Tom Gola",
+      "Lionel Simmons",
+      "Michael Brooks",
+      "Steve Black"
+    ],
+    "answer": "Tom Gola",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball's home arena is named what?",
+    "options": [
+      "DAC (Drexel Athletic Center)",
+      "Daskalakis Athletic Center",
+      "Dragon Den",
+      "Physical Education Athletic Center"
+    ],
+    "answer": "Daskalakis Athletic Center",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Villanova player was Big East Freshman of the Year in 2017?",
+    "options": [
+      "Jalen Brunson",
+      "Mikal Bridges",
+      "Donte DiVincenzo",
+      "Josh Hart"
+    ],
+    "answer": "Donte DiVincenzo",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn basketball coach Steve Donahue previously coached at which school?",
+    "options": [
+      "Cornell",
+      "Boston College",
+      "Princeton",
+      "Harvard"
+    ],
+    "answer": "Cornell",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's mascot owl is named what?",
+    "options": [
+      "Hooter T. Owl",
+      "Owlfred",
+      "Stella",
+      "Russell"
+    ],
+    "answer": "Hooter T. Owl",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which St. Joseph's alumnus coached in the NBA Finals?",
+    "options": [
+      "Phil Martelli",
+      "Jack Ramsay",
+      "Jim Lynam",
+      "John Griffin"
+    ],
+    "answer": "Jack Ramsay",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova's 2016 championship game winning shot was from how far?",
+    "options": [
+      "Half court",
+      "Three-point range",
+      "Free throw line",
+      "Just inside half court"
+    ],
+    "answer": "Three-point range",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle coach won the most games in school history?",
+    "options": [
+      "Ken Loeffler",
+      "Speedy Morris",
+      "John Giannini",
+      "Tom Gola"
+    ],
+    "answer": "Speedy Morris",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn football competes in which conference?",
+    "options": [
+      "Patriot League",
+      "Ivy League",
+      "Colonial Athletic Association",
+      "Northeast Conference"
+    ],
+    "answer": "Ivy League",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple basketball's Aaron McKie became head coach in what year?",
+    "options": [
+      "2019",
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "answer": "2019",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Drexel player was the CAA Rookie of the Year in 2019?",
+    "options": [
+      "James Butler",
+      "Zach Walton",
+      "Camren Wynter",
+      "T.J. Bickerstaff"
+    ],
+    "answer": "James Butler",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's plays in which athletic conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "American Athletic Conference",
+      "Patriot League"
+    ],
+    "answer": "Atlantic 10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was Temple football's best season under Matt Rhule?",
+    "options": [
+      "8-4",
+      "9-4",
+      "10-3",
+      "10-4"
+    ],
+    "answer": "10-4",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova's Jalen Brunson was drafted by which NBA team?",
+    "options": [
+      "Dallas Mavericks",
+      "New York Knicks",
+      "Philadelphia 76ers",
+      "Boston Celtics"
+    ],
+    "answer": "Dallas Mavericks",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Penn player led them to the 1979 Final Four?",
+    "options": [
+      "Tony Price",
+      "Tim Smith",
+      "Matt White",
+      "James Salters"
+    ],
+    "answer": "Tony Price",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's Lionel Simmons was drafted by which NBA team?",
+    "options": [
+      "Philadelphia 76ers",
+      "Sacramento Kings",
+      "Cleveland Cavaliers",
+      "Denver Nuggets"
+    ],
+    "answer": "Sacramento Kings",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "The Palestra is known by what nickname?",
+    "options": [
+      "The Cathedral of College Basketball",
+      "The Snake Pit",
+      "The Pit",
+      "The Palace"
+    ],
+    "answer": "The Cathedral of College Basketball",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple player was the 2008 Atlantic 10 Player of the Year?",
+    "options": [
+      "Dionte Christmas",
+      "Mark Tyndale",
+      "Lavoy Allen",
+      "Ryan Brooks"
+    ],
+    "answer": "Dionte Christmas",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova football competes at what level?",
+    "options": [
+      "FBS",
+      "FCS",
+      "Division II",
+      "Division III"
+    ],
+    "answer": "FCS",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which St. Joseph's player was on the 2004 Olympic basketball team?",
+    "options": [
+      "Jameer Nelson",
+      "Delonte West",
+      "Pat Carroll",
+      "No St. Joseph's player was on the team"
+    ],
+    "answer": "Jameer Nelson",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn basketball won the Ivy League Tournament in which year?",
+    "options": [
+      "2018",
+      "2019",
+      "2020",
+      "Penn has never won the Ivy League Tournament"
+    ],
+    "answer": "Penn has never won the Ivy League Tournament",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel's all-time leading scorer is which player?",
+    "options": [
+      "Malik Rose",
+      "Michael Anderson",
+      "Frank Ntilikina",
+      "Damion Lee"
+    ],
+    "answer": "Michael Anderson",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple football has won how many conference championships?",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": "2",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Kyle Lowry was drafted in which round of the NBA Draft?",
+    "options": [
+      "First round",
+      "Second round",
+      "Third round",
+      "Undrafted"
+    ],
+    "answer": "First round",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle basketball joined the Atlantic 10 in what year?",
+    "options": [
+      "1990",
+      "1995",
+      "2000",
+      "2013"
+    ],
+    "answer": "1995",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which coach took Penn to four Final Fours?",
+    "options": [
+      "Chuck Daly",
+      "Bob Weinhauer",
+      "Fran Dunphy",
+      "No Penn coach has done this"
+    ],
+    "answer": "No Penn coach has done this",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's Jameer Nelson wears which number that was later retired?",
+    "options": [
+      "5",
+      "14",
+      "20",
+      "24"
+    ],
+    "answer": "14",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple won the Big 5 championship outright how many times?",
+    "options": [
+      "8",
+      "12",
+      "15",
+      "18"
+    ],
+    "answer": "12",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player won the Julius Erving Award in 2017?",
+    "options": [
+      "Josh Hart",
+      "Jalen Brunson",
+      "Mikal Bridges",
+      "Kris Jenkins"
+    ],
+    "answer": "Josh Hart",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn State's connection to Philadelphia includes playing at which stadium?",
+    "options": [
+      "Lincoln Financial Field",
+      "Citizens Bank Park",
+      "Wells Fargo Center",
+      "They don't play in Philly"
+    ],
+    "answer": "Lincoln Financial Field",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel won the CIT Championship in what year?",
+    "options": [
+      "2017",
+      "2018",
+      "2019",
+      "2021"
+    ],
+    "answer": "2018",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle player was the NIT MVP in 1952?",
+    "options": [
+      "Tom Gola",
+      "Norm Grekin",
+      "Jackie Moore",
+      "Buddy Donnelly"
+    ],
+    "answer": "Tom Gola",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's has retired how many basketball jersey numbers?",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": "4",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple football's current coach as of 2023 is?",
+    "options": [
+      "Stan Drayton",
+      "Rod Carey",
+      "Manny Diaz",
+      "Geoff Collins"
+    ],
+    "answer": "Stan Drayton",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova basketball has appeared in how many Final Fours?",
+    "options": [
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "answer": "6",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Penn player was the Ivy League Player of the Year in 2018?",
+    "options": [
+      "Darnell Foreman",
+      "AJ Brodeur",
+      "Ryan Betley",
+      "Devon Goodman"
+    ],
+    "answer": "Darnell Foreman",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "John Chaney's career record at Temple was approximately what?",
+    "options": [
+      "516-253",
+      "475-290",
+      "530-240",
+      "490-275"
+    ],
+    "answer": "516-253",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle's Explorer mascot was introduced in what decade?",
+    "options": [
+      "1930s",
+      "1940s",
+      "1950s",
+      "1960s"
+    ],
+    "answer": "1930s",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player was named Big East Defensive Player of the Year in 2018?",
+    "options": [
+      "Mikal Bridges",
+      "Jalen Brunson",
+      "Eric Paschall",
+      "Donte DiVincenzo"
+    ],
+    "answer": "Mikal Bridges",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's first NCAA Tournament appearance was in what year?",
+    "options": [
+      "1959",
+      "1961",
+      "1963",
+      "1965"
+    ],
+    "answer": "1959",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple's Mark Macon finished his career with how many points?",
+    "options": [
+      "1,973",
+      "2,144",
+      "2,256",
+      "2,609"
+    ],
+    "answer": "2,609",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn won the NCAA Tournament in which sport in 1978?",
+    "options": [
+      "Basketball",
+      "Lacrosse",
+      "Rowing",
+      "Penn has not won an NCAA team championship"
+    ],
+    "answer": "Penn has not won an NCAA team championship",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel basketball's conference tournament is held at which venue?",
+    "options": [
+      "The Palestra",
+      "Entertainment & Sports Arena",
+      "DAC",
+      "Atlantic City Convention Center"
+    ],
+    "answer": "Entertainment & Sports Arena",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which La Salle player was named AP First Team All-American?",
+    "options": [
+      "Tom Gola",
+      "Lionel Simmons",
+      "Both Tom Gola and Lionel Simmons",
+      "Michael Brooks"
+    ],
+    "answer": "Both Tom Gola and Lionel Simmons",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova's rivalry with Georgetown is primarily associated with which sport?",
+    "options": [
+      "Football",
+      "Basketball",
+      "Soccer",
+      "Lacrosse"
+    ],
+    "answer": "Basketball",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's Phil Martelli later joined which program as an assistant?",
+    "options": [
+      "Duke",
+      "Michigan",
+      "North Carolina",
+      "Kentucky"
+    ],
+    "answer": "Michigan",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball's home court advantage is known for what feature?",
+    "options": [
+      "Loud student section",
+      "Intimate arena",
+      "Close seating to the court",
+      "All of the above"
+    ],
+    "answer": "All of the above",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn athletics uses what colors?",
+    "options": [
+      "Blue and White",
+      "Red and Blue",
+      "Green and White",
+      "Crimson and Gray"
+    ],
+    "answer": "Red and Blue",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel's athletic teams are named the Dragons because of what?",
+    "options": [
+      "Anthony J. Drexel's coat of arms",
+      "A student vote in the 1920s",
+      "The school mascot from 1891",
+      "Philadelphia's dragon mythology"
+    ],
+    "answer": "A student vote in the 1920s",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple football player was drafted in the first round of the 2019 NFL Draft?",
+    "options": [
+      "Quincy Roche",
+      "Rock Ya-Sin",
+      "Ryquell Armstead",
+      "Isaiah Wright"
+    ],
+    "answer": "Rock Ya-Sin",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova won the FCS National Championship in football in what year?",
+    "options": [
+      "2008",
+      "2009",
+      "2010",
+      "2012"
+    ],
+    "answer": "2009",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's basketball arena seats approximately how many fans?",
+    "options": [
+      "2,000",
+      "3,400",
+      "4,500",
+      "5,200"
+    ],
+    "answer": "3,400",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's has made how many NCAA Tournament appearances?",
+    "options": [
+      "16",
+      "19",
+      "22",
+      "25"
+    ],
+    "answer": "19",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn's Franklin Field is the oldest stadium still in use for which sport?",
+    "options": [
+      "College football",
+      "Professional football",
+      "Both college and professional",
+      "Neither"
+    ],
+    "answer": "College football",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Temple player won the Big 5 MVP multiple times in the 1990s?",
+    "options": [
+      "Aaron McKie",
+      "Eddie Jones",
+      "Rick Brunson",
+      "Lynard Stewart"
+    ],
+    "answer": "Aaron McKie",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova's current head coach Kyle Neptune played college basketball at which school?",
+    "options": [
+      "Villanova",
+      "Lehigh",
+      "Fordham",
+      "LIU Brooklyn"
+    ],
+    "answer": "Lehigh",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel won the CAA regular season title in what year?",
+    "options": [
+      "2018",
+      "2019",
+      "2020",
+      "2021"
+    ],
+    "answer": "2021",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's campus is located in which Philadelphia neighborhood?",
+    "options": [
+      "University City",
+      "Center City",
+      "Olney",
+      "West Philadelphia"
+    ],
+    "answer": "Olney",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's won the Big 5 championship how many times?",
+    "options": [
+      "5",
+      "8",
+      "10",
+      "12"
+    ],
+    "answer": "10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple's conference affiliation changed in 2013 from which conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "MAC",
+      "Conference USA"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn basketball has won how many NCAA Tournament games?",
+    "options": [
+      "7",
+      "10",
+      "13",
+      "16"
+    ],
+    "answer": "10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova's mascot is named what?",
+    "options": [
+      "Will D. Cat",
+      "Willie the Wildcat",
+      "Victor E. Cat",
+      "Vincent Wildcat"
+    ],
+    "answer": "Will D. Cat",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Drexel alumnus played in the NBA for the San Antonio Spurs?",
+    "options": [
+      "Malik Rose",
+      "Michael Anderson",
+      "Chuck Kornegay",
+      "Jeff Myers"
+    ],
+    "answer": "Malik Rose",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's most recent NCAA Tournament appearance was in what year?",
+    "options": [
+      "2011",
+      "2013",
+      "2015",
+      "2019"
+    ],
+    "answer": "2013",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's rivalry with Villanova is often called what?",
+    "options": [
+      "The Holy War",
+      "Battle of the Main Line",
+      "City Series",
+      "The Catholic Clash"
+    ],
+    "answer": "The Holy War",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple football played in which bowl game after the 2019 season?",
+    "options": [
+      "Gasparilla Bowl",
+      "Military Bowl",
+      "Independence Bowl",
+      "No bowl game"
+    ],
+    "answer": "No bowl game",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn's first Ivy League basketball championship was in what year?",
+    "options": [
+      "1953",
+      "1956",
+      "1958",
+      "1961"
+    ],
+    "answer": "1953",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova football plays home games at which stadium?",
+    "options": [
+      "The Linc",
+      "Franklin Field",
+      "Villanova Stadium",
+      "Goodman Stadium"
+    ],
+    "answer": "Villanova Stadium",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which La Salle player was the Atlantic 10 Player of the Year in 2013?",
+    "options": [
+      "Ramon Galloway",
+      "Tyreek Duren",
+      "Sam Mills",
+      "Tyrone Garland"
+    ],
+    "answer": "Ramon Galloway",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's campus straddles which two locations?",
+    "options": [
+      "Philadelphia and Lower Merion",
+      "Philadelphia and Haverford",
+      "Philadelphia and Radnor",
+      "Philadelphia and Cheltenham"
+    ],
+    "answer": "Philadelphia and Lower Merion",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's Eddie Jones was drafted by which NBA team?",
+    "options": [
+      "Los Angeles Lakers",
+      "Charlotte Hornets",
+      "Miami Heat",
+      "Philadelphia 76ers"
+    ],
+    "answer": "Los Angeles Lakers",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn basketball coach Jerome Allen was later an assistant at which NBA team?",
+    "options": [
+      "Philadelphia 76ers",
+      "Boston Celtics",
+      "New York Knicks",
+      "Brooklyn Nets"
+    ],
+    "answer": "Boston Celtics",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball joined the CAA in what year?",
+    "options": [
+      "1998",
+      "2001",
+      "2004",
+      "2007"
+    ],
+    "answer": "2001",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova basketball's longest winning streak was how many games?",
+    "options": [
+      "20",
+      "25",
+      "29",
+      "33"
+    ],
+    "answer": "33",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle played in the NCAA Tournament Final in what year besides 1954?",
+    "options": [
+      "1952",
+      "1955",
+      "1956",
+      "La Salle only made one Final"
+    ],
+    "answer": "La Salle only made one Final",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which St. Joseph's player holds the single-game scoring record?",
+    "options": [
+      "Jameer Nelson",
+      "Cliff Anderson",
+      "Bob McNeill",
+      "Steve Courtin"
+    ],
+    "answer": "Cliff Anderson",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball's all-time leading scorer is?",
+    "options": [
+      "Mark Macon",
+      "Pepe Sanchez",
+      "Aaron McKie",
+      "Dionte Christmas"
+    ],
+    "answer": "Mark Macon",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn's Chuck Daly later won NBA championships coaching which team?",
+    "options": [
+      "Los Angeles Lakers",
+      "Detroit Pistons",
+      "Chicago Bulls",
+      "San Antonio Spurs"
+    ],
+    "answer": "Detroit Pistons",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel's Mario Boni was awarded what in 2023?",
+    "options": [
+      "CAA Coach of the Year",
+      "CAA Player of the Year",
+      "Boni did not receive a major award in 2023",
+      "CAA Defensive Player of the Year"
+    ],
+    "answer": "Boni did not receive a major award in 2023",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Big 5 school has won the most Big 5 championships?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "La Salle",
+      "Penn"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's Billy Hoy Arena was renamed after what?",
+    "options": [
+      "A former coach",
+      "A major donor",
+      "It was renamed Hagan Arena",
+      "A former player"
+    ],
+    "answer": "It was renamed Hagan Arena",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple football's Al Golden went on to coach which program?",
+    "options": [
+      "Miami",
+      "Penn State",
+      "Cincinnati",
+      "Notre Dame"
+    ],
+    "answer": "Miami",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn's historic rivalry with Princeton dates back to what year?",
+    "options": [
+      "1893",
+      "1903",
+      "1913",
+      "1923"
+    ],
+    "answer": "1903",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova's Big East regular season titles number how many since 2015?",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": "5",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle basketball's conference tournament is held where?",
+    "options": [
+      "Brooklyn",
+      "Atlantic City",
+      "Washington D.C.",
+      "Richmond"
+    ],
+    "answer": "Brooklyn",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel's Bruiser Flint was previously an assistant at which Big 5 school?",
+    "options": [
+      "Temple",
+      "Penn",
+      "Villanova",
+      "La Salle"
+    ],
+    "answer": "Penn",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's has produced how many NBA first-round draft picks?",
+    "options": [
+      "5",
+      "7",
+      "9",
+      "11"
+    ],
+    "answer": "7",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's campus is located in which Philadelphia area?",
+    "options": [
+      "North Philadelphia",
+      "South Philadelphia",
+      "West Philadelphia",
+      "Center City"
+    ],
+    "answer": "North Philadelphia",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn football has won how many Ivy League championships?",
+    "options": [
+      "14",
+      "18",
+      "22",
+      "26"
+    ],
+    "answer": "18",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova women's basketball won the Big East title in what year?",
+    "options": [
+      "2020",
+      "2021",
+      "2022",
+      "2023"
+    ],
+    "answer": "2023",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's Tom Gola Arena was previously called what?",
+    "options": [
+      "Hayman Hall",
+      "Kirk Field House",
+      "Wister Hall",
+      "McCarthy Hall"
+    ],
+    "answer": "Hayman Hall",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel competed in which conference before joining the CAA?",
+    "options": [
+      "America East",
+      "North Atlantic Conference",
+      "ECAC",
+      "Atlantic 10"
+    ],
+    "answer": "America East",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's basketball home games are shown on which regional network?",
+    "options": [
+      "NBC Sports Philadelphia",
+      "ESPN+",
+      "Both options",
+      "Neither option"
+    ],
+    "answer": "Both options",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball has won the Atlantic 10 Tournament how many times?",
+    "options": [
+      "0",
+      "1",
+      "3",
+      "5"
+    ],
+    "answer": "1",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn's all-time leading scorer in basketball is?",
+    "options": [
+      "Tony Price",
+      "Ernie Beck",
+      "Ibrahim Jaaber",
+      "Jerome Allen"
+    ],
+    "answer": "Ernie Beck",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova won their 2018 NCAA Championship against which team?",
+    "options": [
+      "Kansas",
+      "North Carolina",
+      "Michigan",
+      "Duke"
+    ],
+    "answer": "Michigan",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle's first round NBA draft picks total how many in history?",
+    "options": [
+      "6",
+      "8",
+      "10",
+      "12"
+    ],
+    "answer": "8",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball's best NCAA Tournament finish was?",
+    "options": [
+      "First round loss",
+      "Second round loss",
+      "Sweet 16",
+      "Drexel has never won an NCAA Tournament game"
+    ],
+    "answer": "First round loss",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's Jack Ramsay is in which Hall of Fame?",
+    "options": [
+      "College Basketball Hall of Fame",
+      "Basketball Hall of Fame",
+      "Both",
+      "Neither"
+    ],
+    "answer": "Both",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball competes in which conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "American Athletic Conference",
+      "Big 12"
+    ],
+    "answer": "American Athletic Conference",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn basketball's home arena other than The Palestra is?",
+    "options": [
+      "They only play at The Palestra",
+      "The Pavilion",
+      "Levy Tennis Pavilion",
+      "Class of 1923 Arena"
+    ],
+    "answer": "They only play at The Palestra",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova's first NCAA Tournament appearance was in what year?",
+    "options": [
+      "1936",
+      "1939",
+      "1949",
+      "1955"
+    ],
+    "answer": "1939",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle was coached by Fran Dunphy for how many seasons?",
+    "options": [
+      "0 seasons",
+      "3 seasons",
+      "5 seasons",
+      "7 seasons"
+    ],
+    "answer": "0 seasons",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel's colors are?",
+    "options": [
+      "Blue and Gold",
+      "Blue and White",
+      "Navy and Gold",
+      "Green and Gold"
+    ],
+    "answer": "Navy and Gold",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's colors are?",
+    "options": [
+      "Red and White",
+      "Crimson and Gray",
+      "Cardinal and White",
+      "Red and Gray"
+    ],
+    "answer": "Crimson and Gray",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple's colors are?",
+    "options": [
+      "Red and White",
+      "Cherry and White",
+      "Crimson and Gold",
+      "Scarlet and Gray"
+    ],
+    "answer": "Cherry and White",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn was a founding member of the NCAA in what year?",
+    "options": [
+      "1905",
+      "1906",
+      "1910",
+      "1912"
+    ],
+    "answer": "1906",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova's school colors are?",
+    "options": [
+      "Blue and White",
+      "Blue and Gray",
+      "Navy and White",
+      "Royal Blue and White"
+    ],
+    "answer": "Blue and White",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle's school colors are?",
+    "options": [
+      "Blue and Gold",
+      "Green and Gold",
+      "Blue and White",
+      "Maroon and Gold"
+    ],
+    "answer": "Blue and Gold",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Big 5 school is a Catholic institution?",
+    "options": [
+      "Penn",
+      "Villanova",
+      "Temple",
+      "Drexel"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's is affiliated with which religious order?",
+    "options": [
+      "Augustinians",
+      "Jesuits",
+      "Christian Brothers",
+      "Franciscans"
+    ],
+    "answer": "Jesuits",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle University is named after which saint?",
+    "options": [
+      "St. Francis de Sales",
+      "St. John Baptist de La Salle",
+      "St. Anthony de Padua",
+      "St. Thomas Aquinas"
+    ],
+    "answer": "St. John Baptist de La Salle",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova is run by which Catholic religious order?",
+    "options": [
+      "Jesuits",
+      "Augustinians",
+      "Dominicans",
+      "Franciscans"
+    ],
+    "answer": "Augustinians",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple University was founded by which minister?",
+    "options": [
+      "Russell Conwell",
+      "John Wanamaker",
+      "Thomas Edison",
+      "William Penn"
+    ],
+    "answer": "Russell Conwell",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn was founded in what year?",
+    "options": [
+      "1740",
+      "1755",
+      "1765",
+      "1780"
+    ],
+    "answer": "1740",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel University was founded in what year?",
+    "options": [
+      "1871",
+      "1881",
+      "1891",
+      "1901"
+    ],
+    "answer": "1891",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova University was founded in what year?",
+    "options": [
+      "1832",
+      "1842",
+      "1852",
+      "1862"
+    ],
+    "answer": "1842",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle University was founded in what year?",
+    "options": [
+      "1843",
+      "1853",
+      "1863",
+      "1873"
+    ],
+    "answer": "1863",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's University was founded in what year?",
+    "options": [
+      "1831",
+      "1841",
+      "1851",
+      "1861"
+    ],
+    "answer": "1851",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple University was founded in what year?",
+    "options": [
+      "1874",
+      "1884",
+      "1894",
+      "1904"
+    ],
+    "answer": "1884",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "The Big 5 Hall of Fame was established in what year?",
+    "options": [
+      "1970",
+      "1973",
+      "1976",
+      "1979"
+    ],
+    "answer": "1973",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Big 5 school has won the most games all-time in Big 5 play?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn State's football rivalry game with Penn was discontinued in what year?",
+    "options": [
+      "1893",
+      "1933",
+      "1953",
+      "1973"
+    ],
+    "answer": "1893",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn State running back Saquon Barkley attended which high school?",
+    "options": [
+      "Coatesville High School",
+      "Whitehall High School",
+      "North Penn High School",
+      "Central Bucks West"
+    ],
+    "answer": "Whitehall High School",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Temple football player was the AAC Defensive Player of the Year in 2017?",
+    "options": [
+      "Quincy Roche",
+      "Ryquell Armstead",
+      "Haason Reddick",
+      "Michael Dogbe"
+    ],
+    "answer": "Quincy Roche",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova basketball won their first regular season Big East title in what year?",
+    "options": [
+      "1982",
+      "1984",
+      "1986",
+      "1988"
+    ],
+    "answer": "1982",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Penn basketball player was the first Ivy Leaguer drafted in the NBA since 1995?",
+    "options": [
+      "Matt Maloney",
+      "Zack Rosen",
+      "Jerome Allen",
+      "No Penn player was drafted"
+    ],
+    "answer": "No Penn player was drafted",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle's Explorer name comes from what?",
+    "options": [
+      "Christopher Columbus",
+      "The French explorer La Salle",
+      "Lewis and Clark",
+      "A student nickname"
+    ],
+    "answer": "The French explorer La Salle",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's Hawk mascot flaps its wings for how long during games?",
+    "options": [
+      "First half only",
+      "During timeouts",
+      "The entire game",
+      "Only during the second half"
+    ],
+    "answer": "The entire game",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple football coach Wayne Hardin previously coached at which school?",
+    "options": [
+      "Penn State",
+      "Navy",
+      "Army",
+      "Air Force"
+    ],
+    "answer": "Navy",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn's Franklin Field hosted the Army-Navy game how many times?",
+    "options": [
+      "22",
+      "34",
+      "42",
+      "56"
+    ],
+    "answer": "34",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova's 1985 championship team was seeded what in their region?",
+    "options": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "answer": "8",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which La Salle player was nicknamed 'L-Train'?",
+    "options": [
+      "Tom Gola",
+      "Lionel Simmons",
+      "Michael Brooks",
+      "Rasual Butler"
+    ],
+    "answer": "Lionel Simmons",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's reached the Elite Eight in which year?",
+    "options": [
+      "1997",
+      "2001",
+      "2004",
+      "St. Joseph's has never reached the Elite Eight"
+    ],
+    "answer": "St. Joseph's has never reached the Elite Eight",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple basketball made the Elite Eight how many times under John Chaney?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "5"
+    ],
+    "answer": "5",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn's women's basketball team plays in which conference?",
+    "options": [
+      "Ivy League",
+      "Patriot League",
+      "Big East",
+      "Atlantic 10"
+    ],
+    "answer": "Ivy League",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel's campus is located in which Philadelphia area?",
+    "options": [
+      "North Philadelphia",
+      "University City",
+      "Center City",
+      "Olney"
+    ],
+    "answer": "University City",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova basketball plays most home games at which venue?",
+    "options": [
+      "The Palestra",
+      "Finneran Pavilion",
+      "Wells Fargo Center",
+      "Liacouras Center"
+    ],
+    "answer": "Finneran Pavilion",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle basketball joined the Metro Atlantic Athletic Conference before moving to which conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "Patriot League",
+      "La Salle was never in the MAAC"
+    ],
+    "answer": "La Salle was never in the MAAC",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball arena Hagan Arena seats how many fans?",
+    "options": [
+      "3,200",
+      "4,200",
+      "5,200",
+      "6,200"
+    ],
+    "answer": "4,200",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple football played in the Sugar Bowl in what year?",
+    "options": [
+      "1935",
+      "1945",
+      "1979",
+      "Temple has never played in the Sugar Bowl"
+    ],
+    "answer": "1935",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball has appeared in how many NCAA Tournaments?",
+    "options": [
+      "18",
+      "22",
+      "26",
+      "30"
+    ],
+    "answer": "26",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova basketball's Kyle Neptune previously was head coach at which school?",
+    "options": [
+      "Lehigh",
+      "Fordham",
+      "Holy Cross",
+      "Richmond"
+    ],
+    "answer": "Fordham",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's current basketball coach is?",
+    "options": [
+      "Fran Dunphy",
+      "Ashley Howard",
+      "John Giannini",
+      "Speedy Morris"
+    ],
+    "answer": "Fran Dunphy",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball has made how many NCAA Tournament appearances?",
+    "options": [
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "answer": "5",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's 2004 team lost in what round of the NCAA Tournament?",
+    "options": [
+      "First round",
+      "Second round",
+      "Sweet 16",
+      "Elite Eight"
+    ],
+    "answer": "Elite Eight",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's basketball all-time wins rank them where nationally?",
+    "options": [
+      "Top 10",
+      "Top 20",
+      "Top 30",
+      "Top 50"
+    ],
+    "answer": "Top 20",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball's Fran Dunphy later coached at which school?",
+    "options": [
+      "La Salle",
+      "Temple",
+      "Villanova",
+      "St. Joseph's"
+    ],
+    "answer": "Temple",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova football won the CAA championship in what year?",
+    "options": [
+      "2007",
+      "2009",
+      "2012",
+      "2016"
+    ],
+    "answer": "2009",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle has retired how many basketball jersey numbers?",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": "3",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel's most famous NBA player is?",
+    "options": [
+      "Malik Rose",
+      "Michael Anderson",
+      "Chuck Kornegay",
+      "Damion Lee"
+    ],
+    "answer": "Malik Rose",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's Billy Lange is known for coaching what style?",
+    "options": [
+      "Fast-paced offense",
+      "Defensive-minded",
+      "Princeton offense",
+      "Motion offense"
+    ],
+    "answer": "Fast-paced offense",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's best NCAA Tournament run under Fran Dunphy was reaching what round?",
+    "options": [
+      "First round",
+      "Second round",
+      "Sweet 16",
+      "Elite Eight"
+    ],
+    "answer": "Second round",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn football's last Ivy League title was in what year?",
+    "options": [
+      "2015",
+      "2016",
+      "2017",
+      "2018"
+    ],
+    "answer": "2016",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova basketball's Howard Porter was named MOP of the 1971 Final Four despite what controversy?",
+    "options": [
+      "He was ruled ineligible",
+      "He failed a drug test",
+      "He had signed with an agent",
+      "He missed the championship game"
+    ],
+    "answer": "He had signed with an agent",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle basketball's most wins in a single season was?",
+    "options": [
+      "26",
+      "28",
+      "30",
+      "32"
+    ],
+    "answer": "30",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel basketball's Zach Spiker became head coach in what year?",
+    "options": [
+      "2018",
+      "2019",
+      "2020",
+      "2021"
+    ],
+    "answer": "2021",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball program dates back to what year?",
+    "options": [
+      "1908",
+      "1918",
+      "1928",
+      "1938"
+    ],
+    "answer": "1908",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple basketball has been coached by how many different head coaches?",
+    "options": [
+      "12",
+      "15",
+      "18",
+      "21"
+    ],
+    "answer": "18",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball's Jerome Allen was head coach for how many seasons?",
+    "options": [
+      "4",
+      "6",
+      "8",
+      "10"
+    ],
+    "answer": "6",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova women's basketball coach is?",
+    "options": [
+      "Denise Dillon",
+      "Harry Perretta",
+      "Ann McInerney",
+      "Danielle Fleming"
+    ],
+    "answer": "Denise Dillon",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle women's basketball plays in which conference?",
+    "options": [
+      "Atlantic 10",
+      "Big East",
+      "Patriot League",
+      "CAA"
+    ],
+    "answer": "Atlantic 10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel sponsors how many varsity sports?",
+    "options": [
+      "15",
+      "18",
+      "21",
+      "24"
+    ],
+    "answer": "18",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's women's basketball has made how many NCAA Tournament appearances?",
+    "options": [
+      "5",
+      "10",
+      "15",
+      "20"
+    ],
+    "answer": "10",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple women's basketball coach is?",
+    "options": [
+      "Diane Richardson",
+      "Tonya Cardoza",
+      "Tiara Malcom",
+      "Diane Nolan"
+    ],
+    "answer": "Diane Richardson",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn lacrosse has won how many Ivy League championships?",
+    "options": [
+      "12",
+      "18",
+      "24",
+      "30"
+    ],
+    "answer": "24",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova lacrosse competes in which conference?",
+    "options": [
+      "Big East",
+      "CAA",
+      "Patriot League",
+      "America East"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle does not sponsor which major sport?",
+    "options": [
+      "Football",
+      "Baseball",
+      "Soccer",
+      "Basketball"
+    ],
+    "answer": "Football",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel lacrosse competes in which conference?",
+    "options": [
+      "Big East",
+      "CAA",
+      "Patriot League",
+      "America East"
+    ],
+    "answer": "CAA",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's does not sponsor which major sport?",
+    "options": [
+      "Football",
+      "Baseball",
+      "Soccer",
+      "Basketball"
+    ],
+    "answer": "Football",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple sponsors which unusual sport for a Philadelphia school?",
+    "options": [
+      "Ice Hockey",
+      "Bowling",
+      "Fencing",
+      "Rugby"
+    ],
+    "answer": "Fencing",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn rowing has won how many national championships?",
+    "options": [
+      "5",
+      "12",
+      "19",
+      "25"
+    ],
+    "answer": "12",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova cross country has won the NCAA Championship how many times?",
+    "options": [
+      "3",
+      "5",
+      "8",
+      "10"
+    ],
+    "answer": "3",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn tennis has won how many Ivy League championships?",
+    "options": [
+      "10",
+      "15",
+      "20",
+      "25"
+    ],
+    "answer": "20",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple men's soccer has won how many American Athletic Conference titles?",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": "1",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel swimming and diving competes in which conference?",
+    "options": [
+      "CAA",
+      "MAC",
+      "America East",
+      "ECAC"
+    ],
+    "answer": "CAA",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle baseball plays home games at which field?",
+    "options": [
+      "Citizens Bank Park",
+      "Devincent Field",
+      "Hank DeVincent Field",
+      "Hagan Field"
+    ],
+    "answer": "Hank DeVincent Field",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's field hockey has won how many Atlantic 10 titles?",
+    "options": [
+      "5",
+      "10",
+      "15",
+      "20"
+    ],
+    "answer": "15",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple gymnastics has produced how many Olympians?",
+    "options": [
+      "2",
+      "4",
+      "6",
+      "8"
+    ],
+    "answer": "4",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn squash has won how many national championships?",
+    "options": [
+      "8",
+      "12",
+      "16",
+      "20"
+    ],
+    "answer": "16",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova softball plays home games at which facility?",
+    "options": [
+      "Villanova Ballpark",
+      "Villanova Softball Complex",
+      "Villanova Stadium",
+      "Pavilion Field"
+    ],
+    "answer": "Villanova Softball Complex",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn wrestling has won how many Ivy League championships?",
+    "options": [
+      "5",
+      "10",
+      "15",
+      "20"
+    ],
+    "answer": "10",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple track and field has produced athletes in how many Olympic Games?",
+    "options": [
+      "8",
+      "12",
+      "16",
+      "20"
+    ],
+    "answer": "12",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel baseball plays in which conference?",
+    "options": [
+      "CAA",
+      "Atlantic 10",
+      "Northeast Conference",
+      "Patriot League"
+    ],
+    "answer": "CAA",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle volleyball plays in which conference?",
+    "options": [
+      "Atlantic 10",
+      "Big East",
+      "Patriot League",
+      "CAA"
+    ],
+    "answer": "Atlantic 10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's men's soccer plays in which conference?",
+    "options": [
+      "Atlantic 10",
+      "Big East",
+      "Patriot League",
+      "CAA"
+    ],
+    "answer": "Atlantic 10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn golf has won how many Ivy League championships?",
+    "options": [
+      "8",
+      "12",
+      "16",
+      "20"
+    ],
+    "answer": "12",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple baseball plays home games at which park?",
+    "options": [
+      "Skip Wilson Field",
+      "Citizens Bank Park",
+      "Ambler Campus Field",
+      "Temple Stadium"
+    ],
+    "answer": "Skip Wilson Field",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova men's soccer plays in which conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "CAA",
+      "Patriot League"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Drexel field hockey plays in which conference?",
+    "options": [
+      "CAA",
+      "Atlantic 10",
+      "Big East",
+      "Patriot League"
+    ],
+    "answer": "CAA",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle swimming plays in which conference?",
+    "options": [
+      "Atlantic 10",
+      "ECAC",
+      "CAA",
+      "Patriot League"
+    ],
+    "answer": "Atlantic 10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "St. Joseph's track and field plays in which conference?",
+    "options": [
+      "Atlantic 10",
+      "Big East",
+      "CAA",
+      "Patriot League"
+    ],
+    "answer": "Atlantic 10",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn baseball has won how many Ivy League championships?",
+    "options": [
+      "12",
+      "18",
+      "24",
+      "30"
+    ],
+    "answer": "18",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple field hockey has won how many American Athletic Conference titles?",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": "2",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova baseball plays in which conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "CAA",
+      "Patriot League"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "The Big 5 classic doubleheader is traditionally played where?",
+    "options": [
+      "Wells Fargo Center",
+      "The Palestra",
+      "Liacouras Center",
+      "Finneran Pavilion"
+    ],
+    "answer": "The Palestra",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn State plays a 'White Out' game at which stadium?",
+    "options": [
+      "Beaver Stadium",
+      "Lincoln Financial Field",
+      "Citizens Bank Park",
+      "Heinz Field"
+    ],
+    "answer": "Beaver Stadium",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia area high school has sent the most players to Big 5 schools?",
+    "options": [
+      "Roman Catholic",
+      "Neumann-Goretti",
+      "Archbishop Carroll",
+      "It varies by decade"
+    ],
+    "answer": "It varies by decade",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball retired which legendary coach's number?",
+    "options": [
+      "John Chaney",
+      "Harry Litwack",
+      "Don Casey",
+      "Temple doesn't retire numbers"
+    ],
+    "answer": "Temple doesn't retire numbers",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova's NCAA Championship trophy is displayed where?",
+    "options": [
+      "Jake Nevin Fieldhouse",
+      "Finneran Pavilion",
+      "Davis Center",
+      "Villanova Room"
+    ],
+    "answer": "Davis Center",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball's 1979 Final Four team was coached by?",
+    "options": [
+      "Chuck Daly",
+      "Bob Weinhauer",
+      "Digger Phelps",
+      "Tom Schneider"
+    ],
+    "answer": "Bob Weinhauer",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle's relationship with the De La Salle Christian Brothers dates back to what year?",
+    "options": [
+      "1851",
+      "1863",
+      "1875",
+      "1890"
+    ],
+    "answer": "1863",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's rivalry with Temple in basketball has been played how many times?",
+    "options": [
+      "Over 100",
+      "Over 150",
+      "Over 175",
+      "Over 200"
+    ],
+    "answer": "Over 150",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel basketball's best season record was achieved in which year?",
+    "options": [
+      "1986",
+      "1994",
+      "1996",
+      "2021"
+    ],
+    "answer": "1996",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn State's largest contingent of players from the Philadelphia area plays which position?",
+    "options": [
+      "Running Back",
+      "Wide Receiver",
+      "Linebacker",
+      "It varies by year"
+    ],
+    "answer": "It varies by year",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple football's biggest rival is considered to be?",
+    "options": [
+      "Penn",
+      "Villanova",
+      "Pittsburgh",
+      "It's debated"
+    ],
+    "answer": "It's debated",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova basketball fans are known for which tradition?",
+    "options": [
+      "Throwing toast",
+      "The V Song",
+      "White Out",
+      "Storming the court"
+    ],
+    "answer": "The V Song",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle basketball's Explorer mascot costume features what?",
+    "options": [
+      "A compass",
+      "A ship",
+      "A flag",
+      "All of the above"
+    ],
+    "answer": "All of the above",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's Hawk mascot was almost replaced with what animal?",
+    "options": [
+      "Eagle",
+      "Falcon",
+      "Owl",
+      "The Hawk was never almost replaced"
+    ],
+    "answer": "The Hawk was never almost replaced",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn's The Palestra was named after a Greek word meaning?",
+    "options": [
+      "Arena",
+      "Wrestling school",
+      "Competition",
+      "Stadium"
+    ],
+    "answer": "Wrestling school",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball has played home games at how many different venues?",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": "4",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel basketball's rivalry with Delaware is for what trophy?",
+    "options": [
+      "The Governor's Cup",
+      "The Blue Hen Trophy",
+      "The Liberty Bell",
+      "There is no trophy"
+    ],
+    "answer": "There is no trophy",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova football has produced how many NFL players?",
+    "options": [
+      "Over 50",
+      "Over 75",
+      "Over 100",
+      "Over 125"
+    ],
+    "answer": "Over 75",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle basketball's biggest upset win was against which ranked team?",
+    "options": [
+      "Louisville",
+      "Syracuse",
+      "Temple",
+      "Villanova"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball has beaten how many #1 ranked teams?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": "2",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball's winning percentage in The Palestra is approximately?",
+    "options": [
+      "65%",
+      "70%",
+      "75%",
+      "80%"
+    ],
+    "answer": "75%",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple football's first winning season was in what year?",
+    "options": [
+      "1927",
+      "1934",
+      "1945",
+      "1951"
+    ],
+    "answer": "1934",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel basketball's first NCAA Tournament appearance was in what year?",
+    "options": [
+      "1984",
+      "1986",
+      "1994",
+      "1996"
+    ],
+    "answer": "1986",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova's basketball practice facility is named after whom?",
+    "options": [
+      "Jay Wright",
+      "Rollie Massimino",
+      "John du Pont",
+      "Davis Center"
+    ],
+    "answer": "Davis Center",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle basketball's first televised game was in what decade?",
+    "options": [
+      "1950s",
+      "1960s",
+      "1970s",
+      "1980s"
+    ],
+    "answer": "1950s",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball has produced how many NBA All-Stars?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": "2",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball coach Steve Donahue previously was an assistant at which Big 5 school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "La Salle",
+      "St. Joseph's"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple basketball's international players have come from how many different countries?",
+    "options": [
+      "10+",
+      "15+",
+      "20+",
+      "25+"
+    ],
+    "answer": "20+",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel basketball has had how many 20-win seasons?",
+    "options": [
+      "5",
+      "8",
+      "11",
+      "14"
+    ],
+    "answer": "8",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova basketball's bench unit in 2016-18 was nicknamed what?",
+    "options": [
+      "The Bench Mob",
+      "Nova Nation",
+      "The Sixth Man",
+      "The Reserve Unit"
+    ],
+    "answer": "The Bench Mob",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle basketball has hosted NCAA Tournament games at Tom Gola Arena how many times?",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": "0",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball attendance record at Hagan Arena is approximately?",
+    "options": [
+      "4,100",
+      "4,522",
+      "5,200",
+      "5,800"
+    ],
+    "answer": "4,522",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball has won the Ivy League regular season title outright how many times since 2000?",
+    "options": [
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "answer": "5",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Temple's oldest athletic rivalry is with which school?",
+    "options": [
+      "Penn",
+      "Villanova",
+      "Penn State",
+      "Rutgers"
+    ],
+    "answer": "Penn",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Drexel athletics department was established in what year?",
+    "options": [
+      "1892",
+      "1905",
+      "1920",
+      "1935"
+    ],
+    "answer": "1892",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova basketball has retired how many jersey numbers?",
+    "options": [
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "answer": "5",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "La Salle basketball's longest winning streak was how many games?",
+    "options": [
+      "12",
+      "15",
+      "18",
+      "21"
+    ],
+    "answer": "15",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball's longest losing streak was how many games?",
+    "options": [
+      "10",
+      "13",
+      "16",
+      "19"
+    ],
+    "answer": "13",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball's game-day tradition includes what activity?",
+    "options": [
+      "Throwing toast",
+      "Throwing newspaper",
+      "The Hey Song",
+      "All of the above"
+    ],
+    "answer": "Throwing toast",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball's student section is called?",
+    "options": [
+      "The Cherry Crush",
+      "The Hooters",
+      "The Owl's Nest",
+      "Temple Tough"
+    ],
+    "answer": "The Cherry Crush",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball's student section is called?",
+    "options": [
+      "The Dragon Den",
+      "The DAC Pack",
+      "Dragon Nation",
+      "The Sixth Dragon"
+    ],
+    "answer": "The DAC Pack",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova basketball's student section is called?",
+    "options": [
+      "The Sixth Man",
+      "Nova Nation",
+      "The Wildcats",
+      "The Blue Crew"
+    ],
+    "answer": "Nova Nation",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle basketball's fight song is titled?",
+    "options": [
+      "Explorer Fight Song",
+      "Go La Salle",
+      "Hail La Salle",
+      "Explorer Pride"
+    ],
+    "answer": "Go La Salle",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "St. Joseph's basketball's fight song is titled?",
+    "options": [
+      "The Hawk Will Never Die",
+      "When the Hawks Go Flying In",
+      "St. Joseph's Victory March",
+      "Hawk Pride"
+    ],
+    "answer": "When the Hawks Go Flying In",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Penn basketball's fight song is titled?",
+    "options": [
+      "The Red and Blue",
+      "Fight On, Pennsylvania",
+      "Hail Pennsylvania",
+      "Penn Victory"
+    ],
+    "answer": "The Red and Blue",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple basketball's fight song is titled?",
+    "options": [
+      "Fight for the Cherry and the White",
+      "Temple Fight Song",
+      "T for Temple U",
+      "Owl Power"
+    ],
+    "answer": "T for Temple U",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball's fight song is titled?",
+    "options": [
+      "Drexel Dragons Fight",
+      "Gold and Blue",
+      "Dragon Pride",
+      "Fly Dragons Fly"
+    ],
+    "answer": "Gold and Blue",
+    "category": "College",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Villanova basketball's fight song is titled?",
+    "options": [
+      "V for Villanova",
+      "Fight Song",
+      "Wildcats Forever",
+      "Villanova Victory"
+    ],
+    "answer": "V for Villanova",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the nickname of the Villanova athletic teams?",
+    "options": [
+      "Tigers",
+      "Wildcats",
+      "Lions",
+      "Panthers"
+    ],
+    "answer": "Wildcats",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Big 5 school is located in University City?",
+    "options": [
+      "Temple",
+      "Villanova",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Penn",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Villanova won the 2018 NCAA Championship by defeating which team?",
+    "options": [
+      "Kansas",
+      "Duke",
+      "Michigan",
+      "Gonzaga"
+    ],
+    "answer": "Michigan",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What position did Jameer Nelson play at St. Joseph's?",
+    "options": [
+      "Center",
+      "Power Forward",
+      "Point Guard",
+      "Shooting Guard"
+    ],
+    "answer": "Point Guard",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple basketball plays in which NCAA Division?",
+    "options": [
+      "Division I",
+      "Division II",
+      "Division III",
+      "NAIA"
+    ],
+    "answer": "Division I",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia college has won the most NCAA basketball championships?",
+    "options": [
+      "Temple",
+      "Villanova",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many NCAA basketball championships has Villanova won?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": "3",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the nickname of the La Salle athletic teams?",
+    "options": [
+      "Pioneers",
+      "Explorers",
+      "Navigators",
+      "Crusaders"
+    ],
+    "answer": "Explorers",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the nickname of the St. Joseph's athletic teams?",
+    "options": [
+      "Eagles",
+      "Hawks",
+      "Falcons",
+      "Cardinals"
+    ],
+    "answer": "Hawks",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn competes in which athletic conference?",
+    "options": [
+      "Big East",
+      "Atlantic 10",
+      "Ivy League",
+      "Patriot League"
+    ],
+    "answer": "Ivy League",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Big 5 school is known for playing in \"The Palestra\"?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "All Big 5 schools"
+    ],
+    "answer": "All Big 5 schools",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple University is located in which part of Philadelphia?",
+    "options": [
+      "South Philadelphia",
+      "North Philadelphia",
+      "West Philadelphia",
+      "Center City"
+    ],
+    "answer": "North Philadelphia",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What type of institution is Villanova University?",
+    "options": [
+      "Public",
+      "Private Catholic",
+      "Private Secular",
+      "State-related"
+    ],
+    "answer": "Private Catholic",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which school did Kyle Lowry attend before joining the NBA?",
+    "options": [
+      "Temple",
+      "Villanova",
+      "Penn",
+      "St. Joseph's"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "The Big 5 is primarily associated with which sport?",
+    "options": [
+      "Football",
+      "Basketball",
+      "Baseball",
+      "Soccer"
+    ],
+    "answer": "Basketball",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "John Chaney is most associated with which Philadelphia school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Temple",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Tom Gola is a legend at which Philadelphia school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "La Salle",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Jay Wright coached at which Philadelphia school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Villanova",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Phil Martelli was the long-time coach at which school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "St. Joseph's"
+    ],
+    "answer": "St. Joseph's",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Lionel Simmons played college basketball at which school?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "La Salle",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Villanova player was nicknamed \"The Big Ragu\"?",
+    "options": [
+      "Jalen Brunson",
+      "Donte DiVincenzo",
+      "Mikal Bridges",
+      "Josh Hart"
+    ],
+    "answer": "Donte DiVincenzo",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple football plays home games at which NFL stadium?",
+    "options": [
+      "MetLife Stadium",
+      "Lincoln Financial Field",
+      "M&T Bank Stadium",
+      "FedEx Field"
+    ],
+    "answer": "Lincoln Financial Field",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Temple player went on to win an NBA championship with the Lakers?",
+    "options": [
+      "Aaron McKie",
+      "Eddie Jones",
+      "Rick Brunson",
+      "Mark Macon"
+    ],
+    "answer": "Aaron McKie",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova is located in which Pennsylvania county?",
+    "options": [
+      "Philadelphia County",
+      "Delaware County",
+      "Montgomery County",
+      "Chester County"
+    ],
+    "answer": "Delaware County",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Penn State running back from Coatesville became an NFL star?",
+    "options": [
+      "Saquon Barkley",
+      "Miles Sanders",
+      "Ricky Watters",
+      "Blair Thomas"
+    ],
+    "answer": "Ricky Watters",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's 2004 team was ranked as high as what in the AP poll?",
+    "options": [
+      "#1",
+      "#2",
+      "#3",
+      "#4"
+    ],
+    "answer": "#1",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Big 5 school has the smallest basketball arena capacity?",
+    "options": [
+      "Villanova",
+      "La Salle",
+      "St. Joseph's",
+      "Drexel"
+    ],
+    "answer": "La Salle",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle won the NCAA Championship in 1954 by defeating which team in the final?",
+    "options": [
+      "Bradley",
+      "Penn State",
+      "USC",
+      "Kentucky"
+    ],
+    "answer": "Bradley",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which former Temple player became head coach of the Owls?",
+    "options": [
+      "Mark Macon",
+      "Aaron McKie",
+      "Eddie Jones",
+      "Rick Brunson"
+    ],
+    "answer": "Aaron McKie",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova basketball joined the current Big East in what year?",
+    "options": [
+      "2010",
+      "2011",
+      "2012",
+      "2013"
+    ],
+    "answer": "2013",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Penn basketball coach later coached the Detroit Pistons to NBA titles?",
+    "options": [
+      "Fran Dunphy",
+      "Chuck Daly",
+      "Bob Weinhauer",
+      "Jack McCloskey"
+    ],
+    "answer": "Chuck Daly",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's is located on the border of Philadelphia and which township?",
+    "options": [
+      "Haverford",
+      "Lower Merion",
+      "Radnor",
+      "Springfield"
+    ],
+    "answer": "Lower Merion",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Drexel player was known as a lockdown defender and went to the NBA?",
+    "options": [
+      "Malik Rose",
+      "Damion Lee",
+      "Frantz Massenat",
+      "Chris Fouch"
+    ],
+    "answer": "Malik Rose",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple's McGonigle Hall was primarily used for what before Liacouras Center?",
+    "options": [
+      "Football",
+      "Basketball",
+      "Swimming",
+      "Academic Classes"
+    ],
+    "answer": "Basketball",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova's 1985 championship is considered one of the greatest upsets because Georgetown was what seed?",
+    "options": [
+      "#1 overall seed",
+      "#2 seed",
+      "#3 seed",
+      "#4 seed"
+    ],
+    "answer": "#1 overall seed",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle basketball was coached by Dr. Tom Gola after his playing career for how many seasons?",
+    "options": [
+      "2",
+      "4",
+      "6",
+      "8"
+    ],
+    "answer": "2",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Big 5 school won the very first Big 5 championship in 1955-56?",
+    "options": [
+      "Villanova",
+      "Temple",
+      "Penn",
+      "La Salle"
+    ],
+    "answer": "Temple",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn State football recruits heavily from Philadelphia-area Catholic League schools, which conference is that?",
+    "options": [
+      "PIAA 6A",
+      "Philadelphia Catholic League",
+      "Suburban One League",
+      "Central League"
+    ],
+    "answer": "Philadelphia Catholic League",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's won back-to-back Atlantic 10 regular season titles in which years?",
+    "options": [
+      "2003-2004",
+      "2004-2005",
+      "2013-2014",
+      "2015-2016"
+    ],
+    "answer": "2003-2004",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Temple football's Matt Rhule went on to coach which NFL team?",
+    "options": [
+      "Carolina Panthers",
+      "New York Giants",
+      "Dallas Cowboys",
+      "Philadelphia Eagles"
+    ],
+    "answer": "Carolina Panthers",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Villanova basketball player wore number 1 and won the 2016 championship?",
+    "options": [
+      "Jalen Brunson",
+      "Ryan Arcidiacono",
+      "Mikal Bridges",
+      "Josh Hart"
+    ],
+    "answer": "Jalen Brunson",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel is primarily known for what type of educational program?",
+    "options": [
+      "Medical School",
+      "Co-op Education",
+      "Law School",
+      "Divinity School"
+    ],
+    "answer": "Co-op Education",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle University was founded by which religious order?",
+    "options": [
+      "Jesuits",
+      "Augustinians",
+      "Christian Brothers",
+      "Franciscans"
+    ],
+    "answer": "Christian Brothers",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Temple basketball player holds the record for most steals in a career?",
+    "options": [
+      "Pepe Sanchez",
+      "Aaron McKie",
+      "Mark Macon",
+      "Lynn Greer"
+    ],
+    "answer": "Pepe Sanchez",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Penn's Ivy League rival Princeton is located approximately how far away?",
+    "options": [
+      "25 miles",
+      "45 miles",
+      "65 miles",
+      "85 miles"
+    ],
+    "answer": "45 miles",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Villanova player was the Big East Tournament MVP in 2015?",
+    "options": [
+      "Ryan Arcidiacono",
+      "Darrun Hilliard",
+      "Josh Hart",
+      "Dylan Ennis"
+    ],
+    "answer": "Ryan Arcidiacono",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "St. Joseph's famous \"Hawk Will Never Die\" slogan refers to what?",
+    "options": [
+      "The basketball team's never-give-up attitude",
+      "The mascot flapping its wings constantly",
+      "A famous player's nickname",
+      "The school's founding motto"
+    ],
+    "answer": "The mascot flapping its wings constantly",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Temple football coach led them to consecutive AAC Championship Game appearances?",
+    "options": [
+      "Al Golden",
+      "Matt Rhule",
+      "Geoff Collins",
+      "Rod Carey"
+    ],
+    "answer": "Matt Rhule",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel basketball had its best season ever in 1995-96, winning how many games?",
+    "options": [
+      "23",
+      "25",
+      "27",
+      "29"
+    ],
+    "answer": "27",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "La Salle's Michael Brooks was the first pick of which NBA team in 1980?",
+    "options": [
+      "Boston Celtics",
+      "San Diego Clippers",
+      "Los Angeles Lakers",
+      "Golden State Warriors"
+    ],
+    "answer": "San Diego Clippers",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Big 5 City Series game traditionally draws the largest crowd?",
+    "options": [
+      "Villanova vs Temple",
+      "Villanova vs St. Joseph's",
+      "Temple vs Penn",
+      "Penn vs La Salle"
+    ],
+    "answer": "Villanova vs St. Joseph's",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Penn basketball won the Ivy League Tournament for the first time in which year?",
+    "options": [
+      "2017",
+      "2018",
+      "2019",
+      "Penn has never won the Ivy Tournament"
+    ],
+    "answer": "Penn has never won the Ivy Tournament",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Villanova won their third NCAA championship in 2018 against Michigan by what final score?",
+    "options": [
+      "69-59",
+      "72-64",
+      "79-62",
+      "85-72"
+    ],
+    "answer": "79-62",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which St. Joseph's player was also an Olympian?",
+    "options": [
+      "Jameer Nelson",
+      "Delonte West",
+      "Marvin O'Connor",
+      "Jack Ramsay"
+    ],
+    "answer": "Jameer Nelson",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Temple's conference before joining the American Athletic Conference was which league?",
+    "options": [
+      "Atlantic 10",
+      "Big East",
+      "Conference USA",
+      "MAC"
+    ],
+    "answer": "Big East",
+    "category": "College",
+    "difficulty": "easy"
+  },
+  {
+    "question": "La Salle basketball's Tom Gola Arena is located where on campus?",
+    "options": [
+      "Main Campus",
+      "West Campus",
+      "Near 20th Street",
+      "Hayman Center"
+    ],
+    "answer": "Hayman Center",
+    "category": "College",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Drexel is located adjacent to which other Philadelphia university?",
+    "options": [
+      "Temple",
+      "Penn",
+      "La Salle",
+      "St. Joseph's"
+    ],
+    "answer": "Penn",
+    "category": "College",
+    "difficulty": "easy"
+  }
+]

@@ -71,7 +71,7 @@ export default async function handler(req, res) {
                 const pack = COIN_PACKS.find(p => p.id === packId);
                 const packName = pack?.name || 'Coin Pack';
 
-                // Award coins to user
+                // Award coins to user (no multiplier - paid purchase)
                 const newBalance = await addCoins(
                     userId,
                     coins,
@@ -81,7 +81,8 @@ export default async function handler(req, res) {
                         packId,
                         amountPaid: session.amount_total,
                         stripeSessionId: session.id
-                    }
+                    },
+                    { skipMultiplier: true }
                 );
 
                 // Record the purchase

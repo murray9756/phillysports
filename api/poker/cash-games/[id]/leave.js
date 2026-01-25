@@ -122,7 +122,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // Cash out remaining chips
+        // Cash out remaining chips (no multiplier - this is returning chips, not earning)
         const cashOutAmount = seat.chipStack;
         if (cashOutAmount > 0) {
             await addCoins(
@@ -130,7 +130,8 @@ export default async function handler(req, res) {
                 cashOutAmount,
                 'cash_game_cashout',
                 `Cashed out from ${table.name}`,
-                { tableId: id, chipStack: cashOutAmount }
+                { tableId: id, chipStack: cashOutAmount },
+                { skipMultiplier: true }
             );
         }
 

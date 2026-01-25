@@ -24,30 +24,31 @@ const SPORT_KEY_MAP = {
 
 /**
  * Find game result from SportsDataIO scores
- * Matches by team names (flexible matching)
+ * Matches by team abbreviations (converts full names to abbreviations first)
  */
 function findGameResult(bet, scoreboards) {
     const sport = bet.sport || SPORT_KEY_MAP[bet.sportKey];
     if (!sport || !scoreboards[sport]) return null;
 
     const games = scoreboards[sport];
-    const homeTeam = bet.homeTeam?.toLowerCase() || '';
-    const awayTeam = bet.awayTeam?.toLowerCase() || '';
+
+    // Normalize bet team names to abbreviations
+    const betHomeAbbr = normalizeTeamName(bet.homeTeam);
+    const betAwayAbbr = normalizeTeamName(bet.awayTeam);
+
+    console.log(`Looking for game: ${betAwayAbbr} @ ${betHomeAbbr} (original: ${bet.awayTeam} @ ${bet.homeTeam})`);
 
     // Try to find matching game
     for (const game of games) {
-        const gameHome = (game.HomeTeam || '').toLowerCase();
-        const gameAway = (game.AwayTeam || '').toLowerCase();
+        // SportsDataIO returns abbreviations
+        const gameHome = (game.HomeTeam || '').toUpperCase();
+        const gameAway = (game.AwayTeam || '').toUpperCase();
 
-        // Check if teams match (flexible - can match abbreviation or full name)
-        const homeMatch = gameHome === homeTeam ||
-                          homeTeam.includes(gameHome) ||
-                          gameHome.includes(homeTeam) ||
-                          normalizeTeamName(game.HomeTeam) === normalizeTeamName(bet.homeTeam);
-        const awayMatch = gameAway === awayTeam ||
-                          awayTeam.includes(gameAway) ||
-                          gameAway.includes(awayTeam) ||
-                          normalizeTeamName(game.AwayTeam) === normalizeTeamName(bet.awayTeam);
+        // Match by abbreviation (primary method)
+        const homeMatch = gameHome === betHomeAbbr.toUpperCase() ||
+                          normalizeTeamName(game.HomeTeam) === betHomeAbbr;
+        const awayMatch = gameAway === betAwayAbbr.toUpperCase() ||
+                          normalizeTeamName(game.AwayTeam) === betAwayAbbr;
 
         if (homeMatch && awayMatch) {
             // Check if game is final
@@ -56,7 +57,12 @@ function findGameResult(bet, scoreboards) {
                            game.Status === 'F/OT' ||
                            game.IsClosed === true;
 
-            if (!isFinal) return null;
+            if (!isFinal) {
+                console.log(`Found game but not final: ${game.AwayTeam} @ ${game.HomeTeam} - Status: ${game.Status}`);
+                return null;
+            }
+
+            console.log(`Matched game: ${game.AwayTeam} @ ${game.HomeTeam} - Final: ${game.AwayScore}-${game.HomeScore}`);
 
             return {
                 homeScore: game.HomeScore ?? game.HomeTeamScore ?? 0,
@@ -68,21 +74,171 @@ function findGameResult(bet, scoreboards) {
         }
     }
 
+    console.log(`No matching game found for ${betAwayAbbr} @ ${betHomeAbbr}`);
     return null;
 }
 
 /**
- * Normalize team name for matching
+ * Team name to abbreviation mappings
+ * Covers full names from TheOddsAPI to abbreviations from SportsDataIO
+ */
+const TEAM_NAME_TO_ABBR = {
+    // NHL
+    'philadelphia flyers': 'PHI', 'flyers': 'PHI',
+    'colorado avalanche': 'COL', 'avalanche': 'COL',
+    'pittsburgh penguins': 'PIT', 'penguins': 'PIT',
+    'new york rangers': 'NYR', 'rangers': 'NYR',
+    'new york islanders': 'NYI', 'islanders': 'NYI',
+    'new jersey devils': 'NJD', 'devils': 'NJD',
+    'washington capitals': 'WSH', 'capitals': 'WSH',
+    'boston bruins': 'BOS', 'bruins': 'BOS',
+    'detroit red wings': 'DET', 'red wings': 'DET',
+    'chicago blackhawks': 'CHI', 'blackhawks': 'CHI',
+    'tampa bay lightning': 'TB', 'lightning': 'TB',
+    'florida panthers': 'FLA', 'panthers': 'FLA',
+    'carolina hurricanes': 'CAR', 'hurricanes': 'CAR',
+    'toronto maple leafs': 'TOR', 'maple leafs': 'TOR',
+    'montreal canadiens': 'MTL', 'canadiens': 'MTL',
+    'ottawa senators': 'OTT', 'senators': 'OTT',
+    'buffalo sabres': 'BUF', 'sabres': 'BUF',
+    'vegas golden knights': 'VGK', 'golden knights': 'VGK',
+    'seattle kraken': 'SEA', 'kraken': 'SEA',
+    'los angeles kings': 'LA', 'kings': 'LA',
+    'anaheim ducks': 'ANA', 'ducks': 'ANA',
+    'san jose sharks': 'SJ', 'sharks': 'SJ',
+    'calgary flames': 'CGY', 'flames': 'CGY',
+    'edmonton oilers': 'EDM', 'oilers': 'EDM',
+    'vancouver canucks': 'VAN', 'canucks': 'VAN',
+    'winnipeg jets': 'WPG', 'jets': 'WPG',
+    'minnesota wild': 'MIN', 'wild': 'MIN',
+    'dallas stars': 'DAL', 'stars': 'DAL',
+    'nashville predators': 'NSH', 'predators': 'NSH',
+    'st louis blues': 'STL', 'blues': 'STL', 'st. louis blues': 'STL',
+    'columbus blue jackets': 'CBJ', 'blue jackets': 'CBJ',
+    'arizona coyotes': 'ARI', 'coyotes': 'ARI',
+    'utah hockey club': 'UTA',
+    // NFL
+    'philadelphia eagles': 'PHI', 'eagles': 'PHI',
+    'dallas cowboys': 'DAL', 'cowboys': 'DAL',
+    'new york giants': 'NYG', 'giants': 'NYG',
+    'new york jets': 'NYJ',
+    'washington commanders': 'WAS', 'commanders': 'WAS',
+    'pittsburgh steelers': 'PIT', 'steelers': 'PIT',
+    'baltimore ravens': 'BAL', 'ravens': 'BAL',
+    'cincinnati bengals': 'CIN', 'bengals': 'CIN',
+    'cleveland browns': 'CLE', 'browns': 'CLE',
+    'buffalo bills': 'BUF', 'bills': 'BUF',
+    'miami dolphins': 'MIA', 'dolphins': 'MIA',
+    'new england patriots': 'NE', 'patriots': 'NE',
+    'tennessee titans': 'TEN', 'titans': 'TEN',
+    'indianapolis colts': 'IND', 'colts': 'IND',
+    'houston texans': 'HOU', 'texans': 'HOU',
+    'jacksonville jaguars': 'JAX', 'jaguars': 'JAX',
+    'kansas city chiefs': 'KC', 'chiefs': 'KC',
+    'las vegas raiders': 'LV', 'raiders': 'LV',
+    'los angeles chargers': 'LAC', 'chargers': 'LAC',
+    'denver broncos': 'DEN', 'broncos': 'DEN',
+    'green bay packers': 'GB', 'packers': 'GB',
+    'minnesota vikings': 'MIN', 'vikings': 'MIN',
+    'chicago bears': 'CHI', 'bears': 'CHI',
+    'detroit lions': 'DET', 'lions': 'DET',
+    'tampa bay buccaneers': 'TB', 'buccaneers': 'TB',
+    'atlanta falcons': 'ATL', 'falcons': 'ATL',
+    'new orleans saints': 'NO', 'saints': 'NO',
+    'carolina panthers': 'CAR',
+    'san francisco 49ers': 'SF', '49ers': 'SF',
+    'seattle seahawks': 'SEA', 'seahawks': 'SEA',
+    'los angeles rams': 'LAR', 'rams': 'LAR',
+    'arizona cardinals': 'ARI', 'cardinals': 'ARI',
+    // NBA
+    'philadelphia 76ers': 'PHI', '76ers': 'PHI', 'sixers': 'PHI',
+    'boston celtics': 'BOS', 'celtics': 'BOS',
+    'new york knicks': 'NY', 'knicks': 'NY',
+    'brooklyn nets': 'BKN', 'nets': 'BKN',
+    'toronto raptors': 'TOR', 'raptors': 'TOR',
+    'milwaukee bucks': 'MIL', 'bucks': 'MIL',
+    'cleveland cavaliers': 'CLE', 'cavaliers': 'CLE', 'cavs': 'CLE',
+    'indiana pacers': 'IND', 'pacers': 'IND',
+    'chicago bulls': 'CHI', 'bulls': 'CHI',
+    'detroit pistons': 'DET', 'pistons': 'DET',
+    'miami heat': 'MIA', 'heat': 'MIA',
+    'orlando magic': 'ORL', 'magic': 'ORL',
+    'atlanta hawks': 'ATL', 'hawks': 'ATL',
+    'charlotte hornets': 'CHA', 'hornets': 'CHA',
+    'washington wizards': 'WAS', 'wizards': 'WAS',
+    'denver nuggets': 'DEN', 'nuggets': 'DEN',
+    'oklahoma city thunder': 'OKC', 'thunder': 'OKC',
+    'portland trail blazers': 'POR', 'trail blazers': 'POR', 'blazers': 'POR',
+    'utah jazz': 'UTA', 'jazz': 'UTA',
+    'minnesota timberwolves': 'MIN', 'timberwolves': 'MIN',
+    'golden state warriors': 'GS', 'warriors': 'GS',
+    'la clippers': 'LAC', 'los angeles clippers': 'LAC', 'clippers': 'LAC',
+    'los angeles lakers': 'LAL', 'lakers': 'LAL',
+    'phoenix suns': 'PHX', 'suns': 'PHX',
+    'sacramento kings': 'SAC',
+    'dallas mavericks': 'DAL', 'mavericks': 'DAL', 'mavs': 'DAL',
+    'houston rockets': 'HOU', 'rockets': 'HOU',
+    'memphis grizzlies': 'MEM', 'grizzlies': 'MEM',
+    'new orleans pelicans': 'NOP', 'pelicans': 'NOP',
+    'san antonio spurs': 'SA', 'spurs': 'SA',
+    // MLB
+    'philadelphia phillies': 'PHI', 'phillies': 'PHI',
+    'new york mets': 'NYM', 'mets': 'NYM',
+    'new york yankees': 'NYY', 'yankees': 'NYY',
+    'atlanta braves': 'ATL', 'braves': 'ATL',
+    'miami marlins': 'MIA', 'marlins': 'MIA',
+    'washington nationals': 'WAS', 'nationals': 'WAS',
+    'boston red sox': 'BOS', 'red sox': 'BOS',
+    'tampa bay rays': 'TB', 'rays': 'TB',
+    'baltimore orioles': 'BAL', 'orioles': 'BAL',
+    'toronto blue jays': 'TOR', 'blue jays': 'TOR',
+    'chicago cubs': 'CHC', 'cubs': 'CHC',
+    'milwaukee brewers': 'MIL', 'brewers': 'MIL',
+    'st louis cardinals': 'STL', 'st. louis cardinals': 'STL', 'cardinals': 'STL',
+    'pittsburgh pirates': 'PIT', 'pirates': 'PIT',
+    'cincinnati reds': 'CIN', 'reds': 'CIN',
+    'los angeles dodgers': 'LAD', 'dodgers': 'LAD',
+    'san diego padres': 'SD', 'padres': 'SD',
+    'san francisco giants': 'SF',
+    'arizona diamondbacks': 'ARI', 'diamondbacks': 'ARI', 'd-backs': 'ARI',
+    'colorado rockies': 'COL', 'rockies': 'COL',
+    'houston astros': 'HOU', 'astros': 'HOU',
+    'texas rangers': 'TEX',
+    'seattle mariners': 'SEA', 'mariners': 'SEA',
+    'oakland athletics': 'OAK', 'athletics': 'OAK', "a's": 'OAK',
+    'los angeles angels': 'LAA', 'angels': 'LAA',
+    'minnesota twins': 'MIN', 'twins': 'MIN',
+    'chicago white sox': 'CWS', 'white sox': 'CWS',
+    'cleveland guardians': 'CLE', 'guardians': 'CLE',
+    'detroit tigers': 'DET', 'tigers': 'DET',
+    'kansas city royals': 'KC', 'royals': 'KC'
+};
+
+/**
+ * Normalize team name for matching - converts full names to abbreviations
  */
 function normalizeTeamName(name) {
     if (!name) return '';
-    return name.toLowerCase()
-        .replace(/philadelphia /gi, '')
-        .replace(/76ers/gi, 'phi')
-        .replace(/eagles/gi, 'phi')
-        .replace(/phillies/gi, 'phi')
-        .replace(/flyers/gi, 'phi')
-        .trim();
+    const lower = name.toLowerCase().trim();
+
+    // Direct lookup
+    if (TEAM_NAME_TO_ABBR[lower]) {
+        return TEAM_NAME_TO_ABBR[lower];
+    }
+
+    // Try without "the" prefix
+    const withoutThe = lower.replace(/^the /, '');
+    if (TEAM_NAME_TO_ABBR[withoutThe]) {
+        return TEAM_NAME_TO_ABBR[withoutThe];
+    }
+
+    // If already an abbreviation (3 chars or less), return uppercase
+    if (name.length <= 3) {
+        return name.toUpperCase();
+    }
+
+    // Fallback: return last word
+    return lower.split(' ').pop();
 }
 
 export default async function handler(req, res) {
@@ -246,7 +402,7 @@ async function settleSingleBet(bet, scoreboards, betsCollection) {
         }
     );
 
-    // Award payout if won or push
+    // Award payout if won or push (no multiplier - payout is calculated from odds)
     if (actualPayout > 0) {
         const description = outcome === 'won'
             ? `Won bet: ${bet.awayTeam} @ ${bet.homeTeam}`
@@ -257,7 +413,8 @@ async function settleSingleBet(bet, scoreboards, betsCollection) {
             actualPayout,
             outcome === 'won' ? 'bet_win' : 'bet_push',
             description,
-            { betId: bet._id.toString() }
+            { betId: bet._id.toString() },
+            { skipMultiplier: true }
         );
     }
 
@@ -354,7 +511,7 @@ async function settleParlayBet(bet, scoreboards, betsCollection) {
             }
         );
 
-        // Award payout if parlay is fully settled with winnings
+        // Award payout if parlay is fully settled with winnings (no multiplier - odds-based payout)
         if (parlayStatus !== 'pending' && actualPayout > 0) {
             let description;
             if (parlayStatus === 'won') {
@@ -370,7 +527,8 @@ async function settleParlayBet(bet, scoreboards, betsCollection) {
                 actualPayout,
                 parlayStatus === 'won' ? 'bet_win' : 'bet_push',
                 description,
-                { betId: bet._id.toString() }
+                { betId: bet._id.toString() },
+                { skipMultiplier: true }
             );
         }
 

@@ -129,7 +129,8 @@ export async function refundTickets(raffleId) {
                 refund.amount,
                 'raffle_refund',
                 `Raffle cancelled: ${raffle.title} (${refund.ticketCount} tickets)`,
-                { raffleId: raffleIdObj, ticketCount: refund.ticketCount }
+                { raffleId: raffleIdObj, ticketCount: refund.ticketCount },
+                { skipMultiplier: true }
             );
             totalRefunded++;
             totalAmount += refund.amount;
@@ -183,11 +184,11 @@ export async function purchaseTickets(userId, raffleId, quantity) {
     const user = await users.findOne({ _id: userIdObj });
     if (!user) throw new Error('User not found');
 
-    // Check if raffle is premium-only
+    // Check if this is a Premium Raffle (better prizes: graded cards, tickets, etc.)
     if (raffle.isPremiumOnly) {
         const benefits = await getUserBenefits(userIdObj);
         if (!benefits.exclusiveRaffles) {
-            throw new Error('This raffle is exclusive to Diehard Premium members');
+            throw new Error('Premium Raffles are exclusive to Diehard Premium members');
         }
     }
 

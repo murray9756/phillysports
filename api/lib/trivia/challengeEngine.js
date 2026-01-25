@@ -150,12 +150,14 @@ export async function declineChallenge(challengeId, userId) {
         throw new Error('You are not the challenged user');
     }
 
-    // Refund challenger's wager
+    // Refund challenger's wager (no multiplier - returning coins)
     await addCoins(
         challenge.challenger.userId,
         challenge.wagerAmount,
         'trivia_wager_refund',
-        'Challenge declined - wager refunded'
+        'Challenge declined - wager refunded',
+        {},
+        { skipMultiplier: true }
     );
 
     // Update challenge status
@@ -172,6 +174,7 @@ export async function declineChallenge(challengeId, userId) {
  */
 export async function spinWheel(challengeId, userId) {
     const challenges = await getCollection('trivia_challenges');
+    const questionsCollection = await getCollection('trivia_questions');
 
     const challenge = await challenges.findOne({ _id: new ObjectId(challengeId) });
     if (!challenge) throw new Error('Challenge not found');
@@ -186,19 +189,54 @@ export async function spinWheel(challengeId, userId) {
     // Random category
     const category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
 
-    // Get a random question from this category that hasn't been used
-    const trivia = await import('../../trivia/index.js');
-    const allQuestions = trivia.TRIVIA_QUESTIONS || [];
+    // Get a random question from this category from the database
+    // Exclude already used questions in this challenge
+    const usedQuestionIds = challenge.usedQuestionIds || [];
+    const usedObjectIds = usedQuestionIds
+        .filter(id => ObjectId.isValid(id))
+        .map(id => new ObjectId(id));
 
-    const availableQuestions = allQuestions.filter(q =>
-        q.team === category && !challenge.usedQuestionIds.includes(q._id)
-    );
+    const dbQuestions = await questionsCollection.find({
+        category: category,
+        status: 'active',
+        _id: { $nin: usedObjectIds }
+    }).toArray();
 
-    if (availableQuestions.length === 0) {
+    // Fall back to legacy questions if no database questions
+    let question = null;
+    if (dbQuestions.length > 0) {
+        const dbQuestion = dbQuestions[Math.floor(Math.random() * dbQuestions.length)];
+        question = {
+            _id: dbQuestion._id.toString(),
+            team: dbQuestion.category,
+            question: dbQuestion.question,
+            options: dbQuestion.options,
+            answer: dbQuestion.answer,
+            difficulty: dbQuestion.difficulty,
+            usedCount: dbQuestion.usedCount || 0,
+            correctCount: dbQuestion.correctCount || 0,
+            incorrectCount: dbQuestion.incorrectCount || 0
+        };
+    } else {
+        // Fall back to legacy
+        const trivia = await import('../../trivia/index.js');
+        const allQuestions = trivia.TRIVIA_QUESTIONS || [];
+        const legacyAvailable = allQuestions.filter(q =>
+            q.team === category && !usedQuestionIds.includes(q._id)
+        );
+        if (legacyAvailable.length > 0) {
+            question = legacyAvailable[Math.floor(Math.random() * legacyAvailable.length)];
+        }
+    }
+
+    if (!question) {
         throw new Error('No more questions available for this category');
     }
 
-    const question = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+    // Calculate accuracy for display
+    const usedCount = question.usedCount || 0;
+    const correctCount = question.correctCount || 0;
+    const accuracy = usedCount > 0 ? Math.round((correctCount / usedCount) * 100) : 0;
 
     // Update challenge with current question (don't include answer!)
     await challenges.updateOne(
@@ -211,7 +249,9 @@ export async function spinWheel(challengeId, userId) {
                     team: question.team,
                     question: question.question,
                     options: question.options,
-                    difficulty: question.difficulty
+                    difficulty: question.difficulty,
+                    usedCount: usedCount,
+                    accuracy: accuracy
                     // answer intentionally omitted
                 },
                 turnStartedAt: new Date()
@@ -227,7 +267,9 @@ export async function spinWheel(challengeId, userId) {
             team: question.team,
             question: question.question,
             options: question.options,
-            difficulty: question.difficulty
+            difficulty: question.difficulty,
+            usedCount: usedCount,
+            accuracy: accuracy
         }
     };
 }
@@ -237,6 +279,7 @@ export async function spinWheel(challengeId, userId) {
  */
 export async function submitAnswer(challengeId, userId, answer) {
     const challenges = await getCollection('trivia_challenges');
+    const questionsCollection = await getCollection('trivia_questions');
 
     const challenge = await challenges.findOne({ _id: new ObjectId(challengeId) });
     if (!challenge) throw new Error('Challenge not found');
@@ -248,16 +291,54 @@ export async function submitAnswer(challengeId, userId, answer) {
         throw new Error('No active question - spin first');
     }
 
-    // Get the full question with answer
-    const trivia = await import('../../trivia/index.js');
-    const allQuestions = trivia.TRIVIA_QUESTIONS || [];
-    const fullQuestion = allQuestions.find(q => q._id === challenge.currentQuestion._id);
+    // Get the full question with answer from database first
+    let fullQuestion = null;
+    const questionId = challenge.currentQuestion._id;
+
+    if (ObjectId.isValid(questionId)) {
+        const dbQuestion = await questionsCollection.findOne({ _id: new ObjectId(questionId) });
+        if (dbQuestion) {
+            fullQuestion = {
+                _id: dbQuestion._id.toString(),
+                team: dbQuestion.category,
+                question: dbQuestion.question,
+                options: dbQuestion.options,
+                answer: dbQuestion.answer,
+                difficulty: dbQuestion.difficulty
+            };
+        }
+    }
+
+    // Fall back to legacy questions
+    if (!fullQuestion) {
+        const trivia = await import('../../trivia/index.js');
+        const allQuestions = trivia.TRIVIA_QUESTIONS || [];
+        fullQuestion = allQuestions.find(q => q._id === questionId);
+    }
 
     if (!fullQuestion) throw new Error('Question not found');
 
-    const isCorrect = answer === fullQuestion.answer;
+    // Normalize both for comparison (case-insensitive)
+    const normalizedAnswer = answer ? answer.trim().toLowerCase() : '';
+    const normalizedCorrect = fullQuestion.answer.trim().toLowerCase();
+    const isCorrect = normalizedAnswer === normalizedCorrect;
     const category = challenge.currentCategory;
     const timeRemaining = Math.max(0, TURN_TIMEOUT_MS - (Date.now() - new Date(challenge.turnStartedAt).getTime())) / 1000;
+
+    // Update question stats in database
+    if (ObjectId.isValid(questionId)) {
+        await questionsCollection.updateOne(
+            { _id: new ObjectId(questionId) },
+            {
+                $inc: {
+                    usedCount: 1,
+                    correctCount: isCorrect ? 1 : 0,
+                    incorrectCount: isCorrect ? 0 : 1
+                },
+                $set: { lastUsedAt: new Date() }
+            }
+        );
+    }
 
     // Determine which player
     const isPlayer1 = challenge.challenger.userId.toString() === userId;
@@ -317,8 +398,8 @@ export async function submitAnswer(challengeId, userId, answer) {
                 winnings: challenge.pot
             };
 
-            // Award pot to winner
-            await addCoins(userId, challenge.pot, 'trivia_win', `Won trivia challenge - ${challenge.pot} DD`);
+            // Award pot to winner (no multiplier - pot is from wagers)
+            await addCoins(userId, challenge.pot, 'trivia_win', `Won trivia challenge - ${challenge.pot} DD`, {}, { skipMultiplier: true });
 
             result.gameOver = true;
             result.winner = { userId: winnerUserId.toString(), username: winnerUsername, winnings: challenge.pot };

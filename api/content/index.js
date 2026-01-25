@@ -18,7 +18,8 @@ export default async function handler(req, res) {
 
     try {
         const {
-            team,           // Filter by team (eagles, phillies, sixers, flyers)
+            team,           // Filter by single team (legacy, eagles, phillies, sixers, flyers)
+            teams,          // Filter by multiple teams (comma-separated, OR logic)
             type,           // Filter by type (news, podcast, video, social)
             featured,       // Get only featured content
             page = 'home',  // Which page to get featured for
@@ -31,7 +32,14 @@ export default async function handler(req, res) {
         // Build filter
         const filter = { status: 'published' };
 
-        if (team) {
+        // Support both single team (legacy) and multiple teams (new OR filter)
+        if (teams) {
+            // Multiple teams - use $in for OR filtering
+            const teamList = teams.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
+            if (teamList.length > 0) {
+                filter.teams = { $in: teamList };
+            }
+        } else if (team) {
             filter.teams = team;
         }
 
@@ -52,8 +60,15 @@ export default async function handler(req, res) {
                 featured: true,
                 featuredOnPages: page
             };
-            // Apply team filter to featured item
-            if (team) featuredFilter.teams = team;
+            // Apply team filter to featured item (supports both single and multi)
+            if (teams) {
+                const teamList = teams.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
+                if (teamList.length > 0) {
+                    featuredFilter.teams = { $in: teamList };
+                }
+            } else if (team) {
+                featuredFilter.teams = team;
+            }
             // Apply type filter to featured item
             if (type) featuredFilter.type = type;
 

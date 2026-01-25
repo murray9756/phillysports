@@ -720,12 +720,22 @@
             color: var(--text-muted);
             cursor: pointer;
         }
-        .filter-btn::before {
+        /* Type filters use radio style (single select) */
+        .filter-btn[data-filter="type"]::before {
             content: '';
             width: 8px;
             height: 8px;
             border: 1px solid var(--text-muted);
             border-radius: 50%;
+            display: inline-block;
+        }
+        /* Category filters use checkbox style (multi-select) */
+        .filter-btn[data-filter="category"]::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--text-muted);
+            border-radius: 2px;
             display: inline-block;
         }
         .filter-btn:hover {
@@ -738,7 +748,11 @@
             color: var(--ps-navy, #1a1a1a);
             font-weight: 500;
         }
-        .filter-btn.active::before {
+        .filter-btn[data-filter="type"].active::before {
+            background: var(--ps-navy, #1a1a1a);
+            border-color: var(--ps-navy, #1a1a1a);
+        }
+        .filter-btn[data-filter="category"].active::before {
             background: var(--ps-navy, #1a1a1a);
             border-color: var(--ps-navy, #1a1a1a);
         }
@@ -815,13 +829,23 @@
         }
 
         .story-curator-note {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             font-style: italic;
-            margin-top: 0.25rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            margin-top: 0.35rem;
+            padding: 0.4rem 0.6rem;
+            background: rgba(139, 0, 0, 0.05);
+            border-left: 2px solid var(--accent-color);
+            border-radius: 0 4px 4px 0;
+        }
+        .story-curator-note::before {
+            content: '"';
+        }
+        .story-curator-note::after {
+            content: '"';
+        }
+        [data-theme="dark"] .story-curator-note {
+            background: rgba(139, 0, 0, 0.15);
         }
 
         /* Comment Links */
@@ -879,7 +903,7 @@
         }
         .story-item-wrapper {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 0.5rem;
             padding: 0.75rem 0;
             border-bottom: 1px solid var(--border-color);
@@ -887,19 +911,38 @@
         .story-item-wrapper:last-child {
             border-bottom: none;
         }
+        .story-item-wrapper .story-item {
+            order: 1;
+        }
         .story-item-wrapper .vote-buttons {
             flex-shrink: 0;
+            order: 2;
+            align-self: center;
         }
-        .story-item-wrapper .story-comment-link {
-            flex-shrink: 0;
-            padding: 0.5rem;
-            font-size: 1rem;
+        /* Comment link now inside story-info */
+        .story-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.35rem;
+        }
+        .story-comment-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             text-decoration: none;
-            transition: color 0.2s;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            transition: all 0.2s;
         }
-        .story-item-wrapper .story-comment-link:hover {
+        .story-comment-btn:hover {
+            background: rgba(0,0,0,0.05);
             color: var(--accent-color);
+        }
+        [data-theme="dark"] .story-comment-btn:hover {
+            background: rgba(255,255,255,0.1);
         }
 
         .load-more-btn {
@@ -956,20 +999,22 @@
             color: #fff !important;
         }
         [data-theme="dark"] .vote-btn {
-            color: #808080 !important;
             border-color: #333 !important;
             background: transparent !important;
         }
-        [data-theme="dark"] .vote-btn:hover {
-            background: #333 !important;
+        [data-theme="dark"] .vote-btn.upvote {
+            color: #66bb6a !important; /* Lighter green for dark mode */
         }
         [data-theme="dark"] .vote-btn.upvote:hover,
-        [data-theme="dark"] .vote-btn.upvote.voted {
-            color: #4CAF50 !important;
+        [data-theme="dark"] .vote-btn.upvote.active {
+            color: #81c784 !important;
+        }
+        [data-theme="dark"] .vote-btn.downvote {
+            color: #ef5350 !important; /* Lighter red for dark mode */
         }
         [data-theme="dark"] .vote-btn.downvote:hover,
-        [data-theme="dark"] .vote-btn.downvote.voted {
-            color: #f44336 !important;
+        [data-theme="dark"] .vote-btn.downvote.active {
+            color: #e57373 !important;
         }
         [data-theme="dark"] .article-tag {
             background: #2a2a2a !important;
@@ -1298,29 +1343,39 @@
             flex-direction: column;
             align-items: center;
             gap: 0.15rem;
-            margin-left: auto;
             padding-left: 0.75rem;
+            flex-shrink: 0;
+            order: 3; /* Move to right side */
         }
         .vote-btn {
             background: none;
             border: none;
             cursor: pointer;
             padding: 0.25rem;
-            color: var(--text-muted);
             font-size: 1rem;
             line-height: 1;
             transition: color 0.2s, transform 0.1s;
             border-radius: 4px;
         }
-        .vote-btn:hover {
-            color: var(--text-primary);
+        .vote-btn.upvote {
+            color: #4caf50; /* Green for upvote */
+        }
+        .vote-btn.upvote:hover {
+            color: #2e7d32;
             transform: scale(1.2);
         }
         .vote-btn.upvote.active {
-            color: #4caf50;
+            color: #1b5e20;
+        }
+        .vote-btn.downvote {
+            color: #f44336; /* Red for downvote */
+        }
+        .vote-btn.downvote:hover {
+            color: #c62828;
+            transform: scale(1.2);
         }
         .vote-btn.downvote.active {
-            color: #f44336;
+            color: #b71c1c;
         }
         .vote-score {
             font-size: 0.8rem;
@@ -1680,6 +1735,27 @@
             font-size: 0.65rem;
             color: var(--text-muted);
             font-weight: 500;
+        }
+
+        .score-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.4rem;
+            padding-top: 0.4rem;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.7rem;
+        }
+
+        .score-links a {
+            color: var(--accent-color, #8B1A28);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .score-links a:hover {
+            opacity: 1;
+            text-decoration: underline;
         }
 
         /* Schedule Widget */
@@ -2478,11 +2554,13 @@
                 <div class="filter-group">
                     <span class="filter-label">Team:</span>
                     <button class="filter-btn active" data-filter="category" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="category" data-value="eagles">Eagles</button>
-                    <button class="filter-btn" data-filter="category" data-value="phillies">Phillies</button>
-                    <button class="filter-btn" data-filter="category" data-value="sixers">Sixers</button>
-                    <button class="filter-btn" data-filter="category" data-value="flyers">Flyers</button>
-                    <button class="filter-btn" data-filter="category" data-value="college">College</button>
+                    <button class="filter-btn active" data-filter="category" data-value="eagles">Eagles</button>
+                    <button class="filter-btn active" data-filter="category" data-value="phillies">Phillies</button>
+                    <button class="filter-btn active" data-filter="category" data-value="sixers">Sixers</button>
+                    <button class="filter-btn active" data-filter="category" data-value="flyers">Flyers</button>
+                    <button class="filter-btn active" data-filter="category" data-value="college">College</button>
+                    <button class="filter-btn active" data-filter="category" data-value="esports">Esports</button>
+                    <button class="filter-btn active" data-filter="category" data-value="youth">Youth</button>
                 </div>
             </div>
 
@@ -2642,25 +2720,46 @@
 
                 if (recentScores.length > 0) {
                     container.innerHTML = recentScores.map(score => {
-                        const content = `
-                            <div class="score-teams">
-                                <div class="score-team">
-                                    <span class="team-dot" style="background:${score.isHome ? score.teamColor : '#666'}"></span>
-                                    ${score.homeTeam}
-                                </div>
-                                <div class="score-team">
-                                    <span class="team-dot" style="background:${!score.isHome ? score.teamColor : '#666'}"></span>
-                                    ${score.awayTeam}
-                                </div>
-                            </div>
-                            <div class="score-result">
-                                <span>${score.homeScore}</span>
-                                <span>${score.awayScore}</span>
+                        // Build highlights search query from team names
+                        const phillyTeam = score.isHome ? score.homeTeam : score.awayTeam;
+                        const opponent = score.isHome ? score.awayTeam : score.homeTeam;
+                        const gameDate = new Date(score.date || score.gameDate);
+                        // Format date like "January 24th, 2026"
+                        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                        const day = gameDate.getDate();
+                        const ordinal = day === 1 || day === 21 || day === 31 ? 'st' : day === 2 || day === 22 ? 'nd' : day === 3 || day === 23 ? 'rd' : 'th';
+                        const dateStr = `${monthNames[gameDate.getMonth()]} ${day}${ordinal}, ${gameDate.getFullYear()}`;
+                        const highlightsQuery = encodeURIComponent(`${dateStr} ${phillyTeam} vs ${opponent} highlights`);
+
+                        // Build links row
+                        const linksHtml = `
+                            <div class="score-links">
+                                ${score.link ? `<a href="${score.link}" target="_blank" rel="noopener">Boxscore</a>` : ''}
+                                <a href="/highlights.html?q=${highlightsQuery}&team=${encodeURIComponent(phillyTeam)}">Highlights</a>
                             </div>
                         `;
-                        return score.link
-                            ? `<a href="${score.link}" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`
-                            : `<div class="score-item">${content}</div>`;
+
+                        return `
+                            <div class="score-item" style="flex-direction:column;align-items:stretch;">
+                                <div style="display:flex;align-items:center;justify-content:space-between;">
+                                    <div class="score-teams">
+                                        <div class="score-team">
+                                            <span class="team-dot" style="background:${score.isHome ? score.teamColor : '#666'}"></span>
+                                            ${score.homeTeam}
+                                        </div>
+                                        <div class="score-team">
+                                            <span class="team-dot" style="background:${!score.isHome ? score.teamColor : '#666'}"></span>
+                                            ${score.awayTeam}
+                                        </div>
+                                    </div>
+                                    <div class="score-result">
+                                        <span>${score.homeScore}</span>
+                                        <span>${score.awayScore}</span>
+                                    </div>
+                                </div>
+                                ${linksHtml}
+                            </div>
+                        `;
                     }).join('');
                 } else {
                     container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores available</div>';
@@ -2821,9 +2920,36 @@
         };
 
         const sourceLogos = {
-            'Crossing Broad': 'https://www.crossingbroad.com/app/themes/bramble/public/build/assets/cb-logo-AC5c2OGU.svg',
-            'On Pattison': 'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png?v=2',
-            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
+            // Local Philly coverage
+            'Crossing Broad': 'https://www.crossingbroad.com/wp-content/uploads/2023/01/cropped-CB-Logo-2023-1-192x192.png',
+            'PhillyVoice Sports': 'https://media.phillyvoice.com/media/images/phillyvoice-social-default.2e16d0ba.fill-1200x630-c0.jpg',
+            'NBC Sports Philadelphia': 'https://www.nbcsports.com/sites/rsnunited/files/favicons/rsn-philadelphia/apple-touch-icon.png',
+            'Philadelphia Inquirer Sports': 'https://www.inquirer.com/apple-touch-icon.png',
+            'On Pattison': 'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png',
+            // Eagles
+            'Bleeding Green Nation': 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396113/bgn_icon.0.png',
+            'Eagles Wire': 'https://eagleswire.usatoday.com/wp-content/uploads/sites/54/2023/08/cropped-usatoday-eagles-wire-site-icon-2.png?w=192',
+            // Phillies
+            'The Good Phight': 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396225/goodphight_icon.0.png',
+            'Phillies Nation': 'https://www.philliesnation.com/wp-content/uploads/2023/02/cropped-PN-Site-Icon-192x192.png',
+            // Sixers
+            'Liberty Ballers': 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396183/libballers_icon.0.png',
+            'Sixers Wire': 'https://sixerswire.usatoday.com/wp-content/uploads/sites/30/2023/08/cropped-usatoday-sixerswire-site-icon-1.png?w=192',
+            // Flyers
+            'Broad Street Hockey': 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396071/bsh_icon.0.png',
+            'Flyers Nation': 'https://flyersnation.com/wp-content/uploads/2023/01/cropped-FlyersNation-Logo-Square-1-192x192.png',
+            // College
+            'VU Hoops (Villanova)': 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/23936828/236.png',
+            'Black Shoe Diaries (Penn State)': 'https://cdn.vox-cdn.com/uploads/chorus_asset/file/7396055/bsd_icon.0.png',
+            // Esports
+            'Dot Esports': 'https://dotesports.com/wp-content/uploads/2021/08/cropped-favicon-192x192.png',
+            // National
+            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80',
+            'The Athletic': 'https://cdn.theathletic.com/app/themes/flavor-developer/assets/img/the-athletic-icon.png',
+            'Yahoo Sports': 'https://s.yimg.com/cv/apiv2/social/images/yahoo_sports/social_share_logo.png',
+            'CBS Sports': 'https://sportsfly.cbsistatic.com/fly-0626/bundles/sportsmediacss/images/core/cbssports-logo-60x60.png',
+            'Bleacher Report': 'https://media.bleacherreport.com/image/upload/c_fill,g_faces,w_200,h_200,q_95/v1706639222/br_logo.png',
+            'Fox Sports': 'https://a57.foxsports.com/statics.foxsports.com/www.foxsports.com/content/uploads/2023/08/favicon-180.png'
         };
 
         function getSourceLogo(source, fallbackEmoji) {
@@ -2837,6 +2963,59 @@
             return fallbackEmoji || '&#128240;';
         }
 
+        // Photo database cache
+        const photoCache = new Map();
+
+        // Search photo database for matching image
+        async function findPhotoForArticle(title, description, team) {
+            // Build search query from title and description
+            const searchText = `${title || ''} ${description || ''}`.trim();
+            if (!searchText && !team) return null;
+
+            // Check cache
+            const cacheKey = `${searchText.substring(0, 50)}-${team || ''}`;
+            if (photoCache.has(cacheKey)) {
+                return photoCache.get(cacheKey);
+            }
+
+            try {
+                const params = new URLSearchParams();
+                if (searchText) params.append('q', searchText);
+                if (team) params.append('team', team);
+                params.append('limit', '1');
+
+                const res = await fetch(`/api/photos/search?${params}`);
+                const data = await res.json();
+
+                const photoUrl = data.photos?.[0]?.url || null;
+                photoCache.set(cacheKey, photoUrl);
+                return photoUrl;
+            } catch (error) {
+                console.error('Photo search error:', error);
+                return null;
+            }
+        }
+
+        // Update thumbnails that are missing images
+        async function updateMissingThumbnails() {
+            const thumbs = document.querySelectorAll('.story-thumb[data-needs-photo="true"]');
+
+            for (const thumb of thumbs) {
+                const title = thumb.dataset.title || '';
+                const description = thumb.dataset.description || '';
+                const team = thumb.dataset.team || '';
+
+                const photoUrl = await findPhotoForArticle(title, description, team);
+                if (photoUrl) {
+                    thumb.style.backgroundImage = `url('${photoUrl}')`;
+                    thumb.style.backgroundSize = 'cover';
+                    thumb.style.backgroundPosition = 'center';
+                    thumb.innerHTML = ''; // Remove fallback content
+                }
+                thumb.removeAttribute('data-needs-photo');
+            }
+        }
+
         // Team tag class mapping
         const teamTagClass = {
             eagles: 'tag-eagles',
@@ -2845,8 +3024,11 @@
             flyers: 'tag-flyers'
         };
 
-        // Current filter state
-        let currentFilters = { type: 'all', category: 'all' };
+        // Current filter state - categories is array for multi-select OR filtering
+        let currentFilters = { type: 'all', categories: ['eagles', 'phillies', 'sixers', 'flyers', 'college', 'esports', 'youth'] };
+
+        // Pagination offset for load more
+        let storyOffset = 15;
 
         // Load curated content (with fallback to news API)
         async function loadNews(filters = {}) {
@@ -2854,15 +3036,19 @@
 
             // Update filter state
             if (filters.type) currentFilters.type = filters.type;
-            if (filters.category) currentFilters.category = filters.category;
+            if (filters.categories) currentFilters.categories = filters.categories;
+
+            // Reset pagination when filters change
+            storyOffset = 15;
 
             // Build query params
             let queryParams = 'page=home&limit=15';
             if (currentFilters.type !== 'all') {
                 queryParams += `&type=${currentFilters.type}`;
             }
-            if (currentFilters.category !== 'all') {
-                queryParams += `&team=${currentFilters.category}`;
+            // Pass multiple teams as comma-separated for OR filter
+            if (currentFilters.categories.length > 0 && currentFilters.categories.length < 7) {
+                queryParams += `&teams=${currentFilters.categories.join(',')}`;
             }
 
             // Show loading state
@@ -2885,6 +3071,8 @@
                 if (allItems.length > 0) {
                     // Render all items in a unified list
                     renderAllItems(listContainer, allItems, curatedData.hasMore);
+                    // Async lookup photos for missing thumbnails
+                    updateMissingThumbnails();
                     return;
                 }
 
@@ -2915,17 +3103,17 @@
                     ? `background-image:url('${item.image}');background-size:cover;background-position:center;`
                     : `background:${item.teamColor || 'var(--border-color)'};`;
                 const itemId = 'news-' + btoa(item.link || '').slice(0, 12);
+                const needsPhoto = !item.image;
+                const thumbContent = item.image ? '' : getSourceLogo(item.source, sportEmoji[item.team]);
+                const photoDataAttrs = needsPhoto
+                    ? `data-needs-photo="true" data-title="${escapeHtml(item.headline || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${item.team || ''}"`
+                    : '';
 
                 return `
                     <div class="story-item-wrapper">
-                        <div class="vote-buttons">
-                            <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
-                            <span class="vote-score" id="score-${itemId}">0</span>
-                            <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
-                        </div>
                         <a href="${item.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
-                            <div class="story-thumb" style="${imageStyle}">
-                                ${!item.image ? getSourceLogo(item.source, sportEmoji[item.team]) : ''}
+                            <div class="story-thumb" style="${imageStyle}" ${photoDataAttrs}>
+                                ${thumbContent}
                             </div>
                             <div class="story-info">
                                 <div class="story-meta">
@@ -2935,11 +3123,19 @@
                                     <span>${timeAgo(item.published)}</span>
                                 </div>
                                 <div class="story-title">${item.headline || ''}</div>
+                                ${item.description ? `<div class="story-teaser">${escapeHtml(truncateText(item.description, 140))}</div>` : ''}
+                                <div class="story-actions-row">
+                                    <a href="/article.html?url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.headline || '')}&image=${encodeURIComponent(item.image || '')}&source=${encodeURIComponent(item.source || '')}" class="story-comment-btn" title="Discuss this story" onclick="event.stopPropagation();">
+                                        &#128172; Comments
+                                    </a>
+                                </div>
                             </div>
                         </a>
-                        <a href="/article.html?url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.headline || '')}&image=${encodeURIComponent(item.image || '')}&source=${encodeURIComponent(item.source || '')}" class="story-comment-link" title="Discuss this story">
-                            &#128172;
-                        </a>
+                        <div class="vote-buttons">
+                            <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${itemId}">0</span>
+                            <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -2999,16 +3195,20 @@
                     videoOverlay = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;background:linear-gradient(135deg,#25F4EE,#FE2C55);border-radius:4px;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px;"></div></div>';
                 }
 
+                // Get thumbnail - use source logo as fallback, mark for photo lookup if missing
+                const needsPhoto = !item.thumbnail;
+                const thumbContent = item.thumbnail
+                    ? ''
+                    : getSourceLogo(item.sourceName, '&#128240;');
+                const photoDataAttrs = needsPhoto
+                    ? `data-needs-photo="true" data-title="${escapeHtml(item.title || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${teamTag}"`
+                    : '';
+
                 return `
                     <div class="story-item-wrapper">
-                        <div class="vote-buttons">
-                            <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
-                            <span class="vote-score" id="score-${item._id}">0</span>
-                            <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
-                        </div>
                         <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
-                            <div class="story-thumb" style="${thumbStyle};position:relative;">
-                                ${!item.thumbnail ? '&#128240;' : ''}
+                            <div class="story-thumb" style="${thumbStyle};position:relative;" ${photoDataAttrs}>
+                                ${thumbContent}
                                 ${videoOverlay}
                             </div>
                             <div class="story-info">
@@ -3020,12 +3220,19 @@
                                 </div>
                                 <div class="story-title">${escapeHtml(item.title)}</div>
                                 ${item.description ? `<div class="story-teaser">${escapeHtml(truncateText(item.description, 140))}</div>` : ''}
-                                ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                                ${item.curatorReview ? `<div class="story-curator-note">${escapeHtml(item.curatorReview)}</div>` : ''}
+                                <div class="story-actions-row">
+                                    <a href="/article.html?url=${encodeURIComponent(item.sourceUrl)}&title=${encodeURIComponent(item.title || '')}&image=${encodeURIComponent(item.thumbnail || '')}" class="story-comment-btn" title="Discuss this story" onclick="event.stopPropagation();">
+                                        &#128172; Comments
+                                    </a>
+                                </div>
                             </div>
                         </a>
-                        <a href="/article.html?url=${encodeURIComponent(item.sourceUrl)}&title=${encodeURIComponent(item.title || '')}&image=${encodeURIComponent(item.thumbnail || '')}" class="story-comment-link" title="Discuss this story">
-                            &#128172;
-                        </a>
+                        <div class="vote-buttons">
+                            <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
+                            <span class="vote-score" id="score-${item._id}">0</span>
+                            <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -3240,17 +3447,13 @@
                         : `background:var(--border-color);`;
                     const teamTag = item.teams?.[0] || 'eagles';
                     const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+                    const thumbContent = item.thumbnail ? '' : getSourceLogo(item.sourceName, '&#128240;');
 
                     return `
                         <div class="story-item-wrapper">
-                            <div class="vote-buttons">
-                                <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
-                                <span class="vote-score" id="score-${item._id}">0</span>
-                                <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
-                            </div>
                             <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
                                 <div class="story-thumb" style="${thumbStyle}">
-                                    ${!item.thumbnail ? '&#128240;' : ''}
+                                    ${thumbContent}
                                 </div>
                                 <div class="story-info">
                                     <div class="story-meta">
@@ -3260,12 +3463,20 @@
                                         <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
                                     </div>
                                     <div class="story-title">${escapeHtml(item.title)}</div>
-                                    ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                                    ${item.description ? `<div class="story-teaser">${escapeHtml(truncateText(item.description, 140))}</div>` : ''}
+                                    ${item.curatorReview ? `<div class="story-curator-note">${escapeHtml(item.curatorReview)}</div>` : ''}
+                                    <div class="story-actions-row">
+                                        <a href="/article.html?url=${encodeURIComponent(item.sourceUrl)}&title=${encodeURIComponent(item.title || '')}&image=${encodeURIComponent(item.thumbnail || '')}" class="story-comment-btn" title="Discuss this story" onclick="event.stopPropagation();">
+                                            &#128172; Comments
+                                        </a>
+                                    </div>
                                 </div>
                             </a>
-                            <a href="/article.html?url=${encodeURIComponent(item.sourceUrl)}&title=${encodeURIComponent(item.title || '')}&image=${encodeURIComponent(item.thumbnail || '')}" class="story-comment-link" title="Discuss this story">
-                                &#128172;
-                            </a>
+                            <div class="vote-buttons">
+                                <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${item._id}">0</span>
+                                <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
+                            </div>
                         </div>
                     `;
                 }).join('');
@@ -3292,16 +3503,16 @@
                         : `background:${article.teamColor || 'var(--border-color)'};`;
                     const itemId = 'news-' + btoa(article.link || '').slice(0, 12);
 
+                    const needsPhoto = !article.image;
+                    const thumbContent = article.image ? '' : getSourceLogo(article.source, sportEmoji[article.team]);
+                    const photoDataAttrs = needsPhoto
+                        ? `data-needs-photo="true" data-title="${escapeHtml(article.headline || '')}" data-description="${escapeHtml(article.description || '')}" data-team="${article.team || ''}"`
+                        : '';
                     return `
                         <div class="story-item-wrapper">
-                            <div class="vote-buttons">
-                                <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
-                                <span class="vote-score" id="score-${itemId}">0</span>
-                                <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
-                            </div>
                             <a href="${article.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
-                                <div class="story-thumb" style="${thumbStyle}">
-                                    ${!article.image ? getSourceLogo(article.source, sportEmoji[article.team]) : ''}
+                                <div class="story-thumb" style="${thumbStyle}" ${photoDataAttrs}>
+                                    ${thumbContent}
                                 </div>
                                 <div class="story-info">
                                     <div class="story-meta">
@@ -3312,14 +3523,23 @@
                                     </div>
                                     <div class="story-title">${escapeHtml(article.headline)}</div>
                                     ${article.description ? `<div class="story-teaser">${escapeHtml(truncateText(article.description, 140))}</div>` : ''}
+                                    <div class="story-actions-row">
+                                        <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="story-comment-btn" title="Discuss this story" onclick="event.stopPropagation();">
+                                            &#128172; Comments
+                                        </a>
+                                    </div>
                                 </div>
                             </a>
-                            <a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline || '')}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="story-comment-link" title="Discuss this story">
-                                &#128172;
-                            </a>
+                            <div class="vote-buttons">
+                                <button class="vote-btn upvote" data-article="${itemId}" onclick="vote('${itemId}', 1, event)">&#9650;</button>
+                                <span class="vote-score" id="score-${itemId}">0</span>
+                                <button class="vote-btn downvote" data-article="${itemId}" onclick="vote('${itemId}', -1, event)">&#9660;</button>
+                            </div>
                         </div>
                     `;
                 }).join('');
+                // Async lookup photos for missing thumbnails
+                updateMissingThumbnails();
             } else {
                 listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No stories available.</div>';
             }
@@ -3334,7 +3554,6 @@
         }
 
         // Load more stories (pagination)
-        let storyOffset = 15;
         async function loadMoreStories() {
             const listContainer = document.getElementById('articleList');
             const btn = listContainer.querySelector('.load-more-btn');
@@ -3344,7 +3563,15 @@
             }
 
             try {
-                const res = await fetch(`/api/content?page=home&limit=10&offset=${storyOffset}`);
+                // Build query with current filters
+                let queryParams = `page=home&limit=10&offset=${storyOffset}`;
+                if (currentFilters.type !== 'all') {
+                    queryParams += `&type=${currentFilters.type}`;
+                }
+                if (currentFilters.categories.length > 0 && currentFilters.categories.length < 7) {
+                    queryParams += `&teams=${currentFilters.categories.join(',')}`;
+                }
+                const res = await fetch(`/api/content?${queryParams}`);
                 const data = await res.json();
 
                 if (data.items && data.items.length > 0) {
@@ -3358,28 +3585,49 @@
                             : `background:var(--border-color);`;
                         const teamTag = item.teams?.[0] || 'eagles';
                         const tagClass = teamTagClass[teamTag] || 'tag-eagles';
+                        const needsPhoto = !item.thumbnail;
+                        const thumbContent = item.thumbnail ? '' : getSourceLogo(item.sourceName, '&#128240;');
+                        const photoDataAttrs = needsPhoto
+                            ? `data-needs-photo="true" data-title="${escapeHtml(item.title || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${teamTag}"`
+                            : '';
 
                         return `
-                            <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;">
-                                <div class="story-thumb" style="${thumbStyle}">
-                                    ${!item.thumbnail ? '&#128240;' : ''}
-                                </div>
-                                <div class="story-info">
-                                    <div class="story-meta">
-                                        <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
-                                        <span>${item.sourceName || 'PhillySports'}</span>
-                                        <span>·</span>
-                                        <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                            <div class="story-item-wrapper">
+                                <a href="${item.sourceUrl}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
+                                    <div class="story-thumb" style="${thumbStyle}" ${photoDataAttrs}>
+                                        ${thumbContent}
                                     </div>
-                                    <div class="story-title">${escapeHtml(item.title)}</div>
-                                    ${item.curatorReview ? `<div class="story-curator-note">"${escapeHtml(item.curatorReview)}"</div>` : ''}
+                                    <div class="story-info">
+                                        <div class="story-meta">
+                                            <span class="article-tag ${tagClass}" style="font-size:0.65rem;padding:0.1rem 0.35rem;">${teamTag.toUpperCase()}</span>
+                                            <span>${item.sourceName || 'PhillySports'}</span>
+                                            <span>·</span>
+                                            <span>${timeAgo(item.curatedAt || item.publishedAt)}</span>
+                                        </div>
+                                        <div class="story-title">${escapeHtml(item.title)}</div>
+                                        ${item.description ? `<div class="story-teaser">${escapeHtml(truncateText(item.description, 140))}</div>` : ''}
+                                        ${item.curatorReview ? `<div class="story-curator-note">${escapeHtml(item.curatorReview)}</div>` : ''}
+                                        <div class="story-actions-row">
+                                            <a href="/article.html?url=${encodeURIComponent(item.sourceUrl)}&title=${encodeURIComponent(item.title || '')}&image=${encodeURIComponent(item.thumbnail || '')}" class="story-comment-btn" title="Discuss this story" onclick="event.stopPropagation();">
+                                                &#128172; Comments
+                                            </a>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="vote-buttons">
+                                    <button class="vote-btn upvote" data-article="${item._id}" onclick="vote('${item._id}', 1, event)">&#9650;</button>
+                                    <span class="vote-score" id="score-${item._id}">0</span>
+                                    <button class="vote-btn downvote" data-article="${item._id}" onclick="vote('${item._id}', -1, event)">&#9660;</button>
                                 </div>
-                            </a>
+                            </div>
                         `;
                     }).join('');
 
                     listContainer.insertAdjacentHTML('beforeend', newItems);
                     storyOffset += 10;
+
+                    // Update thumbnails from photo database
+                    updateMissingThumbnails();
 
                     // Add new load more if there are more
                     if (data.hasMore) {
@@ -3450,19 +3698,65 @@
         loadNews();
 
         // Content filter handlers
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const filterType = btn.dataset.filter;  // 'type' or 'category'
-                const filterValue = btn.dataset.value;
+        const categoryButtons = document.querySelectorAll('.filter-btn[data-filter="category"]');
+        const allCategoryBtn = document.querySelector('.filter-btn[data-filter="category"][data-value="all"]');
+        const individualCategoryBtns = document.querySelectorAll('.filter-btn[data-filter="category"]:not([data-value="all"])');
 
-                // Update active state for this filter group
-                document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b => {
+        // Get currently selected categories (for OR filter)
+        function getSelectedCategories() {
+            const selected = [];
+            individualCategoryBtns.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    selected.push(btn.dataset.value);
+                }
+            });
+            return selected;
+        }
+
+        // Update "All" button state based on individual selections
+        function updateAllButtonState() {
+            const allSelected = Array.from(individualCategoryBtns).every(btn => btn.classList.contains('active'));
+            allCategoryBtn.classList.toggle('active', allSelected);
+        }
+
+        // Type filter handlers (single select - radio style)
+        document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(b => {
                     b.classList.remove('active');
                 });
                 btn.classList.add('active');
+                loadNews({ type: btn.dataset.value, categories: getSelectedCategories() });
+            });
+        });
 
-                // Reload with new filter
-                loadNews({ [filterType]: filterValue });
+        // Category filter handlers (multi-select - checkbox style)
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filterValue = btn.dataset.value;
+
+                if (filterValue === 'all') {
+                    // "All" toggles all categories on or off
+                    const allCurrentlyActive = btn.classList.contains('active');
+                    if (allCurrentlyActive) {
+                        // Turn all off
+                        categoryButtons.forEach(b => b.classList.remove('active'));
+                    } else {
+                        // Turn all on
+                        categoryButtons.forEach(b => b.classList.add('active'));
+                    }
+                } else {
+                    // Toggle individual category
+                    btn.classList.toggle('active');
+                    updateAllButtonState();
+                }
+
+                // Get current type filter
+                const activeTypeBtn = document.querySelector('.filter-btn[data-filter="type"].active');
+                const typeValue = activeTypeBtn ? activeTypeBtn.dataset.value : 'all';
+
+                // Reload with selected categories
+                loadNews({ type: typeValue, categories: getSelectedCategories() });
             });
         });
 
@@ -3944,5 +4238,9 @@
 
     <!-- Live Ticker -->
     <script src="/js/live-ticker.js"></script>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

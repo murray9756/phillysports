@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Highlights - PhillySports.com</title>
+    <meta name="description" content="Watch game highlights from your favorite Philadelphia sports teams - Eagles, Phillies, 76ers, Flyers, and Union.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme-vintage.css">
+    <link rel="stylesheet" href="/css/body-theme.css">
+    <style>
+        .page-content {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: Georgia, serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent-color, #8B1A28);
+            padding-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color, #8B1A28);
+        }
+
+        .search-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-color, #8B1A28);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #6d0014;
+        }
+
+        .highlights-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-embed {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: #000;
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .video-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-color, #8B1A28);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .no-results h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .youtube-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: #FF0000;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .youtube-link:hover {
+            background: #cc0000;
+        }
+
+        .tiktok-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: #000000;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .tiktok-link:hover {
+            background: #333333;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-link {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .quick-link:hover {
+            border-color: var(--accent-color, #8B1A28);
+            color: var(--accent-color, #8B1A28);
+        }
+
+        .quick-link.active {
+            background: var(--accent-color, #8B1A28);
+            color: white;
+            border-color: var(--accent-color, #8B1A28);
+        }
+
+        .section-title {
+            font-family: Georgia, serif;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .highlights-container {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="ps-theme">
+    <!-- Theme initialization -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <!-- Shared Header -->
+    <div id="site-header"></div>
+    <script src="/js/header.js"></script>
+
+    <!-- Main Content -->
+    <main class="page-content">
+        <div class="page-header">
+            <h1 class="page-title">Game Highlights</h1>
+            <p class="page-subtitle" id="pageSubtitle">Watch the best plays from your favorite Philly teams</p>
+        </div>
+
+        <!-- Quick team links -->
+        <div class="quick-links">
+            <a href="/highlights.html?q=Eagles+highlights" class="quick-link" data-team="Eagles">Eagles</a>
+            <a href="/highlights.html?q=Phillies+highlights" class="quick-link" data-team="Phillies">Phillies</a>
+            <a href="/highlights.html?q=76ers+highlights" class="quick-link" data-team="76ers">76ers</a>
+            <a href="/highlights.html?q=Flyers+highlights" class="quick-link" data-team="Flyers">Flyers</a>
+            <a href="/highlights.html?q=Union+highlights" class="quick-link" data-team="Union">Union</a>
+        </div>
+
+        <!-- Search bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search for game highlights...">
+            <button id="searchBtn" class="search-btn">Search</button>
+        </div>
+
+        <!-- Highlights container -->
+        <div id="highlightsContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading highlights...</p>
+            </div>
+        </div>
+
+        <!-- Social search links -->
+        <div id="socialLinks" style="display:none; text-align:center; margin-top:2rem;">
+            <p style="color:var(--text-muted); margin-bottom:1rem;">Search for more highlights:</p>
+            <div class="social-links">
+                <a id="youtubeSearchLink" href="#" target="_blank" rel="noopener" class="youtube-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                    YouTube
+                </a>
+                <a id="tiktokSearchLink" href="#" target="_blank" rel="noopener" class="tiktok-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+                    </svg>
+                    TikTok
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
+
+    <script>
+        // Get query params
+        const urlParams = new URLSearchParams(window.location.search);
+        let searchQuery = urlParams.get('q') || '';
+        const team = urlParams.get('team') || '';
+
+        // Update search input
+        const searchInput = document.getElementById('searchInput');
+        if (searchQuery) {
+            searchInput.value = decodeURIComponent(searchQuery);
+        }
+
+        // Update subtitle if specific game
+        if (team) {
+            document.getElementById('pageSubtitle').textContent = `Highlights for ${decodeURIComponent(team)}`;
+        }
+
+        // Highlight active quick link
+        document.querySelectorAll('.quick-link').forEach(link => {
+            const linkTeam = link.dataset.team;
+            if (team && decodeURIComponent(team).includes(linkTeam)) {
+                link.classList.add('active');
+            }
+        });
+
+        // Official team YouTube channels
+        const officialChannels = {
+            'Eagles': { name: 'Philadelphia Eagles', channelId: 'UCDZimfCLzfn0zWYx-rqaLNw' },
+            'Phillies': { name: 'Philadelphia Phillies', channelId: 'UCoL3ydLDx-CNvgZ1ogYwT3w' },
+            '76ers': { name: 'Philadelphia 76ers', channelId: 'UC97Vd5mEMstUoPTdh50_uvg' },
+            'Flyers': { name: 'Philadelphia Flyers', channelId: 'UCT17J8iqLqJMFcuAjrVgkvA' },
+            'Union': { name: 'Philadelphia Union', channelId: 'UC3xJqpVlf2DCPM09FVvvB7w' }
+        };
+
+        // Featured highlight videos (manually curated, can be updated via admin later)
+        const featuredVideos = {
+            'Eagles': [
+                { id: 'dQw4w9WgXcQ', title: 'Eagles Season Highlights' }, // Placeholder
+            ],
+            'Phillies': [
+                { id: 'dQw4w9WgXcQ', title: 'Phillies Season Highlights' }, // Placeholder
+            ]
+        };
+
+        // Load highlights
+        async function loadHighlights(query) {
+            const container = document.getElementById('highlightsContainer');
+            const socialLinks = document.getElementById('socialLinks');
+            const youtubeLinkEl = document.getElementById('youtubeSearchLink');
+            const tiktokLinkEl = document.getElementById('tiktokSearchLink');
+
+            if (!query) {
+                // Show default featured highlights
+                showFeaturedHighlights();
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Searching for highlights...</p>
+                </div>
+            `;
+
+            // Update social links
+            const encodedQuery = encodeURIComponent(query);
+            youtubeLinkEl.href = `https://www.youtube.com/results?search_query=${encodedQuery}`;
+            tiktokLinkEl.href = `https://www.tiktok.com/search?q=${encodedQuery}`;
+
+            try {
+                // Try to fetch from our API (if implemented)
+                const response = await fetch(`/api/highlights?q=${encodedQuery}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (data.videos && data.videos.length > 0) {
+                        renderVideos(data.videos);
+                        socialLinks.style.display = 'block';
+                    } else {
+                        showNoResults(query);
+                    }
+                } else {
+                    // API not available, show YouTube search embed and link
+                    showYouTubeSearch(query);
+                }
+            } catch (error) {
+                // Fallback to YouTube search
+                showYouTubeSearch(query);
+            }
+        }
+
+        function renderVideos(videos) {
+            const container = document.getElementById('highlightsContainer');
+            const socialLinks = document.getElementById('socialLinks');
+
+            container.innerHTML = `<div class="highlights-container">${videos.map(video => {
+                // Handle both YouTube and TikTok embeds
+                let embedHtml;
+                if (video.source === 'tiktok') {
+                    // TikTok embed
+                    embedHtml = `
+                        <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@${video.author}/video/${video.id}"
+                            data-video-id="${video.id}" style="max-width:605px; min-width:325px;">
+                            <section></section>
+                        </blockquote>
+                    `;
+                } else {
+                    // YouTube embed (default)
+                    embedHtml = `
+                        <div class="video-embed">
+                            <iframe
+                                src="https://www.youtube.com/embed/${video.id}"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen
+                                loading="lazy"
+                            ></iframe>
+                        </div>
+                    `;
+                }
+                return `
+                    <div class="video-card">
+                        ${embedHtml}
+                        <div class="video-info">
+                            <div class="video-title">${escapeHtml(video.title)}</div>
+                            ${video.channel ? `<div class="video-meta">${escapeHtml(video.channel)}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('')}</div>`;
+
+            // Load TikTok embed script if needed
+            if (videos.some(v => v.source === 'tiktok') && !document.querySelector('script[src*="tiktok.com/embed.js"]')) {
+                const script = document.createElement('script');
+                script.src = 'https://www.tiktok.com/embed.js';
+                script.async = true;
+                document.body.appendChild(script);
+            }
+
+            socialLinks.style.display = 'block';
+        }
+
+        function showYouTubeSearch(query) {
+            const container = document.getElementById('highlightsContainer');
+            const socialLinks = document.getElementById('socialLinks');
+
+            // Show embedded YouTube search results
+            container.innerHTML = `
+                <div style="position:relative; width:100%; padding-bottom:56.25%; background:#000; border-radius:8px; overflow:hidden;">
+                    <iframe
+                        style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;"
+                        src="https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(query)}"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+                <p style="text-align:center; color:var(--text-muted); margin-top:1rem; font-size:0.85rem;">
+                    Showing YouTube search results for "${escapeHtml(decodeURIComponent(query))}"
+                </p>
+            `;
+
+            socialLinks.style.display = 'block';
+        }
+
+        function showFeaturedHighlights() {
+            const container = document.getElementById('highlightsContainer');
+
+            container.innerHTML = `
+                <h2 class="section-title">Featured Highlights</h2>
+                <p style="color:var(--text-muted); margin-bottom:1.5rem;">
+                    Use the search bar above or click a team to find game highlights.
+                    You can also visit the official team channels below:
+                </p>
+                <div class="highlights-container">
+                    ${Object.entries(officialChannels).map(([team, info]) => `
+                        <div class="video-card">
+                            <a href="https://www.youtube.com/channel/${info.channelId}" target="_blank" rel="noopener" style="display:block;">
+                                <div style="padding:2rem; text-align:center; background:linear-gradient(135deg, var(--card-bg) 0%, var(--border-color) 100%);">
+                                    <div style="font-size:2rem; margin-bottom:0.5rem;">📺</div>
+                                    <div style="font-weight:600; color:var(--text-primary);">${info.name}</div>
+                                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;">Official YouTube Channel</div>
+                                </div>
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function showNoResults(query) {
+            const container = document.getElementById('highlightsContainer');
+            const socialLinks = document.getElementById('socialLinks');
+
+            container.innerHTML = `
+                <div class="no-results">
+                    <h3>No highlights found</h3>
+                    <p>We couldn't find highlights for "${escapeHtml(decodeURIComponent(query))}"</p>
+                    <p>Try searching on YouTube or TikTok:</p>
+                </div>
+            `;
+
+            socialLinks.style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Search functionality
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                const newUrl = `/highlights.html?q=${encodeURIComponent(query)}`;
+                window.history.pushState({}, '', newUrl);
+                loadHighlights(query);
+            }
+        }
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+
+        // Initial load
+        loadHighlights(searchQuery);
+    </script>
+</body>
+</html>

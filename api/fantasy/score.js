@@ -354,9 +354,17 @@ export default async function handler(req, res) {
                     const playerCount = Object.keys(playerStats).length;
                     console.log(`Got ${playerCount} player stats from SportsDataIO`);
 
+                    // CRITICAL FIX: Don't overwrite scores if API returns no stats
+                    // This prevents wiping out valid scores when API is unavailable
+                    if (playerCount === 0) {
+                        console.log(`WARNING: No stats returned for contest ${contest._id} (${contest.title}). Skipping score update to preserve existing scores.`);
+                        continue; // Skip to next contest, preserving existing scores
+                    }
+
                     for (const entry of entries) {
                         let totalPoints = 0;
                         const playerPoints = [];
+                        let playersWithStats = 0;
 
                         for (const player of entry.lineup) {
                             // Try both string and number formats for player ID
@@ -365,6 +373,15 @@ export default async function handler(req, res) {
 
                             if (!stats) {
                                 console.log(`No stats found for player ${player.playerName} (ID: ${playerId})`);
+                                // Preserve existing points for this player if available
+                                const existingPlayerPoints = entry.playerPoints?.find(pp => pp.playerId === playerId);
+                                if (existingPlayerPoints) {
+                                    playerPoints.push(existingPlayerPoints);
+                                    totalPoints += existingPlayerPoints.points || 0;
+                                    continue;
+                                }
+                            } else {
+                                playersWithStats++;
                             }
 
                             const points = calculateFantasyPoints(contest.sport, stats);
@@ -381,17 +398,24 @@ export default async function handler(req, res) {
                             totalPoints += points;
                         }
 
-                        await entriesCollection.updateOne(
-                            { _id: entry._id },
-                            {
-                                $set: {
-                                    totalPoints: Math.round(totalPoints * 10) / 10,
-                                    playerPoints,
-                                    updatedAt: now
+                        // Only update if we got stats for at least one player
+                        // or if entry currently has no scores (first scoring)
+                        const hasExistingScores = (entry.totalPoints || 0) > 0;
+                        if (playersWithStats > 0 || !hasExistingScores) {
+                            await entriesCollection.updateOne(
+                                { _id: entry._id },
+                                {
+                                    $set: {
+                                        totalPoints: Math.round(totalPoints * 10) / 10,
+                                        playerPoints,
+                                        updatedAt: now
+                                    }
                                 }
-                            }
-                        );
-                        results.entriesScored++;
+                            );
+                            results.entriesScored++;
+                        } else {
+                            console.log(`Preserving existing scores for entry ${entry._id} (${entry.username}) - no new stats available`);
+                        }
                     }
                 }
             } catch (error) {

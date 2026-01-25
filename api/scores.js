@@ -1,5 +1,5 @@
 // Vercel Serverless Function - Fetch Philly Sports Scores
-// Uses SportsDataIO as primary, ESPN as fallback
+// Uses ESPN as primary (free, reliable), SportsDataIO only as fallback
 
 import { getTodayET, getYesterdayET, hoursSince } from './lib/timezone.js';
 
@@ -53,10 +53,20 @@ export default async function handler(req, res) {
 
         await Promise.all(sportsToFetch.map(async (sport) => {
             let scoreData = null;
-            let source = 'sportsdata';
+            let source = 'espn';
 
-            // Try SportsDataIO first
-            if (SPORTSDATA_API_KEY) {
+            // Try ESPN first (free, reliable)
+            try {
+                scoreData = await fetchFromESPN(sport);
+                if (scoreData) {
+                    source = 'espn';
+                }
+            } catch (e) {
+                console.error(`ESPN ${sport} error:`, e.message);
+            }
+
+            // Fall back to SportsDataIO if ESPN failed
+            if (!scoreData && SPORTSDATA_API_KEY) {
                 try {
                     scoreData = await fetchFromSportsDataIO(sport);
                     if (scoreData) {
@@ -64,18 +74,6 @@ export default async function handler(req, res) {
                     }
                 } catch (e) {
                     console.error(`SportsDataIO ${sport} error:`, e.message);
-                }
-            }
-
-            // Fall back to ESPN if SportsDataIO failed
-            if (!scoreData) {
-                try {
-                    scoreData = await fetchFromESPN(sport);
-                    if (scoreData) {
-                        source = 'espn';
-                    }
-                } catch (e) {
-                    console.error(`ESPN ${sport} error:`, e.message);
                 }
             }
 

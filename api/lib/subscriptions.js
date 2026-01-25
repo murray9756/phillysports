@@ -25,7 +25,7 @@ export const TIER_BENEFITS = {
         coinMultiplier: 1,              // 1x on all earnings
         monthlyBonusCoins: 0,           // No monthly grant
         freeContestEntriesPerWeek: 0,   // No free contest entries
-        exclusiveRaffles: false,        // No exclusive raffles
+        exclusiveRaffles: false,        // No access to Premium Raffles (graded cards, tickets)
         premiumBadge: false,            // No premium badge
         noSellerFees: false,            // Pay 5% seller fee
         customEmail: false,             // No @phillysports.com email
@@ -39,7 +39,7 @@ export const TIER_BENEFITS = {
         coinMultiplier: 2,              // 2x on ALL earnings (login, comments, trivia, referrals)
         monthlyBonusCoins: 500,         // 500 DD monthly grant
         freeContestEntriesPerWeek: 1,   // 1 free premium contest entry per week
-        exclusiveRaffles: true,         // Access to premium-only raffles
+        exclusiveRaffles: true,         // Access to Premium Raffles (graded cards, tickets, better prizes)
         premiumBadge: true,             // Gold premium badge
         noSellerFees: true,             // No marketplace seller fees
         customEmail: true,              // @phillysports.com email

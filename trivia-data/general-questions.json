@@ -1,0 +1,2634 @@
+[
+  {
+    "question": "Which Philadelphia athlete famously played both professional football and baseball?",
+    "options": ["Bo Jackson", "Deion Sanders", "Brian Mitchell", "Ron Jaworski"],
+    "answer": "Deion Sanders",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What stadium did the Eagles, Phillies, and Eagles all share from 1971 to 2003?",
+    "options": ["Franklin Field", "Veterans Stadium", "Lincoln Financial Field", "JFK Stadium"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which legendary broadcaster was known as the 'Voice of the Phillies' for nearly 40 years?",
+    "options": ["Merrill Reese", "Harry Kalas", "Chris Wheeler", "Richie Ashburn"],
+    "answer": "Harry Kalas",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "In what year did Philadelphia fans famously boo Santa Claus at an Eagles game?",
+    "options": ["1965", "1968", "1972", "1975"],
+    "answer": "1968",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Philadelphia Union's home stadium?",
+    "options": ["Talen Energy Stadium", "Subaru Park", "PPL Park", "Chester Stadium"],
+    "answer": "Subaru Park",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia sports radio station is known as 'The Fanatic'?",
+    "options": ["WIP 94.1", "97.5 FM", "610 AM", "1210 WPHT"],
+    "answer": "97.5 FM",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Who has been the radio voice of the Philadelphia Eagles since 1977?",
+    "options": ["Harry Kalas", "Merrill Reese", "Al Morganti", "Mike Missanelli"],
+    "answer": "Merrill Reese",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the capacity of Veterans Stadium?",
+    "options": ["52,000", "62,000", "65,000", "70,000"],
+    "answer": "65,000",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which stadium hosted the Live Aid concert in 1985?",
+    "options": ["Veterans Stadium", "JFK Stadium", "Franklin Field", "The Spectrum"],
+    "answer": "JFK Stadium",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Union join Major League Soccer?",
+    "options": ["2008", "2010", "2012", "2014"],
+    "answer": "2010",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the name of the Philadelphia arena that hosted the Flyers and 76ers from 1967 to 1996?",
+    "options": ["The Palestra", "CoreStates Center", "The Spectrum", "Wells Fargo Center"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team won the city's first major professional championship in 37 years in 2008?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the chant Eagles fans sing to the tune of 'Fly Eagles Fly'?",
+    "options": ["Go Birds Go", "E-A-G-L-E-S Eagles!", "Fly Eagles Fly", "Eagles Fight Song"],
+    "answer": "Fly Eagles Fly",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Shibe Park, later renamed Connie Mack Stadium, was located at what intersection?",
+    "options": ["Broad and Pattison", "21st and Lehigh", "33rd and Spruce", "15th and Market"],
+    "answer": "21st and Lehigh",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Phillies win their first World Series?",
+    "options": ["1950", "1964", "1980", "1983"],
+    "answer": "1980",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which sports radio host was known for his controversial takes on WIP?",
+    "options": ["Howard Eskin", "Angelo Cataldi", "Mike Missanelli", "All of the above"],
+    "answer": "All of the above",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Philadelphia Union's supporters group?",
+    "options": ["Sons of Ben", "River End Hooligans", "Chester Ultras", "Union Guard"],
+    "answer": "Sons of Ben",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which stadium was known as 'The Vet'?",
+    "options": ["Franklin Field", "Veterans Stadium", "JFK Stadium", "Citizens Bank Park"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles win their first Super Bowl?",
+    "options": ["2004", "2010", "2018", "2023"],
+    "answer": "2018",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia arena was called 'The Palestra'?",
+    "options": ["Temple's home arena", "Penn's campus arena", "LaSalle's arena", "Villanova's arena"],
+    "answer": "Penn's campus arena",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Who owned the Philadelphia Eagles from 1969 to 1985?",
+    "options": ["Jerry Wolman", "Leonard Tose", "Norman Braman", "Jeffrey Lurie"],
+    "answer": "Leonard Tose",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did Lincoln Financial Field open?",
+    "options": ["2001", "2003", "2005", "2007"],
+    "answer": "2003",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team plays its home games in Chester, Pennsylvania?",
+    "options": ["Phillies", "Eagles", "Union", "Flyers"],
+    "answer": "Union",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Harry Kalas was famous for which home run call?",
+    "options": ["It's outta here!", "That ball is high, it is far, it is gone!", "Watch that baby fly!", "Swing and a long drive!"],
+    "answer": "That ball is high, it is far, it is gone!",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the Baker Bowl primarily used for?",
+    "options": ["Football", "Baseball", "Boxing", "Horse racing"],
+    "answer": "Baseball",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team did Jeffrey Lurie purchase in 1994?",
+    "options": ["Phillies", "76ers", "Eagles", "Flyers"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is WIP 94.1's full call letters?",
+    "options": ["WFAN", "WIP-FM", "WPEN", "WYSP"],
+    "answer": "WIP-FM",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "The 'Wing Bowl' eating contest was associated with which radio station?",
+    "options": ["97.5 The Fanatic", "WIP 94.1", "93.3 WMMR", "102.9 WMGK"],
+    "answer": "WIP 94.1",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia stadium was imploded in 2004?",
+    "options": ["JFK Stadium", "Veterans Stadium", "The Spectrum", "Shibe Park"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Philadelphia 76ers win their most recent NBA Championship?",
+    "options": ["1967", "1977", "1983", "2001"],
+    "answer": "1983",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which legendary Philadelphia athlete was inducted into both the baseball and football halls of fame?",
+    "options": ["Jim Thorpe", "Chuck Bednarik", "Steve Carlton", "Mike Schmidt"],
+    "answer": "Jim Thorpe",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Flyers' mascot?",
+    "options": ["Phanatic", "Gritty", "Swoop", "Franklin"],
+    "answer": "Gritty",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What color did fans throw on the ice to honor Eric Lindros?",
+    "options": ["Red", "Orange", "Black", "White"],
+    "answer": "Orange",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which stadium hosted the Army-Navy game for many years?",
+    "options": ["Veterans Stadium", "Franklin Field", "Lincoln Financial Field", "JFK Stadium"],
+    "answer": "Franklin Field",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Who is the all-time leading scorer in Philadelphia Union history?",
+    "options": ["Sebastien Le Toux", "Chris Pontius", "C.J. Sapong", "Kacper Przybylko"],
+    "answer": "Sebastien Le Toux",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Flyers win their first Stanley Cup?",
+    "options": ["1972", "1974", "1975", "1976"],
+    "answer": "1974",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "The Philly Special play was called in which Super Bowl?",
+    "options": ["Super Bowl XXXIX", "Super Bowl LII", "Super Bowl LVII", "Super Bowl XV"],
+    "answer": "Super Bowl LII",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia sports venue was nicknamed 'The Big Shower'?",
+    "options": ["Veterans Stadium", "The Spectrum", "Shibe Park", "Franklin Field"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Eagles' mascot?",
+    "options": ["Gritty", "Phanatic", "Swoop", "Franklin"],
+    "answer": "Swoop",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'His Whiteness' or 'Whitey'?",
+    "options": ["Harry Kalas", "Richie Ashburn", "Chris Wheeler", "Larry Andersen"],
+    "answer": "Richie Ashburn",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Citizens Bank Park open?",
+    "options": ["2002", "2003", "2004", "2005"],
+    "answer": "2004",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team had the longest championship drought before their 2008 win?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the Philadelphia Union's original stadium name before Subaru Park?",
+    "options": ["Chester Stadium", "PPL Park", "Talen Energy Stadium", "Union Field"],
+    "answer": "PPL Park",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which radio host started the 'Wing Bowl' with Al Morganti?",
+    "options": ["Howard Eskin", "Angelo Cataldi", "Mike Missanelli", "Anthony Gargano"],
+    "answer": "Angelo Cataldi",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year was the Wells Fargo Center originally opened?",
+    "options": ["1992", "1994", "1996", "1998"],
+    "answer": "1996",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was the first to have AstroTurf?",
+    "options": ["Franklin Field", "Veterans Stadium", "The Spectrum", "JFK Stadium"],
+    "answer": "Franklin Field",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What did Eagles fans throw at Santa Claus in 1968?",
+    "options": ["Batteries", "Snowballs", "Beer cans", "Ice balls"],
+    "answer": "Snowballs",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia arena was demolished in 2011?",
+    "options": ["Veterans Stadium", "The Spectrum", "JFK Stadium", "Convention Hall"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the E-A-G-L-E-S chant typically followed by?",
+    "options": ["Go Birds!", "Eagles!", "Fly!", "Win!"],
+    "answer": "Eagles!",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Who was the first owner of the Philadelphia Eagles?",
+    "options": ["Bert Bell", "Jeffrey Lurie", "Leonard Tose", "Norman Braman"],
+    "answer": "Bert Bell",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What was the original name of the Wells Fargo Center?",
+    "options": ["First Union Center", "CoreStates Center", "Wachovia Center", "Spectrum II"],
+    "answer": "CoreStates Center",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team drafted Allen Iverson first overall in 1996?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the seating capacity of Lincoln Financial Field?",
+    "options": ["55,000", "62,000", "67,500", "72,000"],
+    "answer": "67,500",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia Union player was the first to be called up to the US National Team?",
+    "options": ["Sebastien Le Toux", "Danny Mwanga", "Zach Pfeffer", "Maurice Edu"],
+    "answer": "Danny Mwanga",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Flyers join the NHL?",
+    "options": ["1965", "1967", "1970", "1972"],
+    "answer": "1967",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium hosted the 1976 NHL All-Star Game?",
+    "options": ["The Palestra", "The Spectrum", "CoreStates Center", "Wells Fargo Center"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Phillie Phanatic's species?",
+    "options": ["Bird", "Unknown/undefined", "Bear", "Dinosaur"],
+    "answer": "Unknown/undefined",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Answer'?",
+    "options": ["Charles Barkley", "Allen Iverson", "Julius Erving", "Wilt Chamberlain"],
+    "answer": "Allen Iverson",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the 76ers move to Philadelphia from Syracuse?",
+    "options": ["1959", "1963", "1967", "1971"],
+    "answer": "1963",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue hosted Pope John Paul II in 1979?",
+    "options": ["Veterans Stadium", "JFK Stadium", "The Spectrum", "Franklin Field"],
+    "answer": "JFK Stadium",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the nickname of the 1974-75 Flyers?",
+    "options": ["Broad Street Bombers", "Broad Street Bullies", "Philly Fighters", "Orange Crush"],
+    "answer": "Broad Street Bullies",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia radio personality was known as 'The King'?",
+    "options": ["Angelo Cataldi", "Howard Eskin", "Mike Missanelli", "Tony Bruno"],
+    "answer": "Howard Eskin",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What minor league baseball team plays in Lehigh Valley as a Phillies affiliate?",
+    "options": ["Reading Fightin Phils", "Lehigh Valley IronPigs", "Lakewood BlueClaws", "Clearwater Threshers"],
+    "answer": "Lehigh Valley IronPigs",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia stadium was known for having a jail in its basement?",
+    "options": ["Franklin Field", "Veterans Stadium", "Lincoln Financial Field", "The Spectrum"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles last win an NFL Championship before the Super Bowl era?",
+    "options": ["1948", "1952", "1960", "1966"],
+    "answer": "1960",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team did Ed Snider own?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the 76ers' mascot?",
+    "options": ["Swoop", "Franklin", "Gritty", "Phanatic"],
+    "answer": "Franklin",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team won back-to-back championships in 1974 and 1975?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the seating capacity of The Spectrum?",
+    "options": ["14,500", "17,000", "19,500", "21,000"],
+    "answer": "17,000",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster called 'The Miracle at the Meadowlands'?",
+    "options": ["Harry Kalas", "Merrill Reese", "Bill Campbell", "By Saam"],
+    "answer": "Merrill Reese",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did JFK Stadium close?",
+    "options": ["1985", "1989", "1992", "1995"],
+    "answer": "1989",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's fans are known for 'Gritty chants'?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the Philadelphia Union's primary color?",
+    "options": ["Red", "Blue", "Navy Blue and Gold", "Green"],
+    "answer": "Navy Blue and Gold",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which stadium was demolished to make way for a housing development?",
+    "options": ["Veterans Stadium", "Shibe Park", "Baker Bowl", "JFK Stadium"],
+    "answer": "Shibe Park",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What was the first professional sports team in Philadelphia?",
+    "options": ["Athletics", "Phillies", "Eagles", "Warriors"],
+    "answer": "Athletics",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Dr. J'?",
+    "options": ["Charles Barkley", "Allen Iverson", "Julius Erving", "Moses Malone"],
+    "answer": "Julius Erving",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did Harry Kalas pass away?",
+    "options": ["2007", "2009", "2011", "2013"],
+    "answer": "2009",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team plays at the South Philadelphia Sports Complex?",
+    "options": ["Eagles only", "Phillies only", "Eagles, Phillies, Flyers, and 76ers", "Union"],
+    "answer": "Eagles, Phillies, Flyers, and 76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the name of Philadelphia's ABA team before they merged with the NBA?",
+    "options": ["Philadelphia Warriors", "Philadelphia 76ers", "Philadelphia Atoms", "Philadelphia Firebirds"],
+    "answer": "Philadelphia 76ers",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia arena hosted wrestling events and concerts before becoming a sports venue?",
+    "options": ["The Spectrum", "Convention Hall", "The Palestra", "Arena"],
+    "answer": "Convention Hall",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the capacity of Citizens Bank Park?",
+    "options": ["38,500", "42,500", "45,000", "48,000"],
+    "answer": "42,500",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team won the first Super Bowl in franchise history in 2018?",
+    "options": ["76ers", "Flyers", "Eagles", "Phillies"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Phillie Phanatic debut?",
+    "options": ["1974", "1978", "1980", "1983"],
+    "answer": "1978",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia sports figure was known as 'Concrete Charlie'?",
+    "options": ["Mike Schmidt", "Chuck Bednarik", "Bobby Clarke", "Steve Carlton"],
+    "answer": "Chuck Bednarik",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What river does the Philadelphia Union's stadium overlook?",
+    "options": ["Schuylkill River", "Delaware River", "Chester Creek", "Brandywine River"],
+    "answer": "Delaware River",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team had the 'Process' rebuild?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the Baker Bowl's original name?",
+    "options": ["Philadelphia Park", "National League Park", "Phillies Field", "Broad Street Grounds"],
+    "answer": "National League Park",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was famous for saying 'Hard to believe, Harry'?",
+    "options": ["Chris Wheeler", "Richie Ashburn", "Larry Andersen", "Scott Graham"],
+    "answer": "Richie Ashburn",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Gritty make his debut as the Flyers mascot?",
+    "options": ["2015", "2016", "2018", "2020"],
+    "answer": "2018",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team won 11 NFL Championships?",
+    "options": ["Eagles", "Steelers", "Giants", "Bears"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Phillies' Triple-A affiliate?",
+    "options": ["Reading Fightin Phils", "Lehigh Valley IronPigs", "Jersey Shore BlueClaws", "Clearwater Threshers"],
+    "answer": "Lehigh Valley IronPigs",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which famous Philadelphia athlete played for both the Eagles and Phillies?",
+    "options": ["Ron Jaworski", "Chuck Bednarik", "Deion Sanders", "Bo Jackson"],
+    "answer": "Deion Sanders",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year was The Spectrum opened?",
+    "options": ["1965", "1967", "1970", "1972"],
+    "answer": "1967",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team drafted Ben Simmons first overall?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the nickname for Veterans Stadium's artificial turf?",
+    "options": ["Green Monster", "Death Turf", "Carpet of Death", "Concrete Grass"],
+    "answer": "Carpet of Death",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia radio host was known for the 'Dirty 30'?",
+    "options": ["Howard Eskin", "Angelo Cataldi", "Mike Missanelli", "Anthony Gargano"],
+    "answer": "Angelo Cataldi",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Warriors move to San Francisco?",
+    "options": ["1958", "1962", "1965", "1968"],
+    "answer": "1962",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's fans threw batteries at J.D. Drew?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Eagles' official fight song?",
+    "options": ["Fly Eagles Fly", "Eagles Anthem", "Go Birds", "Philadelphia Eagles Fight Song"],
+    "answer": "Fly Eagles Fly",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was called 'The Birthplace of Rock and Roll Legends'?",
+    "options": ["The Spectrum", "JFK Stadium", "The Tower Theater", "Electric Factory"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Wilt Chamberlain score 100 points while playing for the Philadelphia Warriors?",
+    "options": ["1960", "1962", "1964", "1966"],
+    "answer": "1962",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team's ownership group includes Will Smith and Jay-Z?",
+    "options": ["Eagles", "Phillies", "76ers", "Union"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the original name of Lincoln Financial Field before naming rights?",
+    "options": ["Eagles Stadium", "Philadelphia Stadium", "It was always Lincoln Financial Field", "Veterans Stadium II"],
+    "answer": "It was always Lincoln Financial Field",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team's minor league affiliate plays in Reading?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the section in Citizens Bank Park known for rowdy fans?",
+    "options": ["The 700 Level", "The Bleachers", "Left Field", "Right Field"],
+    "answer": "The 700 Level",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia stadium hosted both the Democratic and Republican National Conventions?",
+    "options": ["Veterans Stadium", "JFK Stadium", "Convention Hall", "The Spectrum"],
+    "answer": "Convention Hall",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Flyers last win the Stanley Cup?",
+    "options": ["1974", "1975", "1987", "1997"],
+    "answer": "1975",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was the first overall pick in 1997 and went to the Lakers?",
+    "options": ["Allen Iverson", "Kobe Bryant", "Tim Duncan", "The 76ers didn't have the first pick"],
+    "answer": "The 76ers didn't have the first pick",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Philadelphia Union's official snake mascot called?",
+    "options": ["Phang", "Slither", "The Union don't have a snake mascot", "Striker"],
+    "answer": "Phang",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was the play-by-play voice for NFL Films?",
+    "options": ["Merrill Reese", "Harry Kalas", "John Facenda", "By Saam"],
+    "answer": "John Facenda",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Athletics move to Kansas City?",
+    "options": ["1952", "1954", "1955", "1958"],
+    "answer": "1954",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team plays in the oldest NFL division?",
+    "options": ["Eagles", "Steelers", "Giants", "Cowboys"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the street address of Citizens Bank Park?",
+    "options": ["1 Citizens Bank Way", "One Citizens Bank Park", "One Citizens Bank Way", "3501 S Broad Street"],
+    "answer": "One Citizens Bank Way",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Big Dipper'?",
+    "options": ["Charles Barkley", "Moses Malone", "Wilt Chamberlain", "Julius Erving"],
+    "answer": "Wilt Chamberlain",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Eagles play in their first Super Bowl?",
+    "options": ["1976", "1981", "2002", "2005"],
+    "answer": "1981",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team won the first ever MLS Supporters' Shield?",
+    "options": ["Philadelphia Union", "Tampa Bay Mutiny", "DC United", "The Union never won it"],
+    "answer": "The Union never won it",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What was the Eagles' record during the 2017 Super Bowl-winning season?",
+    "options": ["11-5", "12-4", "13-3", "14-2"],
+    "answer": "13-3",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'By'?",
+    "options": ["Harry Kalas", "Richie Ashburn", "By Saam", "Bill Campbell"],
+    "answer": "By Saam",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the 76ers' G League affiliate?",
+    "options": ["Delaware Blue Coats", "Philadelphia Blue", "Sixers G", "Jersey 76ers"],
+    "answer": "Delaware Blue Coats",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was the first multipurpose stadium in the NFL?",
+    "options": ["Franklin Field", "Veterans Stadium", "JFK Stadium", "Shibe Park"],
+    "answer": "Franklin Field",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Soul win the Arena Football League championship?",
+    "options": ["2006", "2008", "2010", "2012"],
+    "answer": "2008",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete threw up on the court during a 1997 Finals game?",
+    "options": ["Allen Iverson", "Michael Jordan", "Charles Barkley", "Scottie Pippen"],
+    "answer": "Michael Jordan",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Philadelphia Union's official mascot?",
+    "options": ["Phang", "Philly", "Chester", "Union Jack"],
+    "answer": "Phang",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia sports venue was known as 'America's Showplace'?",
+    "options": ["The Spectrum", "Convention Hall", "The Palestra", "Academy of Music"],
+    "answer": "Convention Hall",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Phillies lose 10,000 games, the first team to do so?",
+    "options": ["2003", "2007", "2012", "2015"],
+    "answer": "2007",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia arena hosted the 1996 Republican National Convention?",
+    "options": ["The Spectrum", "CoreStates Center", "Convention Hall", "Wells Fargo Center"],
+    "answer": "CoreStates Center",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Philadelphia Union's motto?",
+    "options": ["Strength, Unity, Honor", "Jungite Aut Perite", "For the City", "Union Strong"],
+    "answer": "Jungite Aut Perite",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team did Comcast own from 1996 to 2001?",
+    "options": ["Eagles", "Flyers", "Phillies", "76ers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the name of Philadelphia's WNBA team?",
+    "options": ["Philadelphia Rage", "Philadelphia Liberty", "Philadelphia Storm", "Philadelphia Fury"],
+    "answer": "Philadelphia Rage",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the first paid admission sporting event?",
+    "options": ["The Palestra", "Baker Bowl", "Shibe Park", "Recreation Park"],
+    "answer": "Recreation Park",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Fury play in the NASL?",
+    "options": ["1976-1978", "1978-1980", "1980-1982", "1982-1984"],
+    "answer": "1978-1980",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team had a mascot named 'Hip Hop'?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What was the first Philadelphia team to win a championship in the 21st century?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia radio personality was known as 'The Governor'?",
+    "options": ["Angelo Cataldi", "Howard Eskin", "Ed Rendell", "Mike Missanelli"],
+    "answer": "Ed Rendell",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Eagles draft Donovan McNabb?",
+    "options": ["1997", "1999", "2001", "2003"],
+    "answer": "1999",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia stadium was known as 'The House That Shibe Built'?",
+    "options": ["Baker Bowl", "Shibe Park", "Veterans Stadium", "Franklin Field"],
+    "answer": "Shibe Park",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Philadelphia Wings lacrosse team?",
+    "options": ["Philadelphia Wings", "Philadelphia Barrage", "Philadelphia Flyers Lacrosse", "They no longer exist"],
+    "answer": "Philadelphia Wings",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team won the first-ever Super Bowl to be played in Philadelphia?",
+    "options": ["No Super Bowl has been played in Philadelphia", "Eagles", "Steelers", "Raiders"],
+    "answer": "No Super Bowl has been played in Philadelphia",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Citizens Bank Park host the MLB All-Star Game?",
+    "options": ["2006", "2008", "2010", "2012"],
+    "answer": "2012",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Round Mound of Rebound'?",
+    "options": ["Wilt Chamberlain", "Moses Malone", "Charles Barkley", "Julius Erving"],
+    "answer": "Charles Barkley",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the Flyers' original mascot before Gritty?",
+    "options": ["Slapshot", "They didn't have one", "Puck", "Fred"],
+    "answer": "They didn't have one",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue was known as 'The Cathedral of Basketball'?",
+    "options": ["The Spectrum", "Convention Hall", "The Palestra", "Wells Fargo Center"],
+    "answer": "The Palestra",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Blazers play in the WHA?",
+    "options": ["1970-1971", "1972-1973", "1974-1975", "1976-1977"],
+    "answer": "1972-1973",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's fans are known for the 'Trust the Process' chant?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the capacity of the Wells Fargo Center?",
+    "options": ["18,000", "19,500", "20,300", "21,600"],
+    "answer": "20,300",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster called games for over 50 years?",
+    "options": ["Harry Kalas", "Merrill Reese", "By Saam", "Richie Ashburn"],
+    "answer": "By Saam",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Atoms win the NASL championship?",
+    "options": ["1971", "1973", "1975", "1977"],
+    "answer": "1973",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team drafted Carson Wentz second overall?",
+    "options": ["76ers", "Phillies", "Eagles", "Flyers"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the South Philadelphia sports complex area?",
+    "options": ["Stadium District", "Sports Complex", "Pattison Avenue Complex", "South Philly Sports Village"],
+    "answer": "Sports Complex",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Human Highlight Film'?",
+    "options": ["Allen Iverson", "Julius Erving", "Dominique Wilkins", "Charles Barkley"],
+    "answer": "Dominique Wilkins",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What was the name of Philadelphia's original NFL team before the Eagles?",
+    "options": ["Philadelphia Quakers", "Frankford Yellow Jackets", "Philadelphia Athletics", "Philadelphia Stars"],
+    "answer": "Frankford Yellow Jackets",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia stadium hosted the 1980 World Series?",
+    "options": ["Shibe Park", "Veterans Stadium", "Citizens Bank Park", "Franklin Field"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles move from Franklin Field to Veterans Stadium?",
+    "options": ["1969", "1971", "1973", "1975"],
+    "answer": "1971",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team was owned by Pat Croce?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the Philadelphia Union's home jersey color?",
+    "options": ["White", "Navy Blue", "Gold", "Light Blue"],
+    "answer": "Navy Blue",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the first indoor football game?",
+    "options": ["The Spectrum", "Convention Hall", "Franklin Field", "The Palestra"],
+    "answer": "Convention Hall",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Soul win their second Arena Bowl?",
+    "options": ["2010", "2012", "2015", "2017"],
+    "answer": "2017",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for 'Oh, brother!'?",
+    "options": ["Harry Kalas", "Merrill Reese", "Chris Wheeler", "Tom McCarthy"],
+    "answer": "Chris Wheeler",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Eagles' stadium train station?",
+    "options": ["Sports Complex", "AT&T Station", "NRG Station", "Pattison Avenue"],
+    "answer": "AT&T Station",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team has the longest championship drought?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year was the first night game played at Shibe Park?",
+    "options": ["1935", "1939", "1941", "1945"],
+    "answer": "1939",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Chairman of the Boards'?",
+    "options": ["Wilt Chamberlain", "Moses Malone", "Charles Barkley", "Julius Erving"],
+    "answer": "Moses Malone",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the Eagles' home field before Franklin Field?",
+    "options": ["Shibe Park", "Baker Bowl", "Municipal Stadium", "All of these at various times"],
+    "answer": "All of these at various times",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia radio station has the slogan 'Sports Radio'?",
+    "options": ["WIP 94.1", "97.5 The Fanatic", "Both", "Neither"],
+    "answer": "WIP 94.1",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Stars win the USFL championship?",
+    "options": ["1983", "1984", "1985", "Both 1984 and 1985"],
+    "answer": "Both 1984 and 1985",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's fans are known for climbing greased poles?",
+    "options": ["Eagles", "Phillies", "Flyers", "All Philadelphia fans"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Phillies' Double-A affiliate?",
+    "options": ["Lehigh Valley IronPigs", "Reading Fightin Phils", "Jersey Shore BlueClaws", "Clearwater Threshers"],
+    "answer": "Reading Fightin Phils",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was demolished to build a parking lot?",
+    "options": ["Baker Bowl", "Shibe Park", "JFK Stadium", "Convention Hall"],
+    "answer": "JFK Stadium",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did Jeffrey Lurie buy the Eagles?",
+    "options": ["1990", "1992", "1994", "1996"],
+    "answer": "1994",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Lefty'?",
+    "options": ["Steve Carlton", "Cole Hamels", "Cliff Lee", "Jamie Moyer"],
+    "answer": "Steve Carlton",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the capacity of JFK Stadium?",
+    "options": ["75,000", "85,000", "100,000", "105,000"],
+    "answer": "100,000",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team won the 1983 NBA Championship?",
+    "options": ["Lakers", "Celtics", "76ers", "Bucks"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the Philadelphia Union's supporters' section called?",
+    "options": ["The River End", "Sons of Ben Section", "The Blue Zone", "Chester End"],
+    "answer": "The River End",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was a former Phillies player?",
+    "options": ["Harry Kalas", "Richie Ashburn", "By Saam", "Bill Campbell"],
+    "answer": "Richie Ashburn",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles win their first NFL Championship?",
+    "options": ["1940", "1948", "1952", "1955"],
+    "answer": "1948",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was the first to have lights for night games?",
+    "options": ["Baker Bowl", "Shibe Park", "Franklin Field", "Veterans Stadium"],
+    "answer": "Shibe Park",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Philadelphia Wings' home arena?",
+    "options": ["Wells Fargo Center", "The Pavilion", "PPL Center", "Liacouras Center"],
+    "answer": "Wells Fargo Center",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team did Connie Mack manage for 50 years?",
+    "options": ["Phillies", "Athletics", "Eagles", "Stars"],
+    "answer": "Athletics",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Veterans Stadium host its last Eagles game?",
+    "options": ["2001", "2002", "2003", "2004"],
+    "answer": "2003",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete scored 100 points in a single NBA game?",
+    "options": ["Allen Iverson", "Wilt Chamberlain", "Julius Erving", "Charles Barkley"],
+    "answer": "Wilt Chamberlain",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the Eagles' record in their 1980 Super Bowl loss?",
+    "options": ["10-6", "11-5", "12-4", "13-3"],
+    "answer": "12-4",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the 2000 Republican National Convention?",
+    "options": ["The Spectrum", "First Union Center", "Convention Hall", "Wells Fargo Center"],
+    "answer": "First Union Center",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the Philadelphia Union's Latin motto translated to English?",
+    "options": ["Strength Through Unity", "Join or Die", "United We Stand", "Victory Together"],
+    "answer": "Join or Die",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia broadcaster called the 2008 World Series clinching moment?",
+    "options": ["Harry Kalas", "Tom McCarthy", "Chris Wheeler", "Scott Franzke"],
+    "answer": "Harry Kalas",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Phillies play their first game at Citizens Bank Park?",
+    "options": ["2003", "2004", "2005", "2006"],
+    "answer": "2004",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team was known as the 'Dream Team'?",
+    "options": ["1983 76ers", "2004 Eagles", "1980 Phillies", "1974 Flyers"],
+    "answer": "2004 Eagles",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the original name of Veterans Stadium?",
+    "options": ["Philadelphia Stadium", "Veterans Memorial Stadium", "It was always Veterans Stadium", "Municipal Stadium"],
+    "answer": "It was always Veterans Stadium",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was the MVP of Super Bowl LII?",
+    "options": ["Nick Foles", "Carson Wentz", "Zach Ertz", "Fletcher Cox"],
+    "answer": "Nick Foles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Philadelphia Flyers' AHL affiliate?",
+    "options": ["Lehigh Valley Phantoms", "Philadelphia Phantoms", "Adirondack Phantoms", "Syracuse Crunch"],
+    "answer": "Lehigh Valley Phantoms",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue was known as 'The Grand Dame of Broad Street'?",
+    "options": ["Academy of Music", "The Met", "Convention Hall", "The Spectrum"],
+    "answer": "The Met",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Big 5 basketball conference form?",
+    "options": ["1955", "1961", "1965", "1970"],
+    "answer": "1955",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team had the 'Fo', Fo', Fo'' playoff run?",
+    "options": ["Flyers", "76ers", "Eagles", "Phillies"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Eagles' cheerleading squad?",
+    "options": ["Eagle-ettes", "Philadelphia Eagles Cheerleaders", "Fly Girls", "Eagles Dancers"],
+    "answer": "Philadelphia Eagles Cheerleaders",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'The Pope'?",
+    "options": ["John Facenda", "Merrill Reese", "Harry Kalas", "Bill Campbell"],
+    "answer": "John Facenda",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Flyers play the Soviet Red Army team?",
+    "options": ["1974", "1976", "1978", "1980"],
+    "answer": "1976",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's home opener features the singing of 'God Bless America'?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the name of Philadelphia's XFL team?",
+    "options": ["Philadelphia Enforcers", "Philadelphia Destroyers", "Philadelphia Defenders", "Philadelphia never had an XFL team"],
+    "answer": "Philadelphia never had an XFL team",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia stadium was built on the site of a former brewery?",
+    "options": ["Veterans Stadium", "Citizens Bank Park", "Lincoln Financial Field", "None of these"],
+    "answer": "None of these",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Philadelphia 76ers' official team color?",
+    "options": ["Blue", "Red", "Blue, Red, and White", "Navy"],
+    "answer": "Blue, Red, and White",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team won the 1967 NBA Championship?",
+    "options": ["Warriors", "76ers", "Celtics", "Lakers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did By Saam retire from broadcasting?",
+    "options": ["1972", "1975", "1979", "1982"],
+    "answer": "1975",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue was the home of the Philadelphia Ramblers hockey team?",
+    "options": ["The Spectrum", "Convention Hall", "Arena", "The Palestra"],
+    "answer": "Arena",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Philadelphia Union's main sponsor as of 2020?",
+    "options": ["Bimbo Bakeries", "Subaru", "Independence Blue Cross", "Talen Energy"],
+    "answer": "Bimbo Bakeries",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Minister of Defense'?",
+    "options": ["Reggie White", "Brian Dawkins", "Seth Joyner", "Clyde Simmons"],
+    "answer": "Reggie White",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles draft Jalen Hurts?",
+    "options": ["2018", "2019", "2020", "2021"],
+    "answer": "2020",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia stadium was used as a set in the movie 'Rocky'?",
+    "options": ["Veterans Stadium", "The Spectrum", "JFK Stadium", "Franklin Field"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Phillies' mascot performer (the original)?",
+    "options": ["Tom Burgoyne", "Dave Raymond", "Tucker Burgoyne", "Matt Nern"],
+    "answer": "Dave Raymond",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team plays in the NFC East?",
+    "options": ["76ers", "Phillies", "Eagles", "Flyers"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did Citizens Bank Park host the NHL Winter Classic?",
+    "options": ["2010", "2012", "2018", "Citizens Bank Park never hosted it"],
+    "answer": "Citizens Bank Park never hosted it",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for 'Long drive...deep left field...'?",
+    "options": ["Harry Kalas", "Richie Ashburn", "By Saam", "Scott Franzke"],
+    "answer": "Harry Kalas",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the capacity of Subaru Park?",
+    "options": ["15,000", "18,500", "21,000", "25,000"],
+    "answer": "18,500",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team won back-to-back World Series in 1910-1911?",
+    "options": ["Phillies", "Athletics", "Neither team won back-to-back", "Both teams"],
+    "answer": "Athletics",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What was the nickname of the 1980 Phillies team?",
+    "options": ["Wheeze Kids", "Dream Team", "The Cardiac Kids", "The Machine"],
+    "answer": "The Cardiac Kids",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the first televised professional basketball game?",
+    "options": ["Convention Hall", "The Palestra", "The Spectrum", "Arena"],
+    "answer": "Convention Hall",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did Sam Hinkie become GM of the 76ers?",
+    "options": ["2011", "2013", "2015", "2017"],
+    "answer": "2013",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team's anthem is 'Here Come the Sixers'?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the main entrance to Lincoln Financial Field?",
+    "options": ["Eagles Gate", "Headhouse Plaza", "Lincoln Entrance", "South Gate"],
+    "answer": "Headhouse Plaza",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster worked for both WIP and The Fanatic?",
+    "options": ["Howard Eskin", "Mike Missanelli", "Angelo Cataldi", "Anthony Gargano"],
+    "answer": "Mike Missanelli",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Phillies retire Mike Schmidt's number?",
+    "options": ["1988", "1990", "1995", "2000"],
+    "answer": "1990",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team drafted Bryce Harper?",
+    "options": ["Eagles", "Phillies", "Flyers", "Harper was signed as a free agent"],
+    "answer": "Harper was signed as a free agent",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the name of the Flyers' original arena?",
+    "options": ["Convention Hall", "The Spectrum", "Arena", "The Palestra"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was used for boxing matches featuring Joe Frazier?",
+    "options": ["The Spectrum", "Convention Hall", "Arena", "All of these"],
+    "answer": "All of these",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Union win the Supporters' Shield?",
+    "options": ["2019", "2020", "2021", "They haven't won it"],
+    "answer": "2020",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Weapon X'?",
+    "options": ["Reggie White", "Brian Dawkins", "Seth Joyner", "Troy Vincent"],
+    "answer": "Brian Dawkins",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the tunnel the Eagles run through at Lincoln Financial Field?",
+    "options": ["Eagle Tunnel", "The Tunnel", "Player Tunnel", "There is no official name"],
+    "answer": "There is no official name",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was inducted into the Pro Football Hall of Fame?",
+    "options": ["Merrill Reese", "John Facenda", "Harry Kalas", "None of these"],
+    "answer": "John Facenda",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Phillies debut their famous powder blue road uniforms?",
+    "options": ["1970", "1972", "1975", "1979"],
+    "answer": "1972",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team won the first MLS tournament match?",
+    "options": ["Philadelphia Union", "They haven't won an MLS tournament", "Philadelphia KiXX", "Philadelphia Atoms"],
+    "answer": "Philadelphia Union",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Eagles' pre-game show on WIP?",
+    "options": ["Eagles Pre-Game Live", "Countdown to Kickoff", "Eagles Gameday", "The Green Room"],
+    "answer": "Eagles Gameday",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue hosted concerts by The Beatles in 1964?",
+    "options": ["The Spectrum", "Convention Hall", "JFK Stadium", "The Palestra"],
+    "answer": "Convention Hall",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did Lincoln Financial Field first host the Army-Navy game?",
+    "options": ["2003", "2005", "2008", "2010"],
+    "answer": "2003",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team did the Comcast Spectacor own?",
+    "options": ["Eagles", "Phillies", "76ers and Flyers", "Union"],
+    "answer": "76ers and Flyers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Phillies' High-A affiliate?",
+    "options": ["Jersey Shore BlueClaws", "Reading Fightin Phils", "Lehigh Valley IronPigs", "Clearwater Threshers"],
+    "answer": "Jersey Shore BlueClaws",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was the first to have a retractable roof in planning (never built)?",
+    "options": ["Veterans Stadium", "Citizens Bank Park", "Lincoln Financial Field", "None of these"],
+    "answer": "Citizens Bank Park",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Phantoms win the Calder Cup?",
+    "options": ["1995", "1998", "2005", "They never won it"],
+    "answer": "2005",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was the 2001 NBA MVP?",
+    "options": ["Charles Barkley", "Allen Iverson", "Dikembe Mutombo", "Aaron McKie"],
+    "answer": "Allen Iverson",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Flyers' ice hockey training facility?",
+    "options": ["Skate Zone", "Flyers Training Center", "Virtua Center Flyers Skate Zone", "Flyers Ice Center"],
+    "answer": "Virtua Center Flyers Skate Zone",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for 'White Hot!'?",
+    "options": ["Harry Kalas", "Merrill Reese", "Gary Matthews", "Tom McCarthy"],
+    "answer": "Gary Matthews",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Eagles retire Reggie White's number?",
+    "options": ["2002", "2005", "2009", "2012"],
+    "answer": "2005",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue was the first sports facility to have luxury suites?",
+    "options": ["Veterans Stadium", "The Spectrum", "Shibe Park", "Convention Hall"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the official name of the statue outside Lincoln Financial Field?",
+    "options": ["Eagles Statue", "Swoop Statue", "The Eagles Bronze", "The Eagle"],
+    "answer": "The Eagle",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team won the 2022 NL Pennant?",
+    "options": ["Phillies", "Eagles", "76ers", "Flyers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the name of the Philadelphia Atoms' home stadium?",
+    "options": ["Veterans Stadium", "Franklin Field", "JFK Stadium", "Temple Stadium"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'The Voice of God'?",
+    "options": ["Harry Kalas", "John Facenda", "Merrill Reese", "By Saam"],
+    "answer": "John Facenda",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the 76ers move from Convention Hall to The Spectrum?",
+    "options": ["1965", "1967", "1969", "1971"],
+    "answer": "1967",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's fans are known for tailgating in FDR Park?",
+    "options": ["Eagles", "Phillies", "Flyers", "All of these"],
+    "answer": "All of these",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the section in Citizens Bank Park called Ashburn Alley?",
+    "options": ["Left field concourse", "Right field concourse", "Center field area", "Behind home plate"],
+    "answer": "Center field area",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Schmidt'?",
+    "options": ["Mike Schmidt", "There was only one Schmidt", "Eric Schmidt", "Jason Schmidt"],
+    "answer": "Mike Schmidt",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles lose Super Bowl LVII to the Chiefs?",
+    "options": ["2021", "2022", "2023", "2024"],
+    "answer": "2023",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was known as 'The Arena'?",
+    "options": ["The Spectrum", "Convention Hall", "Philadelphia Arena", "The Palestra"],
+    "answer": "Philadelphia Arena",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Eagles' official app?",
+    "options": ["Eagles App", "Philadelphia Eagles Official App", "Eagles Mobile", "Go Birds App"],
+    "answer": "Philadelphia Eagles Official App",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team drafted Joel Embiid third overall?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did Veterans Stadium host the Army-Navy game for the first time?",
+    "options": ["1971", "1972", "1975", "1980"],
+    "answer": "1980",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster called the Eagles' first Super Bowl win?",
+    "options": ["Merrill Reese", "Mike Quick", "Al Michaels", "Joe Buck"],
+    "answer": "Merrill Reese",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the 76ers' practice facility?",
+    "options": ["76ers Training Complex", "Philadelphia 76ers Practice Facility", "76ers Fieldhouse", "Overbrook"],
+    "answer": "76ers Fieldhouse",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team had a 26-game home winning streak in 2022-23?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What was the original cost of Veterans Stadium?",
+    "options": ["$25 million", "$50 million", "$65 million", "$100 million"],
+    "answer": "$50 million",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'Sarge'?",
+    "options": ["Harry Kalas", "Richie Ashburn", "Gary Matthews", "Larry Andersen"],
+    "answer": "Gary Matthews",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Philadelphia Union reach the MLS Cup Final?",
+    "options": ["2020", "2021", "2022", "They haven't reached the final"],
+    "answer": "2022",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was known for its 700 Level?",
+    "options": ["Lincoln Financial Field", "Veterans Stadium", "The Spectrum", "Citizens Bank Park"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the Eagles' official podcast called?",
+    "options": ["Fly Eagles Fly Podcast", "Eagles Insider Podcast", "Inside the Eagles", "Birds Talk"],
+    "answer": "Eagles Insider Podcast",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Mailman'?",
+    "options": ["Karl Malone", "Brian Dawkins", "Lenny Dykstra", "Moses Malone"],
+    "answer": "Karl Malone",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Phillies win the NL East for the first time?",
+    "options": ["1976", "1977", "1978", "1980"],
+    "answer": "1976",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the 1959 NFL Championship Game?",
+    "options": ["Franklin Field", "Shibe Park", "Veterans Stadium", "Municipal Stadium"],
+    "answer": "Franklin Field",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the mascot race at Citizens Bank Park?",
+    "options": ["Phanatic Race", "Philly Phorever Race", "Phighting Phils Race", "The Phanatic 500"],
+    "answer": "Phighting Phils Race",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team drafted Eric Lindros?",
+    "options": ["Nordiques", "Flyers", "Rangers", "Lindros was traded to the Flyers"],
+    "answer": "Lindros was traded to the Flyers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did WIP switch from AM to FM?",
+    "options": ["2010", "2012", "2014", "2016"],
+    "answer": "2014",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster is known for radio play-by-play of Phillies games?",
+    "options": ["Tom McCarthy", "Scott Franzke", "Larry Andersen", "Both Scott Franzke and Larry Andersen"],
+    "answer": "Both Scott Franzke and Larry Andersen",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Philadelphia Union's academy?",
+    "options": ["Union Academy", "YSC Academy", "Philadelphia Union Youth Academy", "Delaware Valley Soccer Academy"],
+    "answer": "YSC Academy",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team won the 1929 and 1930 World Series?",
+    "options": ["Phillies", "Athletics", "They split one each", "Neither team won"],
+    "answer": "Athletics",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the 76ers retire Julius Erving's number?",
+    "options": ["1986", "1988", "1992", "1995"],
+    "answer": "1988",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia venue was home to the Philadelphia Firebirds hockey team?",
+    "options": ["The Spectrum", "Convention Hall", "Arena", "Civic Center"],
+    "answer": "Civic Center",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Eagles' official team store called?",
+    "options": ["Eagles Pro Shop", "Eagles Team Store", "Eagles Nest", "Lincoln Financial Field Store"],
+    "answer": "Eagles Pro Shop",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Natural'?",
+    "options": ["Richie Ashburn", "Chase Utley", "John Kruk", "They all had different nicknames"],
+    "answer": "They all had different nicknames",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Phillies sign Bryce Harper?",
+    "options": ["2017", "2018", "2019", "2020"],
+    "answer": "2019",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia stadium featured the Liberty Bell in center field?",
+    "options": ["Veterans Stadium", "Citizens Bank Park", "Shibe Park", "Baker Bowl"],
+    "answer": "Citizens Bank Park",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the section in Lincoln Financial Field called The Linc?",
+    "options": ["Upper deck", "The whole stadium", "Club level", "Lower bowl"],
+    "answer": "The whole stadium",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for 'Swing and a miss!'?",
+    "options": ["Harry Kalas", "By Saam", "Richie Ashburn", "All broadcasters use this"],
+    "answer": "All broadcasters use this",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Eagles beat the Patriots in Super Bowl LII?",
+    "options": ["2017", "2018", "2019", "2020"],
+    "answer": "2018",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team's color is called 'Midnight Green'?",
+    "options": ["Phillies", "76ers", "Eagles", "Flyers"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the statue of Billy Penn atop City Hall?",
+    "options": ["Billy Penn", "William Penn", "The Founder", "Penn Statue"],
+    "answer": "William Penn",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was known for hosting the Big 5 city series games?",
+    "options": ["The Spectrum", "Convention Hall", "The Palestra", "Wells Fargo Center"],
+    "answer": "The Palestra",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the curse of Billy Penn end?",
+    "options": ["2004", "2006", "2008", "2010"],
+    "answer": "2008",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team drafted Mike Schmidt?",
+    "options": ["Phillies", "Eagles", "Athletics", "Phillies drafted him in 1971"],
+    "answer": "Phillies drafted him in 1971",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the official seating capacity of Wells Fargo Center for basketball?",
+    "options": ["18,500", "19,500", "20,318", "21,000"],
+    "answer": "20,318",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster called 'The Fog Bowl'?",
+    "options": ["Merrill Reese", "Harry Kalas", "John Madden", "Pat Summerall"],
+    "answer": "Merrill Reese",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Eagles win three consecutive NFL Championships?",
+    "options": ["1947-1949", "1948-1950", "1949-1951", "They never won three consecutive"],
+    "answer": "They never won three consecutive",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team's fans threw wristbands for causes?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the Phillies' Single-A affiliate?",
+    "options": ["Clearwater Threshers", "Jersey Shore BlueClaws", "Reading Fightin Phils", "Lakewood BlueClaws"],
+    "answer": "Clearwater Threshers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue was demolished and replaced by apartments?",
+    "options": ["The Spectrum", "Convention Hall", "JFK Stadium", "Arena"],
+    "answer": "The Spectrum",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia KiXX indoor soccer team form?",
+    "options": ["1995", "1998", "2001", "2004"],
+    "answer": "2001",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Wild Thing'?",
+    "options": ["John Kruk", "Lenny Dykstra", "Mitch Williams", "Darren Daulton"],
+    "answer": "Mitch Williams",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the bridge near the Sports Complex?",
+    "options": ["South Street Bridge", "Walt Whitman Bridge", "Platt Bridge", "Penrose Avenue Bridge"],
+    "answer": "Platt Bridge",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for his bow tie?",
+    "options": ["Harry Kalas", "Howard Eskin", "Angelo Cataldi", "Mike Missanelli"],
+    "answer": "Howard Eskin",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Flyers retire Bobby Clarke's number?",
+    "options": ["1982", "1984", "1986", "1988"],
+    "answer": "1984",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team plays at the NovaCare Complex?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the highway that runs past the Sports Complex?",
+    "options": ["I-95", "I-76", "I-676", "Route 1"],
+    "answer": "I-95",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the 1976 Democratic National Convention?",
+    "options": ["The Spectrum", "Convention Hall", "Madison Square Garden", "It was not held in Philadelphia"],
+    "answer": "Madison Square Garden",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did Harry Kalas join the Phillies broadcast team?",
+    "options": ["1969", "1971", "1973", "1975"],
+    "answer": "1971",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team did Harold Katz own?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the statue of Rocky outside the Philadelphia Museum of Art?",
+    "options": ["Rocky Statue", "Rocky Balboa", "The Italian Stallion", "Rocky"],
+    "answer": "Rocky",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia stadium was known as 'The House of Horrors'?",
+    "options": ["Veterans Stadium", "The Spectrum", "Franklin Field", "Lincoln Financial Field"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Phillies host their first playoff game at Citizens Bank Park?",
+    "options": ["2005", "2007", "2008", "2009"],
+    "answer": "2007",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for 'He's looking... he's leaning...'?",
+    "options": ["Merrill Reese", "Harry Kalas", "Tom McCarthy", "Scott Graham"],
+    "answer": "Tom McCarthy",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Eagles' fight song composer?",
+    "options": ["Steve Van Buren", "Bert Bell", "Tommy McDonald", "Unknown"],
+    "answer": "Unknown",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team won the 1960 NFL Championship in a famous game?",
+    "options": ["Steelers", "Giants", "Eagles", "Browns"],
+    "answer": "Eagles",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What was the last Philadelphia team to win a championship before the 2008 Phillies?",
+    "options": ["1974 Flyers", "1975 Flyers", "1980 Phillies", "1983 76ers"],
+    "answer": "1983 76ers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was known for its ice shows?",
+    "options": ["The Spectrum", "Convention Hall", "Arena", "The Palestra"],
+    "answer": "Arena",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Rage WNBA team fold?",
+    "options": ["1998", "2000", "2002", "2004"],
+    "answer": "2000",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Nails'?",
+    "options": ["John Kruk", "Lenny Dykstra", "Pete Rose", "Mitch Williams"],
+    "answer": "Lenny Dykstra",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the SEPTA subway stop at the Sports Complex?",
+    "options": ["Sports Complex", "AT&T Station", "NRG Station", "Pattison"],
+    "answer": "NRG Station",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for calling out 'High Hopes'?",
+    "options": ["Harry Kalas", "Richie Ashburn", "By Saam", "All Phillies broadcasters"],
+    "answer": "Harry Kalas",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles trade for A.J. Brown?",
+    "options": ["2020", "2021", "2022", "2023"],
+    "answer": "2022",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team had a mascot named 'Big Shot'?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "76ers",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the Flyers' goal song?",
+    "options": ["Doop", "Chelsea Dagger", "Kernkraft 400", "Rock and Roll Part 2"],
+    "answer": "Doop",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue was the first to have a Jumbotron?",
+    "options": ["Veterans Stadium", "The Spectrum", "Franklin Field", "JFK Stadium"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the 76ers draft Markelle Fultz first overall?",
+    "options": ["2015", "2016", "2017", "2018"],
+    "answer": "2017",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'The Man'?",
+    "options": ["Chase Utley", "Ryan Howard", "Jimmy Rollins", "Utley was called 'The Man' by fans"],
+    "answer": "Utley was called 'The Man' by fans",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the Eagles' record for most wins in a regular season?",
+    "options": ["13", "14", "15", "16"],
+    "answer": "14",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was the Eagles' color commentator with Merrill Reese?",
+    "options": ["Stan Walters", "Mike Quick", "Bobby Taylor", "All of these at different times"],
+    "answer": "All of these at different times",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Philadelphia Soul arena football team form?",
+    "options": ["2002", "2004", "2006", "2008"],
+    "answer": "2004",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue hosted WWE WrestleMania XV?",
+    "options": ["The Spectrum", "First Union Center", "Wells Fargo Center", "Veterans Stadium"],
+    "answer": "First Union Center",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Phillies' all-time wins leader?",
+    "options": ["Steve Carlton", "Robin Roberts", "Grover Cleveland Alexander", "Cole Hamels"],
+    "answer": "Steve Carlton",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team plays in the Metropolitan Division?",
+    "options": ["Eagles", "Phillies", "76ers", "Flyers"],
+    "answer": "Flyers",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Eagles fire Chip Kelly?",
+    "options": ["2013", "2014", "2015", "2016"],
+    "answer": "2015",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium hosted the FIFA Women's World Cup in 2003?",
+    "options": ["Veterans Stadium", "Lincoln Financial Field", "Franklin Field", "It wasn't held in Philadelphia"],
+    "answer": "It wasn't held in Philadelphia",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the name of the documentary about the 1983 76ers?",
+    "options": ["Fo' Fo' Fo'", "The Process", "Trust the Process", "Doctor's Orders"],
+    "answer": "Fo' Fo' Fo'",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster joined the Phillies in 2002?",
+    "options": ["Scott Franzke", "Tom McCarthy", "Larry Andersen", "Gary Matthews"],
+    "answer": "Scott Franzke",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did Subaru Park open?",
+    "options": ["2008", "2010", "2012", "2014"],
+    "answer": "2010",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia team's fans are known for 'Fly, Eagles, Fly' at Phillies games?",
+    "options": ["It doesn't happen", "Eagles fans at Phillies games", "All Philadelphia fans sing it", "It's a tradition in Philadelphia"],
+    "answer": "It's a tradition in Philadelphia",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Flyers' alumni organization?",
+    "options": ["Flyers Alumni", "Broad Street Bullies Club", "Orange and Black Alumni", "Flyers Forever"],
+    "answer": "Flyers Alumni",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the 2014 NHL Draft?",
+    "options": ["Citizens Bank Park", "Lincoln Financial Field", "Wells Fargo Center", "It wasn't held in Philadelphia"],
+    "answer": "Wells Fargo Center",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Phillies retire Roy Halladay's number?",
+    "options": ["2014", "2017", "2020", "They haven't retired it"],
+    "answer": "They haven't retired it",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete was known as 'Dutch'?",
+    "options": ["Darren Daulton", "Mike Schmidt", "John Kruk", "Pete Rose"],
+    "answer": "Darren Daulton",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the Eagles' all-time leading rusher?",
+    "options": ["Wilbert Montgomery", "Brian Westbrook", "LeSean McCoy", "Steve Van Buren"],
+    "answer": "LeSean McCoy",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was the first to serve as both a baseball and football venue?",
+    "options": ["Shibe Park", "Baker Bowl", "Franklin Field", "Veterans Stadium"],
+    "answer": "Shibe Park",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Philadelphia Charge women's soccer team fold?",
+    "options": ["2001", "2003", "2005", "2007"],
+    "answer": "2003",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known for 'Touch 'em all!'?",
+    "options": ["Harry Kalas", "Tom McCarthy", "Scott Franzke", "Gary Matthews"],
+    "answer": "Scott Franzke",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the parking area south of the Sports Complex?",
+    "options": ["Lot K", "FDR Park", "Pattison Parking", "Stadium Lot"],
+    "answer": "FDR Park",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team won the 2020 MLS Supporters' Shield?",
+    "options": ["Philadelphia Union", "Columbus Crew", "Sporting KC", "Seattle Sounders"],
+    "answer": "Philadelphia Union",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the 76ers hire Sam Hinkie?",
+    "options": ["2011", "2012", "2013", "2014"],
+    "answer": "2013",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue hosted Elton John's farewell concert?",
+    "options": ["Citizens Bank Park", "Lincoln Financial Field", "Wells Fargo Center", "The Met"],
+    "answer": "Citizens Bank Park",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the Flyers' all-time leading scorer?",
+    "options": ["Bobby Clarke", "Bill Barber", "Brian Propp", "Eric Lindros"],
+    "answer": "Bobby Clarke",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete scored the winning touchdown in Super Bowl LII?",
+    "options": ["Nick Foles", "Zach Ertz", "Alshon Jeffery", "Corey Clement"],
+    "answer": "Zach Ertz",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Eagles sign Michael Vick?",
+    "options": ["2007", "2009", "2011", "2013"],
+    "answer": "2009",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'Big Daddy'?",
+    "options": ["Angelo Cataldi", "Tom Brookshier", "Howard Eskin", "Jody McDonald"],
+    "answer": "Tom Brookshier",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the Eagles' all-time leading receiver?",
+    "options": ["Harold Carmichael", "Pete Retzlaff", "Tommy McDonald", "Zach Ertz"],
+    "answer": "Harold Carmichael",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was known for its concrete donuts?",
+    "options": ["Veterans Stadium", "Lincoln Financial Field", "Franklin Field", "JFK Stadium"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did the Flyers beat the Soviet Red Army team?",
+    "options": ["1974", "1976", "1978", "1980"],
+    "answer": "1976",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia athlete was the 2008 World Series MVP?",
+    "options": ["Ryan Howard", "Chase Utley", "Cole Hamels", "Jimmy Rollins"],
+    "answer": "Cole Hamels",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the Eagles' practice facility?",
+    "options": ["Eagles Training Camp", "NovaCare Complex", "Lincoln Fields", "Eagles Fieldhouse"],
+    "answer": "NovaCare Complex",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the 1985 NFC Championship Game?",
+    "options": ["Veterans Stadium", "Franklin Field", "Lincoln Financial Field", "It wasn't hosted in Philadelphia"],
+    "answer": "It wasn't hosted in Philadelphia",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Eagles draft Reggie White?",
+    "options": ["1984", "1985", "He was signed from the USFL", "1987"],
+    "answer": "He was signed from the USFL",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster called the Flyers' 1974 Stanley Cup win?",
+    "options": ["Gene Hart", "Don Earle", "Jim Jackson", "Gary Dornhoefer"],
+    "answer": "Gene Hart",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the 76ers' all-time leading scorer?",
+    "options": ["Julius Erving", "Allen Iverson", "Hal Greer", "Charles Barkley"],
+    "answer": "Hal Greer",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia team was the first to have a modern mascot?",
+    "options": ["Eagles", "Phillies", "Flyers", "76ers"],
+    "answer": "Phillies",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Harry Kalas call his final game?",
+    "options": ["2007", "2008", "2009", "2010"],
+    "answer": "2009",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia stadium was featured in the movie 'Invincible'?",
+    "options": ["Veterans Stadium", "Franklin Field", "Lincoln Financial Field", "The Spectrum"],
+    "answer": "Franklin Field",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the name of the tunnel fans pass through at Citizens Bank Park?",
+    "options": ["Left Field Gate", "Ashburn Alley", "Main Gate", "Citizens Passage"],
+    "answer": "Ashburn Alley",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia athlete was the 2007 NL MVP?",
+    "options": ["Ryan Howard", "Chase Utley", "Jimmy Rollins", "Cole Hamels"],
+    "answer": "Jimmy Rollins",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What year did the Philadelphia Soul cease operations for the first time?",
+    "options": ["2009", "2011", "2013", "2015"],
+    "answer": "2009",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was the voice of the Flyers for 29 years?",
+    "options": ["Gene Hart", "Jim Jackson", "Don Earle", "Gary Dornhoefer"],
+    "answer": "Gene Hart",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the Eagles' all-time leading scorer?",
+    "options": ["Bobby Walston", "David Akers", "Jake Elliott", "Sam Baker"],
+    "answer": "David Akers",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue was known as 'The Big House on the Hill'?",
+    "options": ["Franklin Field", "The Palestra", "Veterans Stadium", "Lincoln Financial Field"],
+    "answer": "Franklin Field",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Phillies move from Baker Bowl to Shibe Park?",
+    "options": ["1935", "1938", "1940", "1943"],
+    "answer": "1938",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia athlete threw a perfect game in the 2010 playoffs?",
+    "options": ["Cole Hamels", "Roy Halladay", "Cliff Lee", "Roy Oswalt"],
+    "answer": "Roy Halladay",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the bell that rings after Phillies home runs?",
+    "options": ["Liberty Bell", "Victory Bell", "Phanatic Bell", "Home Run Bell"],
+    "answer": "Liberty Bell",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia team did Connie Mack also own?",
+    "options": ["Phillies", "Athletics", "Eagles", "None - he only managed"],
+    "answer": "Athletics",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What year did Lincoln Financial Field host its first Eagles playoff game?",
+    "options": ["2003", "2004", "2006", "2008"],
+    "answer": "2004",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia broadcaster was known as 'The Big Piece'?",
+    "options": ["Ryan Howard", "John Kruk", "Ryan Howard was the player", "Gary Matthews"],
+    "answer": "Ryan Howard was the player",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the 76ers' longest winning streak?",
+    "options": ["14 games", "16 games", "18 games", "20 games"],
+    "answer": "16 games",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Which Philadelphia stadium was the first to have instant replay screens?",
+    "options": ["Veterans Stadium", "The Spectrum", "Franklin Field", "JFK Stadium"],
+    "answer": "Veterans Stadium",
+    "category": "General",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What year did the Eagles trade Donovan McNabb?",
+    "options": ["2008", "2009", "2010", "2011"],
+    "answer": "2010",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Which Philadelphia athlete was the 2006 NL MVP?",
+    "options": ["Chase Utley", "Ryan Howard", "Jimmy Rollins", "Bobby Abreu"],
+    "answer": "Ryan Howard",
+    "category": "General",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the name of the rivalry between WIP and The Fanatic?",
+    "options": ["Sports Radio Wars", "Philly Radio Battle", "The Ratings War", "There is no official name"],
+    "answer": "There is no official name",
+    "category": "General",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Which Philadelphia venue hosted the 2017 NFL Draft?",
+    "options": ["Lincoln Financial Field", "Wells Fargo Center", "Citizens Bank Park", "Art Museum"],
+    "answer": "Art Museum",
+    "category": "General",
+    "difficulty": "easy"
+  }
+]

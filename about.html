@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - PhillySports.com</title>
+    <meta name="description" content="Learn about PhillySports.com - the ultimate destination for Philadelphia sports fans. Our story, mission, and the team behind the platform.">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/theme-vintage.css">
+    <link rel="stylesheet" href="/css/body-theme.css">
+    <style>
+        .page-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-title {
+            font-family: Georgia, serif;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent-color, #8B1A28);
+            padding-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .content-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section h2 {
+            font-family: Georgia, serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        .placeholder-notice {
+            background: rgba(139, 0, 0, 0.1);
+            border: 2px dashed var(--accent-color, #8B1A28);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .placeholder-notice h3 {
+            color: var(--accent-color, #8B1A28);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="ps-theme">
+    <!-- Theme initialization -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <!-- Shared Header -->
+    <div id="site-header"></div>
+    <script src="/js/header.js"></script>
+
+    <!-- Main Content -->
+    <main class="page-content">
+        <h1 class="page-title">About Us</h1>
+        <p class="page-subtitle">The story behind Philadelphia's home for passionate sports fans</p>
+
+        <div class="placeholder-notice">
+            <h3>Content Coming Soon</h3>
+            <p>We're working on telling our story. Check back soon to learn more about PhillySports.com, our mission, and the team behind the platform.</p>
+        </div>
+
+        <!-- Placeholder sections for future content -->
+        <!--
+        <section class="content-section">
+            <h2>Our Story</h2>
+            <p>Content about how PhillySports.com came to be...</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Our Mission</h2>
+            <p>Content about what drives us...</p>
+        </section>
+
+        <section class="content-section">
+            <h2>The Team</h2>
+            <p>Content about the people behind the site...</p>
+        </section>
+        -->
+    </main>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
+</body>
+</html>

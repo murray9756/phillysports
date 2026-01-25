@@ -56,14 +56,15 @@ export default async function handler(req, res) {
             const seat = table.seats[seatIndex];
             const chipStack = seat.chipStack || 0;
 
-            // Cash out chips
+            // Cash out chips (no multiplier - returning chips)
             if (chipStack > 0) {
                 await addCoins(
                     user.userId,
                     chipStack,
                     'cash_game_force_cashout',
                     `Force cashout from ${table.name}`,
-                    { tableId: table._id.toString() }
+                    { tableId: table._id.toString() },
+                    { skipMultiplier: true }
                 );
                 totalCashOut += chipStack;
             }

@@ -96,7 +96,7 @@ export default async function handler(req, res) {
       }
     );
 
-    // Refund buy-in
+    // Refund buy-in (no multiplier - returning coins)
     let newBalance = 0;
     if (tournament.buyIn > 0) {
       newBalance = await addCoins(
@@ -104,7 +104,8 @@ export default async function handler(req, res) {
         tournament.buyIn,
         'poker_refund',
         `Tournament unregister refund: ${tournament.name}`,
-        { tournamentId: tournament._id }
+        { tournamentId: tournament._id },
+        { skipMultiplier: true }
       );
     }
 

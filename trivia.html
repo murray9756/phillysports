@@ -123,17 +123,12 @@
         .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-color); }
         .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
         .question-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .question-team { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 20px; margin-bottom: 1rem; color: white; }
-        .question-team.Eagles { background: var(--eagles-green); }
-        .question-team.Phillies { background: var(--phillies-red); }
-        .question-team.sixers, .question-team[data-team="76ers"] { background: var(--sixers-blue); }
-        .question-team.Flyers { background: var(--flyers-orange); }
-        .question-team.College { background: #1e3a5f; }
-        .question-team.General { background: #6b5b95; }
-        .question-difficulty { font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; margin-left: 0.5rem; text-transform: uppercase; }
-        .question-difficulty.easy { background: #e8f5e9; color: #2e7d32; }
-        .question-difficulty.medium { background: #fff3e0; color: #e65100; }
-        .question-difficulty.hard { background: #ffebee; color: #c62828; }
+        .question-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .question-team { display: inline-block; font-size: 1rem; font-weight: 700; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 6px; background: var(--text-secondary); color: var(--card-bg); }
+        .question-difficulty { font-size: 0.9rem; font-weight: 600; padding: 0.4rem 0.85rem; border-radius: 6px; text-transform: uppercase; background: var(--border-color); color: var(--text-primary); }
+        .question-stats { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); margin-left: auto; }
+        .question-stats-item { display: flex; align-items: center; gap: 0.25rem; }
+        .question-stats-item .icon { font-size: 0.9rem; }
         .question-text { font-size: 1.35rem; font-weight: 600; margin-bottom: 1.5rem; line-height: 1.4; }
         .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .option-btn { width: 100%; padding: 1rem 1.25rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-primary); font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: left; }
@@ -377,11 +372,28 @@
             const reward = REWARDS[difficulty] || 10;
             const penalty = PENALTIES[difficulty] || 10;
 
+            // Calculate question accuracy
+            const timesPresented = question.usedCount || 0;
+            const correctCount = question.correctCount || 0;
+            const accuracy = timesPresented > 0 ? Math.round((correctCount / timesPresented) * 100) : 0;
+
             container.innerHTML = `
                 <div class="question-card">
-                    <div>
-                        <span class="question-team ${question.team}">${question.team}</span>
-                        <span class="question-difficulty ${difficulty}">${difficulty}</span>
+                    <div class="question-meta">
+                        <span class="question-team">${question.team}</span>
+                        <span class="question-difficulty">${difficulty}</span>
+                        <div class="question-stats">
+                            <span class="question-stats-item" title="Times this question has been presented">
+                                <span class="icon">&#128202;</span>
+                                <span>${timesPresented} plays</span>
+                            </span>
+                            ${timesPresented > 0 ? `
+                            <span class="question-stats-item" title="Percentage of players who answered correctly">
+                                <span class="icon">&#9989;</span>
+                                <span>${accuracy}% correct</span>
+                            </span>
+                            ` : ''}
+                        </div>
                     </div>
                     <p class="question-text">${question.question}</p>
                     <div class="options-list">
@@ -791,5 +803,9 @@
     <script src="/js/mobile-menu.js"></script>
     <!-- Live Ticker -->
     <script src="/js/live-ticker.js"></script>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

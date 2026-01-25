@@ -220,6 +220,7 @@
     <!-- Shared Header -->
     <div id="site-header"></div>
     <script src="/js/header.js"></script>
+    <script src="/js/news-feed.js"></script>
 
     <div class="team-hero">
         <h1>Penn Quakers</h1>
@@ -394,77 +395,12 @@
 
         const TEAM = 'penn';
         const ESPN_TEAM_ID = 219;
-        let allArticles = [];
-        let currentTypeFilter = 'all';
-        let showingAll = false;
-
-        const sourceLogos = {
-            'ESPN': 'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'
-        };
-        function getSourceLogo(source) {
-            const logo = source && sourceLogos[source] ? sourceLogos[source] : sourceLogos['ESPN'];
-            return `<img src="${logo}" alt="${source || 'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;
-        }
-
-        function timeAgo(dateString) {
-            const now = new Date();
-            const date = new Date(dateString);
-            const seconds = Math.floor((now - date) / 1000);
-            if (seconds < 60) return 'Just now';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes}m ago`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours}h ago`;
-            const days = Math.floor(hours / 24);
-            return `${days}d ago`;
-        }
 
         function formatGameDate(dateString) {
             const date = new Date(dateString);
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             return { day: date.getDate(), month: months[date.getMonth()], dayName: days[date.getDay()], time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) };
-        }
-
-        async function loadNews(filters = {}) {
-            if (filters.type) currentTypeFilter = filters.type;
-            const container = document.getElementById('articleList');
-            try {
-                const response = await fetch('/api/news?team=' + TEAM);
-                const data = await response.json();
-                if (data.articles && data.articles.length > 0) {
-                    allArticles = data.articles;
-                    renderArticleList();
-                } else {
-                    container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">No news available</div>';
-                }
-            } catch (e) {
-                container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">Unable to load news</div>';
-            }
-        }
-
-        function renderArticleList() {
-            const container = document.getElementById('articleList');
-            const showMoreBtn = document.getElementById('showMoreNews');
-            let filtered = allArticles;
-            if (currentTypeFilter !== 'all') {
-                filtered = allArticles.filter(a => (a.type || 'article') === currentTypeFilter);
-            }
-            const listArticles = showingAll ? filtered.slice(0, 15) : filtered.slice(0, 8);
-            if (listArticles.length > 0) {
-                container.innerHTML = listArticles.map(article => {
-                    const thumbStyle = article.image ? "background-image:url('" + article.image + "');background-size:cover;background-position:center;" : '';
-                    return '<a href="/article.html?url=' + encodeURIComponent(article.link) + '&title=' + encodeURIComponent(article.headline) + '&image=' + encodeURIComponent(article.image || '') + '&source=' + encodeURIComponent(article.source || '') + '" class="article-item"><div class="article-thumb" style="' + thumbStyle + '">' + (!article.image ? getSourceLogo(article.source) : '') + '</div><div class="article-info"><h4 class="article-title">' + article.headline + '</h4><div class="article-meta">' + timeAgo(article.published) + (article.source ? ' · ' + article.source : '') + '</div></div></a>';
-                }).join('');
-            } else {
-                container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);">No ' + currentTypeFilter + ' content available</div>';
-            }
-            if (showMoreBtn && filtered.length > 8) {
-                showMoreBtn.style.display = 'block';
-                showMoreBtn.textContent = showingAll ? 'Show Less' : 'Show More News (' + Math.min(7, filtered.length - 8) + ' more)';
-            } else if (showMoreBtn) {
-                showMoreBtn.style.display = 'none';
-            }
         }
 
         async function loadScores() {
@@ -624,7 +560,7 @@
             }
         }
 
-        loadNews();
+        PhillySportsNewsFeed.init({ containerId: 'articleList', team: 'penn' });
         loadScores();
         loadSchedule();
         loadRoster();
@@ -637,14 +573,8 @@
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                loadNews({ type: btn.dataset.value });
+                PhillySportsNewsFeed.load({ type: btn.dataset.value });
             });
-        });
-
-        // Show More button click handler
-        document.getElementById('showMoreNews').addEventListener('click', function() {
-            showingAll = !showingAll;
-            renderArticleList();
         });
 
         // Auth check for header
@@ -709,5 +639,9 @@
 </script>
     <!-- Live Ticker -->
     <script src="/js/live-ticker.js"></script>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

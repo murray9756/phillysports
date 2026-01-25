@@ -313,6 +313,7 @@
     <!-- Shared Header -->
     <div id="site-header"></div>
     <script src="/js/header.js"></script>
+    <script src="/js/news-feed.js"></script>
 
     <div class="team-hero"><h1>Philadelphia Phillies</h1><p>News, Scores & Schedule</p></div>
     <main class="main-container">
@@ -527,10 +528,6 @@
         // Theme is handled by header.js
 
         const TEAM = 'phillies';
-        let currentTypeFilter = 'all';
-        const sourceLogos={'Crossing Broad':'https://www.crossingbroad.com/app/themes/bramble/public/build/assets/cb-logo-AC5c2OGU.svg','On Pattison':'https://accessglobal.media.clients.ellingtoncms.com/static-4/assets/images/on-pattison-logo.png?v=2','ESPN':'https://a.espncdn.com/combiner/i?img=/i/espn/espn_logos/espn_red.png&w=80&h=80'};
-        function getSourceLogo(s){const l=s&&sourceLogos[s]?sourceLogos[s]:sourceLogos['ESPN'];return`<img src="${l}" alt="${s||'ESPN'}" style="max-width:60%;max-height:60%;object-fit:contain;">`;}
-        function timeAgo(d){const s=Math.floor((new Date()-new Date(d))/1000);if(s<60)return'Just now';const m=Math.floor(s/60);if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
         function formatGameDate(d){const date=new Date(d);return{day:date.getDate(),month:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.getMonth()],dayName:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][date.getDay()],time:date.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})};}
         async function loadDiehardLeaderboard() {
             const container = document.getElementById('diehardLeaderboardWidget');
@@ -591,28 +588,6 @@
             }
         }
 
-        async function loadNews(filters = {}) {
-            const c = document.getElementById('articleList');
-
-            // Update filter state
-            if (filters.type) currentTypeFilter = filters.type;
-
-            // Show loading state
-            c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading...</div>';
-
-            try {
-                const r = await fetch(`/api/news?team=${TEAM}`);
-                const d = await r.json();
-                if (d.articles?.length > 0) {
-                    allArticles = d.articles;
-                    renderArticleList();
-                } else {
-                    c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">No news available</div>';
-                }
-            } catch(e) {
-                c.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Unable to load news</div>';
-            }
-        }
         async function loadScores(){const c=document.getElementById('scoresContainer');try{const r=await fetch(`/api/scores?team=${TEAM}`);const d=await r.json();if(d.scores?.length>0){c.innerHTML=d.scores.map(s=>{const content=`<div class="score-teams"><div class="score-team"><span class="team-dot" style="background:${s.isHome?s.teamColor:'#666'}"></span> ${s.homeTeam}</div><div class="score-team"><span class="team-dot" style="background:${!s.isHome?s.teamColor:'#666'}"></span> ${s.awayTeam}</div></div><div class="score-result"><span>${s.homeScore}</span><span>${s.awayScore}</span></div>`;return s.link?`<a href="${s.link}" target="_blank" class="score-item" style="text-decoration:none;color:inherit;cursor:pointer;">${content}</a>`:`<div class="score-item">${content}</div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No recent scores</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadSchedule(){const c=document.getElementById('scheduleContainer');try{const r=await fetch(`/api/schedule?team=${TEAM}`);const d=await r.json();if(d.schedule?.length>0){c.innerHTML=d.schedule.map(g=>{const f=formatGameDate(g.date);return`<div class="schedule-item"><div class="schedule-date"><div class="schedule-day">${f.day}</div><div class="schedule-month">${f.month}</div></div><div class="schedule-info"><div class="schedule-matchup">${g.isHome?'vs':'@'} ${g.opponent}</div><div class="schedule-time">${f.dayName} ${f.time}${g.broadcast?' · '+g.broadcast:''}</div></div></div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No upcoming games</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load</div>';}}
         async function loadRoster(){const c=document.getElementById('rosterContainer');try{const r=await fetch(`/api/roster?team=${TEAM}`);const d=await r.json();if(d.players?.length>0){c.innerHTML=d.players.map(p=>{const initials=(p.name||'').split(' ').map(n=>n[0]).join('').slice(0,2);const fallback=`<div style="width:32px;height:32px;border-radius:50%;background:var(--team-color);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:700;">${initials}</div>`;const img=p.headshot?`<img src="${p.headshot}" alt="${p.name}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" onerror="this.outerHTML=this.dataset.fallback" data-fallback="${fallback.replace(/"/g,'&quot;')}">`:`${fallback}`;return`<div style="display:flex;align-items:center;gap:0.5rem;padding:0.4rem 0.75rem;border-bottom:1px solid var(--border-color);font-size:0.8rem;">${img}<span style="min-width:24px;color:var(--text-muted);font-weight:600;">#${p.number||'-'}</span>${p.link?`<a href="${p.link}" target="_blank" style="flex:1;font-weight:500;color:var(--text-primary);text-decoration:none;" onmouseover="this.style.color='var(--team-color)'" onmouseout="this.style.color='var(--text-primary)'">${p.name}</a>`:`<span style="flex:1;font-weight:500;">${p.name}</span>`}<span style="color:var(--text-muted);font-size:0.75rem;">${p.position}</span></div>`;}).join('');}else{c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No roster available</div>';}}catch(e){c.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">Unable to load roster</div>';}}
@@ -677,54 +652,7 @@
             }
         }
 
-        // Show More news functionality
-        let allArticles = [];
-        let showingAll = false;
-        function setupShowMore() {
-            const showMoreBtn = document.getElementById('showMoreBtn');
-            if (showMoreBtn) {
-                showMoreBtn.addEventListener('click', function() {
-                    showingAll = !showingAll;
-                    renderArticleList();
-                    this.textContent = showingAll ? 'Show Less' : 'Show More News';
-                });
-            }
-        }
-        function renderArticleList() {
-            const container = document.getElementById('articleList');
-            const showMoreContainer = document.getElementById('showMoreContainer');
-
-            // Apply type filter
-            let filteredArticles = allArticles;
-            if (currentTypeFilter !== 'all') {
-                filteredArticles = allArticles.filter(article => {
-                    const articleType = article.type || 'article';
-                    return articleType === currentTypeFilter;
-                });
-            }
-
-            // Apply show more/less limit
-            const displayArticles = showingAll ? filteredArticles.slice(0, 14) : filteredArticles.slice(0, 9);
-
-            if (displayArticles.length > 0) {
-                container.innerHTML = displayArticles.map(article => {
-                    const thumbStyle = article.image ? `background-image:url('${article.image}');background-size:cover;background-position:center;` : '';
-                    return `<a href="/article.html?url=${encodeURIComponent(article.link)}&title=${encodeURIComponent(article.headline)}&image=${encodeURIComponent(article.image || '')}&source=${encodeURIComponent(article.source || '')}" class="article-item"><div class="article-thumb" style="${thumbStyle}">${!article.image ? getSourceLogo(article.source) : ''}</div><div class="article-info"><h4 class="article-title">${article.headline}</h4><div class="article-meta">${timeAgo(article.published)}${article.source ? ' · ' + article.source : ''} · <span style="color:var(--team-color);">&#128172; Discuss</span></div></div></a>`;
-                }).join('');
-            } else {
-                container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">No articles found for this filter</div>';
-            }
-
-            // Show/hide "Show More" button
-            if (showMoreContainer && filteredArticles.length > 9) {
-                showMoreContainer.style.display = 'block';
-            } else if (showMoreContainer) {
-                showMoreContainer.style.display = 'none';
-            }
-        }
-        setupShowMore();
-
-        loadTriviaQuestion();loadDiehardLeaderboard();loadSourceLeaderboard();loadNews();loadScores();loadSchedule();loadStandings();
+        loadTriviaQuestion();loadDiehardLeaderboard();loadSourceLeaderboard();PhillySportsNewsFeed.init({ containerId: 'articleList', team: 'phillies' });loadScores();loadSchedule();loadStandings();
 
         // Content filter handlers
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -739,7 +667,7 @@
                 btn.classList.add('active');
 
                 // Reload with new filter
-                loadNews({ [filterType]: filterValue });
+                PhillySportsNewsFeed.load({ type: btn.dataset.value });
             });
         });
 
@@ -941,5 +869,9 @@
     });
 })();
 </script>
+
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
 </body>
 </html>

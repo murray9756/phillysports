@@ -114,7 +114,7 @@ export default async function handler(req, res) {
     );
 
     if (!result) {
-      // Refund if registration failed
+      // Refund if registration failed (no multiplier - returning coins)
       if (tournament.buyIn > 0) {
         const { addCoins } = await import('../../lib/coins.js');
         await addCoins(
@@ -122,7 +122,8 @@ export default async function handler(req, res) {
           tournament.buyIn,
           'poker_refund',
           `Registration failed refund: ${tournament.name}`,
-          { tournamentId: tournament._id }
+          { tournamentId: tournament._id },
+          { skipMultiplier: true }
         );
       }
       return res.status(400).json({ error: 'Registration failed. Please try again.' });

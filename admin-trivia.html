@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Question Bank | Admin</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent-color: #8b0000; --dark-bg: #faf9f6; --card-bg: #ffffff; --border-color: #e0e0e0; --text-primary: #1a1a1a; --text-secondary: #555555; --text-muted: #888888; }
+        [data-theme="dark"] { --dark-bg: #121212; --card-bg: #1e1e1e; --border-color: #333333; --text-primary: #e8e8e8; --text-secondary: #b0b0b0; --text-muted: #808080; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
+        .admin-header { background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .admin-header h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .admin-header a { color: var(--accent-color); text-decoration: none; font-weight: 500; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; text-align: center; }
+        .stat-card .count { font-size: 2rem; font-weight: 700; color: var(--accent-color); }
+        .stat-card .label { font-size: 0.85rem; color: var(--text-muted); }
+        .controls { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+        .controls select, .controls input { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); font-size: 0.9rem; }
+        .controls input[type="text"] { min-width: 250px; }
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
+        .btn-primary { background: var(--accent-color); color: white; }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: var(--border-color); }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .questions-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
+        .questions-table th, .questions-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .questions-table th { background: var(--border-color); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
+        .questions-table tr:hover { background: rgba(139, 0, 0, 0.05); }
+        .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge-easy { background: #e8f5e9; color: #2e7d32; }
+        .badge-medium { background: #fff3e0; color: #e65100; }
+        .badge-hard { background: #ffebee; color: #c62828; }
+        .badge-eagles { background: #004C54; color: white; }
+        .badge-phillies { background: #E81828; color: white; }
+        .badge-76ers { background: #006BB6; color: white; }
+        .badge-flyers { background: #F74902; color: white; }
+        .badge-college { background: #1e3a5f; color: white; }
+        .badge-general { background: #6b5b95; color: white; }
+        .badge-union { background: #B49759; color: white; }
+        .question-text { max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .action-btns { display: flex; gap: 0.5rem; }
+        .action-btns button { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--card-bg); border-radius: 12px; padding: 2rem; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal h2 { margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--dark-bg); color: var(--text-primary); font-size: 0.95rem; }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .options-container { display: flex; flex-direction: column; gap: 0.5rem; }
+        .option-row { display: flex; gap: 0.5rem; align-items: center; }
+        .option-row input { flex: 1; }
+        .option-row button { padding: 0.5rem; background: none; border: none; cursor: pointer; color: var(--text-muted); }
+        .correct-indicator { color: #28a745; font-weight: 600; }
+        .modal-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem; }
+        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+        .pagination button { padding: 0.5rem 1rem; }
+        .migrate-section { background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 2rem; }
+        .migrate-section h3 { color: #856404; margin-bottom: 0.5rem; }
+        .migrate-section p { color: #856404; font-size: 0.9rem; margin-bottom: 1rem; }
+        .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); padding: 1rem 2rem; border-radius: 8px; z-index: 2000; display: none; }
+        .toast.success { background: #28a745; color: white; }
+        .toast.error { background: #dc3545; color: white; }
+        .stats-mini { font-size: 0.8rem; color: var(--text-muted); }
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .questions-table { font-size: 0.85rem; }
+            .controls { flex-direction: column; }
+            .controls input, .controls select { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>Trivia Question Bank</h1>
+        <a href="/admin.html">&larr; Back to Admin</a>
+    </header>
+
+    <div class="container">
+        <!-- Migration Notice -->
+        <div class="migrate-section" id="migrateSection" style="display: none;">
+            <h3>Database Migration Required</h3>
+            <p>Your 120 hardcoded trivia questions need to be migrated to the database. Click the button below to run the migration.</p>
+            <button class="btn btn-primary" onclick="runMigration()">Migrate Questions to Database</button>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+                <div class="count" id="totalCount">0</div>
+                <div class="label">Total Questions</div>
+            </div>
+            <div class="stat-card">
+                <div class="count" id="eaglesCount">0</div>
+                <div class="label">Eagles</div>
+            </div>
+            <div class="stat-card">
+                <div class="count" id="philliesCount">0</div>
+                <div class="label">Phillies</div>
+            </div>
+            <div class="stat-card">
+                <div class="count" id="sixersCount">0</div>
+                <div class="label">76ers</div>
+            </div>
+            <div class="stat-card">
+                <div class="count" id="flyersCount">0</div>
+                <div class="label">Flyers</div>
+            </div>
+            <div class="stat-card">
+                <div class="count" id="collegeCount">0</div>
+                <div class="label">College</div>
+            </div>
+            <div class="stat-card">
+                <div class="count" id="generalCount">0</div>
+                <div class="label">General</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="Eagles">Eagles</option>
+                <option value="Phillies">Phillies</option>
+                <option value="76ers">76ers</option>
+                <option value="Flyers">Flyers</option>
+                <option value="College">College</option>
+                <option value="General">General</option>
+                <option value="Union">Union</option>
+            </select>
+            <select id="difficultyFilter">
+                <option value="all">All Difficulties</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Search questions...">
+            <button class="btn btn-secondary" onclick="loadQuestions()">Search</button>
+            <button class="btn btn-primary" onclick="openAddModal()">+ Add Question</button>
+        </div>
+
+        <!-- Questions Table -->
+        <table class="questions-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Difficulty</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>Stats</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="questionsBody">
+                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading...</td></tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="questionModal">
+        <div class="modal">
+            <h2 id="modalTitle">Add New Question</h2>
+            <form id="questionForm">
+                <input type="hidden" id="questionId">
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="formCategory" required>
+                        <option value="">Select category...</option>
+                        <option value="Eagles">Eagles</option>
+                        <option value="Phillies">Phillies</option>
+                        <option value="76ers">76ers</option>
+                        <option value="Flyers">Flyers</option>
+                        <option value="College">College</option>
+                        <option value="General">General</option>
+                        <option value="Union">Union</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Difficulty</label>
+                    <select id="formDifficulty" required>
+                        <option value="">Select difficulty...</option>
+                        <option value="easy">Easy (+5 DD correct, -20 DD wrong)</option>
+                        <option value="medium">Medium (+10 DD correct, -10 DD wrong)</option>
+                        <option value="hard">Hard (+20 DD correct, -5 DD wrong)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Question</label>
+                    <textarea id="formQuestion" placeholder="Enter the trivia question..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Options (click to mark as correct answer)</label>
+                    <div class="options-container" id="optionsContainer">
+                        <div class="option-row">
+                            <input type="text" class="option-input" placeholder="Option 1" required>
+                            <button type="button" class="mark-correct" title="Mark as correct">&#x2713;</button>
+                        </div>
+                        <div class="option-row">
+                            <input type="text" class="option-input" placeholder="Option 2" required>
+                            <button type="button" class="mark-correct" title="Mark as correct">&#x2713;</button>
+                        </div>
+                        <div class="option-row">
+                            <input type="text" class="option-input" placeholder="Option 3">
+                            <button type="button" class="mark-correct" title="Mark as correct">&#x2713;</button>
+                        </div>
+                        <div class="option-row">
+                            <input type="text" class="option-input" placeholder="Option 4">
+                            <button type="button" class="mark-correct" title="Mark as correct">&#x2713;</button>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                        Selected answer: <span id="selectedAnswer" class="correct-indicator">None</span>
+                    </p>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Question</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentOffset = 0;
+        const limit = 50;
+        let correctAnswerIndex = -1;
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        async function loadQuestions() {
+            const category = document.getElementById('categoryFilter').value;
+            const difficulty = document.getElementById('difficultyFilter').value;
+            const search = document.getElementById('searchInput').value;
+
+            const params = new URLSearchParams({
+                category,
+                difficulty,
+                search,
+                limit,
+                offset: currentOffset
+            });
+
+            try {
+                const response = await fetch(`/api/admin/trivia?${params}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        window.location.href = '/login.html';
+                        return;
+                    }
+                    throw new Error(data.error);
+                }
+
+                // Check if migration needed
+                if (data.total === 0) {
+                    document.getElementById('migrateSection').style.display = 'block';
+                } else {
+                    document.getElementById('migrateSection').style.display = 'none';
+                }
+
+                // Update stats
+                const counts = data.countsByCategory || {};
+                document.getElementById('totalCount').textContent = data.total;
+                document.getElementById('eaglesCount').textContent = counts['Eagles'] || 0;
+                document.getElementById('philliesCount').textContent = counts['Phillies'] || 0;
+                document.getElementById('sixersCount').textContent = counts['76ers'] || 0;
+                document.getElementById('flyersCount').textContent = counts['Flyers'] || 0;
+                document.getElementById('collegeCount').textContent = counts['College'] || 0;
+                document.getElementById('generalCount').textContent = counts['General'] || 0;
+
+                // Render questions
+                const tbody = document.getElementById('questionsBody');
+                if (data.questions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">No questions found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.questions.map(q => `
+                    <tr>
+                        <td><span class="badge badge-${q.category.toLowerCase().replace('76ers', 'sixers')}">${q.category}</span></td>
+                        <td><span class="badge badge-${q.difficulty}">${q.difficulty}</span></td>
+                        <td class="question-text" title="${escapeHtml(q.question)}">${escapeHtml(q.question)}</td>
+                        <td>${escapeHtml(q.answer)}</td>
+                        <td class="stats-mini">Used: ${q.usedCount || 0}<br>Correct: ${q.correctCount || 0}</td>
+                        <td class="action-btns">
+                            <button class="btn btn-secondary" onclick="editQuestion('${q._id}')">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteQuestion('${q._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                // Pagination
+                const totalPages = Math.ceil(data.total / limit);
+                const currentPage = Math.floor(currentOffset / limit) + 1;
+                const pagination = document.getElementById('pagination');
+
+                if (totalPages > 1) {
+                    pagination.innerHTML = `
+                        <button class="btn btn-secondary" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">Prev</button>
+                        <span style="padding: 0.5rem;">Page ${currentPage} of ${totalPages}</span>
+                        <button class="btn btn-secondary" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next</button>
+                    `;
+                } else {
+                    pagination.innerHTML = '';
+                }
+
+            } catch (error) {
+                console.error('Load questions error:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        function goToPage(page) {
+            currentOffset = (page - 1) * limit;
+            loadQuestions();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Question';
+            document.getElementById('questionId').value = '';
+            document.getElementById('formCategory').value = '';
+            document.getElementById('formDifficulty').value = '';
+            document.getElementById('formQuestion').value = '';
+            document.querySelectorAll('.option-input').forEach((input, i) => {
+                input.value = '';
+                input.parentElement.classList.remove('correct');
+            });
+            correctAnswerIndex = -1;
+            document.getElementById('selectedAnswer').textContent = 'None';
+            document.getElementById('questionModal').classList.add('active');
+        }
+
+        async function editQuestion(id) {
+            try {
+                const response = await fetch(`/api/admin/trivia/${id}`, { credentials: 'include' });
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error);
+
+                const q = data.question;
+                document.getElementById('modalTitle').textContent = 'Edit Question';
+                document.getElementById('questionId').value = q._id;
+                document.getElementById('formCategory').value = q.category;
+                document.getElementById('formDifficulty').value = q.difficulty;
+                document.getElementById('formQuestion').value = q.question;
+
+                const optionInputs = document.querySelectorAll('.option-input');
+                q.options.forEach((opt, i) => {
+                    if (optionInputs[i]) {
+                        optionInputs[i].value = opt;
+                        if (opt === q.answer) {
+                            correctAnswerIndex = i;
+                            optionInputs[i].parentElement.classList.add('correct');
+                            document.getElementById('selectedAnswer').textContent = opt;
+                        } else {
+                            optionInputs[i].parentElement.classList.remove('correct');
+                        }
+                    }
+                });
+
+                document.getElementById('questionModal').classList.add('active');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm('Are you sure you want to archive this question?')) return;
+
+            try {
+                const response = await fetch(`/api/admin/trivia/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error);
+                }
+
+                showToast('Question archived successfully');
+                loadQuestions();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').classList.remove('active');
+        }
+
+        // Mark answer as correct
+        document.querySelectorAll('.mark-correct').forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.option-row').forEach(row => row.classList.remove('correct'));
+                btn.parentElement.classList.add('correct');
+                correctAnswerIndex = index;
+                const value = btn.parentElement.querySelector('.option-input').value;
+                document.getElementById('selectedAnswer').textContent = value || 'None';
+            });
+        });
+
+        // Update selected answer display when typing
+        document.querySelectorAll('.option-input').forEach((input, index) => {
+            input.addEventListener('input', () => {
+                if (index === correctAnswerIndex) {
+                    document.getElementById('selectedAnswer').textContent = input.value || 'None';
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('questionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const options = [];
+            document.querySelectorAll('.option-input').forEach(input => {
+                if (input.value.trim()) {
+                    options.push(input.value.trim());
+                }
+            });
+
+            if (options.length < 2) {
+                showToast('At least 2 options required', 'error');
+                return;
+            }
+
+            if (correctAnswerIndex < 0 || correctAnswerIndex >= options.length) {
+                showToast('Please select the correct answer', 'error');
+                return;
+            }
+
+            const payload = {
+                question: document.getElementById('formQuestion').value.trim(),
+                category: document.getElementById('formCategory').value,
+                difficulty: document.getElementById('formDifficulty').value,
+                options,
+                answer: options[correctAnswerIndex]
+            };
+
+            const id = document.getElementById('questionId').value;
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/admin/trivia/${id}` : '/api/admin/trivia';
+
+            try {
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error);
+
+                showToast(id ? 'Question updated!' : 'Question added!');
+                closeModal();
+                loadQuestions();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        async function runMigration() {
+            if (!confirm('This will migrate 120 hardcoded questions to the database. Continue?')) return;
+
+            try {
+                const response = await fetch('/api/admin/trivia/migrate', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) throw new Error(data.error);
+
+                showToast(`Migration complete! ${data.inserted} questions added.`);
+                loadQuestions();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Filter change handlers
+        document.getElementById('categoryFilter').addEventListener('change', () => { currentOffset = 0; loadQuestions(); });
+        document.getElementById('difficultyFilter').addEventListener('change', () => { currentOffset = 0; loadQuestions(); });
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') { currentOffset = 0; loadQuestions(); }
+        });
+
+        // Initial load
+        loadQuestions();
+    </script>
+    <!-- Shared Footer -->
+    <div id="site-footer"></div>
+    <script src="/js/footer.js"></script>
+</body>
+</html>

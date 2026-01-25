@@ -44,6 +44,7 @@ export default async function handler(req, res) {
                     estimatedValue: r.estimatedValue,
                     ticketPrice: r.ticketPrice,
                     maxTicketsPerUser: r.maxTicketsPerUser,
+                    isPremiumOnly: r.isPremiumOnly || false,
                     totalTicketsSold: r.totalTicketsSold || 0,
                     status: r.status,
                     drawDate: r.drawDate,
@@ -66,7 +67,8 @@ export default async function handler(req, res) {
                 estimatedValue,
                 ticketPrice,
                 maxTicketsPerUser,
-                drawDate
+                drawDate,
+                isPremiumOnly
             } = req.body;
 
             if (!title || title.trim().length === 0) {
@@ -94,6 +96,7 @@ export default async function handler(req, res) {
                 estimatedValue: parseFloat(estimatedValue) || 0,
                 ticketPrice: parseInt(ticketPrice) || DEFAULT_TICKET_PRICE,
                 maxTicketsPerUser: maxTicketsPerUser ? parseInt(maxTicketsPerUser) : null,
+                isPremiumOnly: isPremiumOnly === true,  // Premium-only raffle (exclusive to Diehard Premium members)
                 totalTicketsSold: 0,
                 status: 'draft',
                 drawDate: drawDateObj,

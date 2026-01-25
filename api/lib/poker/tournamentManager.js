@@ -329,13 +329,14 @@ export async function distributePrizes(tournamentId) {
     if (winner) {
       const prize = Math.floor(tournament.prizePool * (structure.percentage / 100));
       if (prize > 0) {
-        // Award coins
+        // Award coins (no multiplier - prize pool is from buy-ins)
         await addCoins(
           winner.playerId.toString(),
           prize,
           'poker_prize',
           `Tournament prize: ${tournament.name} - ${getOrdinal(structure.place)} place`,
-          { tournamentId: tournament._id, place: structure.place }
+          { tournamentId: tournament._id, place: structure.place },
+          { skipMultiplier: true }
         );
 
         prizeWinners.push({

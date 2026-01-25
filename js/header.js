@@ -1,7 +1,7 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
-// Version: 2.7 - Added inline styles to prevent layout jumbling
+// Version: 2.8 - Consolidated user panel (DD, badges, links in single clean control)
 
 (function() {
     'use strict';
@@ -29,6 +29,18 @@
                             <span>&#9888;</span>
                             <span class="feedback-label">Report Issue</span>
                         </button>
+                    </div>
+                    <!-- Founders Club Progress -->
+                    <div class="founders-club-widget" id="foundersWidget" style="display: none;">
+                        <a href="/founders.html" class="founders-progress-link" id="foundersProgress" title="Join the Founders Club - Limited to 76 members!">
+                            <span class="founders-bell">&#128276;</span>
+                            <span class="founders-text">Founders Club</span>
+                            <span class="founders-bar">
+                                <span class="founders-bar-fill" id="foundersBarFill"></span>
+                            </span>
+                            <span class="founders-count" id="foundersCount">0/76</span>
+                        </a>
+                        <a href="/founders.html#about" class="founders-info-link" title="Learn more about the Founders Club">More Info</a>
                     </div>
                 </div>
                 <!-- Center Column: Logo -->
@@ -150,16 +162,6 @@
 
                     <a href="/esports/" class="nav-item">eSports</a>
                     <a href="/youth/" class="nav-item">Youth</a>
-
-                    <!-- Founders Club Progress -->
-                    <a href="/founders.html" class="founders-progress" id="foundersProgress" style="display: none;" title="Join the Founders Club">
-                        <span class="founders-bell">&#128276;</span>
-                        <span class="founders-text">Founders Club</span>
-                        <span class="founders-bar">
-                            <span class="founders-bar-fill" id="foundersBarFill"></span>
-                        </span>
-                        <span class="founders-count" id="foundersCount">0/76</span>
-                    </a>
                 </div>
             </nav>
         </header>
@@ -735,177 +737,190 @@
             box-shadow: inset 0 0 0 2px #8B1A28, 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* ----- Coin Display ----- */
-        .coin-display {
+        /* ----- User Panel (Consolidated) ----- */
+        .user-panel {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.15rem;
-            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
-            border: 3px solid #F5F0E1;
+            gap: 0.5rem;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.4rem 0.75rem;
-            cursor: default;
-            min-width: 110px;
-        }
-
-        .coin-label {
+            padding: 0.6rem 0.75rem;
+            min-width: 160px;
             font-family: Georgia, serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            font-style: italic;
-            color: #F5F0E1;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .coin-amount-row {
+        .user-panel-header {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 1px solid rgba(26, 39, 68, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1A2744, #0d1520);
+            color: #F5F0E1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 2px solid #8B1A28;
+            text-transform: uppercase;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-panel-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .user-panel-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #1A2744;
+            text-decoration: none;
+            line-height: 1.2;
+        }
+
+        .user-panel-name:hover {
+            color: #8B1A28;
+        }
+
+        .user-panel-badges {
+            display: flex;
+            gap: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .badge-premium {
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.3rem;
+            background: linear-gradient(135deg, #ffd700, #c9a000);
+            color: #1A2744;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-founder {
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.3rem;
+            background: linear-gradient(135deg, #1A2744, #0d1520);
+            color: #ffd700;
+            border-radius: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-admin {
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 0.1rem 0.3rem;
+            background: linear-gradient(135deg, #8B1A28, #5a0f15);
+            color: #F5F0E1;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .user-panel-coins {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+        }
+
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
         }
 
         .coin-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 26px;
-            height: 26px;
+            width: 22px;
+            height: 22px;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             border-radius: 50%;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 800;
             color: #1A2744;
-            border: 2px solid #F5F0E1;
+            border: 2px solid #1A2744;
             font-family: Georgia, serif;
         }
 
         .coin-balance {
             font-family: Georgia, serif;
             font-variant-numeric: tabular-nums;
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: #ffd700;
+            color: #1A2744;
+        }
+
+        .coin-label {
+            font-size: 0.6rem;
+            color: #666;
+            font-weight: 500;
         }
 
         .buy-coins-link {
-            font-family: Georgia, serif;
-            color: #1A2744 !important;
-            text-decoration: none;
+            font-size: 0.6rem;
             font-weight: 600;
-            font-size: 0.4rem;
-            margin-top: 0.15rem;
-            padding: 0.1rem 0.3rem;
-            transition: all 0.2s;
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            color: #8B1A28;
+            text-decoration: none;
+            padding: 0.15rem 0.35rem;
             border: 1px solid #8B1A28;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 0.25px;
-            text-align: center;
+            border-radius: 2px;
+            transition: all 0.2s;
         }
 
         .buy-coins-link:hover {
-            background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
-            transform: translateY(-1px);
+            background: #8B1A28;
+            color: #F5F0E1;
         }
 
-        /* ----- User Actions Stack ----- */
-        .user-actions-stack {
+        .user-panel-links {
             display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0.3rem;
-            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
-            border: 3px solid #F5F0E1;
-            box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.35rem 0.5rem;
+            padding-top: 0.35rem;
+            border-top: 1px solid rgba(26, 39, 68, 0.2);
         }
 
-        .user-actions-stack a {
-            font-family: Georgia, serif;
-            text-align: center;
-            padding: 0.3rem 0.5rem !important;
-            font-size: 0.7rem !important;
-            color: #F5F0E1 !important;
+        .user-panel-links a {
+            font-size: 0.7rem;
+            color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
         }
 
-        .user-actions-stack a:hover {
-            color: #ffd700 !important;
+        .user-panel-links a:hover {
+            color: #8B1A28;
         }
 
-        /* ----- Premium Badge ----- */
-        .premium-badge {
-            background: linear-gradient(180deg, #ffd700 0%, #c9a000 100%) !important;
-            color: #1A2744 !important;
-            font-family: Georgia, serif !important;
-            font-size: 0.6rem !important;
-            font-weight: 700 !important;
-            padding: 0.25rem 0.5rem !important;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-            border: 2px solid #F5F0E1;
+        .user-panel-links .link-sep {
+            color: rgba(26, 39, 68, 0.3);
+            font-size: 0.6rem;
         }
 
-        .premium-badge:hover {
-            background: linear-gradient(180deg, #ffe44d 0%, #ffd700 100%) !important;
-        }
-
-        .go-premium-link {
-            background: linear-gradient(180deg, #ffd700 0%, #c9a000 100%) !important;
-            color: #1A2744 !important;
-            font-family: Georgia, serif !important;
-            font-size: 0.65rem !important;
-            font-weight: 700 !important;
-            padding: 0.3rem 0.6rem !important;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-            border: 2px solid #F5F0E1;
-        }
-
-        .go-premium-link:hover {
-            background: linear-gradient(180deg, #ffe44d 0%, #ffd700 100%) !important;
-        }
-
-        /* ----- Mail Link ----- */
-        .mail-link {
-            background: linear-gradient(180deg, #1a5c3a 0%, #0d3320 100%) !important;
-            color: #F5F0E1 !important;
-            font-family: Georgia, serif !important;
-            font-size: 0.65rem !important;
-            font-weight: 700 !important;
-            padding: 0.25rem 0.6rem !important;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-            border: 2px solid #F5F0E1;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .mail-link:hover {
-            background: linear-gradient(180deg, #2d8659 0%, #1a5c3a 100%) !important;
-        }
-
-        /* ----- Admin Link ----- */
-        .admin-link {
-            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%) !important;
-            color: #F5F0E1 !important;
-            font-family: Georgia, serif !important;
-            font-size: 0.65rem !important;
-            font-weight: 700 !important;
-            padding: 0.3rem 0.6rem !important;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-            border: 2px solid #F5F0E1;
-        }
-
-        .admin-link:hover {
-            background: linear-gradient(180deg, #a01f30 0%, #8B1A28 100%) !important;
+        /* Legacy styles kept for backwards compatibility */
+        .premium-badge, .go-premium-link, .mail-link, .admin-link {
+            display: none;
         }
 
         /* ----- Theme Toggle ----- */
@@ -1398,48 +1413,31 @@
             background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
         }
 
-        /* Coin Display - Dark Mode (cream box on black header) */
-        [data-theme="dark"] .coin-display {
+        /* User Panel - Dark Mode (same cream styling on black header) */
+        [data-theme="dark"] .user-panel {
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            border: 3px solid #1A2744;
+            border: 3px solid #F5F0E1;
+            box-shadow: inset 0 0 0 2px #8B1A28;
         }
 
-        [data-theme="dark"] .coin-label {
-            color: #000000;
+        [data-theme="dark"] .user-panel-name {
+            color: #1A2744;
         }
 
-        [data-theme="dark"] .coin-balance {
+        [data-theme="dark"] .user-panel-name:hover {
             color: #8B1A28;
         }
 
-        [data-theme="dark"] .coin-icon {
-            border: 2px solid #1A2744;
+        [data-theme="dark"] .coin-balance {
+            color: #1A2744;
         }
 
-        /* Buy More button - keep readable in dark mode */
-        [data-theme="dark"] .buy-coins-link {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%) !important;
-            color: #1A2744 !important;
-            border: 1px solid #8B1A28 !important;
+        [data-theme="dark"] .user-panel-links a {
+            color: #1A2744;
         }
 
-        /* User Actions Stack - Dark Mode (cream box on black header) */
-        [data-theme="dark"] .user-actions-stack {
-            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
-            border: 3px solid #1A2744;
-        }
-
-        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):not(.mail-link) {
-            color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .user-actions-stack a:not(.admin-link):not(.premium-badge):not(.go-premium-link):not(.mail-link):hover {
-            color: #8B1A28 !important;
-        }
-
-        /* Admin link - keep cream text in dark mode */
-        [data-theme="dark"] .admin-link {
-            color: #F5F0E1 !important;
+        [data-theme="dark"] .user-panel-links a:hover {
+            color: #8B1A28;
         }
 
         /* Theme toggle - dark mode icon visibility */
@@ -1465,14 +1463,21 @@
         }
 
         /* ==========================================================================
-           SECTION 6B: FOUNDERS CLUB PROGRESS INDICATOR
+           SECTION 6B: FOUNDERS CLUB WIDGET (in header-left)
            ========================================================================== */
-        .founders-progress {
+        .founders-club-widget {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .founders-progress-link {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             padding: 0.4rem 0.75rem;
-            margin-left: 1rem;
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border: 2px solid #ffd700;
             border-radius: 20px;
@@ -1486,7 +1491,7 @@
             to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
         }
 
-        .founders-progress:hover {
+        .founders-progress-link:hover {
             transform: scale(1.05);
             border-color: #fff;
         }
@@ -1536,8 +1541,29 @@
             50% { opacity: 0.5; }
         }
 
-        /* Hide founders progress when full */
-        .founders-progress.full {
+        .founders-info-link {
+            font-family: Georgia, serif;
+            font-size: 0.65rem;
+            color: #1A2744;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .founders-info-link:hover {
+            color: #8B1A28;
+        }
+
+        [data-theme="dark"] .founders-info-link {
+            color: #ffd700;
+        }
+
+        [data-theme="dark"] .founders-info-link:hover {
+            color: #fff;
+        }
+
+        /* Hide founders widget when full */
+        .founders-club-widget.full {
             display: none !important;
         }
 
@@ -1549,7 +1575,7 @@
         }
 
         @media (max-width: 1100px) {
-            .founders-progress { display: none !important; }
+            .founders-club-widget { display: none !important; }
         }
 
         @media (max-width: 768px) {
@@ -1559,7 +1585,7 @@
             .feedback-link { display: none; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
-            .founders-progress { display: none !important; }
+            .founders-club-widget { display: none !important; }
             .header-logo {
                 margin-top: 0;
                 width: 300px !important;
@@ -1720,26 +1746,46 @@
                     : '';
 
                 if (headerAuth) {
-                    // Change to column layout for logged-in state
-                    headerAuth.style.flexDirection = 'column';
-                    headerAuth.style.alignItems = 'flex-end';
-                    headerAuth.style.gap = '0.5rem';
+                    // Get user initials for avatar
+                    const initials = (data.user.displayName || data.user.username || 'U').charAt(0).toUpperCase();
+                    const avatarContent = data.user.profilePhoto
+                        ? `<img src="${data.user.profilePhoto}" alt="${data.user.username}">`
+                        : initials;
+
+                    // Build badges array
+                    const badges = [];
+                    if (isPremium) badges.push('<span class="badge-premium">Premium</span>');
+                    if (data.user.founderNumber) badges.push(`<span class="badge-founder">#${data.user.founderNumber}</span>`);
+                    if (data.user.isAdmin) badges.push('<span class="badge-admin">Admin</span>');
+                    const badgesHtml = badges.length > 0 ? `<div class="user-panel-badges">${badges.join('')}</div>` : '';
+
+                    // Build quick links
+                    const quickLinks = ['<a href="/profile.html">Profile</a>'];
+                    if (isPremium) quickLinks.push('<a href="/mail.html">Mail</a>');
+                    quickLinks.push('<a href="/settings.html">Settings</a>');
+                    if (data.user.isAdmin) quickLinks.push('<a href="/admin.html">Admin</a>');
+                    quickLinks.push('<a href="#" id="logoutBtn">Logout</a>');
 
                     headerAuth.innerHTML = `
-                        <div class="coin-display" style="display: flex; flex-direction: column; align-items: center;">
-                            <span class="coin-label">Diehard Dollars</span>
-                            <div class="coin-amount-row" style="display: flex; align-items: center; gap: 0.4rem;">
-                                <span class="coin-icon">DD</span>
-                                <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
+                        <div class="user-panel">
+                            <div class="user-panel-header">
+                                <div class="user-avatar">${avatarContent}</div>
+                                <div class="user-panel-info">
+                                    <a href="/profile.html" class="user-panel-name">${data.user.displayName || data.user.username}</a>
+                                    ${badgesHtml}
+                                </div>
                             </div>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link">Buy More</a>
-                        </div>
-                        <div class="user-actions-stack" style="display: flex; flex-direction: column; align-items: stretch;">
-                            <a href="/profile.html">${data.user.username}</a>
-                            ${premiumBadge}
-                            ${mailLink}
-                            ${adminLink}
-                            <a href="#" id="logoutBtn">Logout</a>
+                            <div class="user-panel-coins">
+                                <div class="coin-info">
+                                    <span class="coin-icon">DD</span>
+                                    <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
+                                    <span class="coin-label">DD</span>
+                                </div>
+                                <a href="/shop.html#coin-packs" class="buy-coins-link">Buy</a>
+                            </div>
+                            <div class="user-panel-links">
+                                ${quickLinks.join('<span class="link-sep">·</span>')}
+                            </div>
                         </div>
                     `;
 
@@ -1972,27 +2018,29 @@
             if (!data.success || !data.foundersClub) return;
 
             const { current, limit, spotsRemaining, isFull } = data.foundersClub;
-            const progressEl = document.getElementById('foundersProgress');
+            const widgetEl = document.getElementById('foundersWidget');
             const barFill = document.getElementById('foundersBarFill');
             const countEl = document.getElementById('foundersCount');
 
-            if (!progressEl) return;
+            if (!widgetEl) return;
 
             if (isFull) {
                 // Hide if full
-                progressEl.classList.add('full');
-                progressEl.style.display = 'none';
+                widgetEl.classList.add('full');
+                widgetEl.style.display = 'none';
             } else {
                 // Show progress
-                progressEl.style.display = 'flex';
+                widgetEl.style.display = 'flex';
                 const percent = (current / limit) * 100;
-                barFill.style.width = percent + '%';
-                countEl.textContent = `${current}/${limit}`;
+                if (barFill) barFill.style.width = percent + '%';
+                if (countEl) {
+                    countEl.textContent = `${current}/${limit}`;
 
-                // Add urgency styling when few spots left
-                if (spotsRemaining <= 10) {
-                    countEl.classList.add('urgent');
-                    countEl.textContent = `${spotsRemaining} left!`;
+                    // Add urgency styling when few spots left
+                    if (spotsRemaining <= 10) {
+                        countEl.classList.add('urgent');
+                        countEl.textContent = `${spotsRemaining} left!`;
+                    }
                 }
             }
         } catch (e) {

@@ -213,13 +213,14 @@ export default async function handler(req, res) {
                     { orderId: order._id.toString(), listingId: listing._id.toString() }
                 );
 
-                // Add to seller (minus commission)
+                // Add to seller (minus commission) - no multiplier for sales revenue
                 await addCoins(
                     listing.sellerId.toString(),
                     commission.sellerPayout,
                     'marketplace_sale',
                     `Sold: ${listing.title}`,
-                    { orderId: order._id.toString(), commission: commission.commission }
+                    { orderId: order._id.toString(), commission: commission.commission },
+                    { skipMultiplier: true }
                 );
             } catch (coinError) {
                 // Rollback order if coin operations fail
