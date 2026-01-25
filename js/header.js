@@ -737,35 +737,29 @@
             box-shadow: inset 0 0 0 2px #8B1A28, 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* ----- User Panel (Consolidated) ----- */
+        /* ----- User Panel (Consolidated Horizontal) ----- */
         .user-panel {
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.5rem 0.75rem;
+            padding: 0.4rem 0.6rem;
             font-family: Georgia, serif;
         }
 
-        .user-panel-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #F5F0E1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             border: 2px solid #8B1A28;
             text-transform: uppercase;
@@ -782,11 +776,11 @@
         .user-panel-info {
             display: flex;
             flex-direction: column;
-            gap: 0.15rem;
+            gap: 0.1rem;
         }
 
         .user-panel-name {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #1A2744;
             text-decoration: none;
@@ -800,14 +794,13 @@
 
         .user-panel-badges {
             display: flex;
-            gap: 0.2rem;
-            flex-wrap: wrap;
+            gap: 0.15rem;
         }
 
         .badge-premium {
             font-size: 0.5rem;
             font-weight: 700;
-            padding: 0.1rem 0.25rem;
+            padding: 0.08rem 0.2rem;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             color: #1A2744;
             border-radius: 2px;
@@ -818,7 +811,7 @@
         .badge-founder {
             font-size: 0.5rem;
             font-weight: 700;
-            padding: 0.1rem 0.25rem;
+            padding: 0.08rem 0.2rem;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #ffd700;
             border-radius: 2px;
@@ -828,7 +821,7 @@
         .badge-admin {
             font-size: 0.5rem;
             font-weight: 700;
-            padding: 0.1rem 0.25rem;
+            padding: 0.08rem 0.2rem;
             background: linear-gradient(135deg, #8B1A28, #5a0f15);
             color: #F5F0E1;
             border-radius: 2px;
@@ -836,53 +829,47 @@
             letter-spacing: 0.3px;
         }
 
+        .user-panel-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(26, 39, 68, 0.25);
+        }
+
         .user-panel-coins {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0 0.5rem;
-            border-left: 1px solid rgba(26, 39, 68, 0.2);
-        }
-
-        .coin-info {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
+            gap: 0.35rem;
         }
 
         .coin-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             border-radius: 50%;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 800;
             color: #1A2744;
-            border: 2px solid #1A2744;
+            border: 1.5px solid #1A2744;
             font-family: Georgia, serif;
         }
 
         .coin-balance {
             font-family: Georgia, serif;
             font-variant-numeric: tabular-nums;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #1A2744;
         }
 
-        .coin-label {
-            display: none;
-        }
-
         .buy-coins-link {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 600;
             color: #8B1A28;
             text-decoration: none;
-            padding: 0.15rem 0.3rem;
+            padding: 0.1rem 0.25rem;
             border: 1px solid #8B1A28;
             border-radius: 2px;
             transition: all 0.2s;
@@ -896,13 +883,11 @@
         .user-panel-links {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            padding-left: 0.5rem;
-            border-left: 1px solid rgba(26, 39, 68, 0.2);
+            gap: 0.3rem;
         }
 
         .user-panel-links a {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
@@ -915,7 +900,7 @@
 
         .user-panel-links .link-sep {
             color: rgba(26, 39, 68, 0.3);
-            font-size: 0.5rem;
+            font-size: 0.45rem;
         }
 
         /* Legacy styles kept for backwards compatibility */
@@ -1413,32 +1398,19 @@
             background: linear-gradient(180deg, #ffffff 0%, #F5F0E1 100%);
         }
 
-        /* User Panel - Dark Mode (same cream styling on black header) */
+        /* User Panel - Dark Mode (cream panel stays same on black header) */
         [data-theme="dark"] .user-panel {
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #F5F0E1;
             box-shadow: inset 0 0 0 2px #8B1A28;
         }
 
-        [data-theme="dark"] .user-panel-name {
-            color: #1A2744;
-        }
-
-        [data-theme="dark"] .user-panel-name:hover {
-            color: #8B1A28;
-        }
-
-        [data-theme="dark"] .coin-balance {
-            color: #1A2744;
-        }
-
-        [data-theme="dark"] .user-panel-links a {
-            color: #1A2744;
-        }
-
-        [data-theme="dark"] .user-panel-links a:hover {
-            color: #8B1A28;
-        }
+        [data-theme="dark"] .user-panel-name { color: #1A2744; }
+        [data-theme="dark"] .user-panel-name:hover { color: #8B1A28; }
+        [data-theme="dark"] .coin-balance { color: #1A2744; }
+        [data-theme="dark"] .user-panel-links a { color: #1A2744; }
+        [data-theme="dark"] .user-panel-links a:hover { color: #8B1A28; }
+        [data-theme="dark"] .user-panel-divider { background: rgba(26, 39, 68, 0.25); }
 
         /* Theme toggle - dark mode icon visibility */
         [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
@@ -1768,21 +1740,18 @@
 
                     headerAuth.innerHTML = `
                         <div class="user-panel">
-                            <div class="user-panel-header">
-                                <div class="user-avatar">${avatarContent}</div>
-                                <div class="user-panel-info">
-                                    <a href="/profile.html" class="user-panel-name">${data.user.displayName || data.user.username}</a>
-                                    ${badgesHtml}
-                                </div>
+                            <div class="user-avatar">${avatarContent}</div>
+                            <div class="user-panel-info">
+                                <a href="/profile.html" class="user-panel-name">${data.user.displayName || data.user.username}</a>
+                                ${badgesHtml}
                             </div>
+                            <div class="user-panel-divider"></div>
                             <div class="user-panel-coins">
-                                <div class="coin-info">
-                                    <span class="coin-icon">DD</span>
-                                    <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
-                                    <span class="coin-label">DD</span>
-                                </div>
+                                <span class="coin-icon">DD</span>
+                                <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
                                 <a href="/shop.html#coin-packs" class="buy-coins-link">Buy</a>
                             </div>
+                            <div class="user-panel-divider"></div>
                             <div class="user-panel-links">
                                 ${quickLinks.join('<span class="link-sep">·</span>')}
                             </div>
