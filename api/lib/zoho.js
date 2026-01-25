@@ -257,7 +257,7 @@ export async function getMailFolders(accountId) {
             folders: (result.data || []).map(f => ({
                 id: f.folderId,
                 name: f.folderName,
-                path: f.folderPath,
+                path: f.path || f.folderPath || '',
                 unreadCount: f.unreadCount || 0,
                 messageCount: f.messageCount || 0,
                 isSystemFolder: f.isSystemFolder
