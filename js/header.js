@@ -737,29 +737,35 @@
             box-shadow: inset 0 0 0 2px #8B1A28, 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* ----- User Panel (Consolidated Horizontal) ----- */
+        /* ----- User Panel (Two Row Layout) ----- */
         .user-panel {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 0.35rem;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
             padding: 0.4rem 0.6rem;
             font-family: Georgia, serif;
+            min-width: 140px;
+        }
+
+        .user-panel-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #F5F0E1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
             border: 2px solid #8B1A28;
             text-transform: uppercase;
@@ -785,7 +791,6 @@
             color: #1A2744;
             text-decoration: none;
             line-height: 1.2;
-            white-space: nowrap;
         }
 
         .user-panel-name:hover {
@@ -805,7 +810,6 @@
             color: #1A2744;
             border-radius: 2px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
         .badge-founder {
@@ -815,7 +819,6 @@
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #ffd700;
             border-radius: 2px;
-            letter-spacing: 0.3px;
         }
 
         .badge-admin {
@@ -826,30 +829,28 @@
             color: #F5F0E1;
             border-radius: 2px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
         .user-panel-divider {
-            width: 1px;
-            height: 24px;
-            background: rgba(26, 39, 68, 0.25);
+            display: none;
         }
 
         .user-panel-coins {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.3rem;
+            margin-left: auto;
         }
 
         .coin-icon {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             border-radius: 50%;
-            font-size: 0.5rem;
+            font-size: 0.45rem;
             font-weight: 800;
             color: #1A2744;
             border: 1.5px solid #1A2744;
@@ -859,7 +860,7 @@
         .coin-balance {
             font-family: Georgia, serif;
             font-variant-numeric: tabular-nums;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: #1A2744;
         }
@@ -869,7 +870,7 @@
             font-weight: 600;
             color: #8B1A28;
             text-decoration: none;
-            padding: 0.1rem 0.25rem;
+            padding: 0.1rem 0.2rem;
             border: 1px solid #8B1A28;
             border-radius: 2px;
             transition: all 0.2s;
@@ -883,7 +884,8 @@
         .user-panel-links {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.25rem;
+            flex-wrap: wrap;
         }
 
         .user-panel-links a {
@@ -891,7 +893,6 @@
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
-            white-space: nowrap;
         }
 
         .user-panel-links a:hover {
@@ -1740,18 +1741,18 @@
 
                     headerAuth.innerHTML = `
                         <div class="user-panel">
-                            <div class="user-avatar">${avatarContent}</div>
-                            <div class="user-panel-info">
-                                <a href="/profile.html" class="user-panel-name">${data.user.displayName || data.user.username}</a>
-                                ${badgesHtml}
+                            <div class="user-panel-row">
+                                <div class="user-avatar">${avatarContent}</div>
+                                <div class="user-panel-info">
+                                    <a href="/profile.html" class="user-panel-name">${data.user.displayName || data.user.username}</a>
+                                    ${badgesHtml}
+                                </div>
+                                <div class="user-panel-coins">
+                                    <span class="coin-icon">DD</span>
+                                    <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
+                                    <a href="/shop.html#coin-packs" class="buy-coins-link">Buy</a>
+                                </div>
                             </div>
-                            <div class="user-panel-divider"></div>
-                            <div class="user-panel-coins">
-                                <span class="coin-icon">DD</span>
-                                <span class="coin-balance">${Math.round(data.user.coinBalance || 0).toLocaleString()}</span>
-                                <a href="/shop.html#coin-packs" class="buy-coins-link">Buy</a>
-                            </div>
-                            <div class="user-panel-divider"></div>
                             <div class="user-panel-links">
                                 ${quickLinks.join('<span class="link-sep">·</span>')}
                             </div>

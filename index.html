@@ -2453,6 +2453,7 @@
     <!-- Shared Header -->
     <div id="site-header"></div>
     <script src="/js/header.js"></script>
+    <script src="/js/news-feed.js"></script>
 
     <!-- Main Content -->
     <main class="main-container">
@@ -3695,7 +3696,8 @@
         loadSchedule();
         loadDiehardLeaderboard();
         loadSourceLeaderboard();
-        loadNews();
+        // Initialize shared news feed component
+        PhillySportsNewsFeed.init({ containerId: 'articleList' });
 
         // Content filter handlers
         const categoryButtons = document.querySelectorAll('.filter-btn[data-filter="category"]');
@@ -3726,7 +3728,7 @@
                     b.classList.remove('active');
                 });
                 btn.classList.add('active');
-                loadNews({ type: btn.dataset.value, categories: getSelectedCategories() });
+                PhillySportsNewsFeed.load({ type: btn.dataset.value, categories: getSelectedCategories() });
             });
         });
 
@@ -3756,14 +3758,13 @@
                 const typeValue = activeTypeBtn ? activeTypeBtn.dataset.value : 'all';
 
                 // Reload with selected categories
-                loadNews({ type: typeValue, categories: getSelectedCategories() });
+                PhillySportsNewsFeed.load({ type: typeValue, categories: getSelectedCategories() });
             });
         });
 
         // Refresh data every 5 minutes
         setInterval(loadScores, 5 * 60 * 1000);
         setInterval(loadSchedule, 5 * 60 * 1000);
-        setInterval(loadNews, 5 * 60 * 1000);
 
         // Trivia Widget
         let currentTriviaQuestion = null;
