@@ -95,14 +95,10 @@ export async function isEmailAvailable(emailPrefix) {
 export async function createEmailAccount(emailPrefix, displayName, password) {
     const email = `${emailPrefix.toLowerCase()}@${ZOHO_CONFIG.domain}`;
 
+    // Zoho API only accepts minimal fields - extra fields cause errors
     const userData = {
         primaryEmailAddress: email,
-        displayName: displayName,
-        password: password,
-        userType: 'member', // or 'admin'
-        role: 'member',
-        country: 'us',
-        language: 'en'
+        password: password
     };
 
     try {
