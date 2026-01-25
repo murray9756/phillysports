@@ -117,6 +117,26 @@
         .toast.success { background: #4caf50; }
         .toast.error { background: #f44336; }
 
+        /* Founders Club Banner */
+        .founders-banner { background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid #ffd700; border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; position: relative; overflow: hidden; }
+        .founders-banner::before { content: ''; position: absolute; top: -50%; right: -50%; width: 100%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); pointer-events: none; }
+        .founders-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .founders-icon { font-size: 2.5rem; }
+        .founders-title { color: #ffd700; font-size: 1.5rem; font-weight: 800; }
+        .founders-subtitle { color: #b8b8b8; font-size: 0.9rem; }
+        .founders-spots { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+        .spots-counter { background: rgba(255,215,0,0.15); border: 1px solid rgba(255,215,0,0.3); border-radius: 10px; padding: 1rem 1.5rem; text-align: center; }
+        .spots-number { font-size: 2rem; font-weight: 800; color: #ffd700; }
+        .spots-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .founders-perks { flex: 1; min-width: 200px; }
+        .founders-perks-title { color: #ffd700; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem; }
+        .founders-perks-list { color: #ccc; font-size: 0.85rem; line-height: 1.8; }
+        .founders-perks-list span { color: #ffd700; }
+        .founders-full { text-align: center; color: #888; font-style: italic; }
+
+        /* Founder badge in status */
+        .founder-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg, #ffd700, #b8860b); color: #1a1a1a; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-left: 0.5rem; }
+
         @media (max-width: 768px) {
             .page-hero h1 { font-size: 1.75rem; }
             .pricing-section { flex-direction: column; align-items: center; }
@@ -139,6 +159,33 @@
     </div>
 
     <main class="main-container">
+        <!-- Founders Club Banner -->
+        <div class="founders-banner" id="foundersBanner" style="display: none;">
+            <div class="founders-header">
+                <span class="founders-icon">&#128276;</span>
+                <div>
+                    <div class="founders-title">Founders Club</div>
+                    <div class="founders-subtitle">Be one of the first 76 Premium members</div>
+                </div>
+            </div>
+            <div class="founders-spots">
+                <div class="spots-counter">
+                    <div class="spots-number" id="spotsRemaining">76</div>
+                    <div class="spots-label">Spots Left</div>
+                </div>
+                <div class="founders-perks">
+                    <div class="founders-perks-title">Founders Get Extra Perks Forever:</div>
+                    <div class="founders-perks-list">
+                        <span>&#10022;</span> 3x earnings (vs 2x) &nbsp;
+                        <span>&#10022;</span> 1,000 DD/month (vs 500) &nbsp;
+                        <span>&#10022;</span> Vote on site features &nbsp;
+                        <span>&#10022;</span> Founders-only events &nbsp;
+                        <span>&#10022;</span> Exclusive badge
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="pricing-card">
             <span class="premium-badge">Best Value</span>
 
@@ -316,6 +363,7 @@
     <script>
         let currentUser = null;
         let subscriptionStatus = null;
+        let foundersData = null;
         let billingInterval = 'quarter';
 
         async function init() {
@@ -330,18 +378,47 @@
             }
 
             try {
-                const authRes = await fetch('/api/auth/me');
+                // Fetch auth, subscription status, and founders count in parallel
+                const [authRes, subRes, foundersRes] = await Promise.all([
+                    fetch('/api/auth/me'),
+                    fetch('/api/subscriptions/status'),
+                    fetch('/api/subscriptions/founders')
+                ]);
+
                 const authData = await authRes.json();
                 if (authData.user) {
                     currentUser = authData.user;
                 }
 
-                const subRes = await fetch('/api/subscriptions/status');
                 subscriptionStatus = await subRes.json();
+                foundersData = await foundersRes.json();
 
                 updateUI();
+                updateFoundersBanner();
             } catch (e) {
                 console.error('Init error:', e);
+            }
+        }
+
+        function updateFoundersBanner() {
+            const banner = document.getElementById('foundersBanner');
+            const spotsEl = document.getElementById('spotsRemaining');
+
+            if (!foundersData?.foundersClub) return;
+
+            const { spotsRemaining, isFull } = foundersData.foundersClub;
+
+            if (isFull) {
+                // All spots taken - hide banner or show "closed" message
+                banner.style.display = 'none';
+            } else {
+                banner.style.display = 'block';
+                spotsEl.textContent = spotsRemaining;
+
+                // Urgency styling for low spots
+                if (spotsRemaining <= 10) {
+                    spotsEl.style.color = '#ff4444';
+                }
             }
         }
 
@@ -365,11 +442,24 @@
                 statusBanner.classList.add('premium');
 
                 const endDate = subscriptionStatus.endDate ? new Date(subscriptionStatus.endDate).toLocaleDateString() : '';
+                const isFounder = subscriptionStatus.isFounder;
+                const founderNumber = subscriptionStatus.founderNumber;
+
+                // Build status message
+                let tierLabel = '<strong>Diehard Premium</strong>';
+                if (isFounder) {
+                    tierLabel = `<strong>Founders Club</strong> <span class="founder-badge">&#128276; #${founderNumber} of 76</span>`;
+                }
 
                 if (subscriptionStatus.status === 'canceling') {
-                    statusText.innerHTML = `You're a <strong>Diehard Premium</strong> member! Your subscription will end on ${endDate}.`;
+                    statusText.innerHTML = `You're a ${tierLabel} member! Your subscription will end on ${endDate}.`;
                 } else {
-                    statusText.innerHTML = `You're a <strong>Diehard Premium</strong> member! Next billing: ${endDate}`;
+                    statusText.innerHTML = `You're a ${tierLabel} member! Next billing: ${endDate}`;
+                }
+
+                // Hide founders banner if user is already a founder
+                if (isFounder) {
+                    document.getElementById('foundersBanner').style.display = 'none';
                 }
 
                 // Show management section
@@ -383,9 +473,14 @@
                 document.getElementById('reactivateBtn').style.display = subscriptionStatus.status === 'canceling' ? 'inline-block' : 'none';
 
                 // Update subscribe button
-                subscribeBtn.textContent = 'You\'re a Premium Member!';
+                subscribeBtn.textContent = isFounder ? 'You\'re a Founder!' : 'You\'re a Premium Member!';
                 subscribeBtn.classList.add('current');
                 subscribeBtn.disabled = true;
+            } else {
+                // Not subscribed - update button text based on founders availability
+                if (foundersData?.foundersClub && !foundersData.foundersClub.isFull) {
+                    subscribeBtn.textContent = `Join Founders Club (${foundersData.foundersClub.spotsRemaining} spots left)`;
+                }
             }
         }
 

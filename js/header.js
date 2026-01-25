@@ -150,6 +150,16 @@
 
                     <a href="/esports/" class="nav-item">eSports</a>
                     <a href="/youth/" class="nav-item">Youth</a>
+
+                    <!-- Founders Club Progress -->
+                    <a href="/founders.html" class="founders-progress" id="foundersProgress" style="display: none;" title="Join the Founders Club">
+                        <span class="founders-bell">&#128276;</span>
+                        <span class="founders-text">Founders Club</span>
+                        <span class="founders-bar">
+                            <span class="founders-bar-fill" id="foundersBarFill"></span>
+                        </span>
+                        <span class="founders-count" id="foundersCount">0/76</span>
+                    </a>
                 </div>
             </nav>
         </header>
@@ -1455,10 +1465,91 @@
         }
 
         /* ==========================================================================
+           SECTION 6B: FOUNDERS CLUB PROGRESS INDICATOR
+           ========================================================================== */
+        .founders-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            margin-left: 1rem;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.2s;
+            animation: foundersGlow 2s infinite alternate;
+        }
+
+        @keyframes foundersGlow {
+            from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        }
+
+        .founders-progress:hover {
+            transform: scale(1.05);
+            border-color: #fff;
+        }
+
+        .founders-bell {
+            font-size: 1rem;
+        }
+
+        .founders-text {
+            font-family: Georgia, serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .founders-bar {
+            width: 50px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .founders-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .founders-count {
+            font-family: Georgia, serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .founders-count.urgent {
+            color: #ff4444;
+            animation: urgentPulse 1s infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Hide founders progress when full */
+        .founders-progress.full {
+            display: none !important;
+        }
+
+        /* ==========================================================================
            SECTION 7: MOBILE/RESPONSIVE STYLES
            ========================================================================== */
         @media (max-width: 1024px) {
             .header-search input { width: 200px; }
+        }
+
+        @media (max-width: 1100px) {
+            .founders-progress { display: none !important; }
         }
 
         @media (max-width: 768px) {
@@ -1468,6 +1559,7 @@
             .feedback-link { display: none; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
+            .founders-progress { display: none !important; }
             .header-logo {
                 margin-top: 0;
                 width: 300px !important;
@@ -1871,6 +1963,43 @@
         }
     });
 
+    // Fetch and display Founders Club progress
+    async function loadFoundersProgress() {
+        try {
+            const res = await fetch('/api/subscriptions/founders');
+            const data = await res.json();
+
+            if (!data.success || !data.foundersClub) return;
+
+            const { current, limit, spotsRemaining, isFull } = data.foundersClub;
+            const progressEl = document.getElementById('foundersProgress');
+            const barFill = document.getElementById('foundersBarFill');
+            const countEl = document.getElementById('foundersCount');
+
+            if (!progressEl) return;
+
+            if (isFull) {
+                // Hide if full
+                progressEl.classList.add('full');
+                progressEl.style.display = 'none';
+            } else {
+                // Show progress
+                progressEl.style.display = 'flex';
+                const percent = (current / limit) * 100;
+                barFill.style.width = percent + '%';
+                countEl.textContent = `${current}/${limit}`;
+
+                // Add urgency styling when few spots left
+                if (spotsRemaining <= 10) {
+                    countEl.classList.add('urgent');
+                    countEl.textContent = `${spotsRemaining} left!`;
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load founders progress:', e);
+        }
+    }
+
     // Highlight current page in navigation
     function highlightCurrentPage() {
         const currentPath = window.location.pathname;
@@ -1910,6 +2039,7 @@
         initMobileMenu();
         highlightCurrentPage();
         checkAuth();
+        loadFoundersProgress();
     }
 
     // Run on DOM ready

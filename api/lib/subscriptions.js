@@ -5,6 +5,9 @@ import { ObjectId } from 'mongodb';
 import { getCollection } from './mongodb.js';
 import { getStripeInstance } from './payments/stripe.js';
 
+// Founders Club - first 76 premium subscribers get lifetime enhanced benefits
+export const FOUNDERS_CLUB_LIMIT = 76;
+
 // Subscription tiers - simplified to just Free and Premium
 export const SUBSCRIPTION_TIERS = {
     FREE: 'free',
@@ -46,6 +49,24 @@ export const TIER_BENEFITS = {
     // Legacy tier mappings (redirect to premium benefits)
     diehard_plus: null,  // Mapped to premium
     diehard_pro: null    // Mapped to premium
+};
+
+// Founders Club benefits - enhanced premium for first 76 subscribers
+export const FOUNDER_BENEFITS = {
+    name: 'Founders Club',
+    coinMultiplier: 3,              // 3x on ALL earnings (vs 2x for regular premium)
+    monthlyBonusCoins: 1000,        // 1000 DD monthly grant (vs 500)
+    freeContestEntriesPerWeek: 2,   // 2 free premium contest entries per week (vs 1)
+    exclusiveRaffles: true,
+    premiumBadge: true,
+    founderBadge: true,             // Special Founders Club badge
+    noSellerFees: true,
+    customEmail: true,
+    canCreatePrivatePoker: true,
+    adFree: true,
+    foundersEvents: true,           // Access to founders-only events
+    earlyAccess: true,              // Early access to new features
+    canVoteOnFeatures: true         // Vote on site features, changes, and roadmap
 };
 
 // Helper to get actual benefits (handles legacy tier names)
@@ -90,7 +111,9 @@ export async function getSubscriptionStatus(userId) {
                 subscriptionEndDate: 1,
                 subscriptionInterval: 1,
                 stripeCustomerId: 1,
-                stripeSubscriptionId: 1
+                stripeSubscriptionId: 1,
+                isFounder: 1,
+                founderNumber: 1
             }
         }
     );
@@ -100,18 +123,26 @@ export async function getSubscriptionStatus(userId) {
     const rawTier = user.subscriptionTier || 'free';
     // Normalize legacy tiers to 'premium'
     const tier = (rawTier === 'diehard_plus' || rawTier === 'diehard_pro') ? 'premium' : rawTier;
-    const benefits = getTierBenefits(tier);
+
+    // Founders get enhanced benefits (lifetime, even if subscription lapses and returns)
+    const isFounder = user.isFounder === true;
+    const isPremiumActive = tier === 'premium' && user.subscriptionStatus === 'active';
+
+    // Use founder benefits if they're a founder AND have active premium
+    const benefits = (isFounder && isPremiumActive) ? FOUNDER_BENEFITS : getTierBenefits(tier);
 
     return {
         tier,
-        tierName: benefits.name,
+        tierName: isFounder && isPremiumActive ? 'Founders Club' : benefits.name,
         status: user.subscriptionStatus || 'none',
         startDate: user.subscriptionStartDate,
         endDate: user.subscriptionEndDate,
         interval: user.subscriptionInterval,
         benefits,
         isActive: user.subscriptionStatus === 'active' || tier === 'free',
-        isPremium: tier === 'premium' && user.subscriptionStatus === 'active'
+        isPremium: isPremiumActive,
+        isFounder,
+        founderNumber: user.founderNumber || null
     };
 }
 
@@ -197,40 +228,87 @@ export async function activateSubscription(userId, subscriptionData) {
     const tier = (rawTier === 'diehard_plus' || rawTier === 'diehard_pro') ? 'premium' : rawTier;
     const interval = subscriptionData.items?.data[0]?.price?.recurring?.interval || 'month';
 
+    // Check if user already has a founder number (don't reassign)
+    const existingUser = await users.findOne({ _id: userIdObj });
+    let isFounder = existingUser?.isFounder || false;
+    let founderNumber = existingUser?.founderNumber || null;
+
+    // If no founder number yet, check if they qualify for Founders Club
+    if (!founderNumber) {
+        // Count how many founders we have
+        const founderCount = await users.countDocuments({
+            founderNumber: { $exists: true, $ne: null }
+        });
+
+        if (founderCount < FOUNDERS_CLUB_LIMIT) {
+            founderNumber = founderCount + 1;
+            isFounder = true;
+            console.log(`New Founders Club member #${founderNumber}: ${existingUser?.username || userId}`);
+        }
+    }
+
+    const updateFields = {
+        subscriptionTier: tier,
+        subscriptionStatus: 'active',
+        subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
+        subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
+        subscriptionInterval: interval,
+        stripeSubscriptionId: subscriptionData.id,
+        updatedAt: new Date()
+    };
+
+    // Add founder fields if they qualify
+    if (founderNumber && !existingUser?.founderNumber) {
+        updateFields.isFounder = true;
+        updateFields.founderNumber = founderNumber;
+        updateFields.founderJoinedAt = new Date();
+    }
+
     await users.updateOne(
         { _id: userIdObj },
-        {
-            $set: {
-                subscriptionTier: tier,
-                subscriptionStatus: 'active',
-                subscriptionStartDate: new Date(subscriptionData.current_period_start * 1000),
-                subscriptionEndDate: new Date(subscriptionData.current_period_end * 1000),
-                subscriptionInterval: interval,
-                stripeSubscriptionId: subscriptionData.id,
-                updatedAt: new Date()
-            }
-        }
+        { $set: updateFields }
     );
 
-    // Award premium badge if not already awarded
+    // Award badges
     const badges = await getCollection('user_badges');
-    const badgeName = 'Diehard Premium';
 
-    const existingBadge = await badges.findOne({
+    // Premium badge
+    const premiumBadgeName = 'Diehard Premium';
+    const existingPremiumBadge = await badges.findOne({
         userId: userIdObj,
-        badge: badgeName
+        badge: premiumBadgeName
     });
 
-    if (!existingBadge) {
+    if (!existingPremiumBadge) {
         await badges.insertOne({
             userId: userIdObj,
-            badge: badgeName,
+            badge: premiumBadgeName,
             earnedAt: new Date(),
             source: 'subscription'
         });
     }
 
-    return { tier, status: 'active' };
+    // Founders Club badge (if they're a founder)
+    if (isFounder) {
+        const founderBadgeName = 'Founders Club';
+        const existingFounderBadge = await badges.findOne({
+            userId: userIdObj,
+            badge: founderBadgeName
+        });
+
+        if (!existingFounderBadge) {
+            await badges.insertOne({
+                userId: userIdObj,
+                badge: founderBadgeName,
+                earnedAt: new Date(),
+                source: 'founders_club',
+                founderNumber: founderNumber,
+                description: `Founder #${founderNumber} of 76`
+            });
+        }
+    }
+
+    return { tier, status: 'active', isFounder, founderNumber };
 }
 
 /**
@@ -343,11 +421,45 @@ export async function reactivateSubscription(userId) {
 
 /**
  * Get coin multiplier for user (applies to ALL earnings)
+ * Founders get 3x, Premium gets 2x, Free gets 1x
  */
 export async function getCoinMultiplier(userId) {
     const status = await getSubscriptionStatus(userId);
     if (!status || !status.isActive) return 1;
     return status.benefits.coinMultiplier || 1;
+}
+
+/**
+ * Check if user is a Founders Club member
+ */
+export async function isFounderMember(userId) {
+    const users = await getCollection('users');
+    const userIdObj = typeof userId === 'string' ? new ObjectId(userId) : userId;
+
+    const user = await users.findOne(
+        { _id: userIdObj },
+        { projection: { isFounder: 1, founderNumber: 1 } }
+    );
+
+    return {
+        isFounder: user?.isFounder === true,
+        founderNumber: user?.founderNumber || null
+    };
+}
+
+/**
+ * Get count of current founders (for display purposes)
+ */
+export async function getFoundersCount() {
+    const users = await getCollection('users');
+    const count = await users.countDocuments({
+        founderNumber: { $exists: true, $ne: null }
+    });
+    return {
+        current: count,
+        limit: FOUNDERS_CLUB_LIMIT,
+        spotsRemaining: Math.max(0, FOUNDERS_CLUB_LIMIT - count)
+    };
 }
 
 // Alias for backward compatibility
