@@ -552,15 +552,6 @@
             }
         });
 
-        // Notifications form
-        document.getElementById('notificationsForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const successEl = document.getElementById('notifSuccess');
-            successEl.textContent = 'Preferences saved!';
-            successEl.classList.add('show');
-            setTimeout(() => successEl.classList.remove('show'), 3000);
-        });
-
         // Delete account modal
         document.getElementById('deleteAccountBtn').addEventListener('click', () => {
             document.getElementById('deleteModal').classList.add('show');
