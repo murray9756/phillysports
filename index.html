@@ -693,16 +693,18 @@
         /* Content Filters */
         .content-filters {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            gap: 0.35rem;
             margin: -0.25rem 0 0.5rem 0;
             padding: 0.25rem 0;
         }
-        .filter-group {
+        .filter-row {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.35rem;
+            flex-wrap: wrap;
         }
         .filter-label {
             font-size: 0.6rem;
@@ -2533,15 +2535,7 @@
 
             <!-- Content Filters -->
             <div class="content-filters" id="contentFilters">
-                <div class="filter-group">
-                    <span class="filter-label">Type:</span>
-                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
-                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
-                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
-                </div>
-                <span class="filter-sep">|</span>
-                <div class="filter-group">
+                <div class="filter-row">
                     <span class="filter-label">Team:</span>
                     <button class="filter-btn active" data-filter="category" data-value="all">All</button>
                     <button class="filter-btn active" data-filter="category" data-value="eagles">Eagles</button>
@@ -2551,6 +2545,13 @@
                     <button class="filter-btn active" data-filter="category" data-value="college">College</button>
                     <button class="filter-btn active" data-filter="category" data-value="esports">Esports</button>
                     <button class="filter-btn active" data-filter="category" data-value="youth">Youth</button>
+                </div>
+                <div class="filter-row">
+                    <span class="filter-label">Type:</span>
+                    <button class="filter-btn active" data-filter="type" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
+                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
+                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
                 </div>
             </div>
 

@@ -380,11 +380,17 @@
             container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;font-size:0.9rem;">Loading...</div>';
 
             try {
+                // If no categories selected (and not a team page), show empty message
+                if (!this.team && this.categories.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;">No teams selected. Choose at least one team filter above.</div>';
+                    return;
+                }
+
                 // Build query params
                 let queryParams = `limit=${this.limit}`;
                 if (this.team) {
                     queryParams += `&teams=${this.team}`;
-                } else if (this.categories.length > 0 && this.categories.length < 7) {
+                } else if (this.categories.length > 0) {
                     queryParams += `&teams=${this.categories.join(',')}`;
                 }
                 if (this.type !== 'all') {
@@ -395,13 +401,8 @@
                 const curatedRes = await fetch(`/api/content?${queryParams}`);
                 const curatedData = await curatedRes.json();
 
-                let allItems = [];
-                if (curatedData && curatedData.featured) {
-                    allItems.push(curatedData.featured);
-                }
-                if (curatedData && curatedData.items) {
-                    allItems = allItems.concat(curatedData.items);
-                }
+                // Get all items (no separate featured - treat all the same)
+                let allItems = curatedData && curatedData.items ? curatedData.items : [];
 
                 if (allItems.length > 0) {
                     this.renderItems(container, allItems, curatedData.hasMore);
@@ -530,7 +531,7 @@
                 let queryParams = `limit=10&offset=${this.offset}`;
                 if (this.team) {
                     queryParams += `&teams=${this.team}`;
-                } else if (this.categories.length > 0 && this.categories.length < 7) {
+                } else if (this.categories.length > 0) {
                     queryParams += `&teams=${this.categories.join(',')}`;
                 }
                 if (this.type !== 'all') {
