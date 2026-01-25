@@ -281,7 +281,7 @@ export async function getMessages(accountId, folderId = 'inbox', options = {}) {
             sortOrder: 'desc'
         });
 
-        const result = await mailRequest(accountId, `/folders/${folderId}/messages?${params}`);
+        const result = await mailRequest(accountId, `/messages/view?folderId=${folderId}&${params}`);
 
         return {
             success: true,
@@ -294,9 +294,9 @@ export async function getMessages(accountId, folderId = 'inbox', options = {}) {
                 fromName: m.sender || m.fromAddress,
                 to: m.toAddress,
                 date: m.receivedTime || m.sentDateInGMT,
-                isRead: m.isRead || m.readStatus === 'read',
-                hasAttachment: m.hasAttachment || false,
-                isStarred: m.isFlagged || false,
+                isRead: m.status === '1' || m.status === 1,
+                hasAttachment: m.hasAttachment === '1' || m.hasAttachment === 1 || m.hasAttachment === true,
+                isStarred: m.flagid !== 'flag_not_set',
                 size: m.size
             })),
             total: result.data?.length || 0,
