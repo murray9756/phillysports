@@ -604,7 +604,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         /* ==========================================================================
@@ -746,19 +746,18 @@
         .user-panel {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.25rem;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.5rem 0.75rem;
+            padding: 0.4rem 0.6rem;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            min-width: 160px;
         }
 
         .user-panel-row {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .user-avatar {
@@ -889,16 +888,14 @@
         .user-panel-links {
             display: flex;
             align-items: center;
-            gap: 0.15rem;
-            flex-wrap: nowrap;
+            gap: 0.1rem;
         }
 
         .user-panel-links a {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
-            white-space: nowrap;
         }
 
         .user-panel-links a:hover {
@@ -907,7 +904,8 @@
 
         .user-panel-links .link-sep {
             color: rgba(26, 39, 68, 0.3);
-            font-size: 0.5rem;
+            font-size: 0.45rem;
+            margin: 0 0.05rem;
         }
 
         /* Legacy styles kept for backwards compatibility */
