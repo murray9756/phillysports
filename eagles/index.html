@@ -69,77 +69,21 @@
     <!-- Body & Layout Theme (Centralized styling for 3-column pages) -->
     <link rel="stylesheet" href="/css/body-theme.css">
     <style>
+        /* Team-specific variables */
         :root {
             --team-color: #004C54;
             --team-secondary: #A5ACAF;
-            --dark-bg: #faf9f6;
-            --card-bg: #ffffff;
-            --card-bg-hover: #fafafa;
-            --border-color: #e0e0e0;
-            --text-primary: #1a1a1a;
-            --text-secondary: #444444;
-            --text-muted: #777777;
-            --accent-color: #8b0000;
-            --nav-text: #333333;
-            --widget-header-bg: #e8e3db;
         }
 
-        [data-theme="dark"] {
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-            --card-bg-hover: #2a2a2a;
-            --border-color: #333333;
-            --text-primary: #e8e8e8;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --nav-text: #d0d0d0;
-            --widget-header-bg: #2a2a2a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
-        a { color: inherit; text-decoration: none; }
-        /* Feedback Modal */
-        .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-        .feedback-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
-        .feedback-nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 0.5rem 0.75rem;
-            transition: color 0.2s;
-        }
-        .feedback-nav-btn:hover {
-            color: var(--accent-color);
-        }
-        .feedback-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .feedback-modal-overlay.active { display: flex; }
-        .feedback-modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; }
-        .feedback-modal h3 { margin: 0 0 1rem 0; color: var(--accent-color); }
-        .feedback-modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
-        .feedback-type-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
-        .feedback-type-option { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .feedback-type-option:hover { border-color: var(--accent-color); }
-        .feedback-type-option.selected { border-color: var(--accent-color); background: rgba(139, 0, 0, 0.1); }
-        .feedback-type-option input { display: none; }
-        .feedback-textarea { width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: inherit; font-size: 0.9rem; resize: vertical; margin-bottom: 1rem; }
-        .feedback-textarea:focus { outline: none; border-color: var(--accent-color); }
-        .feedback-submit { width: 100%; padding: 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-        .feedback-submit:hover { opacity: 0.9; }
-        .feedback-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-        .feedback-reward { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; }
-        .feedback-reward span { color: #b8860b; font-weight: 600; }
-        .feedback-success { text-align: center; padding: 1rem; }
-        .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
+        /* Page-specific styles */
         .team-hero { background: linear-gradient(135deg, var(--team-color), #000); padding: 1rem 1.5rem; text-align: center; color: #ffffff; }
         .team-hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 0.85rem; }
 
-        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr 320px; gap: 1.5rem; }
-        .left-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
+        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* Standings table - page-specific styling */
         .standings-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         .standings-table th { text-align: left; padding: 0.5rem 0.4rem; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-size: 0.65rem; text-transform: uppercase; }
         .standings-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border-color); }
@@ -149,77 +93,19 @@
         .standings-table .record { text-align: center; }
         .standings-table .pct { text-align: right; color: var(--text-muted); }
 
-        .content-section { display: flex; flex-direction: column; gap: 1rem; }
-        .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
-
-        .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
-        .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
-        .widget-header span { font-size: 1rem; }
-        .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .widget-content { padding: 0.75rem; }
-        .trivia-promo-widget { padding: 0; overflow: hidden; }
-        .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; }
-        .trivia-promo-icon { font-size: 1.25rem; }
-        .trivia-promo-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .trivia-promo-body { padding: 1rem; text-align: center; }
-        .trivia-promo-tagline { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
-        .trivia-promo-stats { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-        .trivia-stat { display: flex; flex-direction: column; align-items: center; padding: 0.4rem 0.6rem; background: var(--dark-bg); border-radius: 6px; min-width: 60px; }
-        .trivia-stat .stat-number { font-size: 0.9rem; font-weight: 800; color: #673ab7; }
-        .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
-        .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
-        .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4); }
-
-        .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
-        .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
-        .article-item:hover { border-color: var(--team-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .article-thumb { width: 120px; height: 80px; background: var(--team-color); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; background-size: cover; background-position: center; }
-        .article-info { flex: 1; min-width: 0; }
-        .article-title { font-size: 1rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
-        .article-meta { font-size: 0.75rem; color: var(--text-muted); }
-
-        .content-filters { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; padding: 0.5rem 0; }
-        .filter-group { display: flex; align-items: center; gap: 0.35rem; }
-        .filter-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
-        .filter-btn { display: inline-flex; align-items: center; gap: 0.2rem; padding: 0.25rem 0.5rem; font-size: 0.7rem; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: all 0.2s; }
-        .filter-btn:hover { border-color: var(--team-color); color: var(--team-color); }
-        .filter-btn.active { background: var(--team-color); color: #fff; border-color: var(--team-color); }
-
-        .score-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .score-item:last-child { border-bottom: none; }
-        .score-teams { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; }
-        .score-team { display: flex; align-items: center; gap: 0.5rem; }
-        .team-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--team-color); }
-        .score-result { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; font-size: 0.8rem; font-weight: 600; }
-
-        .schedule-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .schedule-item:last-child { border-bottom: none; }
-        .schedule-date { text-align: center; min-width: 40px; }
-        .schedule-day { font-size: 1rem; font-weight: 700; }
-        .schedule-month { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
-        .schedule-info { flex: 1; }
-        .schedule-matchup { font-size: 0.8rem; font-weight: 600; }
-        .schedule-time { font-size: 0.7rem; color: var(--text-muted); }
-
-        .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
-        .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
-
-        /* All-Time Leaders Section - fits within center column */
+        /* Stats section - team-specific styling */
         .stats-section { margin-top: 1rem; }
         .stats-container { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
         .stats-header { padding: 0.75rem 1rem; background: linear-gradient(135deg, var(--team-color), #002428); color: #fff; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
         .stats-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
         .stats-attribution { font-size: 0.65rem; color: rgba(255,255,255,0.7); }
         .stats-attribution a { color: rgba(255,255,255,0.9); text-decoration: underline; }
-
         .stats-tabs { display: flex; flex-wrap: nowrap; overflow-x: auto; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
         .stats-tabs::-webkit-scrollbar { height: 4px; }
         .stats-tabs::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
         .stats-tab { padding: 0.5rem 0.75rem; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
         .stats-tab:hover { color: var(--team-color); background: rgba(0,76,84,0.05); }
         .stats-tab.active { color: var(--team-color); border-bottom-color: var(--team-color); background: var(--card-bg); }
-
         .stats-scroll-wrapper { position: relative; }
         .stats-scroll-controls { display: flex; justify-content: flex-end; gap: 0.25rem; padding: 0.25rem 0.5rem; background: var(--card-bg); border-bottom: 1px solid var(--border-color); }
         .stats-scroll-btn { width: 24px; height: 24px; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
@@ -241,29 +127,13 @@
         .stats-table .player-name { font-weight: 600; color: var(--text-primary); }
         .stats-table .player-years { font-size: 0.65rem; color: var(--text-muted); display: block; }
         .stats-table .stat-highlight { font-weight: 700; color: var(--team-color); }
-
         .stats-footer { padding: 0.5rem 1rem; background: #f5f2ed; font-size: 0.65rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
         .stats-loading { padding: 2rem; text-align: center; color: var(--text-muted); }
-
         [data-theme="dark"] .stats-table th { background: #2a2a2a; }
         [data-theme="dark"] .stats-table th:hover { background: #333; }
         [data-theme="dark"] .stats-footer { background: #2a2a2a; }
 
-        @media (max-width: 900px) {
-            .main-container { grid-template-columns: 1fr; }
-            .team-hero h1 { font-size: 1.8rem; }
-        }
-        @media (max-width: 768px) {
-            .header-search { display: none; }
-        }
-        @media (max-width: 600px) {
-            .article-item { flex-direction: column; }
-            .article-thumb { width: 100%; height: 150px; }
-            .stats-tab { padding: 0.5rem 0.6rem; font-size: 0.7rem; }
-            .stats-table { font-size: 0.75rem; }
-            .stats-table th, .stats-table td { padding: 0.5rem; }
-        }
-
+        /* Trivia widget styles */
         .trivia-loading { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1rem; }
         .trivia-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
         .trivia-team-badge { display: inline-block; font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 2px; background: var(--ps-cream-dark, #e8e4d9); }
@@ -294,6 +164,44 @@
         .trivia-btn-secondary:hover { border-color: var(--ps-red, #8B0000); color: var(--ps-red, #8B0000); }
         .trivia-login-prompt { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem; }
         .trivia-login-prompt a { color: #8b0000; font-weight: 600; }
+
+        /* Feedback Modal */
+        .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .feedback-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .feedback-nav-btn { background: none; border: none; color: var(--text-color); font-size: 0.85rem; font-weight: 500; cursor: pointer; padding: 0.5rem 0.75rem; transition: color 0.2s; }
+        .feedback-nav-btn:hover { color: var(--accent-color); }
+        .feedback-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10000; }
+        .feedback-modal-overlay.active { display: flex; }
+        .feedback-modal { background: var(--card-bg); border-radius: 12px; padding: 1.5rem; width: 90%; max-width: 450px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .feedback-modal h3 { margin: 0 0 1rem 0; color: var(--accent-color); }
+        .feedback-modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+        .feedback-type-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .feedback-type-option { flex: 1; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .feedback-type-option:hover { border-color: var(--accent-color); }
+        .feedback-type-option.selected { border-color: var(--accent-color); background: rgba(139, 0, 0, 0.1); }
+        .feedback-type-option input { display: none; }
+        .feedback-textarea { width: 100%; min-height: 120px; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-color); color: var(--text-color); font-family: inherit; font-size: 0.9rem; resize: vertical; margin-bottom: 1rem; }
+        .feedback-textarea:focus { outline: none; border-color: var(--accent-color); }
+        .feedback-submit { width: 100%; padding: 0.75rem; background: var(--accent-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .feedback-submit:hover { opacity: 0.9; }
+        .feedback-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+        .feedback-reward { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; }
+        .feedback-reward span { color: #b8860b; font-weight: 600; }
+        .feedback-success { text-align: center; padding: 1rem; }
+        .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .team-hero h1 { font-size: 1.8rem; }
+        }
+        @media (max-width: 768px) {
+            .header-search { display: none; }
+        }
+        @media (max-width: 600px) {
+            .stats-tab { padding: 0.5rem 0.6rem; font-size: 0.7rem; }
+            .stats-table { font-size: 0.75rem; }
+            .stats-table th, .stats-table td { padding: 0.5rem; }
+        }
     </style>
     <link rel="stylesheet" href="/css/mobile-menu.css">
 </head>

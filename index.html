@@ -554,21 +554,7 @@
             padding: 1.25rem;
         }
 
-        .article-tag {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            border-radius: 3px;
-            margin-bottom: 0.5rem;
-        }
-
-        .tag-eagles { background: var(--eagles-green); color: #fff; }
-        .tag-phillies { background: var(--phillies-red); color: #fff; }
-        .tag-sixers { background: var(--sixers-blue); color: #fff; }
-        .tag-flyers { background: var(--flyers-orange); color: #fff; }
-        .tag-union { background: var(--union-gold); color: #000; }
+        /* Article tag styles now in body-theme.css */
 
         .featured-title {
             font-size: 1.4rem;
@@ -691,37 +677,13 @@
             letter-spacing: 0.5px;
         }
 
-        /* Content Filters */
-        .content-filters {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.35rem;
-            margin: -0.25rem 0 0.5rem 0;
-            padding: 0.25rem 0;
-        }
+        /* Content Filters - styles now in body-theme.css */
         .filter-row {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.35rem;
             flex-wrap: wrap;
-        }
-        .filter-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .filter-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.85rem;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
         }
         /* Type filters use radio style (single select) */
         .filter-btn[data-filter="type"]::before {
@@ -741,16 +703,6 @@
             border-radius: 2px;
             display: inline-block;
         }
-        .filter-btn:hover {
-            color: var(--ps-navy, #1a1a1a);
-        }
-        .filter-btn:hover::before {
-            border-color: var(--ps-navy, #1a1a1a);
-        }
-        .filter-btn.active {
-            color: var(--ps-navy, #1a1a1a);
-            font-weight: 500;
-        }
         .filter-btn[data-filter="type"].active::before {
             background: var(--ps-navy, #1a1a1a);
             border-color: var(--ps-navy, #1a1a1a);
@@ -759,25 +711,8 @@
             background: var(--ps-navy, #1a1a1a);
             border-color: var(--ps-navy, #1a1a1a);
         }
-        .filter-sep {
-            color: var(--border-color);
-            font-size: 0.7rem;
-            margin: 0 0.25rem;
-        }
 
-        .story-item {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            background: var(--ps-cream, #f5f2eb);
-            border: 2px solid var(--ps-navy, #1a1a1a);
-            border-radius: 2px;
-            transition: border-color 0.2s;
-        }
-
-        .story-item:hover {
-            border-color: var(--ps-red, #8B0000);
-        }
+        /* Story items - base styles now in body-theme.css */
 
         .story-thumb {
             width: 120px;
@@ -796,39 +731,6 @@
         .story-info {
             flex: 1;
             min-width: 0;
-        }
-
-        .story-meta {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 0.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .story-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.3;
-            color: var(--text-primary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        .story-teaser {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-top: 0.3rem;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
         }
 
         .story-curator-note {
@@ -937,59 +839,13 @@
             background: rgba(255,255,255,0.1);
         }
 
-        .load-more-btn {
-            width: 100%;
-            padding: 0.85rem;
-            background: var(--ps-cream, #f5f2eb);
-            border: 2px solid var(--ps-navy, #1a1a1a);
-            border-radius: 2px;
-            color: var(--ps-navy, #1a1a1a);
-            font-weight: 600;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 0.75rem;
-        }
-
-        .load-more-btn:hover {
-            background: var(--ps-navy, #1a1a1a);
-            color: var(--ps-cream, #f5f2eb);
-        }
+        /* Load more button - styles now in body-theme.css */
 
         /* ===========================================
            DARK MODE OVERRIDES - Comprehensive fixes
+           Note: .story-item, .story-title, .story-teaser, .story-meta, .load-more-btn
+           dark mode styles are now in body-theme.css
            =========================================== */
-        [data-theme="dark"] .story-item {
-            background: #1e1e1e !important;
-            border-color: #333 !important;
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .story-item:hover {
-            border-color: #8B0000 !important;
-        }
-        [data-theme="dark"] .story-title {
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .story-teaser {
-            color: #808080 !important;
-        }
-        [data-theme="dark"] .story-meta {
-            color: #808080 !important;
-        }
-        [data-theme="dark"] .story-meta span {
-            color: #808080 !important;
-        }
-        [data-theme="dark"] .load-more-btn {
-            background: #1e1e1e !important;
-            border-color: #333 !important;
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .load-more-btn:hover {
-            background: #333 !important;
-            color: #fff !important;
-        }
         [data-theme="dark"] .vote-btn {
             border-color: #333 !important;
             background: transparent !important;
@@ -1019,26 +875,7 @@
         [data-theme="dark"] .article-list {
             background: #121212 !important;
         }
-        [data-theme="dark"] .filter-btn {
-            color: #808080 !important;
-        }
-        [data-theme="dark"] .filter-btn::before {
-            border-color: #808080 !important;
-        }
-        [data-theme="dark"] .filter-btn:hover,
-        [data-theme="dark"] .filter-btn.active {
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .filter-btn:hover::before {
-            border-color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .filter-btn.active::before {
-            background: #e8e8e8 !important;
-            border-color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .filter-label {
-            color: #808080 !important;
-        }
+        /* Filter dark mode styles now in body-theme.css */
         [data-theme="dark"] .section-title {
             color: #e8e8e8 !important;
         }
@@ -1131,20 +968,7 @@
             border-color: #333 !important;
             color: #e8e8e8 !important;
         }
-        [data-theme="dark"] .widget {
-            background: #1e1e1e !important;
-            border-color: #333 !important;
-        }
-        [data-theme="dark"] .widget-content {
-            color: #e8e8e8 !important;
-            background: #1e1e1e !important;
-        }
-        [data-theme="dark"] .news-section {
-            background: #121212 !important;
-        }
-        [data-theme="dark"] .sidebar {
-            background: #121212 !important;
-        }
+        /* Widget dark mode styles now in body-theme.css */
         /* Trivia widget - keep header consistent in dark mode */
         [data-theme="dark"] .trivia-promo-header {
             background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
@@ -1194,59 +1018,7 @@
         [data-theme="dark"] #sourceLeaderboardWidget span {
             color: #e8e8e8 !important;
         }
-        /* Ticket links dark mode */
-        [data-theme="dark"] .ticket-link {
-            background: #2a2a2a !important;
-            color: #e8e8e8 !important;
-            border: 1px solid #444 !important;
-        }
-        [data-theme="dark"] .ticket-link:hover {
-            background: #8B0000 !important;
-            color: #fff !important;
-        }
-        /* Schedule widget dark mode */
-        [data-theme="dark"] .schedule-item {
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .schedule-time,
-        [data-theme="dark"] .schedule-teams,
-        [data-theme="dark"] .schedule-location {
-            color: #e8e8e8 !important;
-        }
-        /* Filter buttons - no background */
-        [data-theme="dark"] .filter-btn {
-            background: transparent !important;
-            color: #808080 !important;
-        }
-        [data-theme="dark"] .filter-btn:hover,
-        [data-theme="dark"] .filter-btn.active {
-            background: transparent !important;
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .filter-group {
-            background: transparent !important;
-        }
-        [data-theme="dark"] .content-filters {
-            background: transparent !important;
-        }
-        /* Memorabilia and Quick Links widgets dark mode */
-        [data-theme="dark"] .widget-content a {
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .widget-content a:hover {
-            color: #ff9800 !important;
-        }
-        [data-theme="dark"] .quick-link {
-            color: #e8e8e8 !important;
-        }
-        /* Podcast cards dark mode */
-        [data-theme="dark"] .podcast-card {
-            background: #1e1e1e !important;
-            border-color: #333 !important;
-        }
-        [data-theme="dark"] .podcast-card:hover {
-            border-color: #555 !important;
-        }
+        /* Ticket links, schedule, filter, widget-content, podcast dark mode styles now in body-theme.css */
         [data-theme="dark"] .podcast-info {
             color: #e8e8e8 !important;
         }
@@ -1257,32 +1029,7 @@
             color: #808080 !important;
         }
 
-        .article-meta {
-            margin-top: 0.75rem;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* Article List */
-        .article-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .article-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--ps-cream, #f5f2eb);
-            border-radius: 2px;
-            border: 2px solid var(--ps-navy, #1a1a1a);
-            transition: border-color 0.2s;
-        }
-
-        .article-item:hover {
-            border-color: var(--ps-red, #8B0000);
-        }
+        /* Article styles now in body-theme.css */
 
         .article-thumb {
             width: 100px;
@@ -1306,22 +1053,11 @@
             padding: 0.25rem 0.5rem;
         }
 
-        .article-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.35;
-            margin-bottom: 0.3rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
         .article-item .article-meta {
             margin-top: 0.25rem;
         }
 
-        /* Vote Buttons */
+        /* Vote button base styles now in body-theme.css */
         .vote-buttons {
             display: flex;
             flex-direction: column;
@@ -1330,16 +1066,6 @@
             padding-left: 0.75rem;
             flex-shrink: 0;
             order: 3; /* Move to right side */
-        }
-        .vote-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.25rem;
-            font-size: 1rem;
-            line-height: 1;
-            transition: color 0.2s, transform 0.1s;
-            border-radius: 4px;
         }
         .vote-btn.upvote {
             color: #4caf50; /* Green for upvote */
@@ -1360,13 +1086,6 @@
         }
         .vote-btn.downvote.active {
             color: #b71c1c;
-        }
-        .vote-score {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            min-width: 24px;
-            text-align: center;
         }
         .vote-score.positive { color: #4caf50; }
         .vote-score.negative { color: #f44336; }
@@ -1464,89 +1183,13 @@
             color: var(--text-muted);
         }
 
-        /* Sidebar */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .widget-footer {
-            padding: 0.6rem 0.85rem;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-        }
-        .widget-footer a {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-        .widget-footer a:hover { color: var(--text-primary); }
-
-        .widget {
-            background: var(--ps-cream, #f5f2eb);
-            border-radius: 2px;
-            border: 2px solid var(--ps-navy, #1a1a1a);
-            overflow: hidden;
-        }
-
-        .widget-header {
-            padding: 0.75rem 1rem;
-            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
-            border-bottom: 2px solid #1A2744;
-            text-align: center;
-        }
+        /* Sidebar and widget styles now in body-theme.css */
 
         .widget-header-content {
             display: flex;
             flex-direction: column;
             gap: 0.15rem;
             align-items: center;
-        }
-
-        .widget-title {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #1A2744;
-            text-align: center;
-        }
-
-        .widget-subtitle {
-            font-size: 0.65rem;
-            font-weight: 400;
-            color: #1A2744;
-            opacity: 0.8;
-            text-align: center;
-        }
-
-        /* Keep widget header consistent in dark mode - must override header.js h3 rule */
-        [data-theme="dark"] .widget-header {
-            background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
-            border-bottom-color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .widget-header .widget-title,
-        [data-theme="dark"] .widget-header h3.widget-title,
-        [data-theme="dark"] h3.widget-title,
-        [data-theme="dark"] .widget .widget-header .widget-title {
-            color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .widget-header .widget-subtitle,
-        [data-theme="dark"] .widget-subtitle {
-            color: #1A2744 !important;
-        }
-
-        [data-theme="dark"] .widget-header div,
-        [data-theme="dark"] .widget-header span {
-            color: #1A2744 !important;
-        }
-
-        .widget-content {
-            padding: 0.75rem;
         }
 
         /* Video Widget */
@@ -1742,77 +1385,8 @@
             text-decoration: underline;
         }
 
-        /* Schedule Widget */
-        .schedule-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            padding: 0.6rem 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .schedule-item:last-child {
-            border-bottom: none;
-        }
-
-        .schedule-date {
-            text-align: center;
-            min-width: 32px;
-            flex-shrink: 0;
-        }
-
-        .schedule-day {
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .schedule-month {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .schedule-info {
-            flex: 1;
-            min-width: 0;
-            text-align: left;
-        }
-
-        .schedule-matchup {
-            font-size: 0.75rem;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .schedule-time {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-
-        .schedule-tickets {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.2rem;
-            margin-top: 0.25rem;
-        }
-
-        .ticket-link {
-            font-size: 0.55rem;
-            padding: 0.1rem 0.25rem;
-            background: var(--ps-cream-dark, #e8e4d9);
-            border-radius: 2px;
-            color: var(--ps-navy, #1a1a1a);
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .ticket-link:hover {
-            background: var(--ps-red, #8B0000);
-            color: #fff;
-        }
-
+        /* Schedule widget styles now in body-theme.css */
+        /* Keep schedule-team-dot as it may be index-specific */
         .schedule-team-dot {
             width: 6px;
             height: 6px;

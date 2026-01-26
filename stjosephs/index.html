@@ -69,36 +69,11 @@
     <!-- Body & Layout Theme (Centralized styling for 3-column pages) -->
     <link rel="stylesheet" href="/css/body-theme.css">
     <style>
+        /* Team-specific variables */
         :root {
             --team-color: #9E1B32;
             --team-secondary: #000000;
-            --dark-bg: #faf9f6;
-            --card-bg: #ffffff;
-            --card-bg-hover: #fafafa;
-            --border-color: #e0e0e0;
-            --text-primary: #1a1a1a;
-            --text-secondary: #444444;
-            --text-muted: #777777;
-            --accent-color: #8b0000;
-            --nav-text: #333333;
-            --widget-header-bg: #e8e3db;
         }
-
-        [data-theme="dark"] {
-            --dark-bg: #121212;
-            --card-bg: #1e1e1e;
-            --card-bg-hover: #2a2a2a;
-            --border-color: #333333;
-            --text-primary: #e8e8e8;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --nav-text: #d0d0d0;
-            --widget-header-bg: #2a2a2a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: var(--dark-bg); color: var(--text-primary); line-height: 1.6; }
-        a { color: inherit; text-decoration: none; }
 
         /* Feedback Modal */
         .feedback-btn { background: none; border: 1px solid var(--border-color); color: var(--text-color); padding: 0.35rem 0.6rem; border-radius: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
@@ -136,12 +111,12 @@
         .feedback-success { text-align: center; padding: 1rem; }
         .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
 
+        /* Team Hero */
         .team-hero { background: linear-gradient(135deg, var(--team-color), var(--team-secondary)); padding: 1rem 1.5rem; text-align: center; color: #ffffff; }
         .team-hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 0.85rem; }
 
-        .main-container { max-width: 1400px; margin: 0 auto; padding: 1.5rem; display: grid; grid-template-columns: 280px 1fr 320px; gap: 1.5rem; }
-        .left-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        /* Standings Table */
         .standings-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         .standings-table th { text-align: left; padding: 0.5rem 0.4rem; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border-color); font-size: 0.65rem; text-transform: uppercase; }
         .standings-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border-color); }
@@ -151,15 +126,7 @@
         .standings-table .record { text-align: center; }
         .standings-table .pct { text-align: right; color: var(--text-muted); }
 
-        .content-section { display: flex; flex-direction: column; gap: 1rem; }
-        .section-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .section-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
-
-        .widget { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 1rem; }
-        .widget-header { padding: 0.75rem 1rem; background: var(--widget-header-bg); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
-        .widget-header span { font-size: 1rem; }
-        .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .widget-content { padding: 0.75rem; }
+        /* Trivia Widget */
         .trivia-promo-widget { padding: 0; overflow: hidden; }
         .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; }
         .trivia-promo-icon { font-size: 1.25rem; }
@@ -173,36 +140,12 @@
         .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9c27b0, #673ab7); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
         .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(103, 58, 183, 0.4); }
 
-        .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
-        .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
-        .article-item:hover { border-color: var(--team-color); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .article-thumb { width: 120px; height: 80px; background: var(--team-color); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; background-size: cover; background-position: center; }
-        .article-info { flex: 1; min-width: 0; }
-        .article-title { font-size: 1rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.25rem; }
-        .article-meta { font-size: 0.75rem; color: var(--text-muted); }
-
-        .content-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.75rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1rem; }
-        .filter-group { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-        .filter-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-        .filter-btn { padding: 0.35rem 0.75rem; font-size: 0.75rem; font-weight: 500; border: 1px solid var(--border-color); border-radius: 20px; background: var(--card-bg); color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+        /* Team-specific hover colors */
+        .article-item:hover { border-color: var(--team-color); }
         .filter-btn:hover { border-color: var(--team-color); color: var(--team-color); }
         .filter-btn.active { background: var(--team-color); color: #fff; border-color: var(--team-color); }
 
-        .score-item { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .score-item:last-child { border-bottom: none; }
-        .score-teams { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.8rem; }
-        .score-team { display: flex; align-items: center; gap: 0.5rem; }
-        .team-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--team-color); }
-        .score-result { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; font-size: 0.8rem; font-weight: 600; }
-
-        .schedule-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-color); }
-        .schedule-item:last-child { border-bottom: none; }
-        .schedule-date { text-align: center; min-width: 40px; }
-        .schedule-day { font-size: 1rem; font-weight: 700; }
-        .schedule-month { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
-        .schedule-info { flex: 1; }
-        .schedule-matchup { font-size: 0.8rem; font-weight: 600; }
-        .schedule-time { font-size: 0.7rem; color: var(--text-muted); }
+        /* Schedule ticket links */
         .schedule-tickets { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem; }
         .ticket-link { font-size: 0.55rem; padding: 0.1rem 0.25rem; background: var(--widget-header-bg); border-radius: 3px; color: var(--text-secondary); text-decoration: none; border: 1px solid var(--border-color); }
         .ticket-link:hover { background: var(--team-color); color: #fff; }
@@ -211,16 +154,12 @@
         .show-more-btn { display: block; width: 100%; padding: 0.75rem; margin-top: 0.75rem; background: var(--widget-header-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; text-align: center; }
         .show-more-btn:hover { background: var(--team-color); color: #fff; border-color: var(--team-color); }
 
+        /* Footer */
         .footer { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-top: 1px solid var(--border-color); text-align: center; }
         .footer-copy { color: var(--text-muted); font-size: 0.75rem; }
 
         @media (max-width: 900px) {
-            .main-container { grid-template-columns: 1fr; }
             .team-hero h1 { font-size: 1.8rem; }
-        }
-        @media (max-width: 600px) {
-            .article-item { flex-direction: column; }
-            .article-thumb { width: 100%; height: 150px; }
         }
     </style>
     <link rel="stylesheet" href="/css/mobile-menu.css">

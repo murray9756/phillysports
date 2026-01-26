@@ -602,9 +602,9 @@
         .header-right {
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
 
         /* ==========================================================================
@@ -889,15 +889,16 @@
         .user-panel-links {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
-            flex-wrap: wrap;
+            gap: 0.15rem;
+            flex-wrap: nowrap;
         }
 
         .user-panel-links a {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
+            white-space: nowrap;
         }
 
         .user-panel-links a:hover {
@@ -906,7 +907,7 @@
 
         .user-panel-links .link-sep {
             color: rgba(26, 39, 68, 0.3);
-            font-size: 0.65rem;
+            font-size: 0.5rem;
         }
 
         /* Legacy styles kept for backwards compatibility */
@@ -1447,7 +1448,8 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.35rem;
         }
 
         .founders-progress-link {
