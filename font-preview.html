@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Preview - PhillySports</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Lato:wght@400;700&family=Open+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f2eb;
+            padding: 2rem;
+            color: #1a1a1a;
+        }
+
+        h1 {
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #1A2744;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .font-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .font-card {
+            background: #fff;
+            border: 2px solid #1A2744;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .font-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .font-name {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #8B1A28;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sample-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1A2744;
+        }
+
+        .sample-subheader {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #333;
+        }
+
+        .sample-body {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+            color: #444;
+        }
+
+        .sample-meta {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 0.5rem;
+        }
+
+        .sample-small {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .sample-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .sample-nav span {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #1A2744;
+        }
+
+        /* Font families */
+        .font-inter { font-family: 'Inter', sans-serif; }
+        .font-roboto { font-family: 'Roboto', sans-serif; }
+        .font-source { font-family: 'Source Sans 3', sans-serif; }
+        .font-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-dm { font-family: 'DM Sans', sans-serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+        .font-open { font-family: 'Open Sans', sans-serif; }
+        .font-lato { font-family: 'Lato', sans-serif; }
+
+        .pick-btn {
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            color: #F5F0E1;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .pick-btn:hover {
+            background: linear-gradient(180deg, #8B1A28 0%, #5a0f15 100%);
+        }
+
+        .current-badge {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <h1>Choose Your Font</h1>
+    <p class="subtitle">Click on a card to see how each font looks. All samples show the same content.</p>
+
+    <div class="font-grid">
+        <!-- Inter (Current) -->
+        <div class="font-card font-inter">
+            <div class="font-name">Inter <span class="current-badge">CURRENT</span></div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- Roboto -->
+        <div class="font-card font-roboto">
+            <div class="font-name">Roboto</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- Source Sans Pro -->
+        <div class="font-card font-source">
+            <div class="font-name">Source Sans 3</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- Plus Jakarta Sans -->
+        <div class="font-card font-jakarta">
+            <div class="font-name">Plus Jakarta Sans</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- DM Sans -->
+        <div class="font-card font-dm">
+            <div class="font-name">DM Sans</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- Poppins -->
+        <div class="font-card font-poppins">
+            <div class="font-name">Poppins</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- Open Sans -->
+        <div class="font-card font-open">
+            <div class="font-name">Open Sans</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+
+        <!-- Lato -->
+        <div class="font-card font-lato">
+            <div class="font-name">Lato</div>
+            <div class="sample-header">Eagles Dominate Cowboys 34-17</div>
+            <div class="sample-subheader">Hurts throws 3 TDs in statement win</div>
+            <div class="sample-body">The Philadelphia Eagles continued their dominant season with a convincing victory over their divisional rivals. Jalen Hurts connected on 24 of 31 passes for 287 yards.</div>
+            <div class="sample-meta">By John Smith | 2 hours ago | 847 comments</div>
+            <div class="sample-small">Eagles, Phillies, 76ers, Flyers - Philadelphia Sports Coverage</div>
+            <div class="sample-nav">
+                <span>Home</span>
+                <span>Eagles</span>
+                <span>Phillies</span>
+                <span>76ers</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/header.js"></script>
+</body>
+</html>
