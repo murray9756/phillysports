@@ -658,7 +658,7 @@
             color: #1A2744;
             font-size: 0.95rem;
             width: 220px;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .header-search input::placeholder {
@@ -674,7 +674,7 @@
             font-weight: 700;
             font-size: 0.9rem;
             cursor: pointer;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             transition: all 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -698,7 +698,7 @@
         }
 
         .header-auth a {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 1rem;
             font-weight: 600;
             padding: 0.5rem 1rem;
@@ -751,7 +751,7 @@
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
             padding: 0.4rem 0.6rem;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .user-panel-row {
@@ -858,11 +858,11 @@
             font-weight: 800;
             color: #1A2744;
             border: 1.5px solid #1A2744;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .coin-balance {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-variant-numeric: tabular-nums;
             font-size: 1rem;
             font-weight: 700;
@@ -929,7 +929,7 @@
             box-sizing: border-box;
             gap: 0.35rem;
             color: #1A2744;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .theme-toggle:hover {
@@ -968,7 +968,7 @@
             box-sizing: border-box;
             gap: 0.35rem;
             color: #1A2744;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .feedback-link:hover {
@@ -1011,7 +1011,7 @@
             padding: 0.5rem 0.85rem;
             font-size: 1.2rem;
             font-weight: 700;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color: #1A2744;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1073,7 +1073,7 @@
             display: block;
             padding: 0.6rem 1rem;
             color: #1A2744;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 1.1rem;
             font-weight: 600;
             text-decoration: none;
@@ -1478,7 +1478,7 @@
         }
 
         .founders-text {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 0.85rem;
             font-weight: 700;
             color: #ffd700;
@@ -1502,7 +1502,7 @@
         }
 
         .founders-count {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 0.9rem;
             font-weight: 700;
             color: #fff;
@@ -1519,7 +1519,7 @@
         }
 
         .founders-info-link {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 0.8rem;
             color: #1A2744;
             text-decoration: underline;
