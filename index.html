@@ -139,8 +139,9 @@
         }
 
         body {
-            font-family: var(--ps-font-body, 'Helvetica Neue', Arial, sans-serif);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
+            font-size: 16px;
         }
 
         /* Default theme (non-vintage) */
@@ -503,9 +504,9 @@
         }
 
         .section-title {
-            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
-            font-size: 1.1rem;
-            font-weight: 900;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             color: #1A2744;
@@ -707,16 +708,16 @@
             flex-wrap: wrap;
         }
         .filter-label {
-            font-size: 0.6rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: 500;
         }
         .filter-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.2rem;
-            padding: 0.15rem 0.3rem;
-            font-size: 0.6rem;
+            gap: 0.3rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.85rem;
             border: none;
             background: transparent;
             color: var(--text-muted);
@@ -725,18 +726,18 @@
         /* Type filters use radio style (single select) */
         .filter-btn[data-filter="type"]::before {
             content: '';
-            width: 8px;
-            height: 8px;
-            border: 1px solid var(--text-muted);
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid var(--text-muted);
             border-radius: 50%;
             display: inline-block;
         }
         /* Category filters use checkbox style (multi-select) */
         .filter-btn[data-filter="category"]::before {
             content: '';
-            width: 8px;
-            height: 8px;
-            border: 1px solid var(--text-muted);
+            width: 12px;
+            height: 12px;
+            border: 1.5px solid var(--text-muted);
             border-radius: 2px;
             display: inline-block;
         }
@@ -798,16 +799,16 @@
         }
 
         .story-meta {
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.3rem;
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.4rem;
         }
 
         .story-title {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 600;
             line-height: 1.3;
             color: var(--text-primary);
@@ -819,10 +820,10 @@
         }
 
         .story-teaser {
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            line-height: 1.4;
-            margin-top: 0.25rem;
+            line-height: 1.5;
+            margin-top: 0.3rem;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -831,11 +832,11 @@
         }
 
         .story-curator-note {
-            font-size: 0.8rem;
+            font-size: 1rem;
             color: var(--text-secondary);
             font-style: italic;
-            margin-top: 0.35rem;
-            padding: 0.4rem 0.6rem;
+            margin-top: 0.4rem;
+            padding: 0.5rem 0.75rem;
             background: rgba(139, 0, 0, 0.05);
             border-left: 2px solid var(--accent-color);
             border-radius: 0 4px 4px 0;
@@ -854,11 +855,11 @@
         .comment-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.8rem;
+            gap: 0.4rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
             text-decoration: none;
-            padding: 0.35rem 0.6rem;
+            padding: 0.4rem 0.7rem;
             border-radius: 4px;
             transition: all 0.2s;
             background: rgba(0,0,0,0.03);
@@ -891,11 +892,11 @@
         .story-comment-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.2rem;
-            font-size: 0.7rem;
+            gap: 0.3rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             text-decoration: none;
-            padding: 0.2rem 0.4rem;
+            padding: 0.3rem 0.5rem;
             border-radius: 3px;
             transition: all 0.2s;
         }
@@ -920,11 +921,11 @@
         .story-comment-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            font-size: 0.75rem;
+            gap: 0.35rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
             text-decoration: none;
-            padding: 0.2rem 0.4rem;
+            padding: 0.3rem 0.5rem;
             border-radius: 3px;
             transition: all 0.2s;
         }
@@ -938,13 +939,13 @@
 
         .load-more-btn {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.85rem;
             background: var(--ps-cream, #f5f2eb);
             border: 2px solid var(--ps-navy, #1a1a1a);
             border-radius: 2px;
             color: var(--ps-navy, #1a1a1a);
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
@@ -1090,22 +1091,14 @@
         [data-theme="dark"] .trivia-question-text {
             color: #e8e8e8 !important;
         }
-        [data-theme="dark"] .trivia-team-badge {
-            background: #333 !important;
+        [data-theme="dark"] .trivia-meta {
+            color: #b0b0b0 !important;
+        }
+        [data-theme="dark"] .trivia-meta strong {
             color: #e8e8e8 !important;
         }
-        [data-theme="dark"] .trivia-team-badge strong {
-            color: #e8e8e8 !important;
-        }
-        [data-theme="dark"] .trivia-team-badge.Eagles { color: #4ade80 !important; }
-        [data-theme="dark"] .trivia-team-badge.Phillies { color: #f87171 !important; }
-        [data-theme="dark"] .trivia-team-badge.t76ers { color: #60a5fa !important; }
-        [data-theme="dark"] .trivia-team-badge.Flyers { color: #fb923c !important; }
-        [data-theme="dark"] .trivia-difficulty {
-            background: #333 !important;
-        }
-        [data-theme="dark"] .trivia-difficulty strong {
-            color: #e8e8e8 !important;
+        [data-theme="dark"] .trivia-stats {
+            color: #808080 !important;
         }
         [data-theme="dark"] .trivia-dd-info {
             color: #b0b0b0 !important;
@@ -1266,7 +1259,7 @@
 
         .article-meta {
             margin-top: 0.75rem;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
@@ -1309,15 +1302,15 @@
         }
 
         .article-info .article-tag {
-            font-size: 0.65rem;
-            padding: 0.2rem 0.4rem;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
         }
 
         .article-title {
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 0.25rem;
+            line-height: 1.35;
+            margin-bottom: 0.3rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -1369,10 +1362,10 @@
             color: #b71c1c;
         }
         .vote-score {
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-secondary);
-            min-width: 20px;
+            min-width: 24px;
             text-align: center;
         }
         .vote-score.positive { color: #4caf50; }
@@ -1461,13 +1454,13 @@
         }
 
         .podcast-info h4 {
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 0.15rem;
+            margin-bottom: 0.2rem;
         }
 
         .podcast-info p {
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
@@ -1479,12 +1472,12 @@
         }
 
         .widget-footer {
-            padding: 0.5rem 0.75rem;
+            padding: 0.6rem 0.85rem;
             text-align: center;
             border-top: 1px solid var(--border-color);
         }
         .widget-footer a {
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             font-weight: 600;
         }
@@ -1512,7 +1505,7 @@
         }
 
         .widget-title {
-            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 0.75rem;
             font-weight: 900;
             text-transform: uppercase;
@@ -1845,7 +1838,7 @@
         }
 
         .trivia-promo-title {
-            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 0.75rem;
             font-weight: 900;
             text-transform: uppercase;
@@ -1866,49 +1859,44 @@
 
         .trivia-meta {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
-        .trivia-team-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 2px;
-            background: var(--ps-cream-dark, #e8e4d9);
+        .trivia-meta span {
+            text-align: center;
         }
 
-        .trivia-team-badge strong {
-            font-weight: 600;
+        .trivia-meta strong {
             color: #1A2744;
+            font-weight: 700;
         }
 
-        .trivia-team-badge.Eagles { color: #004C54; }
-        .trivia-team-badge.Phillies { color: #E81828; }
-        .trivia-team-badge.t76ers { color: #006BB6; }
-        .trivia-team-badge.Flyers { color: #F74902; }
+        .trivia-stats {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
 
+        /* Legacy badge styles - kept for backwards compatibility */
+        .trivia-team-badge,
         .trivia-difficulty {
             display: inline-block;
-            font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 2px;
-            background: var(--ps-cream-dark, #e8e4d9);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
+        .trivia-team-badge strong,
         .trivia-difficulty strong {
             font-weight: 600;
             color: #1A2744;
         }
 
-        .trivia-difficulty.easy { color: #4caf50; }
-        .trivia-difficulty.medium { color: #ff9800; }
-        .trivia-difficulty.hard { color: #f44336; }
-
         .trivia-dd-info {
             margin-bottom: 0.75rem;
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             text-align: center;
         }
 
@@ -1928,25 +1916,25 @@
         }
 
         .trivia-question-text {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 0.75rem;
-            line-height: 1.4;
+            margin-bottom: 0.85rem;
+            line-height: 1.45;
         }
 
         .trivia-options {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.6rem;
         }
 
         .trivia-option {
-            padding: 0.6rem 0.75rem;
+            padding: 0.7rem 0.85rem;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 1rem;
             font-family: inherit;
             color: var(--text-primary);
             cursor: pointer;
@@ -1981,11 +1969,11 @@
         }
 
         .trivia-result {
-            margin-top: 0.75rem;
-            padding: 0.75rem;
+            margin-top: 0.85rem;
+            padding: 0.85rem;
             border-radius: 6px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 1.05rem;
             font-weight: 600;
         }
 
@@ -2001,16 +1989,16 @@
 
         .trivia-actions {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
+            gap: 0.6rem;
+            margin-top: 0.85rem;
         }
 
         .trivia-btn {
             flex: 1;
-            padding: 0.6rem;
+            padding: 0.7rem;
             border: 2px solid var(--ps-navy, #1a1a1a);
             border-radius: 2px;
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
@@ -2042,9 +2030,9 @@
 
         .trivia-login-prompt {
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            margin-top: 0.5rem;
+            margin-top: 0.6rem;
         }
 
         .trivia-login-prompt a {
@@ -2074,7 +2062,7 @@
         }
 
         .newsletter-title {
-            font-family: var(--ps-font-headline, 'Arial Black', sans-serif);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 0.9rem;
             font-weight: 900;
             color: var(--ps-navy, #1a1a1a);
@@ -2567,7 +2555,7 @@
             <div class="widget trivia-promo-widget">
                 <div class="trivia-promo-header">
                     <span class="trivia-promo-title">Trivia</span>
-                    <div id="triviaLoginHint" style="font-size:0.6rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;">Login to earn Diehard Dollars</div>
+                    <div id="triviaLoginHint" style="font-size:0.7rem;color:#1A2744;opacity:0.7;margin-top:0.15rem;display:none;">Login to earn Diehard Dollars</div>
                 </div>
                 <div class="trivia-widget-body" id="triviaWidget">
                     <div class="trivia-loading">Loading question...</div>
@@ -3800,9 +3788,9 @@
         function renderTriviaQuestion(q) {
             const widget = document.getElementById('triviaWidget');
             const teamClass = q.team === '76ers' ? 't76ers' : q.team;
-            const isLoggedIn = !!localStorage.getItem('token');
+            const isLoggedIn = !!localStorage.getItem('auth_token');
 
-            // Hide login hint in header if logged in
+            // Show/hide login hint in header based on login status
             const loginHint = document.getElementById('triviaLoginHint');
             if (loginHint) loginHint.style.display = isLoggedIn ? 'none' : 'block';
 
@@ -3810,10 +3798,15 @@
             const ddValues = { easy: 5, medium: 10, hard: 20 };
             const ddAtStake = ddValues[q.difficulty] || 10;
 
+            // Calculate % correct
+            const totalAnswers = (q.correctCount || 0) + (q.incorrectCount || 0);
+            const percentCorrect = totalAnswers > 0 ? Math.round((q.correctCount / totalAnswers) * 100) : null;
+            const timesServed = q.usedCount || 0;
+
             widget.innerHTML = `
                 <div class="trivia-meta">
-                    <span class="trivia-team-badge ${teamClass}"><strong>Category:</strong> ${q.team}</span>
-                    <span class="trivia-difficulty ${q.difficulty}"><strong>Difficulty:</strong> ${q.difficulty}</span>
+                    <span><strong>${q.team}</strong> · ${q.difficulty}</span>
+                    ${timesServed > 0 ? `<span class="trivia-stats">${timesServed.toLocaleString()} plays${percentCorrect !== null ? ` · ${percentCorrect}% correct` : ''}</span>` : ''}
                 </div>
                 ${isLoggedIn ? `<div class="trivia-dd-info"><span class="trivia-dd-stake">&#129689; ${ddAtStake} DD at stake</span></div>` : ''}
                 <p class="trivia-question-text">${q.question}</p>

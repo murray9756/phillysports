@@ -95,6 +95,7 @@
                             </span>
                             <span class="founders-count" id="foundersCount">0/76</span>
                         </a>
+                        <a href="/founders.html#about" class="founders-info-link">What's this?</a>
                     </div>
                 </div>
                 <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
@@ -653,9 +654,9 @@
             box-shadow: inset 0 0 0 2px #8B1A28;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             color: #1A2744;
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             width: 220px;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .header-search input::placeholder {
@@ -669,9 +670,9 @@
             border: 2px solid #F5F0E1;
             color: #F5F0E1;
             font-weight: 700;
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             transition: all 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -695,8 +696,8 @@
         }
 
         .header-auth a {
-            font-family: Georgia, serif;
-            font-size: 0.85rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 1rem;
             font-weight: 600;
             padding: 0.5rem 1rem;
             text-decoration: none;
@@ -748,7 +749,7 @@
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
             padding: 0.4rem 0.6rem;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             min-width: 140px;
         }
 
@@ -788,7 +789,7 @@
         }
 
         .user-panel-name {
-            font-size: 0.75rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #1A2744;
             text-decoration: none;
@@ -805,9 +806,9 @@
         }
 
         .badge-premium {
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            padding: 0.08rem 0.2rem;
+            padding: 0.1rem 0.25rem;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             color: #1A2744;
             border-radius: 2px;
@@ -815,18 +816,18 @@
         }
 
         .badge-founder {
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            padding: 0.08rem 0.2rem;
+            padding: 0.1rem 0.25rem;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #ffd700;
             border-radius: 2px;
         }
 
         .badge-admin {
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             font-weight: 700;
-            padding: 0.08rem 0.2rem;
+            padding: 0.1rem 0.25rem;
             background: linear-gradient(135deg, #8B1A28, #5a0f15);
             color: #F5F0E1;
             border-radius: 2px;
@@ -852,27 +853,27 @@
             height: 16px;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             border-radius: 50%;
-            font-size: 0.45rem;
+            font-size: 0.55rem;
             font-weight: 800;
             color: #1A2744;
             border: 1.5px solid #1A2744;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .coin-balance {
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-variant-numeric: tabular-nums;
-            font-size: 0.75rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #1A2744;
         }
 
         .buy-coins-link {
-            font-size: 0.5rem;
+            font-size: 0.65rem;
             font-weight: 600;
             color: #8B1A28;
             text-decoration: none;
-            padding: 0.1rem 0.2rem;
+            padding: 0.15rem 0.3rem;
             border: 1px solid #8B1A28;
             border-radius: 2px;
             transition: all 0.2s;
@@ -891,7 +892,7 @@
         }
 
         .user-panel-links a {
-            font-size: 0.6rem;
+            font-size: 0.75rem;
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
@@ -903,7 +904,7 @@
 
         .user-panel-links .link-sep {
             color: rgba(26, 39, 68, 0.3);
-            font-size: 0.45rem;
+            font-size: 0.55rem;
         }
 
         /* Legacy styles kept for backwards compatibility */
@@ -927,7 +928,7 @@
             box-sizing: border-box;
             gap: 0.35rem;
             color: #1A2744;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .theme-toggle:hover {
@@ -966,7 +967,7 @@
             box-sizing: border-box;
             gap: 0.35rem;
             color: #1A2744;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .feedback-link:hover {
@@ -975,7 +976,7 @@
         }
 
         .feedback-link .feedback-label {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1007,9 +1008,9 @@
 
         .nav-item {
             padding: 0.5rem 0.85rem;
-            font-size: 1.125rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color: #1A2744;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1071,7 +1072,7 @@
             display: block;
             padding: 0.6rem 1rem;
             color: #1A2744;
-            font-family: Georgia, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 1.1rem;
             font-weight: 600;
             text-decoration: none;
@@ -1438,14 +1439,14 @@
         }
 
         /* ==========================================================================
-           SECTION 6B: FOUNDERS CLUB WIDGET (in header-left)
+           SECTION 6B: FOUNDERS CLUB WIDGET (in header-right)
            ========================================================================== */
         .founders-club-widget {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: center;
             gap: 0.25rem;
-            margin-top: 0.5rem;
+            margin-top: 0.25rem;
         }
 
         .founders-progress-link {
@@ -1476,8 +1477,8 @@
         }
 
         .founders-text {
-            font-family: Georgia, serif;
-            font-size: 0.7rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #ffd700;
             text-transform: uppercase;
@@ -1500,8 +1501,8 @@
         }
 
         .founders-count {
-            font-family: Georgia, serif;
-            font-size: 0.7rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #fff;
         }
@@ -1517,8 +1518,8 @@
         }
 
         .founders-info-link {
-            font-family: Georgia, serif;
-            font-size: 0.65rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
             color: #1A2744;
             text-decoration: underline;
             margin-left: 0.5rem;

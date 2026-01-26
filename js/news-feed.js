@@ -101,15 +101,15 @@
                 min-width: 0;
             }
             .story-meta {
-                font-size: 0.7rem;
+                font-size: 0.85rem;
                 color: var(--text-muted);
-                margin-bottom: 0.2rem;
+                margin-bottom: 0.25rem;
                 display: flex;
                 align-items: center;
-                gap: 0.35rem;
+                gap: 0.4rem;
             }
             .story-title {
-                font-size: 0.9rem;
+                font-size: 1.05rem;
                 font-weight: 600;
                 line-height: 1.3;
                 color: var(--text-primary);
@@ -120,10 +120,10 @@
                 -webkit-box-orient: vertical;
             }
             .story-teaser {
-                font-size: 0.75rem;
+                font-size: 0.9rem;
                 color: var(--text-muted);
                 line-height: 1.4;
-                margin-top: 0.25rem;
+                margin-top: 0.3rem;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: -webkit-box;
@@ -131,11 +131,11 @@
                 -webkit-box-orient: vertical;
             }
             .story-curator-note {
-                font-size: 0.8rem;
+                font-size: 0.95rem;
                 color: var(--text-secondary);
                 font-style: italic;
-                margin-top: 0.35rem;
-                padding: 0.4rem 0.6rem;
+                margin-top: 0.4rem;
+                padding: 0.5rem 0.75rem;
                 background: rgba(139, 0, 0, 0.05);
                 border-left: 2px solid var(--accent-color, #8B1A28);
                 border-radius: 0 4px 4px 0;
@@ -160,11 +160,11 @@
             .story-comment-btn {
                 display: inline-flex;
                 align-items: center;
-                gap: 0.25rem;
-                font-size: 0.75rem;
+                gap: 0.3rem;
+                font-size: 0.9rem;
                 color: var(--text-muted);
                 text-decoration: none;
-                padding: 0.2rem 0.4rem;
+                padding: 0.25rem 0.5rem;
                 border-radius: 3px;
                 transition: all 0.2s;
             }
@@ -200,10 +200,10 @@
             .vote-btn.downvote:hover { color: #c62828; transform: scale(1.2); }
             .vote-btn.downvote.active { color: #b71c1c; }
             .vote-score {
-                font-size: 0.8rem;
+                font-size: 0.95rem;
                 font-weight: 600;
                 color: var(--text-secondary);
-                min-width: 20px;
+                min-width: 24px;
                 text-align: center;
             }
             .vote-score.positive { color: #4caf50; }
@@ -212,13 +212,13 @@
             /* Load More Button */
             .load-more-btn {
                 width: 100%;
-                padding: 0.75rem;
+                padding: 0.85rem;
                 background: var(--ps-cream, #f5f2eb);
                 border: 2px solid var(--ps-navy, #1a1a1a);
                 border-radius: 2px;
                 color: var(--ps-navy, #1a1a1a);
                 font-weight: 600;
-                font-size: 0.85rem;
+                font-size: 1rem;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 cursor: pointer;
@@ -233,9 +233,9 @@
             /* Article Tags */
             .article-tag {
                 display: inline-block;
-                padding: 0.15rem 0.4rem;
+                padding: 0.2rem 0.5rem;
                 border-radius: 3px;
-                font-size: 0.65rem;
+                font-size: 0.75rem;
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
