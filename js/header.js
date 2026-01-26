@@ -578,18 +578,19 @@
         .header-top {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
-            align-items: start;
+            align-items: center;
             padding: 1rem 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .header-left {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.75rem;
         }
 
         .header-left-buttons {
@@ -602,7 +603,8 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.75rem;
         }
 
         /* ==========================================================================
@@ -744,13 +746,13 @@
         .user-panel {
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
+            gap: 0.4rem;
             background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
             border: 3px solid #1A2744;
             box-shadow: inset 0 0 0 2px #8B1A28;
-            padding: 0.4rem 0.6rem;
+            padding: 0.5rem 0.75rem;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            min-width: 140px;
+            min-width: 160px;
         }
 
         .user-panel-row {
@@ -789,7 +791,7 @@
         }
 
         .user-panel-name {
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
             color: #1A2744;
             text-decoration: none;
@@ -806,9 +808,9 @@
         }
 
         .badge-premium {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.1rem 0.25rem;
+            padding: 0.15rem 0.35rem;
             background: linear-gradient(135deg, #ffd700, #c9a000);
             color: #1A2744;
             border-radius: 2px;
@@ -816,18 +818,18 @@
         }
 
         .badge-founder {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.1rem 0.25rem;
+            padding: 0.15rem 0.35rem;
             background: linear-gradient(135deg, #1A2744, #0d1520);
             color: #ffd700;
             border-radius: 2px;
         }
 
         .badge-admin {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            padding: 0.1rem 0.25rem;
+            padding: 0.15rem 0.35rem;
             background: linear-gradient(135deg, #8B1A28, #5a0f15);
             color: #F5F0E1;
             border-radius: 2px;
@@ -863,17 +865,17 @@
         .coin-balance {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-variant-numeric: tabular-nums;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 700;
             color: #1A2744;
         }
 
         .buy-coins-link {
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #8B1A28;
             text-decoration: none;
-            padding: 0.15rem 0.3rem;
+            padding: 0.2rem 0.4rem;
             border: 1px solid #8B1A28;
             border-radius: 2px;
             transition: all 0.2s;
@@ -892,7 +894,7 @@
         }
 
         .user-panel-links a {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: #1A2744;
             text-decoration: none;
             transition: color 0.2s;
@@ -904,7 +906,7 @@
 
         .user-panel-links .link-sep {
             color: rgba(26, 39, 68, 0.3);
-            font-size: 0.55rem;
+            font-size: 0.65rem;
         }
 
         /* Legacy styles kept for backwards compatibility */
@@ -1443,10 +1445,9 @@
            ========================================================================== */
         .founders-club-widget {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 0.25rem;
-            margin-top: 0.25rem;
+            gap: 0.5rem;
         }
 
         .founders-progress-link {
@@ -1478,7 +1479,7 @@
 
         .founders-text {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: #ffd700;
             text-transform: uppercase;
@@ -1519,10 +1520,10 @@
 
         .founders-info-link {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #1A2744;
             text-decoration: underline;
-            margin-left: 0.5rem;
+            margin-left: 0.25rem;
             transition: color 0.2s;
         }
 
