@@ -352,7 +352,7 @@
             this.categories = options.categories || ['eagles', 'phillies', 'sixers', 'flyers', 'college', 'esports', 'youth'];
             this.type = 'all';
             this.offset = 0;
-            this.limit = options.limit || 15;
+            this.limit = options.limit || 10;
             this.userVotes = {};
             this.photoCache = new Map();
 
