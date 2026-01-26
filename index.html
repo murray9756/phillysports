@@ -2247,13 +2247,32 @@
 
         function formatGameDate(dateString) {
             const date = new Date(dateString);
+            // Use Eastern timezone for all date/time display
+            const options = { timeZone: 'America/New_York' };
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            // Get date parts in Eastern timezone
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'America/New_York',
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+            const parts = formatter.formatToParts(date);
+            const dayNum = parseInt(parts.find(p => p.type === 'day').value);
+            const monthStr = parts.find(p => p.type === 'month').value;
+            const dayName = parts.find(p => p.type === 'weekday').value;
+
             return {
-                day: date.getDate(),
-                month: months[date.getMonth()],
-                dayName: days[date.getDay()],
-                time: date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+                day: dayNum,
+                month: monthStr,
+                dayName: dayName,
+                time: date.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    timeZone: 'America/New_York'
+                })
             };
         }
 
