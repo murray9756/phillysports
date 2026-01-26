@@ -685,31 +685,29 @@
             gap: 0.35rem;
             flex-wrap: wrap;
         }
-        /* Type filters use radio style (single select) */
-        .filter-btn[data-filter="type"]::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            border: 1.5px solid var(--text-muted);
-            border-radius: 50%;
-            display: inline-block;
-        }
-        /* Category filters use checkbox style (multi-select) */
+        /* Radio button styles for both filter types */
+        .filter-btn[data-filter="type"]::before,
         .filter-btn[data-filter="category"]::before {
             content: '';
-            width: 12px;
-            height: 12px;
-            border: 1.5px solid var(--text-muted);
-            border-radius: 2px;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
             display: inline-block;
+            position: relative;
+            box-sizing: border-box;
         }
-        .filter-btn[data-filter="type"].active::before {
-            background: var(--ps-navy, #1a1a1a);
-            border-color: var(--ps-navy, #1a1a1a);
-        }
+        .filter-btn[data-filter="type"].active::before,
         .filter-btn[data-filter="category"].active::before {
-            background: var(--ps-navy, #1a1a1a);
             border-color: var(--ps-navy, #1a1a1a);
+            background: radial-gradient(circle, var(--ps-navy, #1a1a1a) 40%, transparent 45%);
+        }
+        /* Vertical separator between filter groups */
+        .filter-separator {
+            width: 1px;
+            height: 24px;
+            background: var(--border-color, #ddd);
+            margin: 0 0.75rem;
         }
 
         /* Story items - base styles now in body-theme.css */
@@ -2098,7 +2096,7 @@
             <!-- Content Filters -->
             <div class="content-filters" id="contentFilters">
                 <div class="filter-row">
-                    <span class="filter-label">Team:</span>
+                    <span class="filter-label">Category:</span>
                     <button class="filter-btn active" data-filter="category" data-value="all">All</button>
                     <button class="filter-btn active" data-filter="category" data-value="eagles">Eagles</button>
                     <button class="filter-btn active" data-filter="category" data-value="phillies">Phillies</button>
@@ -2107,9 +2105,8 @@
                     <button class="filter-btn active" data-filter="category" data-value="college">College</button>
                     <button class="filter-btn active" data-filter="category" data-value="esports">Esports</button>
                     <button class="filter-btn active" data-filter="category" data-value="youth">Youth</button>
-                </div>
-                <div class="filter-row">
-                    <span class="filter-label">Type:</span>
+                    <div class="filter-separator"></div>
+                    <span class="filter-label">Content Type:</span>
                     <button class="filter-btn active" data-filter="type" data-value="all">All</button>
                     <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
                     <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
@@ -3398,8 +3395,8 @@
 
             widget.innerHTML = `
                 <div class="trivia-meta">
-                    <span><strong>${q.team}</strong> · ${q.difficulty}</span>
-                    ${timesServed > 0 ? `<span class="trivia-stats">${timesServed.toLocaleString()} plays${percentCorrect !== null ? ` · ${percentCorrect}% correct` : ''}</span>` : ''}
+                    <span><strong>Category:</strong> ${q.team} · <strong>Difficulty:</strong> ${q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}</span>
+                    <span class="trivia-stats">Times Answered: ${timesServed.toLocaleString()} · Correct %: ${percentCorrect !== null ? percentCorrect + '%' : 'N/A'}</span>
                 </div>
                 ${isLoggedIn ? `<div class="trivia-dd-info"><span class="trivia-dd-stake">&#129689; ${ddAtStake} DD at stake</span></div>` : ''}
                 <p class="trivia-question-text">${q.question}</p>
