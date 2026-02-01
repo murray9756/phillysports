@@ -25,19 +25,25 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <style>
         :root {
+            /* Match main site light mode */
+            --dark-bg: #faf9f6;
+            --card-bg: #ffffff;
+            --card-bg-hover: #fafafa;
+            --border-color: #e0e0e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #444444;
+            --text-muted: #777777;
+            --header-bg: #f5f2eb;
+            --accent-color: #8b0000;
+            --nav-text: #333333;
+            --widget-header-bg: #e8e3db;
+
+            /* Poker table specific (keep green felt for table) */
             --poker-green: #1a5c3a;
             --poker-felt: #35654d;
             --poker-felt-dark: #2a503d;
-            --gold: #ffd700;
-            --dark-bg: #1a1a1a;
-            --card-bg: #2c2c2c;
-            --border-color: #3a3a3a;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --red: #e63946;
-            --blue: #4a90d9;
-            --widget-header-bg: #e8e3db;
+            --red: #8b0000;
+            --gold: #b8860b;
         }
         [data-theme="dark"] {
             --dark-bg: #121212;
@@ -47,9 +53,10 @@
             --text-primary: #e8e8e8;
             --text-secondary: #b0b0b0;
             --text-muted: #808080;
-            --header-bg: #1a1a1a;
+            --header-bg: #000000;
             --nav-text: #d0d0d0;
             --widget-header-bg: #2a2a2a;
+            --accent-color: #8b0000;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
@@ -279,7 +286,7 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
         .player-info.folded { opacity: 0.5; }
-        .player-info.is-you { border-color: var(--blue); }
+        .player-info.is-you { border-color: var(--accent-color); }
         .player-name {
             font-weight: 600;
             font-size: 0.85rem;
@@ -416,7 +423,7 @@
         }
         .action-btn.fold { background: var(--red); color: white; }
         .action-btn.check { background: #6c757d; color: white; }
-        .action-btn.call { background: var(--blue); color: white; }
+        .action-btn.call { background: #2563eb; color: white; }
         .action-btn.bet, .action-btn.raise { background: var(--poker-green); color: white; }
         .action-btn.all-in { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1a1a1a; }
         .action-btn:hover:not(:disabled) { transform: translateY(-2px); }
@@ -757,7 +764,7 @@
         }
         .notification-toast.show { opacity: 1; }
         .notification-toast.eliminated { border-color: var(--red); color: var(--red); }
-        .notification-toast.info { border-color: var(--blue); }
+        .notification-toast.info { border-color: #2563eb; }
 
         /* Responsive - Tablet */
         @media (max-width: 768px) {
