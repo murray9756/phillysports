@@ -85,7 +85,11 @@ function extractEspnBoxScore(data, sport) {
     const awayStats = awayTeam?.statistics || [];
 
     const getStatValue = (stats, name) => {
-        const stat = stats.find(s => s.name === name || s.label === name);
+        const nameLower = name.toLowerCase();
+        const stat = stats.find(s =>
+            s.name?.toLowerCase() === nameLower ||
+            s.label?.toLowerCase() === nameLower
+        );
         return stat?.displayValue || stat?.value || null;
     };
 
@@ -112,21 +116,21 @@ function extractEspnBoxScore(data, sport) {
         return {
             home: {
                 teamName: homeTeam?.team?.displayName || homeTeam?.team?.abbreviation,
-                rebounds: getStatValue(homeStats, 'rebounds'),
-                assists: getStatValue(homeStats, 'assists'),
-                steals: getStatValue(homeStats, 'steals'),
-                blocks: getStatValue(homeStats, 'blocks'),
-                turnovers: getStatValue(homeStats, 'turnovers'),
-                fieldGoalPct: getStatValue(homeStats, 'fieldGoalPct')
+                rebounds: getStatValue(homeStats, 'rebounds') || getStatValue(homeStats, 'totalRebounds') || getStatValue(homeStats, 'Rebounds'),
+                assists: getStatValue(homeStats, 'assists') || getStatValue(homeStats, 'Assists'),
+                steals: getStatValue(homeStats, 'steals') || getStatValue(homeStats, 'Steals'),
+                blocks: getStatValue(homeStats, 'blocks') || getStatValue(homeStats, 'Blocks'),
+                turnovers: getStatValue(homeStats, 'turnovers') || getStatValue(homeStats, 'Turnovers'),
+                fieldGoalPct: getStatValue(homeStats, 'fieldGoalPct') || getStatValue(homeStats, 'Field Goal %')
             },
             away: {
                 teamName: awayTeam?.team?.displayName || awayTeam?.team?.abbreviation,
-                rebounds: getStatValue(awayStats, 'rebounds'),
-                assists: getStatValue(awayStats, 'assists'),
-                steals: getStatValue(awayStats, 'steals'),
-                blocks: getStatValue(awayStats, 'blocks'),
-                turnovers: getStatValue(awayStats, 'turnovers'),
-                fieldGoalPct: getStatValue(awayStats, 'fieldGoalPct')
+                rebounds: getStatValue(awayStats, 'rebounds') || getStatValue(awayStats, 'totalRebounds') || getStatValue(awayStats, 'Rebounds'),
+                assists: getStatValue(awayStats, 'assists') || getStatValue(awayStats, 'Assists'),
+                steals: getStatValue(awayStats, 'steals') || getStatValue(awayStats, 'Steals'),
+                blocks: getStatValue(awayStats, 'blocks') || getStatValue(awayStats, 'Blocks'),
+                turnovers: getStatValue(awayStats, 'turnovers') || getStatValue(awayStats, 'Turnovers'),
+                fieldGoalPct: getStatValue(awayStats, 'fieldGoalPct') || getStatValue(awayStats, 'Field Goal %')
             }
         };
     }
