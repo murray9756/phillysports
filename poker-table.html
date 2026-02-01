@@ -1625,18 +1625,26 @@
         }
 
         async function leaveTable() {
+            // For tournaments, just confirm and redirect (no chip cashout)
+            if (!isCashGame) {
+                if (confirm('Leave the tournament table? You can rejoin from the lobby.')) {
+                    window.location.href = '/poker.html';
+                }
+                return;
+            }
+
+            // Cash game - cash out chips
             if (!confirm('Leave the table? Your remaining chips will be cashed out.')) {
                 return;
             }
 
             try {
-                const endpoint = isCashGame
-                    ? `/api/poker/cash-games/${tableId}/leave`
-                    : `/api/poker/tables/${tableId}/leave`;
+                const endpoint = `/api/poker/cash-games/${tableId}/leave`;
 
                 const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include'
                 });
                 const data = await response.json();
 
@@ -1648,7 +1656,8 @@
                     if (confirm(`${data.error}\n\nForce leave anyway? (You may lose your chips)`)) {
                         const forceResponse = await fetch(endpoint + '?force=true', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include'
                         });
                         const forceData = await forceResponse.json();
                         if (forceData.success) {
