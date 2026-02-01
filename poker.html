@@ -229,8 +229,31 @@
                 <a href="/login.html" class="btn btn-primary">Login to Play</a>
             </div>
 
-            <!-- Private Games (Premium Feature) -->
+            <!-- Cash Games -->
             <div class="section-header">
+                <h2 class="section-title"><span>&#128176;</span> Cash Games - Heads Up</h2>
+                <span style="color: var(--text-muted); font-size: 0.85rem;">10/20 Blinds | 1,000 DD Buy-in</span>
+            </div>
+            <div class="tournament-grid" id="cashGamesGrid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#9203;</div>
+                    <h3>Loading cash tables...</h3>
+                </div>
+            </div>
+
+            <!-- Available Tournaments -->
+            <div class="section-header" style="margin-top: 2rem;">
+                <h2 class="section-title"><span>&#127183;</span> Tournaments</h2>
+            </div>
+            <div class="tournament-grid" id="tournamentGrid">
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#9203;</div>
+                    <h3>Loading tournaments...</h3>
+                </div>
+            </div>
+
+            <!-- Private Games (Premium Feature) -->
+            <div class="section-header" style="margin-top: 2rem;">
                 <h2 class="section-title"><span>&#127183;</span> Private Games</h2>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <button class="btn btn-secondary" onclick="showJoinPrivateModal()" style="padding: 0.5rem 0.75rem; font-size: 0.8rem;">Join Game</button>
@@ -246,29 +269,6 @@
                     <p id="privateGamesMessage">Create a private game to play with friends!</p>
                 </div>
             </div>
-
-            <!-- Cash Games -->
-            <div class="section-header" style="margin-top: 2rem;">
-                <h2 class="section-title"><span>&#128176;</span> Cash Games - Heads Up</h2>
-                <span style="color: var(--text-muted); font-size: 0.85rem;">10/20 Blinds | 1,000 DD Buy-in</span>
-            </div>
-        <div class="tournament-grid" id="cashGamesGrid">
-            <div class="empty-state">
-                <div class="empty-state-icon">&#9203;</div>
-                <h3>Loading cash tables...</h3>
-            </div>
-        </div>
-
-        <!-- Available Tournaments -->
-        <div class="section-header" style="margin-top: 2rem;">
-            <h2 class="section-title"><span>&#127183;</span> Tournaments</h2>
-        </div>
-        <div class="tournament-grid" id="tournamentGrid">
-            <div class="empty-state">
-                <div class="empty-state-icon">&#9203;</div>
-                <h3>Loading tournaments...</h3>
-            </div>
-        </div>
 
         <!-- Quick Rules -->
         <div class="rules-section">
@@ -413,7 +413,7 @@
         // Check authentication
         async function checkAuth() {
             try {
-                const response = await fetch('/api/auth/me');
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
                 const data = await response.json();
                 if (data.user) {
                     currentUser = data.user;
@@ -453,7 +453,7 @@
             document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
             document.getElementById('logoutBtn').addEventListener('click', async (e) => {
                 e.preventDefault();
-                await fetch('/api/auth/logout', { method: 'POST' });
+                await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
                 localStorage.removeItem('auth_token');
                 window.location.reload();
             });
@@ -463,7 +463,7 @@
         async function loadTournaments() {
             const grid = document.getElementById('tournamentGrid');
             try {
-                const response = await fetch('/api/poker/tournaments');
+                const response = await fetch('/api/poker/tournaments', { credentials: 'include' });
                 const data = await response.json();
 
                 if (data.success && data.tournaments.length > 0) {
@@ -584,6 +584,7 @@
                         const response = await fetch('/api/poker/tournaments/register', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
                             body: JSON.stringify({ tournamentId })
                         });
                         const data = await response.json();
@@ -614,6 +615,7 @@
                         const response = await fetch('/api/poker/tournaments/unregister', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
                             body: JSON.stringify({ tournamentId })
                         });
                         const data = await response.json();
@@ -650,7 +652,7 @@
         async function loadCashGames() {
             const grid = document.getElementById('cashGamesGrid');
             try {
-                const response = await fetch('/api/poker/cash-games');
+                const response = await fetch('/api/poker/cash-games', { credentials: 'include' });
                 const data = await response.json();
 
                 if (data.success && data.tables.length > 0) {
@@ -760,7 +762,8 @@
                     try {
                         const response = await fetch(`/api/poker/cash-games/${tableId}/join`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include'
                         });
                         const data = await response.json();
 
@@ -784,7 +787,7 @@
 
         async function checkPremiumStatus() {
             try {
-                const response = await fetch('/api/subscriptions/status');
+                const response = await fetch('/api/subscriptions/status', { credentials: 'include' });
                 const data = await response.json();
                 userIsPremium = data.isPremium ||
                     data.tier === 'premium' ||
@@ -934,7 +937,7 @@
             }
 
             try {
-                const response = await fetch('/api/poker/private/my-games');
+                const response = await fetch('/api/poker/private/my-games', { credentials: 'include' });
                 const data = await response.json();
 
                 if (data.success && data.games.length > 0) {
