@@ -2315,11 +2315,15 @@
         // Cash Game Functions
         function setupCashGameUI() {
             // Hide tournament-specific elements
-            document.getElementById('tournamentStatusBar').classList.add('hidden');
-            document.getElementById('levelDisplay').parentElement.style.display = 'none';
+            const tournamentBar = document.getElementById('tournamentStatusBar');
+            if (tournamentBar) tournamentBar.classList.add('hidden');
+
+            const levelDisplay = document.getElementById('levelDisplay');
+            if (levelDisplay?.parentElement) levelDisplay.parentElement.style.display = 'none';
 
             // Update header to show cash game info
-            document.getElementById('blindsDisplay').textContent = '10/20';
+            const blindsDisplay = document.getElementById('blindsDisplay');
+            if (blindsDisplay) blindsDisplay.textContent = '10/20';
 
             // Change Leave Table button behavior for cash games
             const leaveBtn = document.querySelector('.btn-leave');
