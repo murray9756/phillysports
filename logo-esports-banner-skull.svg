@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 140">
+  <defs>
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A2744"/>
+      <stop offset="100%" style="stop-color:#0d1520"/>
+    </linearGradient>
+    <filter id="glow3" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="440" height="140" fill="url(#bgGrad3)"/>
+  <rect x="3" y="3" width="434" height="134" fill="none" stroke="#F5F0E1" stroke-width="6"/>
+  <rect x="12" y="12" width="416" height="116" fill="none" stroke="#8b00ff" stroke-width="2"/>
+
+  <!-- Gaming Skull Profile -->
+  <g transform="translate(10, 8)" opacity="0.4">
+    <!-- Skull shape profile -->
+    <path d="M60 15 Q95 15 105 50 Q110 75 95 95 L80 95 L75 110 L45 110 L40 95 L25 95 Q10 75 15 50 Q25 15 60 15"
+          fill="none" stroke="#8b00ff" stroke-width="3"/>
+    <!-- Eye socket -->
+    <ellipse cx="45" cy="55" rx="16" ry="18" fill="#0d1520" stroke="#00d4ff" stroke-width="2"/>
+    <circle cx="45" cy="58" r="7" fill="#00d4ff" filter="url(#glow3)"/>
+    <!-- Second eye hint -->
+    <ellipse cx="75" cy="55" rx="12" ry="14" fill="#0d1520" stroke="#ff0080" stroke-width="2"/>
+    <circle cx="75" cy="58" r="5" fill="#ff0080" filter="url(#glow3)"/>
+    <!-- Nose -->
+    <path d="M58 68 L52 82 L64 82 Z" fill="#0d1520"/>
+    <!-- Teeth -->
+    <rect x="35" y="90" width="10" height="15" rx="2" fill="#F5F0E1"/>
+    <rect x="47" y="90" width="10" height="15" rx="2" fill="#F5F0E1"/>
+    <rect x="59" y="90" width="10" height="15" rx="2" fill="#F5F0E1"/>
+    <rect x="71" y="90" width="10" height="15" rx="2" fill="#F5F0E1"/>
+    <!-- Headset -->
+    <path d="M12 45 Q60 0 108 45" stroke="#333" stroke-width="8" fill="none"/>
+    <path d="M12 45 Q60 5 108 45" stroke="#00d4ff" stroke-width="2" fill="none"/>
+    <ellipse cx="10" cy="55" rx="10" ry="16" fill="#1A2744" stroke="#00d4ff" stroke-width="2"/>
+    <ellipse cx="110" cy="55" rx="10" ry="16" fill="#1A2744" stroke="#ff0080" stroke-width="2"/>
+  </g>
+
+  <!-- Top stars and text -->
+  <g transform="translate(140, 18)">
+    <polygon points="12,2 14,8 21,8 16,12 18,19 12,15 6,19 8,12 3,8 10,8" fill="#ff0080" filter="url(#glow3)"/>
+    <text x="35" y="14" font-family="Georgia, serif" font-size="14" fill="#F5F0E1" letter-spacing="2">Est. 2026</text>
+    <polygon points="132,2 134,8 141,8 136,12 138,19 132,15 126,19 128,12 123,8 130,8" fill="#00d4ff" filter="url(#glow3)"/>
+  </g>
+
+  <!-- Main text -->
+  <g transform="translate(155, 75)">
+    <text x="0" y="0" font-family="'Brush Script MT', cursive" font-size="42" fill="#00d4ff" filter="url(#glow3)">Philly</text>
+    <text x="95" y="0" font-family="Impact, 'Arial Black', sans-serif" font-size="42" fill="#ff0080" letter-spacing="-1" filter="url(#glow3)">ESPORTS</text>
+  </g>
+
+  <!-- Domain -->
+  <text x="225" y="118" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#F5F0E1" text-anchor="middle" letter-spacing="1">www.phillEsports.com</text>
+</svg>

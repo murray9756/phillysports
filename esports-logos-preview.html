@@ -25,11 +25,21 @@
             color: #888;
             margin-bottom: 2rem;
         }
+
+        .section-title {
+            text-align: center;
+            color: #ff0080;
+            font-size: 1.5rem;
+            margin: 3rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #333;
+        }
+
         .logo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
             gap: 2rem;
-            max-width: 1400px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         .logo-card {
@@ -44,7 +54,7 @@
             transform: translateY(-4px);
         }
         .logo-card h3 {
-            color: #ff0080;
+            color: #00d4ff;
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
@@ -65,23 +75,102 @@
             max-width: 100%;
             height: auto;
         }
+
         .comparison {
             margin-top: 3rem;
             text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .comparison h2 {
             color: #8b00ff;
             margin-bottom: 1rem;
         }
+        .original-container {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #333;
+        }
         .original-logo {
-            background: #fff;
-            display: inline-block;
-            padding: 1rem 2rem;
-            border-radius: 8px;
+            position: relative;
+            width: 440px;
+            height: 140px;
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            border: 6px solid #F5F0E1;
+            overflow: hidden;
+            margin: 0 auto;
         }
-        .original-logo img {
-            max-width: 250px;
+        .original-logo .inner-border {
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 2px solid #8B1A28;
+            pointer-events: none;
+            z-index: 10;
         }
+        .original-logo .ben {
+            position: absolute;
+            top: 50%; left: -10px;
+            transform: translateY(-50%);
+            height: 130px; width: auto;
+            opacity: 0.25;
+            filter: invert(1) brightness(1.2);
+            z-index: 1;
+        }
+        .original-logo .top-text {
+            position: absolute;
+            top: 8px; left: 70px; right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 18px;
+            color: #F5F0E1;
+            letter-spacing: 3px;
+        }
+        .original-logo .main-text {
+            position: absolute;
+            top: 50%; left: 57%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            z-index: 5;
+        }
+        .original-logo .main-text .philly {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 42px;
+            color: #F5F0E1;
+        }
+        .original-logo .main-text .sports {
+            font-family: Impact, 'Arial Black', sans-serif;
+            font-size: 42px;
+            color: #8B1A28;
+            letter-spacing: -1px;
+        }
+        .original-logo .main-text .com {
+            font-family: Georgia, serif;
+            font-size: 16px;
+            color: #F5F0E1;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .original-logo .tagline {
+            position: absolute;
+            bottom: 8px; left: 70px; right: 20px;
+            text-align: center;
+            font-family: Georgia, serif;
+            font-size: 16px;
+            font-weight: bold;
+            font-style: italic;
+            color: #F5F0E1;
+            letter-spacing: 2px;
+            z-index: 5;
+        }
+
         .note {
             margin-top: 2rem;
             padding: 1rem;
@@ -97,72 +186,78 @@
             color: #aaa;
             font-size: 0.9rem;
         }
+
+        .star {
+            display: inline-block;
+            color: #8B1A28;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>phillEsports Logo Options</h1>
-    <p class="subtitle">Gaming mascot variations for www.phillEsports.com</p>
+    <p class="subtitle">Banner-style logos matching the current header format</p>
+
+    <h2 class="section-title">Banner Logos (Match Header Format)</h2>
 
     <div class="logo-grid">
         <div class="logo-card">
             <h3>1. Gaming Controller Mascot</h3>
-            <p>Controller with character face - fun, approachable gaming vibe</p>
+            <p>Controller with character eyes - replaces Ben Franklin silhouette</p>
             <div class="logo-container">
-                <img src="/logo-esports.svg" alt="Controller Mascot Logo">
+                <img src="/logo-esports-banner-controller.svg" alt="Controller Banner Logo">
             </div>
         </div>
 
         <div class="logo-card">
-            <h3>2. Eagle with Headset</h3>
-            <p>Fierce eagle wearing gaming headset - Philly pride meets esports</p>
+            <h3>2. Eagle with Gaming Headset</h3>
+            <p>Philly eagle wearing headset - fierce gaming attitude</p>
             <div class="logo-container">
-                <img src="/logo-esports-eagle.svg" alt="Eagle Headset Logo">
+                <img src="/logo-esports-banner-eagle.svg" alt="Eagle Banner Logo">
             </div>
         </div>
 
         <div class="logo-card">
-            <h3>3. Cyber Gamer</h3>
-            <p>Futuristic gamer with visor and headset - tech/cyberpunk style</p>
+            <h3>3. Gaming Skull</h3>
+            <p>Skull with headset - edgy esports aesthetic</p>
             <div class="logo-container">
-                <img src="/logo-esports-gamer.svg" alt="Cyber Gamer Logo">
+                <img src="/logo-esports-banner-skull.svg" alt="Skull Banner Logo">
             </div>
         </div>
 
         <div class="logo-card">
-            <h3>4. Gaming Skull</h3>
-            <p>Skull with headset - edgy, popular in competitive esports</p>
+            <h3>4. Cyber Gamer</h3>
+            <p>VR visor gamer head - futuristic tech vibe</p>
             <div class="logo-container">
-                <img src="/logo-esports-skull.svg" alt="Gaming Skull Logo">
-            </div>
-        </div>
-
-        <div class="logo-card">
-            <h3>5. Lightning Bolt</h3>
-            <p>Electric bolt with controller - energy, speed, power</p>
-            <div class="logo-container">
-                <img src="/logo-esports-lightning.svg" alt="Lightning Bolt Logo">
-            </div>
-        </div>
-
-        <div class="logo-card">
-            <h3>6. Crosshair/Target</h3>
-            <p>Minimal FPS-style crosshair - clean, focused, competitive</p>
-            <div class="logo-container">
-                <img src="/logo-esports-minimal.svg" alt="Crosshair Logo">
+                <img src="/logo-esports-banner-gamer.svg" alt="Gamer Banner Logo">
             </div>
         </div>
     </div>
 
     <div class="comparison">
-        <h2>Original PhillySports Logo</h2>
-        <p style="color: #888; margin-bottom: 1rem;">For reference - Ben Franklin silhouette version</p>
-        <div class="original-logo">
-            <img src="/logo.png" alt="Original PhillySports Logo">
+        <h2>Current PhillySports Header Logo</h2>
+        <p style="color: #888; margin-bottom: 1rem;">For reference - the Ben Franklin version you currently have</p>
+        <div class="original-container">
+            <div class="original-logo">
+                <div class="inner-border"></div>
+                <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
+                <div class="top-text">
+                    <span class="star">★</span>
+                    Est. 2026
+                    <span class="star">★</span>
+                </div>
+                <div class="main-text">
+                    <span class="philly">Philly</span>
+                    <span class="sports">SPORTS</span>
+                    <span class="com">.COM</span>
+                </div>
+                <div class="tagline">Where the Diehards, Play Hard</div>
+            </div>
         </div>
     </div>
 
     <div class="note">
-        <p><strong>Note:</strong> These are SVG concepts. For final production, these can be refined by a designer or converted to high-res PNG. The neon glow effects and colors can be adjusted to match your brand preferences.</p>
+        <p><strong>Key Changes:</strong> Ben Franklin → Gaming mascot | "SPORTS" → "ESPORTS" | Tagline → www.phillEsports.com | Neon cyan/pink color scheme</p>
     </div>
 </body>
 </html>

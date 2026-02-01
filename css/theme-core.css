@@ -1,0 +1,114 @@
+/*
+ * PhillySports.com - Core Theme Variables
+ *
+ * This file ONLY defines CSS variables for colors, fonts, and spacing.
+ * It does NOT style any components - that's up to each page.
+ *
+ * Usage: All pages should include this file for consistent theming.
+ * Pages then use these variables in their own styles.
+ */
+
+/* ===========================================
+   LIGHT MODE (Default)
+   =========================================== */
+:root {
+    /* Team Colors */
+    --eagles-green: #004C54;
+    --eagles-silver: #A5ACAF;
+    --phillies-red: #E81828;
+    --sixers-blue: #006BB6;
+    --flyers-orange: #F74902;
+    --union-gold: #B49759;
+
+    /* Core Colors - Light Mode */
+    --bg-primary: #faf9f6;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f5f2eb;
+    --bg-hover: #e8e4d9;
+
+    --text-primary: #1a1a1a;
+    --text-secondary: #444444;
+    --text-muted: #777777;
+
+    --border-color: #e0e0e0;
+    --border-dark: #1a1a1a;
+
+    --accent-color: #8b0000;
+    --accent-hover: #a31515;
+
+    /* Vintage Americana Colors */
+    --ps-cream: #f5f2eb;
+    --ps-cream-dark: #e8e4d9;
+    --ps-navy: #1a1a1a;
+    --ps-red: #8B0000;
+    --ps-gold: #d4c9a8;
+
+    /* Typography */
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-headline: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Font Sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Border Radius */
+    --radius-sm: 2px;
+    --radius-md: 6px;
+    --radius-lg: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+/* ===========================================
+   DARK MODE
+   =========================================== */
+[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2a2a2a;
+    --bg-hover: #333333;
+
+    --text-primary: #e8e8e8;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
+
+    --border-color: #333333;
+    --border-dark: #444444;
+}
+
+/* ===========================================
+   BASE RESET (minimal)
+   =========================================== */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}

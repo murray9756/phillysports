@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 140">
+  <defs>
+    <linearGradient id="bgGrad4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A2744"/>
+      <stop offset="100%" style="stop-color:#0d1520"/>
+    </linearGradient>
+    <filter id="glow4" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="440" height="140" fill="url(#bgGrad4)"/>
+  <rect x="3" y="3" width="434" height="134" fill="none" stroke="#F5F0E1" stroke-width="6"/>
+  <rect x="12" y="12" width="416" height="116" fill="none" stroke="#00d4ff" stroke-width="2"/>
+
+  <!-- Cyber Gamer Head Profile -->
+  <g transform="translate(5, 5)" opacity="0.4">
+    <!-- Head shape -->
+    <ellipse cx="60" cy="70" rx="50" ry="55" fill="none" stroke="#8b00ff" stroke-width="3"/>
+    <!-- Visor/VR style -->
+    <path d="M15 55 L105 55 L100 75 L20 75 Z" fill="#0d1520" stroke="#00d4ff" stroke-width="2"/>
+    <!-- Visor glow -->
+    <line x1="25" y1="65" x2="95" y2="65" stroke="#00d4ff" stroke-width="4" filter="url(#glow4)"/>
+    <!-- Headset band -->
+    <path d="M10 50 Q60 5 110 50" stroke="#333" stroke-width="9" fill="none"/>
+    <path d="M10 50 Q60 10 110 50" stroke="#ff0080" stroke-width="2" fill="none"/>
+    <!-- Ear cups -->
+    <ellipse cx="8" cy="65" rx="12" ry="18" fill="#1A2744" stroke="#ff0080" stroke-width="2"/>
+    <ellipse cx="112" cy="65" rx="12" ry="18" fill="#1A2744" stroke="#ff0080" stroke-width="2"/>
+    <!-- Mic -->
+    <path d="M5 80 Q-10 100 0 118" stroke="#333" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="0" cy="122" r="7" fill="#00ff88" filter="url(#glow4)"/>
+    <!-- Mouth expression -->
+    <path d="M40 95 Q60 108 80 95" stroke="#00d4ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Top stars and text -->
+  <g transform="translate(145, 18)">
+    <polygon points="12,2 14,8 21,8 16,12 18,19 12,15 6,19 8,12 3,8 10,8" fill="#ff0080" filter="url(#glow4)"/>
+    <text x="35" y="14" font-family="Georgia, serif" font-size="14" fill="#F5F0E1" letter-spacing="2">Est. 2026</text>
+    <polygon points="127,2 129,8 136,8 131,12 133,19 127,15 121,19 123,12 118,8 125,8" fill="#00d4ff" filter="url(#glow4)"/>
+  </g>
+
+  <!-- Main text -->
+  <g transform="translate(160, 75)">
+    <text x="0" y="0" font-family="'Brush Script MT', cursive" font-size="42" fill="#00d4ff" filter="url(#glow4)">Philly</text>
+    <text x="95" y="0" font-family="Impact, 'Arial Black', sans-serif" font-size="42" fill="#ff0080" letter-spacing="-1" filter="url(#glow4)">ESPORTS</text>
+  </g>
+
+  <!-- Domain -->
+  <text x="230" y="118" font-family="Georgia, serif" font-size="14" font-weight="bold" fill="#F5F0E1" text-anchor="middle" letter-spacing="1">www.phillEsports.com</text>
+</svg>
