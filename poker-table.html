@@ -1417,8 +1417,10 @@
             document.getElementById('blindLevel').textContent = data.level;
             document.getElementById('currentBlinds').textContent = `${data.smallBlind}/${data.bigBlind}`;
             document.getElementById('currentAnte').textContent = data.ante || 0;
-            document.getElementById('blindsDisplay').textContent = `${data.smallBlind}/${data.bigBlind}`;
-            document.getElementById('levelDisplay').textContent = data.level;
+            const blindsDisplayEl = document.getElementById('blindsDisplay');
+            if (blindsDisplayEl) blindsDisplayEl.textContent = `${data.smallBlind}/${data.bigBlind}`;
+            const levelDisplayEl = document.getElementById('levelDisplay');
+            if (levelDisplayEl) levelDisplayEl.textContent = data.level;
 
             // Flash the status bar
             const statusBar = document.getElementById('tournamentStatusBar');
@@ -1576,11 +1578,14 @@
                 const data = await response.json();
                 if (data.user) {
                     currentUser = data.user;
-                    // Display account balance in header
-                    document.getElementById('accountBalance').textContent =
-                        currentUser.coinBalance >= 1000
-                            ? (currentUser.coinBalance / 1000).toFixed(1) + 'k'
-                            : currentUser.coinBalance;
+                    // Display account balance in header (if element exists)
+                    const accountBalanceEl = document.getElementById('accountBalance');
+                    if (accountBalanceEl) {
+                        accountBalanceEl.textContent =
+                            currentUser.coinBalance >= 1000
+                                ? (currentUser.coinBalance / 1000).toFixed(1) + 'k'
+                                : currentUser.coinBalance;
+                    }
                 } else {
                     alert('Please login to play');
                     window.location.href = '/login.html';
@@ -1766,10 +1771,13 @@
             if (table.tournament) {
                 const blinds = table.tournament.blindStructure?.[table.tournament.currentBlindLevel || 0];
                 if (blinds) {
-                    document.getElementById('blindsDisplay').textContent = `${blinds.smallBlind}/${blinds.bigBlind}`;
+                    const blindsEl = document.getElementById('blindsDisplay');
+                    if (blindsEl) blindsEl.textContent = `${blinds.smallBlind}/${blinds.bigBlind}`;
                 }
-                document.getElementById('levelDisplay').textContent = (table.tournament.currentBlindLevel || 0) + 1;
-                document.getElementById('playersDisplay').textContent = `${table.tournament.registeredCount}/${table.tournament.maxPlayers}`;
+                const levelEl = document.getElementById('levelDisplay');
+                if (levelEl) levelEl.textContent = (table.tournament.currentBlindLevel || 0) + 1;
+                const playersEl = document.getElementById('playersDisplay');
+                if (playersEl) playersEl.textContent = `${table.tournament.registeredCount}/${table.tournament.maxPlayers}`;
             }
 
             // Find user's position at the table
@@ -2344,12 +2352,13 @@
             const table = gameState.table;
 
             // Update blinds display
-            document.getElementById('blindsDisplay').textContent =
-                `${table.blinds?.small || 10}/${table.blinds?.big || 20}`;
+            const blindsEl = document.getElementById('blindsDisplay');
+            if (blindsEl) blindsEl.textContent = `${table.blinds?.small || 10}/${table.blinds?.big || 20}`;
 
             // Update players display
             const playerCount = table.seats.filter(s => s.playerId).length;
-            document.getElementById('playersDisplay').textContent = `${playerCount}/2`;
+            const playersEl = document.getElementById('playersDisplay');
+            if (playersEl) playersEl.textContent = `${playerCount}/2`;
 
             // Show rebuy button if player is busted
             if (gameState.canRebuy) {
