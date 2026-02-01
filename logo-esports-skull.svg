@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <defs>
+    <filter id="neonGlow4" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="400" height="200" fill="#0a0a0a"/>
+
+  <!-- Gaming Skull -->
+  <g transform="translate(20, 25)">
+    <!-- Skull shape -->
+    <path d="M50 10 Q85 10 90 50 Q92 80 75 95 L65 95 L60 105 L40 105 L35 95 L25 95 Q8 80 10 50 Q15 10 50 10"
+          fill="#1a1a2e" stroke="#8b00ff" stroke-width="2"/>
+    <!-- Left eye socket -->
+    <ellipse cx="32" cy="50" rx="14" ry="16" fill="#0a0a0a"/>
+    <ellipse cx="32" cy="50" rx="10" ry="12" fill="none" stroke="#00d4ff" stroke-width="2" filter="url(#neonGlow4)"/>
+    <circle cx="32" cy="52" r="5" fill="#00d4ff" filter="url(#neonGlow4)"/>
+    <!-- Right eye socket -->
+    <ellipse cx="68" cy="50" rx="14" ry="16" fill="#0a0a0a"/>
+    <ellipse cx="68" cy="50" rx="10" ry="12" fill="none" stroke="#ff0080" stroke-width="2" filter="url(#neonGlow4)"/>
+    <circle cx="68" cy="52" r="5" fill="#ff0080" filter="url(#neonGlow4)"/>
+    <!-- Nose -->
+    <path d="M50 60 L45 72 L55 72 Z" fill="#0a0a0a"/>
+    <!-- Teeth -->
+    <rect x="30" y="82" width="8" height="12" rx="1" fill="#e0e0e0"/>
+    <rect x="40" y="82" width="8" height="12" rx="1" fill="#e0e0e0"/>
+    <rect x="50" y="82" width="8" height="12" rx="1" fill="#e0e0e0"/>
+    <rect x="60" y="82" width="8" height="12" rx="1" fill="#e0e0e0"/>
+    <!-- Headset band -->
+    <path d="M8 40 Q50 -5 92 40" stroke="#333" stroke-width="7" fill="none"/>
+    <path d="M8 40 Q50 0 92 40" stroke="#00d4ff" stroke-width="2" fill="none"/>
+    <!-- Ear pieces -->
+    <ellipse cx="5" cy="50" rx="8" ry="14" fill="#1a1a2e" stroke="#00d4ff" stroke-width="2"/>
+    <ellipse cx="95" cy="50" rx="8" ry="14" fill="#1a1a2e" stroke="#ff0080" stroke-width="2"/>
+  </g>
+
+  <!-- "phill" text -->
+  <text x="115" y="95" font-family="Arial Black, Impact, sans-serif" font-size="50" font-weight="900" fill="#00d4ff" filter="url(#neonGlow4)">phill</text>
+
+  <!-- "Esports" text -->
+  <text x="115" y="148" font-family="Arial Black, Impact, sans-serif" font-size="50" font-weight="900" fill="#ff0080" filter="url(#neonGlow4)">Esports</text>
+
+  <!-- Domain -->
+  <text x="200" y="178" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#666" text-anchor="middle">www.phillEsports.com</text>
+</svg>
