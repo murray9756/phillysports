@@ -71,8 +71,10 @@
     <link rel="stylesheet" href="/css/mobile-menu.css">
     <style>
         :root {
-            --team-color: #9146FF;
-            --team-secondary: #1DB954;
+            --team-color: #00aa66;
+            --team-secondary: #0099cc;
+            --esports-green: #00aa66;
+            --esports-cyan: #0099cc;
             --dark-bg: #faf9f6;
             --card-bg: #ffffff;
             --card-bg-hover: #fafafa;
@@ -80,14 +82,16 @@
             --text-primary: #1a1a1a;
             --text-secondary: #444444;
             --text-muted: #777777;
-            --accent-color: #8b0000;
+            --accent-color: #00aa66;
             --nav-text: #333333;
             --widget-header-bg: #e8e3db;
         }
 
         [data-theme="dark"] {
-            --team-color: #9146FF;
-            --team-secondary: #1DB954;
+            --team-color: #00ff88;
+            --team-secondary: #00d4ff;
+            --esports-green: #00ff88;
+            --esports-cyan: #00d4ff;
             --dark-bg: #121212;
             --card-bg: #1e1e1e;
             --card-bg-hover: #2a2a2a;
@@ -97,6 +101,194 @@
             --text-muted: #808080;
             --nav-text: #d0d0d0;
             --widget-header-bg: #2a2a2a;
+        }
+
+        /* Esports Header */
+        .esports-header {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        [data-theme="dark"] .esports-header {
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            border-bottom: 1px solid #333;
+        }
+
+        /* Esports Logo */
+        .esports-logo {
+            position: relative;
+            width: 440px;
+            height: 140px;
+            overflow: hidden;
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 6px solid #1A2744;
+        }
+        [data-theme="dark"] .esports-logo {
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            border-color: #F5F0E1;
+        }
+        .esports-logo .inner-border {
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 2px solid #00aa66;
+            pointer-events: none;
+            z-index: 10;
+        }
+        [data-theme="dark"] .esports-logo .inner-border {
+            border-color: #00ff88;
+        }
+        .esports-logo .ben {
+            position: absolute;
+            top: 50%; left: -10px;
+            transform: translateY(-50%);
+            height: 130px; width: auto;
+            opacity: 0.4;
+            z-index: 1;
+        }
+        [data-theme="dark"] .esports-logo .ben {
+            opacity: 0.25;
+            filter: invert(1) brightness(1.2);
+        }
+        .esports-logo .top-row {
+            position: absolute;
+            top: 8px; left: 70px; right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+        }
+        .esports-logo .top-row .star {
+            font-size: 18px;
+            color: #00aa66;
+        }
+        [data-theme="dark"] .esports-logo .top-row .star {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        .esports-logo .top-row .est {
+            font-family: Georgia, serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #1A2744;
+        }
+        [data-theme="dark"] .esports-logo .top-row .est {
+            color: #F5F0E1;
+        }
+        .esports-logo .main-text {
+            position: absolute;
+            top: 50%; left: 57%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            z-index: 5;
+        }
+        .esports-logo .phill {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 42px;
+            line-height: 1;
+            color: #00aa66;
+        }
+        [data-theme="dark"] .esports-logo .phill {
+            color: #00ff88;
+            text-shadow: 0 0 15px #00ff88;
+        }
+        .esports-logo .big-e {
+            font-family: Impact, 'Arial Black', sans-serif;
+            font-size: 42px;
+            line-height: 1;
+            letter-spacing: -1px;
+            color: #0099cc;
+        }
+        [data-theme="dark"] .esports-logo .big-e {
+            color: #00d4ff;
+            text-shadow: 0 0 15px #00d4ff;
+        }
+        .esports-logo .sports {
+            font-family: Impact, 'Arial Black', sans-serif;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: -1px;
+            margin-left: -2px;
+            color: #0099cc;
+        }
+        [data-theme="dark"] .esports-logo .sports {
+            color: #00d4ff;
+            text-shadow: 0 0 15px #00d4ff;
+        }
+        .esports-logo .dotcom {
+            font-family: Georgia, serif;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #1A2744;
+        }
+        [data-theme="dark"] .esports-logo .dotcom {
+            color: #F5F0E1;
+        }
+
+        /* Header Nav */
+        .esports-nav {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .esports-nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .esports-nav-links a {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .esports-nav-links a:hover {
+            color: var(--team-color);
+        }
+        .esports-nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+        .esports-nav-auth a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .esports-nav-auth a:hover {
+            color: var(--team-color);
+        }
+        .theme-toggle-esports {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.35rem 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        .theme-toggle-esports:hover {
+            border-color: var(--team-color);
+            color: var(--team-color);
+        }
+        .coin-display {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background: var(--dark-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #b8860b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -139,7 +331,8 @@
         .feedback-success { text-align: center; padding: 1rem; }
         .feedback-success h4 { color: #28a745; margin: 0 0 0.5rem 0; }
 
-        .team-hero { background: linear-gradient(135deg, var(--team-color), #1a0033); padding: 1rem 1.5rem; text-align: center; color: #ffffff; }
+        .team-hero { background: linear-gradient(135deg, var(--esports-green), #004d33); padding: 1rem 1.5rem; text-align: center; color: #ffffff; }
+        [data-theme="dark"] .team-hero { background: linear-gradient(135deg, #0d1520, #1A2744); }
         .team-hero h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
         .team-hero p { color: #cccccc; font-size: 0.85rem; }
 
@@ -155,17 +348,17 @@
         .widget-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .widget-content { padding: 0.75rem; }
         .trivia-promo-widget { padding: 0; overflow: hidden; }
-        .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #9146FF, #1DB954); color: #fff; }
+        .trivia-promo-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, var(--esports-green), var(--esports-cyan)); color: #fff; }
         .trivia-promo-icon { font-size: 1.25rem; }
         .trivia-promo-title { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .trivia-promo-body { padding: 1rem; text-align: center; }
         .trivia-promo-tagline { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-primary); }
         .trivia-promo-stats { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 0.75rem; }
         .trivia-stat { display: flex; flex-direction: column; align-items: center; padding: 0.4rem 0.6rem; background: var(--dark-bg); border-radius: 6px; min-width: 60px; }
-        .trivia-stat .stat-number { font-size: 0.9rem; font-weight: 800; color: #9146FF; }
+        .trivia-stat .stat-number { font-size: 0.9rem; font-weight: 800; color: var(--esports-green); }
         .trivia-stat .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
-        .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, #9146FF, #1DB954); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
-        .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(145, 70, 255, 0.4); }
+        .trivia-promo-btn { display: inline-block; width: 100%; padding: 0.6rem 1rem; background: linear-gradient(135deg, var(--esports-green), var(--esports-cyan)); color: #fff; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+        .trivia-promo-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 170, 102, 0.4); }
 
         .article-list { display: flex; flex-direction: column; gap: 0.75rem; }
         .article-item { display: flex; gap: 1rem; padding: 1rem; background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 4px rgba(0,0,0,0.05); transition: box-shadow 0.2s, border-color 0.2s; }
@@ -273,9 +466,41 @@
     </style>
 </head>
 <body class="ps-theme">
-    <!-- Shared Header -->
-    <div id="site-header"></div>
-    <script src="/js/header.js"></script>
+    <!-- Esports Custom Header -->
+    <header class="esports-header">
+        <a href="/esports/" style="text-decoration: none;">
+            <div class="esports-logo">
+                <div class="inner-border"></div>
+                <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
+                <div class="top-row">
+                    <span class="star">★</span>
+                    <span class="est">Est. 2026</span>
+                    <span class="star">★</span>
+                </div>
+                <div class="main-text">
+                    <span class="phill">Phill</span>
+                    <span class="big-e">E</span><span class="sports">SPORTS</span>
+                    <span class="dotcom">.COM</span>
+                </div>
+            </div>
+        </a>
+    </header>
+    <nav class="esports-nav">
+        <div class="esports-nav-links">
+            <a href="/">PhillySports Home</a>
+            <a href="/esports/">News</a>
+            <a href="/trivia.html?team=eSports">Trivia</a>
+            <a href="/poker.html">Poker</a>
+            <a href="/forums.html">Forums</a>
+        </div>
+        <div class="esports-nav-auth" id="esportsHeaderAuth">
+            <button class="theme-toggle-esports" id="esportsThemeToggle" title="Toggle dark mode">
+                <span class="theme-icon-light">☾</span>
+                <span class="theme-icon-dark" style="display:none;">☀</span>
+            </button>
+            <a href="/login.html">Sign In</a>
+        </div>
+    </nav>
 
     <div class="team-hero">
         <h1>Philadelphia eSports</h1>
@@ -482,11 +707,44 @@
     </main>
 
     <footer class="footer">
-        <p class="footer-copy">&copy; 2025 PhillySports.com - <a href="/" style="color:var(--team-color);">Back to All Teams</a></p>
+        <p class="footer-copy">&copy; 2026 PhillEsports.com - <a href="/" style="color:var(--esports-green);">Back to PhillySports</a> | <a href="/esports/" style="color:var(--esports-cyan);">Esports Home</a></p>
     </footer>
 
     <script>
-        // Theme is handled by header.js
+        // Theme handling for esports page
+        function initEsportsTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcons(savedTheme);
+        }
+
+        function updateThemeIcons(theme) {
+            const lightIcon = document.querySelector('.theme-icon-light');
+            const darkIcon = document.querySelector('.theme-icon-dark');
+            if (lightIcon && darkIcon) {
+                if (theme === 'dark') {
+                    lightIcon.style.display = 'none';
+                    darkIcon.style.display = 'inline';
+                } else {
+                    lightIcon.style.display = 'inline';
+                    darkIcon.style.display = 'none';
+                }
+            }
+        }
+
+        function toggleEsportsTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcons(newTheme);
+        }
+
+        // Initialize theme
+        initEsportsTheme();
+
+        // Theme toggle button
+        document.getElementById('esportsThemeToggle').addEventListener('click', toggleEsportsTheme);
 
         const TEAM = 'esports';
 
@@ -617,35 +875,34 @@
 
         loadNews();
 
-        // Auth check for header
+        // Auth check for esports header
         async function checkAuth() {
             try {
                 const response = await fetch('/api/auth/me');
                 const data = await response.json();
                 if (data.user) {
-                    const headerAuth = document.getElementById('headerAuth');
+                    const headerAuth = document.getElementById('esportsHeaderAuth');
                     const premiumBadge = data.user.isSubscribed
-                        ? `<a href="/membership.html" class="premium-badge">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
-                        : `<a href="/membership.html" class="go-premium-link">Go Premium</a>`;
+                        ? `<a href="/membership.html" style="color:var(--esports-green);font-weight:600;">${data.user.subscriptionTier === 'diehard_pro' ? 'PRO' : '+'}</a>`
+                        : '';
                     const adminLink = data.user.isAdmin
-                        ? `<a href="/admin.html" class="admin-link" title="Admin Dashboard">Admin</a>`
+                        ? `<a href="/admin.html">Admin</a>`
                         : '';
                     headerAuth.innerHTML = `
-                        <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
-                            <span class="theme-icon-light">&#9790;</span>
-                            <span class="theme-icon-dark">&#9728;</span>
+                        <button class="theme-toggle-esports" id="esportsThemeToggle" title="Toggle dark mode">
+                            <span class="theme-icon-light" style="${document.documentElement.getAttribute('data-theme') === 'dark' ? 'display:none' : ''}">☾</span>
+                            <span class="theme-icon-dark" style="${document.documentElement.getAttribute('data-theme') === 'dark' ? '' : 'display:none'}">☀</span>
                         </button>
                         <div class="coin-display" title="Diehard Dollars">
-                            <span class="coin-icon">&#129689;</span>
-                            <span class="coin-balance">${Math.round(data.user.coins || 0)}</span>
-                            <a href="/shop.html#coin-packs" class="buy-coins-link" title="Buy Diehard Dollars">+</a>
+                            <span>🪙</span>
+                            <span>${Math.round(data.user.coins || 0)}</span>
                         </div>
                         ${premiumBadge}
                         ${adminLink}
                         <a href="/profile.html">${data.user.username}</a>
                         <a href="#" id="logoutBtn">Logout</a>
                     `;
-                    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+                    document.getElementById('esportsThemeToggle').addEventListener('click', toggleEsportsTheme);
                     document.getElementById('logoutBtn').addEventListener('click', async (e) => {
                         e.preventDefault();
                         await fetch('/api/auth/logout', { method: 'POST' });
