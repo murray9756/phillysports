@@ -771,15 +771,22 @@
                         });
                         const data = await response.json();
 
+                        console.log('Join response:', { status: response.status, data });
                         if (data.success) {
                             currentUser.coinBalance = data.newBalance;
                             updateHeader();
                             window.location.href = `/poker-table.html?cash=${tableId}`;
+                        } else if (data.error && data.error.includes('Already seated')) {
+                            // User is already at this table, just redirect
+                            console.log('Already seated, redirecting to table');
+                            window.location.href = `/poker-table.html?cash=${tableId}`;
                         } else {
+                            console.error('Join failed:', data);
                             alert(data.error || 'Failed to join table');
                         }
                     } catch (e) {
-                        alert('Failed to join table. Please try again.');
+                        console.error('Join table exception:', e);
+                        alert('Failed to join table: ' + e.message);
                     }
                     closeModal();
                 }

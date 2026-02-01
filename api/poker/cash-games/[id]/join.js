@@ -30,7 +30,10 @@ export default async function handler(req, res) {
     }
 
     const user = await authenticate(req);
+    console.log('Join table request:', { tableId: id, userId: user?.userId, hasUser: !!user });
+
     if (!user) {
+        console.log('Join failed: no authenticated user');
         return res.status(401).json({ error: 'Authentication required' });
     }
 
@@ -110,6 +113,7 @@ export default async function handler(req, res) {
                 }
             }
         );
+        console.log('User seated successfully:', { userId: user.userId, seat: openSeatIndex, buyIn });
 
         // Refresh table
         let updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
@@ -166,44 +170,48 @@ export default async function handler(req, res) {
 
         // If 2+ humans, remove all bots
         if (humanPlayers.length >= 2 && botPlayers.length > 0) {
-            for (const botSeat of botPlayers) {
-                const botSeatIdx = updatedTable.seats.findIndex(s => s.playerId?.toString() === botSeat.playerId?.toString());
-                if (botSeatIdx !== -1) {
-                    // Clear the bot's seat
-                    await cashTables.updateOne(
-                        { _id: new ObjectId(id) },
-                        {
-                            $set: {
-                                [`seats.${botSeatIdx}`]: {
-                                    position: botSeatIdx,
-                                    playerId: null,
-                                    username: null,
-                                    chipStack: 0,
-                                    isActive: false,
-                                    isSittingOut: false,
-                                    cards: [],
-                                    currentBet: 0,
-                                    joinedAt: null
+            try {
+                for (const botSeat of botPlayers) {
+                    const botSeatIdx = updatedTable.seats.findIndex(s => s.playerId?.toString() === botSeat.playerId?.toString());
+                    if (botSeatIdx !== -1) {
+                        // Clear the bot's seat
+                        await cashTables.updateOne(
+                            { _id: new ObjectId(id) },
+                            {
+                                $set: {
+                                    [`seats.${botSeatIdx}`]: {
+                                        position: botSeatIdx,
+                                        playerId: null,
+                                        username: null,
+                                        chipStack: 0,
+                                        isActive: false,
+                                        isSittingOut: false,
+                                        cards: [],
+                                        currentBet: 0,
+                                        joinedAt: null
+                                    }
                                 }
                             }
-                        }
-                    );
+                        );
 
-                    // Broadcast bot left
-                    broadcastTableUpdate(id, 'player-left', {
-                        playerId: botSeat.playerId?.toString(),
-                        username: botSeat.username,
-                        position: botSeatIdx,
-                        isBot: true,
-                        reason: 'Humans joined'
-                    });
-                    console.log('Bot removed:', botSeat.username);
+                        // Broadcast bot left
+                        broadcastTableUpdate(id, 'player-left', {
+                            playerId: botSeat.playerId?.toString(),
+                            username: botSeat.username,
+                            position: botSeatIdx,
+                            isBot: true,
+                            reason: 'Humans joined'
+                        });
+                        console.log('Bot removed:', botSeat.username);
+                    }
                 }
-            }
 
-            // Refresh table after bots removed
-            updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
-            seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+                // Refresh table after bots removed
+                updatedTable = await cashTables.findOne({ _id: new ObjectId(id) });
+                seatedPlayers = updatedTable.seats.filter(s => s.playerId);
+            } catch (e) {
+                console.error('Error removing bots:', e.message);
+            }
         }
 
         // Final refresh before hand start check
@@ -251,6 +259,8 @@ export default async function handler(req, res) {
         // Get updated balance
         const updatedUser = await users.findOne({ _id: new ObjectId(user.userId) });
 
+        console.log('Join complete, returning success:', { userId: user.userId, newBalance: updatedUser?.coinBalance, seatedPlayers: seatedPlayers.length, handStarted, handError });
+
         return res.status(200).json({
             success: true,
             message: 'Joined table successfully',
@@ -272,8 +282,8 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error('Join cash table error:', error);
-        return res.status(500).json({ error: error.message || 'Failed to join table' });
+        console.error('Join cash table error:', error.message, error.stack);
+        return res.status(500).json({ error: error.message || 'Failed to join table', stack: error.stack });
     }
 }
 
