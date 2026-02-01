@@ -262,11 +262,11 @@ export function chooseBotAction(hand, player, validActions) {
                 return { action: 'bet', amount: Math.max(hand.minRaise || 20, betSize) };
             }
         }
-        // Weak hand - usually check, occasional bluff
+        // Weak hand - bluff more often to keep opponents guessing
         else {
-            if (validActions.includes('bet') && randomFactor < 0.15) {
-                // Bluff
-                const betSize = Math.floor(hand.pot * 0.6);
+            if (validActions.includes('bet') && randomFactor < 0.40) {
+                // Bluff bet - larger sizing to apply pressure
+                const betSize = Math.floor(hand.pot * (0.65 + Math.random() * 0.35));
                 return { action: 'bet', amount: Math.max(hand.minRaise || 20, betSize) };
             }
         }
@@ -321,9 +321,9 @@ export function chooseBotAction(hand, player, validActions) {
                     return { action: 'call', amount: 0 };
                 }
             }
-            // Occasional bluff raise
-            if (validActions.includes('raise') && randomFactor < 0.1) {
-                const raiseSize = hand.currentBet + Math.floor(hand.pot * 0.7);
+            // Bluff raise more often - represent strength
+            if (validActions.includes('raise') && randomFactor < 0.30) {
+                const raiseSize = hand.currentBet + Math.floor(hand.pot * (0.7 + Math.random() * 0.4));
                 return { action: 'raise', amount: Math.min(raiseSize, player.chipStackCurrent) };
             }
             // Usually fold
@@ -334,9 +334,9 @@ export function chooseBotAction(hand, player, validActions) {
 
         // Weak hands (< 0.3) - mostly fold
         else {
-            // Rare bluff
-            if (validActions.includes('raise') && randomFactor < 0.08) {
-                const raiseSize = hand.currentBet + Math.floor(hand.pot * 0.75);
+            // Bluff raise - keep opponents honest
+            if (validActions.includes('raise') && randomFactor < 0.22) {
+                const raiseSize = hand.currentBet + Math.floor(hand.pot * (0.75 + Math.random() * 0.5));
                 return { action: 'raise', amount: Math.min(raiseSize, player.chipStackCurrent) };
             }
             // Call only if very cheap
