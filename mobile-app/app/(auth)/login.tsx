@@ -83,8 +83,15 @@ export default function LoginScreen() {
 
     setLoading(true);
     try {
-      await login(email.trim().toLowerCase(), password);
-      router.replace('/(tabs)');
+      const result = await login(email.trim().toLowerCase(), password);
+      if (result.success) {
+        router.replace('/(tabs)');
+      } else {
+        Alert.alert(
+          'Login Failed',
+          result.error || 'Invalid email or password. Please try again.'
+        );
+      }
     } catch (error: any) {
       Alert.alert(
         'Login Failed',

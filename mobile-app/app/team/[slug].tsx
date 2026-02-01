@@ -8,6 +8,7 @@ import {
   Image,
   ActivityIndicator,
   RefreshControl,
+  Linking,
 } from 'react-native';
 import { useLocalSearchParams, Stack, Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -37,9 +38,25 @@ interface Score {
 interface ScheduleGame {
   opponent: string;
   date: string;
-  time: string;
   isHome: boolean;
   venue?: string;
+  sport?: string;
+  team?: string;
+  broadcast?: string;
+}
+
+interface Player {
+  _id: string;
+  name: string;
+  position: string;
+  number?: string;
+  image?: string;
+}
+
+interface TeamStats {
+  label: string;
+  value: string;
+  rank?: string;
 }
 
 const teamInfo: Record<string, { name: string; sport: string; league: string; icon: string }> = {
@@ -64,9 +81,11 @@ export default function TeamDetailScreen() {
   const [news, setNews] = useState<Article[]>([]);
   const [scores, setScores] = useState<Score[]>([]);
   const [schedule, setSchedule] = useState<ScheduleGame[]>([]);
+  const [roster, setRoster] = useState<Player[]>([]);
+  const [stats, setStats] = useState<TeamStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'news' | 'scores' | 'schedule'>('news');
+  const [activeTab, setActiveTab] = useState<'news' | 'scores' | 'schedule' | 'roster' | 'stats'>('news');
 
   const team = teamInfo[slug || ''] || { name: slug, sport: '', league: '', icon: '🏆' };
   const teamColor = TeamColors[slug as keyof typeof TeamColors] || colors.primary;
@@ -77,15 +96,19 @@ export default function TeamDetailScreen() {
 
   const loadData = async () => {
     try {
-      const [newsRes, scoresRes, scheduleRes] = await Promise.all([
+      const [newsRes, scoresRes, scheduleRes, rosterRes, statsRes] = await Promise.all([
         sportsService.getNews(slug),
         sportsService.getScores(slug),
         sportsService.getSchedule(slug, 14),
+        sportsService.getRoster(slug).catch(() => ({ roster: [] })),
+        sportsService.getStats(slug).catch(() => ({ stats: [] })),
       ]);
 
       if (newsRes.articles) setNews(newsRes.articles.slice(0, 15));
       if (scoresRes.scores) setScores(scoresRes.scores);
-      if (scheduleRes.games) setSchedule(scheduleRes.games);
+      if (scheduleRes.schedule) setSchedule(scheduleRes.schedule);
+      if (rosterRes.roster) setRoster(rosterRes.roster);
+      if (statsRes.stats) setStats(statsRes.stats);
     } catch (error) {
       console.error('Failed to load team data:', error);
     } finally {
@@ -111,6 +134,36 @@ export default function TeamDetailScreen() {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  };
+
+  const getEspnBoxscoreUrl = (gameId: string, league: string) => {
+    if (!gameId) return null;
+    const sportPath: Record<string, string> = {
+      'NFL': 'nfl',
+      'MLB': 'mlb',
+      'NBA': 'nba',
+      'NHL': 'nhl',
+      'MLS': 'soccer/usa.1',
+      'Big East': 'mens-college-basketball',
+      'Ivy League': 'mens-college-basketball',
+      'AAC': 'mens-college-basketball',
+      'CAA': 'mens-college-basketball',
+      'A-10': 'mens-college-basketball',
+    };
+    const path = sportPath[league] || 'nfl';
+    return `https://www.espn.com/${path}/boxscore/_/gameId/${gameId}`;
+  };
+
+  const openEspnBoxscore = async (gameId: string) => {
+    const url = getEspnBoxscoreUrl(gameId, team.league);
+    if (url) {
+      await Linking.openURL(url);
+    }
   };
 
   if (loading) {
@@ -144,8 +197,13 @@ export default function TeamDetailScreen() {
         </View>
 
         {/* Tab Bar */}
-        <View style={[styles.tabBar, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          {(['news', 'scores', 'schedule'] as const).map((tab) => (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={[styles.tabBar, { backgroundColor: colors.card, borderColor: colors.border }]}
+          contentContainerStyle={styles.tabBarContent}
+        >
+          {(['news', 'scores', 'schedule', 'roster', 'stats'] as const).map((tab) => (
             <TouchableOpacity
               key={tab}
               style={[styles.tab, activeTab === tab && { borderBottomColor: teamColor, borderBottomWidth: 2 }]}
@@ -161,14 +219,22 @@ export default function TeamDetailScreen() {
               </Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
 
         {/* Tab Content */}
         <View style={styles.content}>
           {activeTab === 'news' && (
             <>
               {news.length === 0 ? (
-                <Text style={[styles.emptyText, { color: colors.textMuted }]}>No news available</Text>
+                <View style={styles.emptyState}>
+                  <Ionicons name="newspaper-outline" size={48} color={colors.textMuted} />
+                  <Text style={[styles.emptyText, { color: colors.textMuted }]}>No recent news</Text>
+                  <Text style={[styles.emptySubtext, { color: colors.textSecondary }]}>
+                    {['villanova', 'penn', 'lasalle', 'drexel', 'stjosephs', 'temple'].includes(slug || '')
+                      ? 'College team news is more limited during off-season'
+                      : 'Check back soon for updates'}
+                  </Text>
+                </View>
               ) : (
                 news.map((article) => (
                   <Link
@@ -210,10 +276,11 @@ export default function TeamDetailScreen() {
               {scores.length === 0 ? (
                 <Text style={[styles.emptyText, { color: colors.textMuted }]}>No recent scores</Text>
               ) : (
-                scores.map((score, index) => (
-                  <View
+                scores.map((score: any, index) => (
+                  <TouchableOpacity
                     key={index}
                     style={[styles.scoreCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                    onPress={() => openEspnBoxscore(score.gameId || score.espnId)}
                   >
                     <View style={styles.scoreRow}>
                       <Text style={[styles.scoreTeam, { color: colors.text }]}>{score.homeTeam}</Text>
@@ -223,8 +290,14 @@ export default function TeamDetailScreen() {
                       <Text style={[styles.scoreTeam, { color: colors.text }]}>{score.awayTeam}</Text>
                       <Text style={[styles.scoreNum, { color: colors.text }]}>{score.awayScore}</Text>
                     </View>
-                    <Text style={[styles.scoreStatus, { color: colors.textMuted }]}>{score.status}</Text>
-                  </View>
+                    <View style={styles.scoreFooter}>
+                      <Text style={[styles.scoreStatus, { color: colors.textMuted }]}>{score.status}</Text>
+                      <View style={styles.boxscoreLink}>
+                        <Text style={[styles.boxscoreLinkText, { color: teamColor }]}>ESPN Box Score</Text>
+                        <Ionicons name="open-outline" size={14} color={teamColor} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 ))
               )}
             </>
@@ -244,7 +317,7 @@ export default function TeamDetailScreen() {
                       <Text style={[styles.scheduleDateText, { color: teamColor }]}>
                         {formatDate(game.date)}
                       </Text>
-                      <Text style={[styles.scheduleTime, { color: colors.textMuted }]}>{game.time}</Text>
+                      <Text style={[styles.scheduleTime, { color: colors.textMuted }]}>{formatTime(game.date)}</Text>
                     </View>
                     <View style={styles.scheduleInfo}>
                       <Text style={[styles.scheduleOpponent, { color: colors.text }]}>
@@ -259,6 +332,64 @@ export default function TeamDetailScreen() {
               )}
             </>
           )}
+
+          {activeTab === 'roster' && (
+            <>
+              {roster.length === 0 ? (
+                <View style={styles.emptyState}>
+                  <Ionicons name="people-outline" size={48} color={colors.textMuted} />
+                  <Text style={[styles.emptyText, { color: colors.textMuted }]}>Roster not available</Text>
+                  <Text style={[styles.emptySubtext, { color: colors.textSecondary }]}>
+                    Check back during the season
+                  </Text>
+                </View>
+              ) : (
+                roster.map((player, index) => (
+                  <View
+                    key={player._id || index}
+                    style={[styles.playerCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                  >
+                    <View style={[styles.playerNumber, { backgroundColor: teamColor }]}>
+                      <Text style={styles.playerNumberText}>{player.number || '-'}</Text>
+                    </View>
+                    <View style={styles.playerInfo}>
+                      <Text style={[styles.playerName, { color: colors.text }]}>{player.name}</Text>
+                      <Text style={[styles.playerPosition, { color: colors.textMuted }]}>{player.position}</Text>
+                    </View>
+                  </View>
+                ))
+              )}
+            </>
+          )}
+
+          {activeTab === 'stats' && (
+            <>
+              {stats.length === 0 ? (
+                <View style={styles.emptyState}>
+                  <Ionicons name="stats-chart-outline" size={48} color={colors.textMuted} />
+                  <Text style={[styles.emptyText, { color: colors.textMuted }]}>Stats not available</Text>
+                  <Text style={[styles.emptySubtext, { color: colors.textSecondary }]}>
+                    Check back during the season
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.statsGrid}>
+                  {stats.map((stat, index) => (
+                    <View
+                      key={index}
+                      style={[styles.statCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+                    >
+                      <Text style={[styles.statValue, { color: teamColor }]}>{stat.value}</Text>
+                      <Text style={[styles.statLabel, { color: colors.text }]}>{stat.label}</Text>
+                      {stat.rank && (
+                        <Text style={[styles.statRank, { color: colors.textMuted }]}>Rank: {stat.rank}</Text>
+                      )}
+                    </View>
+                  ))}
+                </View>
+              )}
+            </>
+          )}
         </View>
 
         {/* Quick Actions */}
@@ -269,10 +400,10 @@ export default function TeamDetailScreen() {
               <Text style={styles.actionText}>Game Threads</Text>
             </TouchableOpacity>
           </Link>
-          <Link href={`/predictions?team=${slug}`} asChild>
+          <Link href={`/betting?team=${slug}`} asChild>
             <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }]}>
-              <Ionicons name="analytics" size={20} color={teamColor} />
-              <Text style={[styles.actionText, { color: teamColor }]}>Predictions</Text>
+              <Ionicons name="trending-up" size={20} color={teamColor} />
+              <Text style={[styles.actionText, { color: teamColor }]}>Odds & Bets</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -313,12 +444,15 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.8)',
   },
   tabBar: {
-    flexDirection: 'row',
     borderBottomWidth: 1,
+    maxHeight: 50,
+  },
+  tabBarContent: {
+    paddingHorizontal: 8,
   },
   tab: {
-    flex: 1,
     paddingVertical: 14,
+    paddingHorizontal: 16,
     alignItems: 'center',
   },
   tabText: {
@@ -381,7 +515,24 @@ const styles = StyleSheet.create({
   scoreStatus: {
     fontSize: 12,
     textTransform: 'uppercase',
-    marginTop: 4,
+  },
+  scoreFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.1)',
+  },
+  boxscoreLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  boxscoreLinkText: {
+    fontSize: 13,
+    fontWeight: '600',
   },
   scheduleCard: {
     flexDirection: 'row',
@@ -431,5 +582,71 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 48,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    marginTop: 4,
+  },
+  playerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 8,
+  },
+  playerNumber: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  playerNumberText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  playerInfo: {
+    flex: 1,
+  },
+  playerName: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  playerPosition: {
+    fontSize: 13,
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  statCard: {
+    width: '47%',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  statValue: {
+    fontSize: 28,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  statRank: {
+    fontSize: 11,
+    marginTop: 4,
   },
 });

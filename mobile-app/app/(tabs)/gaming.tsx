@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
-import { TeamColors } from '@/constants/Colors';
+import { TeamColors, VintageColors, Typography, BorderRadius, Spacing } from '@/constants/Colors';
 
 interface GameOption {
   title: string;
@@ -32,12 +32,12 @@ const gameOptions: GameOption[] = [
     coinReward: '5-20 🪙 per correct answer',
   },
   {
-    title: 'Predictions',
-    description: 'Predict game outcomes',
-    icon: 'analytics',
+    title: 'Odds & Bets',
+    description: 'Play money sports betting',
+    icon: 'trending-up',
     color: TeamColors.phillies,
-    href: '/predictions',
-    coinReward: '25 🪙 for correct predictions',
+    href: '/betting',
+    coinReward: 'Bet with Diehard Dollars',
   },
   {
     title: 'Poker',
@@ -85,9 +85,10 @@ export default function GamingScreen() {
 
       {/* Game Options */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          <Ionicons name="game-controller" size={18} color={colors.primary} /> Games
-        </Text>
+        <View style={styles.sectionHeader}>
+          <Ionicons name="game-controller" size={16} color={VintageColors.navy} />
+          <Text style={styles.sectionHeaderText}>GAMES</Text>
+        </View>
 
         {gameOptions.map((game) => (
           <Link key={game.title} href={game.href as any} asChild>
@@ -116,9 +117,10 @@ export default function GamingScreen() {
 
       {/* Shop & Raffles */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          <Ionicons name="cart" size={18} color={colors.primary} /> Shop & Rewards
-        </Text>
+        <View style={styles.sectionHeader}>
+          <Ionicons name="cart" size={16} color={VintageColors.navy} />
+          <Text style={styles.sectionHeaderText}>SHOP & REWARDS</Text>
+        </View>
 
         <Link href="/shop" asChild>
           <TouchableOpacity
@@ -183,18 +185,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   balanceCard: {
-    margin: 16,
-    padding: 20,
-    borderRadius: 16,
+    margin: Spacing.md,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: VintageColors.navy,
   },
   balanceContent: {},
   balanceLabel: {
     color: 'rgba(255,255,255,0.8)',
-    fontSize: 14,
+    fontSize: Typography.sm,
     marginBottom: 4,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
   balanceAmount: {
     flexDirection: 'row',
@@ -206,40 +212,56 @@ const styles = StyleSheet.create({
   },
   balanceValue: {
     color: '#fff',
-    fontSize: 32,
+    fontSize: Typography['3xl'],
     fontWeight: '800',
   },
   loginButton: {
     backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
   loginButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: '700',
+    fontSize: Typography.sm,
   },
   section: {
-    padding: 16,
+    padding: Spacing.md,
     paddingTop: 0,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 12,
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: VintageColors.gold,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    marginBottom: Spacing.md,
+    borderWidth: 2,
+    borderColor: VintageColors.navy,
+    borderRadius: BorderRadius.sm,
+    gap: 8,
+  },
+  sectionHeaderText: {
+    color: VintageColors.navy,
+    fontSize: Typography.sm,
+    fontWeight: '800',
+    letterSpacing: 1,
   },
   gameCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    marginBottom: 10,
-    borderRadius: 12,
-    borderWidth: 1,
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
   },
   gameIcon: {
     width: 56,
     height: 56,
-    borderRadius: 14,
+    borderRadius: BorderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -248,16 +270,16 @@ const styles = StyleSheet.create({
     marginLeft: 14,
   },
   gameTitle: {
-    fontSize: 17,
+    fontSize: Typography.lg,
     fontWeight: '700',
     marginBottom: 2,
   },
   gameDescription: {
-    fontSize: 13,
+    fontSize: Typography.sm,
     marginBottom: 4,
   },
   gameReward: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: Typography.xs,
+    fontWeight: '700',
   },
 });

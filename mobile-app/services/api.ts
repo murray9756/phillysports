@@ -6,7 +6,7 @@ const API_URL = 'https://phillysports.com/api';
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -143,7 +143,7 @@ export const triviaService = {
   },
 
   submitAnswer: async (questionId: string, answer: string) => {
-    const response = await api.post('/trivia', { questionId, answer });
+    const response = await api.post('/trivia', { questionId, selectedAnswer: answer });
     return response.data;
   },
 };

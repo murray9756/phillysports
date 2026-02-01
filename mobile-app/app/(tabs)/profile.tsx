@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth } from '@/context/AuthContext';
-import { TeamColors } from '@/constants/Colors';
+import { TeamColors, VintageColors, Typography, BorderRadius, Spacing } from '@/constants/Colors';
 
 interface MenuItem {
   title: string;
@@ -24,6 +24,13 @@ interface MenuItem {
 
 const menuSections: { title: string; items: MenuItem[] }[] = [
   {
+    title: 'Premium',
+    items: [
+      { title: 'My Email', icon: 'mail', href: '/profile/email', color: '#FFD700' },
+      { title: 'Membership', icon: 'star', href: '/membership', color: '#FFD700' },
+    ],
+  },
+  {
     title: 'Account',
     items: [
       { title: 'Edit Profile', icon: 'person-circle', href: '/profile/edit' },
@@ -34,7 +41,7 @@ const menuSections: { title: string; items: MenuItem[] }[] = [
   {
     title: 'Activity',
     items: [
-      { title: 'My Predictions', icon: 'analytics', href: '/profile/predictions' },
+      { title: 'My Bets', icon: 'trending-up', href: '/profile/bets' },
       { title: 'My Pools', icon: 'grid', href: '/profile/pools' },
       { title: 'Poker History', icon: 'diamond', href: '/profile/poker-history' },
       { title: 'Order History', icon: 'receipt', href: '/profile/orders' },
@@ -91,13 +98,14 @@ export default function ProfileScreen() {
           Sign in to access your profile, earn Diehard Dollars, and join the community.
         </Text>
         <Link href="/(auth)/login" asChild>
-          <TouchableOpacity style={[styles.loginButton, { backgroundColor: colors.primary }]}>
+          <TouchableOpacity style={[styles.loginButton, { backgroundColor: TeamColors.eagles }]}>
             <Text style={styles.loginButtonText}>Sign In</Text>
           </TouchableOpacity>
         </Link>
+        <Text style={[styles.orText, { color: colors.textMuted }]}>or</Text>
         <Link href="/(auth)/register" asChild>
-          <TouchableOpacity style={[styles.registerButton, { borderColor: colors.primary }]}>
-            <Text style={[styles.registerButtonText, { color: colors.primary }]}>Create Account</Text>
+          <TouchableOpacity style={[styles.registerButton, { borderColor: TeamColors.eagles }]}>
+            <Text style={[styles.registerButtonText, { color: TeamColors.eagles }]}>Create Account</Text>
           </TouchableOpacity>
         </Link>
       </View>
@@ -141,9 +149,9 @@ export default function ProfileScreen() {
           <View style={styles.stat}>
             <Text style={styles.statIcon}>📊</Text>
             <Text style={[styles.statValue, { color: colors.text }]}>
-              {user?.totalPredictions || 0}
+              {user?.totalBets || 0}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Predictions</Text>
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Bets</Text>
           </View>
         </View>
       </View>
@@ -225,49 +233,56 @@ const styles = StyleSheet.create({
   centerContent: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
+    padding: Spacing.xl,
   },
   guestTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    marginTop: 16,
-    marginBottom: 8,
+    fontSize: Typography['2xl'],
+    fontWeight: '800',
+    marginTop: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   guestSubtitle: {
-    fontSize: 15,
+    fontSize: Typography.base,
     textAlign: 'center',
     lineHeight: 22,
-    marginBottom: 24,
+    marginBottom: Spacing.lg,
   },
   loginButton: {
     width: '100%',
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: Spacing.sm + 4,
+    borderRadius: BorderRadius.md,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: Spacing.sm,
+    borderWidth: 2,
+    borderColor: 'rgba(0,0,0,0.2)',
   },
   loginButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: Typography.base,
     fontWeight: '700',
+    letterSpacing: 0.5,
   },
   registerButton: {
     width: '100%',
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: Spacing.sm + 4,
+    borderRadius: BorderRadius.md,
     alignItems: 'center',
     borderWidth: 2,
   },
   registerButtonText: {
-    fontSize: 16,
+    fontSize: Typography.base,
     fontWeight: '700',
+  },
+  orText: {
+    fontSize: Typography.sm,
+    marginVertical: Spacing.sm,
   },
   header: {
     alignItems: 'center',
-    padding: 24,
-    margin: 16,
-    borderRadius: 16,
-    borderWidth: 1,
+    padding: Spacing.lg,
+    margin: Spacing.md,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
   },
   avatarContainer: {
     width: 80,
@@ -275,7 +290,9 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: Spacing.sm,
+    borderWidth: 2,
+    borderColor: VintageColors.navy,
   },
   avatar: {
     width: 80,
@@ -284,17 +301,17 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     color: '#fff',
-    fontSize: 32,
-    fontWeight: '700',
+    fontSize: Typography['3xl'],
+    fontWeight: '800',
   },
   username: {
-    fontSize: 22,
-    fontWeight: '700',
+    fontSize: Typography.xl,
+    fontWeight: '800',
     marginBottom: 4,
   },
   email: {
-    fontSize: 14,
-    marginBottom: 20,
+    fontSize: Typography.sm,
+    marginBottom: Spacing.lg,
   },
   statsRow: {
     flexDirection: 'row',
@@ -302,71 +319,74 @@ const styles = StyleSheet.create({
   },
   stat: {
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: Spacing.md,
   },
   statIcon: {
     fontSize: 20,
     marginBottom: 4,
   },
   statValue: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: Typography.lg,
+    fontWeight: '800',
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: Typography.xs,
     marginTop: 2,
+    letterSpacing: 0.5,
   },
   statDivider: {
-    width: 1,
+    width: 2,
     height: 40,
   },
   section: {
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.md,
   },
   sectionTitle: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: Typography.xs,
+    fontWeight: '800',
     textTransform: 'uppercase',
-    marginBottom: 8,
+    marginBottom: Spacing.sm,
     marginLeft: 4,
+    letterSpacing: 1,
   },
   menuCard: {
-    borderRadius: 12,
-    borderWidth: 1,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
     overflow: 'hidden',
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
+    padding: Spacing.sm + 4,
     gap: 12,
   },
   menuItemText: {
     flex: 1,
-    fontSize: 16,
+    fontSize: Typography.base,
+    fontWeight: '500',
   },
   menuItemValue: {
-    fontSize: 14,
+    fontSize: Typography.sm,
     marginRight: 4,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 14,
-    borderRadius: 12,
-    borderWidth: 1,
+    padding: Spacing.sm + 4,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
     gap: 8,
   },
   logoutText: {
     color: '#E53935',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: Typography.base,
+    fontWeight: '700',
   },
   version: {
     textAlign: 'center',
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: Typography.xs,
+    marginTop: Spacing.sm,
   },
 });
