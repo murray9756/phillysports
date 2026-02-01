@@ -533,8 +533,11 @@
                 } else {
                     actionButtons = `<a href="/login.html" class="btn btn-primary">Login to Register</a>`;
                 }
-            } else if (t.status === 'running' && t.isRegistered) {
-                actionButtons = `<a href="/poker-table.html?tournament=${t._id}" class="btn btn-primary">Join Table</a>`;
+            } else if (t.status === 'running') {
+                // Tournament in progress - show status only, no join button
+                actionButtons = `<span class="btn btn-secondary" style="opacity: 0.7; cursor: default;">In Progress</span>`;
+            } else if (t.status === 'completed') {
+                actionButtons = `<span class="btn btn-secondary" style="opacity: 0.7; cursor: default;">Completed</span>`;
             }
 
             return `
