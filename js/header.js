@@ -1,10 +1,102 @@
 // Shared Header Component for PhillySports.com
 // Matches homepage newspaper-style header with centered logo
 // Include this script on every page and add <div id="site-header"></div> where the header should appear
-// Version: 2.8 - Consolidated user panel (DD, badges, links in single clean control)
+// Version: 2.9 - Added esports logo variant for esports pages
 
 (function() {
     'use strict';
+
+    // Detect if we're on the esports page
+    const isEsportsPage = window.location.pathname.includes('/esports');
+
+    // Esports logo HTML (for esports pages)
+    const esportsLogoHTML = `
+                <!-- Esports Logo for Light Mode (dark bg with neon) -->
+                <div class="logo-for-light" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 6px solid #F5F0E1; overflow: hidden;">
+                    <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #00ff88; pointer-events: none; z-index: 10;"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
+                    <div style="position: absolute; top: 8px; left: 70px; right: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
+                        <span style="font-size: 18px; color: #00ff88; text-shadow: 0 0 10px #00ff88;">★</span>
+                        <span style="font-family: Georgia, serif; font-size: 14px; color: #F5F0E1; letter-spacing: 2px;">Est. 2026</span>
+                        <span style="font-size: 18px; color: #00ff88; text-shadow: 0 0 10px #00ff88;">★</span>
+                    </div>
+                    <div style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #00ff88; line-height: 1; text-shadow: 0 0 15px #00ff88;">Phill</span>
+                        <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #00d4ff; line-height: 1; letter-spacing: -1px; text-shadow: 0 0 15px #00d4ff;">E</span>
+                        <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 24px; color: #00d4ff; line-height: 1; letter-spacing: -1px; margin-left: -2px; text-shadow: 0 0 15px #00d4ff;">SPORTS</span>
+                        <span style="font-family: Georgia, serif; font-size: 16px; color: #F5F0E1; letter-spacing: 1px; font-weight: bold;">.COM</span>
+                    </div>
+                </div>
+                <!-- Esports Logo for Dark Mode (cream bg, no glow) -->
+                <div class="logo-for-dark" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 6px solid #1A2744; overflow: hidden;">
+                    <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #00aa66; pointer-events: none; z-index: 10;"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.4; z-index: 1;">
+                    <div style="position: absolute; top: 8px; left: 70px; right: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
+                        <span style="font-size: 18px; color: #00aa66;">★</span>
+                        <span style="font-family: Georgia, serif; font-size: 14px; color: #1A2744; letter-spacing: 2px;">Est. 2026</span>
+                        <span style="font-size: 18px; color: #00aa66;">★</span>
+                    </div>
+                    <div style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #00aa66; line-height: 1;">Phill</span>
+                        <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #0099cc; line-height: 1; letter-spacing: -1px;">E</span>
+                        <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 24px; color: #0099cc; line-height: 1; letter-spacing: -1px; margin-left: -2px;">SPORTS</span>
+                        <span style="font-family: Georgia, serif; font-size: 16px; color: #1A2744; letter-spacing: 1px; font-weight: bold;">.COM</span>
+                    </div>
+                </div>
+    `;
+
+    // Standard PhillySports logo HTML
+    const standardLogoHTML = `
+                <!-- Dark background logo (shows in light mode) -->
+                <div class="logo-for-light" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 6px solid #F5F0E1; overflow: hidden;">
+                    <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
+                    <div style="position: absolute; top: 8px; left: 70px; right: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
+                        <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
+                            <defs><linearGradient id="redStarF2h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
+                            <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF2h)"/>
+                        </svg>
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 18px; color: #F5F0E1; letter-spacing: 3px;">Est. 2026</span>
+                        <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
+                            <defs><linearGradient id="blueStarF2h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6a8fc4"/><stop offset="50%" style="stop-color:#4a6fa0"/><stop offset="100%" style="stop-color:#3a5a8c"/></linearGradient></defs>
+                            <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF2h)"/>
+                        </svg>
+                    </div>
+                    <div style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #F5F0E1; line-height: 1;">Philly</span>
+                        <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
+                        <span style="font-family: Georgia, serif; font-size: 16px; color: #F5F0E1; letter-spacing: 1px; font-weight: bold;">.COM</span>
+                    </div>
+                    <div style="position: absolute; bottom: 8px; left: 70px; right: 20px; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
+                </div>
+                <!-- Light background logo (shows in dark mode) -->
+                <div class="logo-for-dark" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 6px solid #1A2744; overflow: hidden;">
+                    <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
+                    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.2) 100%); z-index: 8; pointer-events: none;"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.4; z-index: 1;">
+                    <div style="position: absolute; top: 8px; left: 70px; right: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
+                        <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                            <defs><linearGradient id="redStarF5h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
+                            <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF5h)"/>
+                        </svg>
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 18px; color: #1A2744; letter-spacing: 3px;">Est. 2026</span>
+                        <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
+                            <defs><linearGradient id="blueStarF5h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3a5a8c"/><stop offset="50%" style="stop-color:#1A2744"/><stop offset="100%" style="stop-color:#0d1520"/></linearGradient></defs>
+                            <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF5h)"/>
+                        </svg>
+                    </div>
+                    <div style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #1A2744; line-height: 1;">Philly</span>
+                        <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
+                        <span style="font-family: Georgia, serif; font-size: 16px; color: #1A2744; letter-spacing: 1px; font-weight: bold;">.COM</span>
+                    </div>
+                    <div style="position: absolute; bottom: 8px; left: 70px; right: 20px; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
+                </div>
+    `;
+
+    // Select logo based on page
+    const logoHTML = isEsportsPage ? esportsLogoHTML : standardLogoHTML;
+    const logoHref = isEsportsPage ? '/esports/' : '/';
 
     // Header HTML template
     const headerHTML = `
@@ -32,52 +124,8 @@
                     </div>
                 </div>
                 <!-- Center Column: Logo -->
-                <a href="/" class="header-logo">
-                    <!-- Dark background logo (shows in light mode) -->
-                    <div class="logo-for-light" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%); border: 6px solid #F5F0E1; overflow: hidden;">
-                        <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
-                        <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.25; filter: invert(1) brightness(1.2); z-index: 1;">
-                        <div style="position: absolute; top: 8px; left: 70px; right: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
-                            <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
-                                <defs><linearGradient id="redStarF2h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
-                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF2h)"/>
-                            </svg>
-                            <span style="font-family: 'Brush Script MT', cursive; font-size: 18px; color: #F5F0E1; letter-spacing: 3px;">Est. 2026</span>
-                            <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.6));" viewBox="0 0 40 40">
-                                <defs><linearGradient id="blueStarF2h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6a8fc4"/><stop offset="50%" style="stop-color:#4a6fa0"/><stop offset="100%" style="stop-color:#3a5a8c"/></linearGradient></defs>
-                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF2h)"/>
-                            </svg>
-                        </div>
-                        <div style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
-                            <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #F5F0E1; line-height: 1;">Philly</span>
-                            <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
-                            <span style="font-family: Georgia, serif; font-size: 16px; color: #F5F0E1; letter-spacing: 1px; font-weight: bold;">.COM</span>
-                        </div>
-                        <div style="position: absolute; bottom: 8px; left: 70px; right: 20px; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #F5F0E1; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
-                    </div>
-                    <!-- Light background logo (shows in dark mode) -->
-                    <div class="logo-for-dark" style="position: relative; width: 440px; height: 140px; background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%); border: 6px solid #1A2744; overflow: hidden;">
-                        <div style="position: absolute; top: 6px; left: 6px; right: 6px; bottom: 6px; border: 2px solid #8B1A28; pointer-events: none; z-index: 10;"></div>
-                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.2) 100%); z-index: 8; pointer-events: none;"></div>
-                        <img src="/ben.jpeg" alt="Ben Franklin" style="position: absolute; top: 50%; left: -10px; transform: translateY(-50%); height: 130px; width: auto; opacity: 0.4; z-index: 1;">
-                        <div style="position: absolute; top: 8px; left: 70px; right: 20px; display: flex; justify-content: center; align-items: center; gap: 8px; z-index: 5;">
-                            <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
-                                <defs><linearGradient id="redStarF5h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#c42030"/><stop offset="50%" style="stop-color:#8B1A28"/><stop offset="100%" style="stop-color:#5a0f15"/></linearGradient></defs>
-                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#redStarF5h)"/>
-                            </svg>
-                            <span style="font-family: 'Brush Script MT', cursive; font-size: 18px; color: #1A2744; letter-spacing: 3px;">Est. 2026</span>
-                            <svg style="width: 24px; height: 24px; filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.4));" viewBox="0 0 40 40">
-                                <defs><linearGradient id="blueStarF5h" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3a5a8c"/><stop offset="50%" style="stop-color:#1A2744"/><stop offset="100%" style="stop-color:#0d1520"/></linearGradient></defs>
-                                <polygon points="20,2 24,14 37,14 27,22 31,35 20,27 9,35 13,22 3,14 16,14" fill="url(#blueStarF5h)"/>
-                            </svg>
-                        </div>
-                        <div style="position: absolute; top: 50%; left: 57%; transform: translate(-50%, -50%); display: flex; align-items: baseline; gap: 6px; z-index: 5;">
-                            <span style="font-family: 'Brush Script MT', cursive; font-size: 42px; color: #1A2744; line-height: 1;">Philly</span>
-                            <span style="font-family: 'Impact', 'Arial Black', sans-serif; font-size: 42px; color: #8B1A28; line-height: 1; letter-spacing: -1px;">SPORTS</span>
-                            <span style="font-family: Georgia, serif; font-size: 16px; color: #1A2744; letter-spacing: 1px; font-weight: bold;">.COM</span>
-                        </div>
-                        <div style="position: absolute; bottom: 8px; left: 70px; right: 20px; text-align: center; font-family: Georgia, serif; font-size: 16px; font-weight: bold; font-style: italic; color: #1A2744; letter-spacing: 2px; z-index: 5;">Where the Diehards, Play Hard</div>
-                    </div>
+                <a href="${logoHref}" class="header-logo">
+                    ${logoHTML}
                 </a>
                 <!-- Right Column: Auth + Founders Club -->
                 <div class="header-right">
