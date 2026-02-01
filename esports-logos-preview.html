@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esports Logo Options | PhillySports.com</title>
+    <title>Esports Logo | PhillySports.com</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -17,7 +17,7 @@
         h1 {
             text-align: center;
             margin-bottom: 0.5rem;
-            color: #00d4ff;
+            color: #00ff88;
             font-size: 2rem;
         }
         .subtitle {
@@ -25,12 +25,18 @@
             color: #888;
             margin-bottom: 2rem;
         }
+        .section-title {
+            text-align: center;
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem 0;
+        }
 
         .logo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-            gap: 2rem;
-            max-width: 1000px;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 1.5rem;
+            max-width: 1050px;
             margin: 0 auto;
         }
         .logo-card {
@@ -38,51 +44,167 @@
             border-radius: 12px;
             padding: 1.5rem;
             border: 2px solid #333;
-            transition: all 0.3s;
-        }
-        .logo-card:hover {
-            border-color: #00d4ff;
-            transform: translateY(-4px);
         }
         .logo-card h3 {
             color: #00d4ff;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            text-align: center;
         }
         .logo-card p {
-            color: #888;
-            font-size: 0.85rem;
+            color: #666;
+            font-size: 0.8rem;
+            text-align: center;
             margin-bottom: 1rem;
         }
         .logo-container {
-            background: #0a0a0a;
-            border-radius: 8px;
-            padding: 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .logo-container img {
-            max-width: 100%;
-            height: auto;
+
+        /* Base Logo Styles (matching main site spacing) */
+        .esports-logo {
+            position: relative;
+            width: 440px;
+            height: 140px;
+            overflow: hidden;
         }
+        .esports-logo .inner-border {
+            position: absolute;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .esports-logo .ben {
+            position: absolute;
+            top: 50%; left: -10px;
+            transform: translateY(-50%);
+            height: 130px; width: auto;
+            z-index: 1;
+        }
+        .esports-logo .top-row {
+            position: absolute;
+            top: 8px; left: 70px; right: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+        }
+        .esports-logo .top-row .star {
+            font-size: 18px;
+        }
+        .esports-logo .top-row .est {
+            font-family: Georgia, serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+        .esports-logo .main-text {
+            position: absolute;
+            top: 50%; left: 57%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            z-index: 5;
+        }
+        .esports-logo .phill {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 42px;
+            line-height: 1;
+        }
+        .esports-logo .big-e {
+            font-family: Impact, 'Arial Black', sans-serif;
+            font-size: 42px;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .esports-logo .sports {
+            font-family: Impact, 'Arial Black', sans-serif;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: -1px;
+            margin-left: -2px;
+        }
+        .esports-logo .dotcom {
+            font-family: Georgia, serif;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Dark Mode Logo */
+        .dark-logo {
+            background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
+            border: 6px solid #F5F0E1;
+        }
+        .dark-logo .inner-border { border: 2px solid #00ff88; }
+        .dark-logo .ben { opacity: 0.25; filter: invert(1) brightness(1.2); }
+        .dark-logo .star { color: #00ff88; text-shadow: 0 0 10px #00ff88; }
+        .dark-logo .est { color: #F5F0E1; }
+        .dark-logo .phill { color: #00ff88; text-shadow: 0 0 15px #00ff88; }
+        .dark-logo .big-e, .dark-logo .sports { color: #00d4ff; text-shadow: 0 0 15px #00d4ff; }
+        .dark-logo .dotcom { color: #F5F0E1; }
+
+        /* Light Mode Logo - Cream Background */
+        .light-logo {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 6px solid #1A2744;
+        }
+        .light-logo .inner-border { border: 2px solid #00aa66; }
+        .light-logo .ben { opacity: 0.4; }
+        .light-logo .star { color: #00aa66; }
+        .light-logo .est { color: #1A2744; }
+        .light-logo .phill { color: #00aa66; }
+        .light-logo .big-e, .light-logo .sports { color: #0099cc; }
+        .light-logo .dotcom { color: #1A2744; }
+
+        /* Light Mode Logo - White Background */
+        .light-logo-white {
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            border: 6px solid #1A2744;
+        }
+        .light-logo-white .inner-border { border: 2px solid #00cc88; }
+        .light-logo-white .ben { opacity: 0.3; }
+        .light-logo-white .star { color: #00cc88; }
+        .light-logo-white .est { color: #1A2744; }
+        .light-logo-white .phill { color: #00cc88; }
+        .light-logo-white .big-e, .light-logo-white .sports { color: #0088bb; }
+        .light-logo-white .dotcom { color: #1A2744; }
+
+        /* Light Mode - Darker Green/Cyan */
+        .light-logo-dark {
+            background: linear-gradient(180deg, #F5F0E1 0%, #e8e0cc 100%);
+            border: 6px solid #1A2744;
+        }
+        .light-logo-dark .inner-border { border: 2px solid #006644; }
+        .light-logo-dark .ben { opacity: 0.4; }
+        .light-logo-dark .star { color: #006644; }
+        .light-logo-dark .est { color: #1A2744; }
+        .light-logo-dark .phill { color: #006644; }
+        .light-logo-dark .big-e, .light-logo-dark .sports { color: #006699; }
+        .light-logo-dark .dotcom { color: #1A2744; }
 
         .comparison {
             margin-top: 3rem;
             text-align: center;
-            max-width: 600px;
+            max-width: 520px;
             margin-left: auto;
             margin-right: auto;
         }
         .comparison h2 {
-            color: #8b00ff;
+            color: #888;
             margin-bottom: 1rem;
+            font-size: 1rem;
         }
         .original-container {
             background: #1e1e1e;
             border-radius: 12px;
             padding: 1.5rem;
             border: 2px solid #333;
+            display: flex;
+            justify-content: center;
         }
         .original-logo {
             position: relative;
@@ -91,7 +213,6 @@
             background: linear-gradient(180deg, #1A2744 0%, #0d1520 100%);
             border: 6px solid #F5F0E1;
             overflow: hidden;
-            margin: 0 auto;
         }
         .original-logo .inner-border {
             position: absolute;
@@ -109,7 +230,7 @@
             filter: invert(1) brightness(1.2);
             z-index: 1;
         }
-        .original-logo .top-text {
+        .original-logo .top-row {
             position: absolute;
             top: 8px; left: 70px; right: 20px;
             display: flex;
@@ -117,10 +238,14 @@
             align-items: center;
             gap: 8px;
             z-index: 5;
-            font-family: 'Brush Script MT', cursive;
-            font-size: 18px;
+            font-family: Georgia, serif;
+            font-size: 14px;
             color: #F5F0E1;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
+        }
+        .original-logo .star {
+            color: #8B1A28;
+            font-size: 18px;
         }
         .original-logo .main-text {
             position: absolute;
@@ -131,22 +256,21 @@
             gap: 6px;
             z-index: 5;
         }
-        .original-logo .main-text .philly {
+        .original-logo .philly {
             font-family: 'Brush Script MT', cursive;
             font-size: 42px;
             color: #F5F0E1;
         }
-        .original-logo .main-text .sports {
+        .original-logo .sports-text {
             font-family: Impact, 'Arial Black', sans-serif;
             font-size: 42px;
             color: #8B1A28;
             letter-spacing: -1px;
         }
-        .original-logo .main-text .com {
+        .original-logo .dotcom {
             font-family: Georgia, serif;
             font-size: 16px;
             color: #F5F0E1;
-            letter-spacing: 1px;
             font-weight: bold;
         }
         .original-logo .tagline {
@@ -161,92 +285,121 @@
             letter-spacing: 2px;
             z-index: 5;
         }
-
-        .note {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: rgba(0, 212, 255, 0.1);
-            border: 1px solid #00d4ff;
-            border-radius: 8px;
-            text-align: center;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .note p {
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .star {
-            display: inline-block;
-            color: #8B1A28;
-            font-size: 20px;
-        }
     </style>
 </head>
 <body>
     <h1>phillEsports.com Logo Options</h1>
-    <p class="subtitle">Ben Franklin + neon esports color schemes</p>
+    <p class="subtitle">Green & Cyan theme - Dark and Light modes</p>
 
+    <h2 class="section-title">Dark Mode</h2>
     <div class="logo-grid">
         <div class="logo-card">
-            <h3>1. Cyan & Pink</h3>
-            <p>Classic esports neon - cyan Philly, pink Esports</p>
+            <h3>Dark Mode - Neon Glow</h3>
+            <p>For dark backgrounds</p>
             <div class="logo-container">
-                <img src="/logo-esports-banner-1.svg" alt="Cyan Pink Logo">
+                <div class="esports-logo dark-logo">
+                    <div class="inner-border"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
+                    <div class="top-row">
+                        <span class="star">★</span>
+                        <span class="est">Est. 2026</span>
+                        <span class="star">★</span>
+                    </div>
+                    <div class="main-text">
+                        <span class="phill">Phill</span>
+                        <span class="big-e">E</span><span class="sports">SPORTS</span>
+                        <span class="dotcom">.COM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Light Mode Options</h2>
+    <div class="logo-grid">
+        <div class="logo-card">
+            <h3>Light Mode - Cream Background</h3>
+            <p>Matches main site light mode</p>
+            <div class="logo-container">
+                <div class="esports-logo light-logo">
+                    <div class="inner-border"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
+                    <div class="top-row">
+                        <span class="star">★</span>
+                        <span class="est">Est. 2026</span>
+                        <span class="star">★</span>
+                    </div>
+                    <div class="main-text">
+                        <span class="phill">Phill</span>
+                        <span class="big-e">E</span><span class="sports">SPORTS</span>
+                        <span class="dotcom">.COM</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="logo-card">
-            <h3>2. Purple & Cyan</h3>
-            <p>Purple Philly, cyan Esports - vibrant contrast</p>
+            <h3>Light Mode - White Background</h3>
+            <p>Clean, bright version</p>
             <div class="logo-container">
-                <img src="/logo-esports-banner-2.svg" alt="Purple Cyan Logo">
+                <div class="esports-logo light-logo-white">
+                    <div class="inner-border"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
+                    <div class="top-row">
+                        <span class="star">★</span>
+                        <span class="est">Est. 2026</span>
+                        <span class="star">★</span>
+                    </div>
+                    <div class="main-text">
+                        <span class="phill">Phill</span>
+                        <span class="big-e">E</span><span class="sports">SPORTS</span>
+                        <span class="dotcom">.COM</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="logo-card">
-            <h3>3. Green & Cyan</h3>
-            <p>Neon green Philly, cyan Esports - Matrix vibes</p>
+            <h3>Light Mode - Darker Colors</h3>
+            <p>More contrast, deeper green/cyan</p>
             <div class="logo-container">
-                <img src="/logo-esports-banner-3.svg" alt="Green Cyan Logo">
-            </div>
-        </div>
-
-        <div class="logo-card">
-            <h3>4. Orange & Pink</h3>
-            <p>Orange Philly, pink Esports - warm neon glow</p>
-            <div class="logo-container">
-                <img src="/logo-esports-banner-4.svg" alt="Orange Pink Logo">
+                <div class="esports-logo light-logo-dark">
+                    <div class="inner-border"></div>
+                    <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
+                    <div class="top-row">
+                        <span class="star">★</span>
+                        <span class="est">Est. 2026</span>
+                        <span class="star">★</span>
+                    </div>
+                    <div class="main-text">
+                        <span class="phill">Phill</span>
+                        <span class="big-e">E</span><span class="sports">SPORTS</span>
+                        <span class="dotcom">.COM</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="comparison">
-        <h2>Current PhillySports Header Logo</h2>
-        <p style="color: #888; margin-bottom: 1rem;">For reference</p>
+        <h2>Original PhillySports Logo (for reference)</h2>
         <div class="original-container">
             <div class="original-logo">
                 <div class="inner-border"></div>
                 <img src="/ben.jpeg" alt="Ben Franklin" class="ben">
-                <div class="top-text">
+                <div class="top-row">
                     <span class="star">★</span>
-                    Est. 2026
+                    <span>Est. 2026</span>
                     <span class="star">★</span>
                 </div>
                 <div class="main-text">
                     <span class="philly">Philly</span>
-                    <span class="sports">SPORTS</span>
-                    <span class="com">.COM</span>
+                    <span class="sports-text">SPORTS</span>
+                    <span class="dotcom">.COM</span>
                 </div>
                 <div class="tagline">Where the Diehards, Play Hard</div>
             </div>
         </div>
-    </div>
-
-    <div class="note">
-        <p><strong>Changes from original:</strong> "SPORTS" → "Esports" (big E, small sports) | Neon color scheme | No tagline</p>
     </div>
 </body>
 </html>
