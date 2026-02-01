@@ -20,7 +20,8 @@ export default async function handler(req, res) {
         const {
             team,           // Filter by single team (legacy, eagles, phillies, sixers, flyers)
             teams,          // Filter by multiple teams (comma-separated, OR logic)
-            type,           // Filter by type (news, podcast, video, social)
+            type,           // Filter by single type (legacy)
+            types,          // Filter by multiple types (comma-separated, OR logic)
             featured,       // Get only featured content
             page = 'home',  // Which page to get featured for
             limit = 20,
@@ -43,13 +44,29 @@ export default async function handler(req, res) {
             filter.teams = team;
         }
 
-        if (type) {
-            // Map filter types to actual database types
+        // Support both single type (legacy) and multiple types (new OR filter)
+        if (types) {
+            // Multiple types - use $in for OR filtering
+            const typeList = types.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
+            if (typeList.length > 0) {
+                // Expand type aliases
+                const expandedTypes = [];
+                typeList.forEach(t => {
+                    if (t === 'video') {
+                        expandedTypes.push('video', 'youtube', 'tiktok');
+                    } else if (t === 'article') {
+                        expandedTypes.push('article', 'news');
+                    } else {
+                        expandedTypes.push(t);
+                    }
+                });
+                filter.type = { $in: [...new Set(expandedTypes)] };
+            }
+        } else if (type) {
+            // Single type (legacy support)
             if (type === 'video') {
-                // Videos can be youtube, tiktok, or video
                 filter.type = { $in: ['video', 'youtube', 'tiktok'] };
             } else if (type === 'article') {
-                // Articles can be article or news
                 filter.type = { $in: ['article', 'news'] };
             } else {
                 filter.type = type;
@@ -78,8 +95,23 @@ export default async function handler(req, res) {
             } else if (team) {
                 featuredFilter.teams = team;
             }
-            // Apply type filter to featured item
-            if (type) {
+            // Apply type filter to featured item (supports both single and multi)
+            if (types) {
+                const typeList = types.split(',').map(t => t.trim().toLowerCase()).filter(t => t);
+                if (typeList.length > 0) {
+                    const expandedTypes = [];
+                    typeList.forEach(t => {
+                        if (t === 'video') {
+                            expandedTypes.push('video', 'youtube', 'tiktok');
+                        } else if (t === 'article') {
+                            expandedTypes.push('article', 'news');
+                        } else {
+                            expandedTypes.push(t);
+                        }
+                    });
+                    featuredFilter.type = { $in: [...new Set(expandedTypes)] };
+                }
+            } else if (type) {
                 if (type === 'video') {
                     featuredFilter.type = { $in: ['video', 'youtube', 'tiktok'] };
                 } else if (type === 'article') {

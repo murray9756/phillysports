@@ -2108,9 +2108,9 @@
                     <div class="filter-separator"></div>
                     <span class="filter-label">Content Type:</span>
                     <button class="filter-btn active" data-filter="type" data-value="all">All</button>
-                    <button class="filter-btn" data-filter="type" data-value="article">Articles</button>
-                    <button class="filter-btn" data-filter="type" data-value="video">Videos</button>
-                    <button class="filter-btn" data-filter="type" data-value="podcast">Pods</button>
+                    <button class="filter-btn active" data-filter="type" data-value="article">Articles</button>
+                    <button class="filter-btn active" data-filter="type" data-value="video">Videos</button>
+                    <button class="filter-btn active" data-filter="type" data-value="podcast">Pods</button>
                 </div>
             </div>
 
@@ -2593,8 +2593,11 @@
             flyers: 'tag-flyers'
         };
 
-        // Current filter state - categories is array for multi-select OR filtering
-        let currentFilters = { type: 'all', categories: ['eagles', 'phillies', 'sixers', 'flyers', 'college', 'esports', 'youth'] };
+        // Current filter state - both types and categories are arrays for multi-select OR filtering
+        let currentFilters = {
+            types: ['article', 'video', 'podcast'],
+            categories: ['eagles', 'phillies', 'sixers', 'flyers', 'college', 'esports', 'youth']
+        };
 
         // Pagination offset for load more
         let storyOffset = 15;
@@ -2604,7 +2607,7 @@
             const listContainer = document.getElementById('articleList');
 
             // Update filter state
-            if (filters.type) currentFilters.type = filters.type;
+            if (filters.types) currentFilters.types = filters.types;
             if (filters.categories) currentFilters.categories = filters.categories;
 
             // Reset pagination when filters change
@@ -2612,8 +2615,9 @@
 
             // Build query params
             let queryParams = 'page=home&limit=15';
-            if (currentFilters.type !== 'all') {
-                queryParams += `&type=${currentFilters.type}`;
+            // Pass multiple types as comma-separated for OR filter (if not all selected)
+            if (currentFilters.types.length > 0 && currentFilters.types.length < 3) {
+                queryParams += `&types=${currentFilters.types.join(',')}`;
             }
             // Pass multiple teams as comma-separated for OR filter
             if (currentFilters.categories.length > 0 && currentFilters.categories.length < 7) {
@@ -3134,8 +3138,8 @@
             try {
                 // Build query with current filters
                 let queryParams = `page=home&limit=10&offset=${storyOffset}`;
-                if (currentFilters.type !== 'all') {
-                    queryParams += `&type=${currentFilters.type}`;
+                if (currentFilters.types.length > 0 && currentFilters.types.length < 3) {
+                    queryParams += `&types=${currentFilters.types.join(',')}`;
                 }
                 if (currentFilters.categories.length > 0 && currentFilters.categories.length < 7) {
                     queryParams += `&teams=${currentFilters.categories.join(',')}`;
@@ -3272,6 +3276,10 @@
         const allCategoryBtn = document.querySelector('.filter-btn[data-filter="category"][data-value="all"]');
         const individualCategoryBtns = document.querySelectorAll('.filter-btn[data-filter="category"]:not([data-value="all"])');
 
+        const typeButtons = document.querySelectorAll('.filter-btn[data-filter="type"]');
+        const allTypeBtn = document.querySelector('.filter-btn[data-filter="type"][data-value="all"]');
+        const individualTypeBtns = document.querySelectorAll('.filter-btn[data-filter="type"]:not([data-value="all"])');
+
         // Get currently selected categories (for OR filter)
         function getSelectedCategories() {
             const selected = [];
@@ -3283,20 +3291,52 @@
             return selected;
         }
 
+        // Get currently selected types (for OR filter)
+        function getSelectedTypes() {
+            const selected = [];
+            individualTypeBtns.forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    selected.push(btn.dataset.value);
+                }
+            });
+            return selected;
+        }
+
         // Update "All" button state based on individual selections
-        function updateAllButtonState() {
+        function updateAllCategoryButtonState() {
             const allSelected = Array.from(individualCategoryBtns).every(btn => btn.classList.contains('active'));
             allCategoryBtn.classList.toggle('active', allSelected);
         }
 
-        // Type filter handlers (single select - radio style)
-        document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(btn => {
+        // Update "All" type button state based on individual selections
+        function updateAllTypeButtonState() {
+            const allSelected = Array.from(individualTypeBtns).every(btn => btn.classList.contains('active'));
+            allTypeBtn.classList.toggle('active', allSelected);
+        }
+
+        // Type filter handlers (multi-select - checkbox style, like categories)
+        typeButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn[data-filter="type"]').forEach(b => {
-                    b.classList.remove('active');
-                });
-                btn.classList.add('active');
-                PhillySportsNewsFeed.load({ type: btn.dataset.value, categories: getSelectedCategories() });
+                const filterValue = btn.dataset.value;
+
+                if (filterValue === 'all') {
+                    // "All" toggles all types on or off
+                    const allCurrentlyActive = btn.classList.contains('active');
+                    if (allCurrentlyActive) {
+                        // Turn all off
+                        typeButtons.forEach(b => b.classList.remove('active'));
+                    } else {
+                        // Turn all on
+                        typeButtons.forEach(b => b.classList.add('active'));
+                    }
+                } else {
+                    // Toggle individual type
+                    btn.classList.toggle('active');
+                    updateAllTypeButtonState();
+                }
+
+                // Reload with selected types and categories
+                PhillySportsNewsFeed.load({ types: getSelectedTypes(), categories: getSelectedCategories() });
             });
         });
 
@@ -3318,15 +3358,11 @@
                 } else {
                     // Toggle individual category
                     btn.classList.toggle('active');
-                    updateAllButtonState();
+                    updateAllCategoryButtonState();
                 }
 
-                // Get current type filter
-                const activeTypeBtn = document.querySelector('.filter-btn[data-filter="type"].active');
-                const typeValue = activeTypeBtn ? activeTypeBtn.dataset.value : 'all';
-
-                // Reload with selected categories
-                PhillySportsNewsFeed.load({ type: typeValue, categories: getSelectedCategories() });
+                // Reload with selected types and categories
+                PhillySportsNewsFeed.load({ types: getSelectedTypes(), categories: getSelectedCategories() });
             });
         });
 

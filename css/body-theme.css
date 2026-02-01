@@ -118,7 +118,16 @@ a {
 /* ===========================================
    3-COLUMN LAYOUT
    =========================================== */
-.main-container {
+/*
+ * Base main-container - minimal styling
+ * Pages can override max-width and padding as needed
+ * 3-column grid only applies when BOTH sidebars are present
+ */
+
+/* Only apply 3-column grid when sidebars are present */
+.main-container:has(.left-sidebar):has(.right-sidebar),
+.main-container:has(.left-sidebar):has(.sidebar),
+.main-container.three-column {
     max-width: 1300px;
     margin: 0 auto;
     padding: 1.5rem;
@@ -129,7 +138,12 @@ a {
 
 /* Alternative wider column widths */
 .main-container.wide-sidebars {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    display: grid;
     grid-template-columns: 280px 1fr 320px;
+    gap: 1.25rem;
 }
 
 .left-sidebar {
@@ -154,39 +168,45 @@ a {
 
 /* ===========================================
    SECTION HEADERS (Vintage Americana Style)
-   Using !important to override inline styles in team pages
+   Only applied to 3-column layout pages (team pages, index)
+   Other pages (poker, trivia, etc.) keep their own styles
    =========================================== */
-.section-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 1rem !important;
-    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
-    border: 2px solid #1A2744 !important;
-    border-radius: 2px !important;
+.main-container:has(.left-sidebar) .section-header,
+.three-column .section-header,
+.vintage-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
+    border: 2px solid #1A2744;
+    border-radius: 2px;
     margin-bottom: 1rem;
 }
 
-.section-title {
-    font-family: var(--font-headline) !important;
-    font-size: var(--text-xl) !important;
-    font-weight: 900 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
-    color: #1A2744 !important;
+.main-container:has(.left-sidebar) .section-title,
+.three-column .section-title,
+.vintage-header .section-title {
+    font-family: var(--font-headline);
+    font-size: var(--text-xl);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1A2744;
 }
 
 /* Keep section header consistent in dark mode */
-[data-theme="dark"] .section-header {
-    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%) !important;
-    border-color: #1A2744 !important;
+[data-theme="dark"] .main-container:has(.left-sidebar) .section-header,
+[data-theme="dark"] .three-column .section-header,
+[data-theme="dark"] .vintage-header {
+    background: linear-gradient(180deg, #d4c9a8 0%, #c4b898 100%);
+    border-color: #1A2744;
 }
 
-[data-theme="dark"] .section-title,
-[data-theme="dark"] h2.section-title,
-[data-theme="dark"] .section-header .section-title,
-[data-theme="dark"] .section-header h2 {
-    color: #1A2744 !important;
+[data-theme="dark"] .main-container:has(.left-sidebar) .section-title,
+[data-theme="dark"] .three-column .section-title,
+[data-theme="dark"] .vintage-header .section-title {
+    color: #1A2744;
 }
 
 /* ===========================================

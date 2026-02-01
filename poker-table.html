@@ -120,6 +120,23 @@
             font-weight: 600;
             border: none;
             cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-leave:hover {
+            background: #c62b36;
+        }
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-reset:hover {
+            background: #5a6268;
         }
 
         /* Main Game Area */
@@ -974,7 +991,6 @@
         [data-theme="dark"] .theme-toggle .theme-icon-light { display: none; }
         [data-theme="dark"] .theme-toggle .theme-icon-dark { display: inline; }
     </style>
-    <link rel="stylesheet" href="/css/body-theme.css">
 </head>
 <body>
     <!-- Shared Header -->
@@ -1011,6 +1027,12 @@
         <span id="connectionText">Connected</span>
     </div>
 
+    <!-- Table Controls -->
+    <div style="position: fixed; top: 70px; left: 20px; z-index: 100; display: flex; gap: 0.5rem;">
+        <button class="btn-leave" onclick="confirmLeave()">Leave Table</button>
+        <button class="btn-reset" onclick="emergencyReset()">Reset Seat</button>
+    </div>
+
     <!-- Notification Toast -->
     <div class="notification-toast" id="notificationToast"></div>
 
@@ -1030,10 +1052,6 @@
             <!-- Poker Table -->
             <div class="poker-table">
                 <div class="table-rail"></div>
-                <div class="table-branding">
-                    <img src="/logo-weathered.png" alt="PhillySports.com">
-                    <div class="tagline">Where the Diehards Play Hard</div>
-                </div>
             </div>
 
             <!-- Pot Display -->
@@ -1592,6 +1610,11 @@
             } catch (e) {
                 alert('Reset error: ' + e.message);
             }
+        }
+
+        function confirmLeave() {
+            leaveTable();
+            return false; // Prevent default link behavior
         }
 
         async function leaveTable() {

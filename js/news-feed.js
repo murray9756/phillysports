@@ -350,7 +350,7 @@
             this.containerId = options.containerId || 'articleList';
             this.team = options.team || null; // Single team filter for team pages
             this.categories = options.categories || ['eagles', 'phillies', 'sixers', 'flyers', 'college', 'esports', 'youth'];
-            this.type = 'all';
+            this.types = ['article', 'video', 'podcast']; // All types by default
             this.offset = 0;
             this.limit = options.limit || 10;
             this.userVotes = {};
@@ -370,7 +370,7 @@
         }
 
         async load(filters = {}) {
-            if (filters.type) this.type = filters.type;
+            if (filters.types) this.types = filters.types;
             if (filters.categories) this.categories = filters.categories;
             this.offset = this.limit;
 
@@ -386,6 +386,12 @@
                     return;
                 }
 
+                // If no types selected, show empty message
+                if (this.types.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;">No content types selected. Choose at least one type filter above.</div>';
+                    return;
+                }
+
                 // Build query params
                 let queryParams = `limit=${this.limit}`;
                 if (this.team) {
@@ -393,8 +399,9 @@
                 } else if (this.categories.length > 0) {
                     queryParams += `&teams=${this.categories.join(',')}`;
                 }
-                if (this.type !== 'all') {
-                    queryParams += `&type=${this.type}`;
+                // Pass multiple types as comma-separated (if not all selected)
+                if (this.types.length > 0 && this.types.length < 3) {
+                    queryParams += `&types=${this.types.join(',')}`;
                 }
 
                 // Try curated content first
@@ -534,8 +541,8 @@
                 } else if (this.categories.length > 0) {
                     queryParams += `&teams=${this.categories.join(',')}`;
                 }
-                if (this.type !== 'all') {
-                    queryParams += `&type=${this.type}`;
+                if (this.types.length > 0 && this.types.length < 3) {
+                    queryParams += `&types=${this.types.join(',')}`;
                 }
 
                 const res = await fetch(`/api/content?${queryParams}`);
