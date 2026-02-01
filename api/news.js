@@ -173,28 +173,29 @@ export default async function handler(req, res) {
 
         // Fetch eSports news (only when esports filter is active)
         if (teamFilter === 'esports') {
-            // ESPN Esports API
+            // Dexerto RSS Feed (reliable esports source)
             try {
-                const esportsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/esports/news?limit=30');
-                const esportsData = await esportsRes.json();
-                const esportsArticles = (esportsData.articles || []).slice(0, 5).map(article => {
-                    const text = `${article.headline} ${article.description || ''}`.toLowerCase();
+                const dexRes = await fetch('https://www.dexerto.com/feed/');
+                const dexXml = await dexRes.text();
+                const dexItems = parseRSS(dexXml);
+
+                dexItems.slice(0, 8).forEach(item => {
+                    const text = `${item.title}`.toLowerCase();
                     const isFusion = text.includes('fusion') || text.includes('philadelphia');
-                    return {
+                    articles.push({
                         team: isFusion ? 'Fusion' : 'eSports',
                         sport: 'eSports',
                         teamColor: isFusion ? '#FFA000' : '#9146FF',
                         tagClass: isFusion ? 'tag-fusion' : 'tag-esports',
-                        headline: article.headline,
-                        description: article.description || '',
-                        link: article.links?.web?.href || article.links?.mobile?.href || '#',
-                        image: article.images?.[0]?.url || null,
-                        published: article.published || new Date().toISOString(),
-                        source: 'ESPN Esports'
-                    };
+                        headline: item.title,
+                        description: item.description,
+                        link: item.link,
+                        image: item.image,
+                        published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+                        source: 'Dexerto'
+                    });
                 });
-                articles.push(...esportsArticles);
-            } catch (e) { console.error('ESPN Esports news error:', e); }
+            } catch (e) { console.error('Dexerto RSS error:', e); }
 
             // Dot Esports RSS Feed
             try {
@@ -220,29 +221,30 @@ export default async function handler(req, res) {
                 });
             } catch (e) { console.error('Dot Esports RSS error:', e); }
 
-            // The Score Esports RSS Feed
+            // ESPN Esports API (may not always have content)
             try {
-                const scoreRes = await fetch('https://www.thescoreesports.com/feed/esports.rss');
-                const scoreXml = await scoreRes.text();
-                const scoreItems = parseRSS(scoreXml);
-
-                scoreItems.slice(0, 5).forEach(item => {
-                    const text = `${item.title}`.toLowerCase();
-                    const isFusion = text.includes('fusion') || text.includes('philadelphia');
-                    articles.push({
-                        team: isFusion ? 'Fusion' : 'eSports',
-                        sport: 'eSports',
-                        teamColor: isFusion ? '#FFA000' : '#9146FF',
-                        tagClass: isFusion ? 'tag-fusion' : 'tag-esports',
-                        headline: item.title,
-                        description: item.description,
-                        link: item.link,
-                        image: item.image,
-                        published: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
-                        source: 'The Score Esports'
+                const esportsRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/esports/news?limit=30');
+                if (esportsRes.ok) {
+                    const esportsData = await esportsRes.json();
+                    const esportsArticles = (esportsData.articles || []).slice(0, 5).map(article => {
+                        const text = `${article.headline} ${article.description || ''}`.toLowerCase();
+                        const isFusion = text.includes('fusion') || text.includes('philadelphia');
+                        return {
+                            team: isFusion ? 'Fusion' : 'eSports',
+                            sport: 'eSports',
+                            teamColor: isFusion ? '#FFA000' : '#9146FF',
+                            tagClass: isFusion ? 'tag-fusion' : 'tag-esports',
+                            headline: article.headline,
+                            description: article.description || '',
+                            link: article.links?.web?.href || article.links?.mobile?.href || '#',
+                            image: article.images?.[0]?.url || null,
+                            published: article.published || new Date().toISOString(),
+                            source: 'ESPN Esports'
+                        };
                     });
-                });
-            } catch (e) { console.error('The Score Esports RSS error:', e); }
+                    articles.push(...esportsArticles);
+                }
+            } catch (e) { console.error('ESPN Esports news error:', e); }
         }
 
         // Fetch Youth Sports news (only when youth filter is active)

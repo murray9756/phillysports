@@ -52,7 +52,11 @@ export default async function handler(req, res) {
                 email: user.email,
                 displayName: user.displayName,
                 favoriteTeam: user.favoriteTeam,
-                profilePhoto: user.profilePhoto
+                profilePhoto: user.profilePhoto,
+                coinBalance: user.coinBalance || 0,
+                lifetimeCoins: user.lifetimeCoins || 0,
+                dailyLoginStreak: user.dailyLoginStreak || 0,
+                badges: user.badges || []
             }
         });
     } catch (error) {
