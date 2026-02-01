@@ -454,7 +454,19 @@
                 <a href="/profile.html">${currentUser.username}</a>
                 <a href="#" id="logoutBtn">Logout</a>
             `;
-            document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+            // Theme toggle is handled by header.js - just need to reinitialize it after updating header
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle && !themeToggle.dataset.initialized) {
+                themeToggle.dataset.initialized = 'true';
+                themeToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const current = document.documentElement.getAttribute('data-theme');
+                    const newTheme = current === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    document.body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
             document.getElementById('logoutBtn').addEventListener('click', async (e) => {
                 e.preventDefault();
                 await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
