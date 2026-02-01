@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 140">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A2744"/>
+      <stop offset="100%" style="stop-color:#0d1520"/>
+    </linearGradient>
+    <filter id="glow2" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="440" height="140" fill="url(#bgGrad2)"/>
+  <!-- Outer border -->
+  <rect x="3" y="3" width="434" height="134" fill="none" stroke="#F5F0E1" stroke-width="6"/>
+  <!-- Inner border - neon purple -->
+  <rect x="12" y="12" width="416" height="116" fill="none" stroke="#8b00ff" stroke-width="2"/>
+
+  <!-- Ben Franklin silhouette -->
+  <image href="/ben.jpeg" x="-10" y="5" width="130" height="130" opacity="0.25" style="filter: invert(1) brightness(1.2);"/>
+
+  <!-- Top stars and text -->
+  <g transform="translate(130, 18)">
+    <polygon points="12,2 14,8 21,8 16,12 18,19 12,15 6,19 8,12 3,8 10,8" fill="#00d4ff" filter="url(#glow2)"/>
+    <text x="35" y="14" font-family="Georgia, serif" font-size="14" fill="#F5F0E1" letter-spacing="2">Est. 2026</text>
+    <polygon points="142,2 144,8 151,8 146,12 148,19 142,15 136,19 138,12 133,8 140,8" fill="#ff0080" filter="url(#glow2)"/>
+  </g>
+
+  <!-- Main text: Philly + big E + small sports + .com -->
+  <g transform="translate(115, 85)">
+    <text x="0" y="0" font-family="'Brush Script MT', cursive" font-size="42" fill="#8b00ff" filter="url(#glow2)">Philly</text>
+    <text x="100" y="0" font-family="Impact, 'Arial Black', sans-serif" font-size="48" fill="#00d4ff" filter="url(#glow2)">E</text>
+    <text x="130" y="0" font-family="Impact, 'Arial Black', sans-serif" font-size="28" fill="#00d4ff" filter="url(#glow2)">sports</text>
+    <text x="222" y="0" font-family="Georgia, serif" font-size="16" fill="#F5F0E1" font-weight="bold">.com</text>
+  </g>
+</svg>
