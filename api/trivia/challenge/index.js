@@ -7,12 +7,14 @@ import { authenticate } from '../../lib/auth.js';
 import { getCollection } from '../../lib/mongodb.js';
 import {
     createChallenge,
+    acceptChallenge as acceptChallengeEngine,
     getPendingChallenges,
     getActiveChallenges,
     getChallengeHistory,
     WAGER_TIERS
 } from '../../lib/trivia/challengeEngine.js';
 import { sendTriviaNotification, PUSHER_EVENTS } from '../../lib/pusher.js';
+import { addCoins } from '../../lib/coins.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -66,19 +68,32 @@ export default async function handler(req, res) {
             try {
                 const challenge = await createChallenge(userId, targetUserId, wagerAmount, 'direct');
 
-                // Send Pusher notification to challenged user
-                await sendTriviaNotification(targetUserId, PUSHER_EVENTS.TRIVIA_CHALLENGE_RECEIVED, {
-                    challengeId: challenge._id.toString(),
-                    challenger: challenge.challenger,
-                    wagerAmount,
-                    message: `${challenge.challenger.username} challenged you to trivia for ${wagerAmount} DD!`
-                });
+                // Auto-accept if the challenged user is a bot
+                const users = await getCollection('users');
+                const targetUser = await users.findOne({ _id: new ObjectId(targetUserId) });
+                let finalChallenge = challenge;
+
+                if (targetUser?.isBot) {
+                    // Ensure bot has enough coins
+                    if ((targetUser.coinBalance || 0) < wagerAmount) {
+                        await addCoins(targetUserId, 10000, 'bot_refill', 'Bot coin refill', {}, { skipMultiplier: true });
+                    }
+                    finalChallenge = await acceptChallengeEngine(challenge._id.toString(), targetUserId);
+                } else {
+                    // Send Pusher notification to challenged user (not bots)
+                    await sendTriviaNotification(targetUserId, PUSHER_EVENTS.TRIVIA_CHALLENGE_RECEIVED, {
+                        challengeId: challenge._id.toString(),
+                        challenger: challenge.challenger,
+                        wagerAmount,
+                        message: `${challenge.challenger.username} challenged you to trivia for ${wagerAmount} DD!`
+                    });
+                }
 
                 res.status(201).json({
                     success: true,
                     challenge: {
-                        _id: challenge._id.toString(),
-                        status: challenge.status,
+                        _id: (finalChallenge._id || challenge._id).toString(),
+                        status: finalChallenge.status || challenge.status,
                         wagerAmount: challenge.wagerAmount,
                         challenged: challenge.challenged,
                         expiresAt: challenge.expiresAt

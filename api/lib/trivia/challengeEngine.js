@@ -2,8 +2,23 @@
 // Handles game logic for head-to-head trivia battles
 
 import { ObjectId } from 'mongodb';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { getCollection } from '../mongodb.js';
 import { addCoins, deductCoins } from '../coins.js';
+
+// Map categories to trivia-data JSON filenames
+const CATEGORY_JSON_FILES = {
+    'Eagles': 'eagles-questions.json',
+    'Phillies': 'phillies-questions.json',
+    '76ers': 'sixers-questions.json',
+    'Flyers': 'flyers-questions.json',
+    'College': 'college-questions.json',
+    'General': 'general-questions.json'
+};
+
+// Cache loaded JSON questions in memory (per serverless instance)
+const jsonQuestionCache = {};
 
 // Categories for pie pieces
 export const CATEGORIES = ['Eagles', 'Phillies', '76ers', 'Flyers', 'College', 'General'];
@@ -225,7 +240,7 @@ export async function spinWheel(challengeId, userId, chosenCategory = null) {
         _id: { $nin: usedObjectIds }
     }).toArray();
 
-    // Fall back to legacy questions if no database questions
+    // Fall back to JSON files if no database questions
     let question = null;
     if (dbQuestions.length > 0) {
         const dbQuestion = dbQuestions[Math.floor(Math.random() * dbQuestions.length)];
@@ -241,14 +256,40 @@ export async function spinWheel(challengeId, userId, chosenCategory = null) {
             incorrectCount: dbQuestion.incorrectCount || 0
         };
     } else {
-        // Fall back to legacy
-        const trivia = await import('../../trivia/index.js');
-        const allQuestions = trivia.TRIVIA_QUESTIONS || [];
-        const legacyAvailable = allQuestions.filter(q =>
-            q.team === category && !usedQuestionIds.includes(q._id)
-        );
-        if (legacyAvailable.length > 0) {
-            question = legacyAvailable[Math.floor(Math.random() * legacyAvailable.length)];
+        // Fall back to trivia-data JSON files
+        const jsonFile = CATEGORY_JSON_FILES[category];
+        if (jsonFile) {
+            if (!jsonQuestionCache[category]) {
+                try {
+                    const filePath = join(process.cwd(), 'trivia-data', jsonFile);
+                    jsonQuestionCache[category] = JSON.parse(readFileSync(filePath, 'utf-8'));
+                } catch (e) {
+                    console.error(`Failed to load trivia-data/${jsonFile}:`, e.message);
+                    jsonQuestionCache[category] = [];
+                }
+            }
+            const usedTexts = new Set();
+            // Build set of used question texts from this challenge
+            for (const qId of usedQuestionIds) {
+                // We track by ID in DB, but JSON questions have no IDs, so also track by text
+            }
+            const jsonAvailable = jsonQuestionCache[category].filter(q =>
+                !usedQuestionIds.includes(q.question)
+            );
+            if (jsonAvailable.length > 0) {
+                const picked = jsonAvailable[Math.floor(Math.random() * jsonAvailable.length)];
+                question = {
+                    _id: picked.question, // Use question text as ID for JSON-sourced questions
+                    team: category,
+                    question: picked.question,
+                    options: picked.options.map(o => String(o)),
+                    answer: String(picked.answer),
+                    difficulty: picked.difficulty || 'medium',
+                    usedCount: 0,
+                    correctCount: 0,
+                    incorrectCount: 0
+                };
+            }
         }
     }
 
@@ -332,11 +373,43 @@ export async function submitAnswer(challengeId, userId, answer) {
         }
     }
 
-    // Fall back to legacy questions
+    // Fall back to JSON files (for questions sourced from trivia-data/)
     if (!fullQuestion) {
-        const trivia = await import('../../trivia/index.js');
-        const allQuestions = trivia.TRIVIA_QUESTIONS || [];
-        fullQuestion = allQuestions.find(q => q._id === questionId);
+        const category = challenge.currentCategory;
+        const jsonFile = CATEGORY_JSON_FILES[category];
+        if (jsonFile) {
+            if (!jsonQuestionCache[category]) {
+                try {
+                    const filePath = join(process.cwd(), 'trivia-data', jsonFile);
+                    jsonQuestionCache[category] = JSON.parse(readFileSync(filePath, 'utf-8'));
+                } catch (e) {
+                    jsonQuestionCache[category] = [];
+                }
+            }
+            // For JSON-sourced questions, the _id is the question text
+            const match = jsonQuestionCache[category].find(q => q.question === questionId);
+            if (match) {
+                fullQuestion = {
+                    _id: questionId,
+                    team: category,
+                    question: match.question,
+                    options: match.options.map(o => String(o)),
+                    answer: String(match.answer),
+                    difficulty: match.difficulty || 'medium'
+                };
+            }
+        }
+    }
+
+    // Last resort: try legacy questions
+    if (!fullQuestion) {
+        try {
+            const trivia = await import('../../trivia/index.js');
+            const allQuestions = trivia.TRIVIA_QUESTIONS || [];
+            fullQuestion = allQuestions.find(q => q._id === questionId);
+        } catch (e) {
+            // Legacy import failed
+        }
     }
 
     if (!fullQuestion) throw new Error('Question not found');

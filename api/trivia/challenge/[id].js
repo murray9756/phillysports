@@ -1,10 +1,22 @@
 // Get specific challenge state
 // GET /api/trivia/challenge/[id]
 
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { authenticate } from '../../lib/auth.js';
 import { getChallengeState, handleTimeout, spinWheel, submitAnswer } from '../../lib/trivia/challengeEngine.js';
 import { getCollection } from '../../lib/mongodb.js';
 import { ObjectId } from 'mongodb';
+
+const CATEGORY_JSON_FILES = {
+    'Eagles': 'eagles-questions.json',
+    'Phillies': 'phillies-questions.json',
+    '76ers': 'sixers-questions.json',
+    'Flyers': 'flyers-questions.json',
+    'College': 'college-questions.json',
+    'General': 'general-questions.json'
+};
+const jsonCache = {};
 
 // Bot auto-play: triggered when polling detects it's a bot's turn
 // 80% accuracy — competitive but beatable
@@ -18,14 +30,29 @@ function pickBotAnswer(options, correctAnswer) {
 
 /**
  * Look up the correct answer for a question.
- * Checks trivia_questions DB first, then falls back to legacy questions.
+ * Checks trivia_questions DB first, then JSON files, then legacy questions.
  */
-async function lookupAnswer(questionId) {
+async function lookupAnswer(questionId, category) {
     // Try database first
     if (ObjectId.isValid(questionId)) {
         const questionsCollection = await getCollection('trivia_questions');
         const fullQ = await questionsCollection.findOne({ _id: new ObjectId(questionId) });
         if (fullQ) return fullQ.answer;
+    }
+
+    // Try JSON files (for questions where _id is the question text)
+    if (category && CATEGORY_JSON_FILES[category]) {
+        const jsonFile = CATEGORY_JSON_FILES[category];
+        if (!jsonCache[category]) {
+            try {
+                const filePath = join(process.cwd(), 'trivia-data', jsonFile);
+                jsonCache[category] = JSON.parse(readFileSync(filePath, 'utf-8'));
+            } catch (e) {
+                jsonCache[category] = [];
+            }
+        }
+        const match = jsonCache[category].find(q => q.question === questionId);
+        if (match) return String(match.answer);
     }
 
     // Fall back to legacy questions
@@ -65,7 +92,7 @@ async function autoBotPlay(challengeId, botId) {
     const updated = await challenges.findOne({ _id: new ObjectId(challengeId) });
     if (!updated || !updated.currentQuestion) return;
 
-    const correctAnswer = await lookupAnswer(updated.currentQuestion._id);
+    const correctAnswer = await lookupAnswer(updated.currentQuestion._id, updated.currentCategory);
 
     const botAnswer = correctAnswer
         ? pickBotAnswer(updated.currentQuestion.options, correctAnswer)

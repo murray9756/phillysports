@@ -702,15 +702,16 @@
 
             try {
                 // Load pending challenges
-                const pendingRes = await fetch('/api/trivia/challenge/pending');
+                const pendingRes = await fetch('/api/trivia/challenge?type=pending', { credentials: 'include' });
                 const pendingData = await pendingRes.json();
+                const pendingList = pendingData.pending || [];
 
                 const pendingContainer = document.getElementById('pendingChallenges');
                 const pendingBadge = document.getElementById('pendingBadge');
 
-                if (pendingData.challenges && pendingData.challenges.length > 0) {
-                    pendingBadge.textContent = pendingData.challenges.length;
-                    pendingContainer.innerHTML = pendingData.challenges.map(c => `
+                if (pendingList.length > 0) {
+                    pendingBadge.textContent = pendingList.length;
+                    pendingContainer.innerHTML = pendingList.map(c => `
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--dark-bg); border-radius: 8px; margin-bottom: 0.5rem;">
                             <div>
                                 <strong>${c.challenger.username}</strong> challenges you
@@ -728,15 +729,16 @@
                 }
 
                 // Load active challenges
-                const activeRes = await fetch('/api/trivia/challenge/active');
+                const activeRes = await fetch('/api/trivia/challenge?type=active', { credentials: 'include' });
                 const activeData = await activeRes.json();
+                const activeList = activeData.active || [];
 
                 const activeContainer = document.getElementById('activeChallenges');
                 const activeBadge = document.getElementById('activeBadge');
 
-                if (activeData.challenges && activeData.challenges.length > 0) {
-                    activeBadge.textContent = activeData.challenges.length;
-                    activeContainer.innerHTML = activeData.challenges.map(c => {
+                if (activeList.length > 0) {
+                    activeBadge.textContent = activeList.length;
+                    activeContainer.innerHTML = activeList.map(c => {
                         const isMyTurn = c.currentTurn === currentUser.id;
                         const opponent = c.challenger.userId === currentUser.id ? c.challenged : c.challenger;
                         return `
@@ -762,7 +764,7 @@
 
         async function acceptChallenge(challengeId) {
             try {
-                const response = await fetch(`/api/trivia/challenge/${challengeId}/accept`, { method: 'POST' });
+                const response = await fetch(`/api/trivia/challenge/${challengeId}/accept`, { method: 'POST', credentials: 'include' });
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -777,7 +779,7 @@
 
         async function declineChallenge(challengeId) {
             try {
-                const response = await fetch(`/api/trivia/challenge/${challengeId}/decline`, { method: 'POST' });
+                const response = await fetch(`/api/trivia/challenge/${challengeId}/decline`, { method: 'POST', credentials: 'include' });
                 const data = await response.json();
 
                 if (!response.ok) {

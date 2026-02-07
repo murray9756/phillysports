@@ -379,7 +379,8 @@
                 <h2 id="gameOverTitle">You Won!</h2>
                 <p id="gameOverMessage">Congratulations!</p>
                 <div class="winnings" id="gameOverWinnings">+50 DD</div>
-                <a href="/trivia-challenge.html" class="spin-btn">Play Again</a>
+                <button class="spin-btn" id="rematchBtn" onclick="startRematch()">Rematch</button>
+                <a href="/trivia.html" class="back-link" style="display:block; margin-top:0.75rem;">Back to Trivia</a>
             </div>
         </div>
     </main>
@@ -733,6 +734,48 @@
             if (pollInterval) {
                 clearInterval(pollInterval);
                 pollInterval = null;
+            }
+        }
+
+        // Rematch - create a new challenge with the same opponent
+        async function startRematch() {
+            if (!gameState || !currentUser) return;
+
+            const btn = document.getElementById('rematchBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            try {
+                const isPlayer1 = gameState.challenger.userId === currentUser._id;
+                const opponent = isPlayer1 ? gameState.challenged : gameState.challenger;
+
+                const res = await fetch('/api/trivia/challenge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        challengedUserId: opponent.userId,
+                        wagerAmount: gameState.wagerAmount
+                    })
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to create rematch');
+                }
+
+                // If opponent is a bot, challenge is auto-accepted — go straight to match
+                if (data.challenge.status === 'active') {
+                    window.location.href = `/trivia-match.html?id=${data.challenge._id}`;
+                } else {
+                    // Human opponent — challenge sent, go back to trivia
+                    alert('Rematch challenge sent! Waiting for opponent to accept.');
+                    window.location.href = '/trivia.html';
+                }
+            } catch (e) {
+                alert(e.message || 'Failed to create rematch');
+                btn.disabled = false;
+                btn.textContent = 'Rematch';
             }
         }
 

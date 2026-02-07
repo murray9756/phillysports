@@ -1,6 +1,11 @@
 {
   "buildCommand": "",
   "outputDirectory": ".",
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "trivia-data/**"
+    }
+  },
   "redirects": [
     {
       "source": "/:path*",
