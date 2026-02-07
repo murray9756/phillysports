@@ -299,20 +299,29 @@ async function scorePendingBets() {
     // Determine which sports and dates we need scores for
     const sportDatePairs = new Set();
 
+    // Helper: get both the UTC date and the previous day (for late-night ET games stored as next day UTC)
+    function addDatePairs(sport, commenceTime) {
+        if (!sport || !commenceTime) return;
+        const dt = new Date(commenceTime);
+        const utcDate = dt.toISOString().split('T')[0];
+        sportDatePairs.add(`${sport}:${utcDate}`);
+        // If game time is before 10:00 UTC (i.e. before 5 AM ET), also check previous day
+        // This catches evening games stored with next-day UTC dates
+        if (dt.getUTCHours() < 10) {
+            const prevDay = new Date(dt);
+            prevDay.setUTCDate(prevDay.getUTCDate() - 1);
+            sportDatePairs.add(`${sport}:${prevDay.toISOString().split('T')[0]}`);
+        }
+    }
+
     for (const bet of pendingBets) {
         if (bet.betType === 'single') {
             const sport = bet.sport || SPORT_KEY_MAP[bet.sportKey];
-            if (sport && bet.commenceTime) {
-                const date = new Date(bet.commenceTime).toISOString().split('T')[0];
-                sportDatePairs.add(`${sport}:${date}`);
-            }
+            addDatePairs(sport, bet.commenceTime);
         } else if (bet.betType === 'parlay') {
             for (const leg of bet.legs) {
                 const sport = leg.sport || SPORT_KEY_MAP[leg.sportKey];
-                if (sport && leg.commenceTime) {
-                    const date = new Date(leg.commenceTime).toISOString().split('T')[0];
-                    sportDatePairs.add(`${sport}:${date}`);
-                }
+                addDatePairs(sport, leg.commenceTime);
             }
         }
     }
