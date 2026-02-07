@@ -44,28 +44,35 @@ async function lookupAnswer(questionId) {
     return null;
 }
 
+/**
+ * Bot plays exactly ONE question per poll cycle.
+ * If the bot answers correctly (keeps its turn), the next poll (3s later)
+ * will trigger the next question. This lets the human watch the game unfold.
+ */
 async function autoBotPlay(challengeId, botId) {
     const challenges = await getCollection('trivia_challenges');
-    let keepPlaying = true;
-    while (keepPlaying) {
-        const challenge = await challenges.findOne({ _id: new ObjectId(challengeId) });
-        if (!challenge || challenge.status !== 'active') break;
-        if (challenge.currentTurn.toString() !== botId) break;
-        if (!challenge.currentQuestion) {
-            await spinWheel(challengeId, botId);
-        }
-        const updated = await challenges.findOne({ _id: new ObjectId(challengeId) });
-        if (!updated || !updated.currentQuestion) break;
 
-        const correctAnswer = await lookupAnswer(updated.currentQuestion._id);
+    const challenge = await challenges.findOne({ _id: new ObjectId(challengeId) });
+    if (!challenge || challenge.status !== 'active') return;
+    if (challenge.currentTurn.toString() !== botId) return;
 
-        const botAnswer = correctAnswer
-            ? pickBotAnswer(updated.currentQuestion.options, correctAnswer)
-            : updated.currentQuestion.options[Math.floor(Math.random() * updated.currentQuestion.options.length)];
-
-        const result = await submitAnswer(challengeId, botId, botAnswer);
-        if (!result.correct || result.gameOver) keepPlaying = false;
+    // Step 1: Spin if no question yet
+    if (!challenge.currentQuestion) {
+        await spinWheel(challengeId, botId);
     }
+
+    // Step 2: Re-fetch and answer
+    const updated = await challenges.findOne({ _id: new ObjectId(challengeId) });
+    if (!updated || !updated.currentQuestion) return;
+
+    const correctAnswer = await lookupAnswer(updated.currentQuestion._id);
+
+    const botAnswer = correctAnswer
+        ? pickBotAnswer(updated.currentQuestion.options, correctAnswer)
+        : updated.currentQuestion.options[Math.floor(Math.random() * updated.currentQuestion.options.length)];
+
+    await submitAnswer(challengeId, botId, botAnswer);
+    // Stop here — next poll will trigger next turn if bot still has it
 }
 
 export default async function handler(req, res) {
