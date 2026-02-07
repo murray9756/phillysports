@@ -1,6 +1,6 @@
 // ESPN box score stats for fantasy scoring
 // Fetches player game stats from ESPN's free public API
-// Maps ESPN stat labels to SportsDataIO-compatible field names
+// Maps ESPN stat labels to normalized field names for fantasy scoring
 // so existing calculateFantasyPoints() works unchanged
 
 import { normalizeTeam } from './player-matching.js';
@@ -58,7 +58,7 @@ export async function fetchGamesByDate(sport, date) {
     }
 }
 
-// --- ESPN stat label to SportsDataIO field name mapping ---
+// --- ESPN stat label to fantasy scoring field name mapping ---
 
 function parseStatValue(val) {
     if (!val || val === '--' || val === '-') return 0;

@@ -1,8 +1,15 @@
-// SportsDataIO Odds & Betting Lines API
+// Odds & Betting Lines API - Uses TheOddsAPI
 // GET /api/sportsdata/odds?sport=NFL
 // GET /api/sportsdata/odds?sport=NFL&team=PHI
 
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+const ODDS_API_KEY = process.env.ODDS_API_KEY;
+
+const ODDS_API_SPORT_KEYS = {
+    'NFL': 'americanfootball_nfl',
+    'NBA': 'basketball_nba',
+    'MLB': 'baseball_mlb',
+    'NHL': 'icehockey_nhl'
+};
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,19 +22,42 @@ export default async function handler(req, res) {
 
     const { sport, team, gameId } = req.query;
 
-    if (!SPORTSDATA_API_KEY) {
-        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
+    if (!ODDS_API_KEY) {
+        return res.status(500).json({ error: 'Odds API key not configured' });
     }
 
     try {
         const sportUpper = (sport || 'NFL').toUpperCase();
+        const sportKey = ODDS_API_SPORT_KEYS[sportUpper];
 
-        let odds;
-        if (gameId) {
-            odds = await fetchGameOdds(sportUpper, gameId);
-        } else {
-            odds = await fetchUpcomingOdds(sportUpper, team);
+        if (!sportKey) {
+            return res.status(400).json({ error: 'Invalid sport. Valid: NFL, NBA, MLB, NHL' });
         }
+
+        const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}&regions=us&markets=spreads,h2h,totals&oddsFormat=american`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`TheOddsAPI fetch failed: ${response.status}`);
+        }
+
+        let games = await response.json();
+
+        // Filter by team if specified
+        if (team) {
+            const teamUpper = team.toUpperCase();
+            games = games.filter(g =>
+                g.home_team?.toUpperCase().includes(teamUpper) ||
+                g.away_team?.toUpperCase().includes(teamUpper)
+            );
+        }
+
+        // Filter by gameId if specified
+        if (gameId) {
+            games = games.filter(g => g.id === gameId);
+        }
+
+        const odds = games.map(game => transformOdds(game, sportUpper));
 
         return res.status(200).json({
             success: true,
@@ -41,157 +71,80 @@ export default async function handler(req, res) {
     }
 }
 
-async function fetchUpcomingOdds(sport, team) {
-    // Get today's date and next 7 days
-    const today = new Date();
-    const endDate = new Date(today);
-    endDate.setDate(endDate.getDate() + 7);
-
-    const formatDate = (d) => d.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
-
-    // Calculate current NFL season (season starts in Sept, so Jan-Aug = previous year)
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth(); // 0-indexed
-    const nflSeason = currentMonth < 8 ? currentYear - 1 : currentYear; // Before September = last year's season
-
-    const endpoints = {
-        NFL: `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/${nflSeason}REG/1`,
-        NBA: `https://api.sportsdata.io/v3/nba/odds/json/GameOddsByDate/${formatDate(today)}`,
-        MLB: `https://api.sportsdata.io/v3/mlb/odds/json/GameOddsByDate/${formatDate(today)}`,
-        NHL: `https://api.sportsdata.io/v3/nhl/odds/json/GameOddsByDate/${formatDate(today)}`
-    };
-
-    // For NFL, we need to get the current week
-    if (sport === 'NFL') {
-        try {
-            const weekUrl = `https://api.sportsdata.io/v3/nfl/scores/json/CurrentWeek?key=${SPORTSDATA_API_KEY}`;
-            const weekResponse = await fetch(weekUrl);
-            if (weekResponse.ok) {
-                const currentWeek = await weekResponse.json();
-                endpoints.NFL = `https://api.sportsdata.io/v3/nfl/odds/json/GameOddsByWeek/${nflSeason}REG/${currentWeek}`;
-            }
-        } catch (e) {
-            console.error('Failed to get current NFL week');
-        }
-    }
-
-    const url = `${endpoints[sport]}?key=${SPORTSDATA_API_KEY}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        throw new Error(`Odds fetch failed: ${response.status}`);
-    }
-
-    let games = await response.json();
-
-    // Filter by team if specified
-    if (team) {
-        const teamUpper = team.toUpperCase();
-        games = games.filter(g =>
-            g.HomeTeam?.toUpperCase() === teamUpper ||
-            g.AwayTeam?.toUpperCase() === teamUpper
-        );
-    } else {
-        // Filter to Philly teams
-        games = games.filter(g =>
-            g.HomeTeam === 'PHI' || g.AwayTeam === 'PHI'
-        );
-    }
-
-    return games.map(game => transformOdds(game, sport));
-}
-
-async function fetchGameOdds(sport, gameId) {
-    const endpoints = {
-        NFL: `https://api.sportsdata.io/v3/nfl/odds/json/GameOdds/${gameId}`,
-        NBA: `https://api.sportsdata.io/v3/nba/odds/json/GameOdds/${gameId}`,
-        MLB: `https://api.sportsdata.io/v3/mlb/odds/json/GameOdds/${gameId}`,
-        NHL: `https://api.sportsdata.io/v3/nhl/odds/json/GameOdds/${gameId}`
-    };
-
-    const url = `${endpoints[sport]}?key=${SPORTSDATA_API_KEY}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        throw new Error(`Game odds fetch failed: ${response.status}`);
-    }
-
-    const game = await response.json();
-    return transformOdds(game, sport);
-}
-
 function transformOdds(game, sport) {
-    // Get consensus odds (or first available)
-    const pregameOdds = game.PregameOdds || [];
-    const consensus = pregameOdds.find(o => o.Sportsbook === 'Consensus') ||
-                      pregameOdds.find(o => o.Sportsbook === 'DraftKings') ||
-                      pregameOdds.find(o => o.Sportsbook === 'FanDuel') ||
-                      pregameOdds[0] || {};
+    const PREFERRED = ['draftkings', 'fanduel', 'betmgm', 'caesars'];
+    const bookmakers = game.bookmakers || [];
+    let bookmaker = null;
+    for (const pref of PREFERRED) {
+        bookmaker = bookmakers.find(b => b.key === pref);
+        if (bookmaker) break;
+    }
+    if (!bookmaker) bookmaker = bookmakers[0];
 
-    const liveOdds = game.LiveOdds || [];
-    const liveConsensus = liveOdds.find(o => o.Sportsbook === 'Consensus') ||
-                          liveOdds[0] || {};
+    const spread = bookmaker?.markets?.find(m => m.key === 'spreads');
+    const moneyline = bookmaker?.markets?.find(m => m.key === 'h2h');
+    const total = bookmaker?.markets?.find(m => m.key === 'totals');
+
+    const homeSpread = spread?.outcomes?.find(o => o.name === game.home_team);
+    const awaySpread = spread?.outcomes?.find(o => o.name === game.away_team);
+    const homeMl = moneyline?.outcomes?.find(o => o.name === game.home_team);
+    const awayMl = moneyline?.outcomes?.find(o => o.name === game.away_team);
+    const over = total?.outcomes?.find(o => o.name === 'Over');
+    const under = total?.outcomes?.find(o => o.name === 'Under');
+
+    const isPhilly = game.home_team?.includes('Philadelphia') || game.away_team?.includes('Philadelphia');
+    const phillyIsHome = game.home_team?.includes('Philadelphia');
 
     return {
-        gameId: game.GameId || game.ScoreID,
-        date: game.DateTime || game.Day,
-        dateDisplay: formatGameDate(game.DateTime || game.Day),
-        homeTeam: game.HomeTeam,
-        awayTeam: game.AwayTeam,
-        status: game.Status,
+        gameId: game.id,
+        date: game.commence_time,
+        dateDisplay: formatGameDate(game.commence_time),
+        homeTeam: game.home_team,
+        awayTeam: game.away_team,
+        status: null,
 
-        // Pregame lines
         spread: {
-            home: consensus.HomePointSpread,
-            away: consensus.AwayPointSpread,
-            homeOdds: consensus.HomePointSpreadPayout,
-            awayOdds: consensus.AwayPointSpreadPayout
+            home: homeSpread?.point || null,
+            away: awaySpread?.point || null,
+            homeOdds: homeSpread?.price || null,
+            awayOdds: awaySpread?.price || null
         },
         moneyline: {
-            home: consensus.HomeMoneyLine,
-            away: consensus.AwayMoneyLine
+            home: homeMl?.price || null,
+            away: awayMl?.price || null
         },
         total: {
-            overUnder: consensus.OverUnder,
-            overOdds: consensus.OverPayout,
-            underOdds: consensus.UnderPayout
+            overUnder: over?.point || null,
+            overOdds: over?.price || null,
+            underOdds: under?.price || null
         },
 
-        // Live lines (if game in progress)
-        live: liveConsensus.HomePointSpread ? {
-            spread: {
-                home: liveConsensus.HomePointSpread,
-                away: liveConsensus.AwayPointSpread
-            },
-            moneyline: {
-                home: liveConsensus.HomeMoneyLine,
-                away: liveConsensus.AwayMoneyLine
-            },
-            total: {
-                overUnder: liveConsensus.OverUnder
-            }
-        } : null,
+        live: null,
 
-        // All sportsbook odds for comparison
-        sportsbooks: pregameOdds.map(o => ({
-            name: o.Sportsbook,
-            spread: o.HomePointSpread,
-            moneylineHome: o.HomeMoneyLine,
-            moneylineAway: o.AwayMoneyLine,
-            total: o.OverUnder
-        })),
+        sportsbooks: bookmakers.map(b => {
+            const bSpread = b.markets?.find(m => m.key === 'spreads')?.outcomes?.find(o => o.name === game.home_team);
+            const bMlHome = b.markets?.find(m => m.key === 'h2h')?.outcomes?.find(o => o.name === game.home_team);
+            const bMlAway = b.markets?.find(m => m.key === 'h2h')?.outcomes?.find(o => o.name === game.away_team);
+            const bTotal = b.markets?.find(m => m.key === 'totals')?.outcomes?.find(o => o.name === 'Over');
+            return {
+                name: formatBookmakerName(b.key),
+                spread: bSpread?.point || null,
+                moneylineHome: bMlHome?.price || null,
+                moneylineAway: bMlAway?.price || null,
+                total: bTotal?.point || null
+            };
+        }),
 
-        // Formatted display strings
         display: {
-            spread: formatSpread(consensus.HomePointSpread, game.HomeTeam),
-            moneyline: formatMoneyline(consensus.HomeMoneyLine, consensus.AwayMoneyLine, game.HomeTeam, game.AwayTeam),
-            total: consensus.OverUnder ? `O/U ${consensus.OverUnder}` : null
+            spread: homeSpread ? formatSpread(homeSpread.point, game.home_team) : null,
+            moneyline: (homeMl && awayMl) ? formatMoneyline(homeMl.price, awayMl.price, game.home_team, game.away_team) : null,
+            total: over ? `O/U ${over.point}` : null
         },
 
-        isPhilly: game.HomeTeam === 'PHI' || game.AwayTeam === 'PHI',
-        phillyIsHome: game.HomeTeam === 'PHI',
-        phillySpread: game.HomeTeam === 'PHI' ? consensus.HomePointSpread : consensus.AwayPointSpread,
-        phillyMoneyline: game.HomeTeam === 'PHI' ? consensus.HomeMoneyLine : consensus.AwayMoneyLine
+        isPhilly,
+        phillyIsHome,
+        phillySpread: phillyIsHome ? (homeSpread?.point || null) : (awaySpread?.point || null),
+        phillyMoneyline: phillyIsHome ? (homeMl?.price || null) : (awayMl?.price || null)
     };
 }
 
@@ -205,6 +158,17 @@ function formatMoneyline(homeML, awayML, homeTeam, awayTeam) {
     if (!homeML && !awayML) return null;
     const formatML = (ml) => ml > 0 ? `+${ml}` : ml;
     return `${homeTeam} ${formatML(homeML)} / ${awayTeam} ${formatML(awayML)}`;
+}
+
+function formatBookmakerName(key) {
+    const names = {
+        'draftkings': 'DraftKings',
+        'fanduel': 'FanDuel',
+        'betmgm': 'BetMGM',
+        'caesars': 'Caesars',
+        'pointsbetus': 'PointsBet'
+    };
+    return names[key] || key;
 }
 
 function formatGameDate(dateStr) {

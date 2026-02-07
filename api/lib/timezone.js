@@ -96,15 +96,6 @@ export function formatGameDate(dateString) {
     });
 }
 
-/**
- * Convert YYYY-MM-DD to YYYY-MMM-DD format for SportsDataIO API
- * e.g., "2026-02-06" → "2026-FEB-06"
- */
-export function toSportsDataDate(dateStr) {
-    const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    const [year, month, day] = dateStr.split('-');
-    return `${year}-${months[parseInt(month) - 1]}-${day}`;
-}
 
 /**
  * Check if a game is today in Eastern Time
