@@ -123,44 +123,45 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid sport' });
             }
 
-            if (!SPORTSDATA_API_KEY) {
-                return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-            }
-
-            // Get games for the date from SportsDataIO
             const targetDate = date || getTodayET();
-            const endpoint = SPORTSDATA_ENDPOINTS[sport];
-            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
+            let gameIds = [];
+            let earliestGame = new Date(targetDate + 'T19:00:00-05:00'); // Default 7pm ET
+            let latestGame = new Date(targetDate + 'T22:00:00-05:00');  // Default 10pm ET
 
-            const gamesResponse = await fetch(gamesUrl);
-            if (!gamesResponse.ok) {
-                console.error('SportsDataIO games fetch failed:', gamesResponse.status);
-                return res.status(400).json({ error: 'Failed to fetch games from SportsDataIO' });
-            }
+            // Try to fetch games from SportsDataIO
+            if (SPORTSDATA_API_KEY) {
+                const endpoint = SPORTSDATA_ENDPOINTS[sport];
+                const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
 
-            const gamesData = await gamesResponse.json();
-
-            if (!gamesData || gamesData.length === 0) {
-                return res.status(400).json({ error: 'No games found for this date' });
-            }
-
-            // Get game IDs and game times from SportsDataIO
-            // SportsDataIO returns times in Eastern Time without timezone suffix
-            const gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
-            const gameTimes = gamesData
-                .map(g => {
-                    const dt = g.DateTime || g.Day;
-                    if (!dt) return null;
-                    // If no timezone in string, treat as Eastern Time
-                    if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
-                        return new Date(dt + '-05:00'); // Append EST offset
+                try {
+                    const gamesResponse = await fetch(gamesUrl);
+                    if (gamesResponse.ok) {
+                        const gamesData = await gamesResponse.json();
+                        if (gamesData && gamesData.length > 0) {
+                            gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
+                            const gameTimes = gamesData
+                                .map(g => {
+                                    const dt = g.DateTime || g.Day;
+                                    if (!dt) return null;
+                                    if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
+                                        return new Date(dt + '-05:00');
+                                    }
+                                    return new Date(dt);
+                                })
+                                .filter(d => d && !isNaN(d.getTime()))
+                                .sort((a, b) => a - b);
+                            if (gameTimes.length > 0) {
+                                earliestGame = gameTimes[0];
+                                latestGame = gameTimes[gameTimes.length - 1];
+                            }
+                        }
+                    } else {
+                        console.log(`SportsDataIO games fetch returned ${gamesResponse.status}, using default times`);
                     }
-                    return new Date(dt);
-                })
-                .filter(d => d && !isNaN(d.getTime()))
-                .sort((a, b) => a - b);
-            const earliestGame = gameTimes[0] || new Date(targetDate + 'T18:00:00-05:00');
-            const latestGame = gameTimes[gameTimes.length - 1] || earliestGame;
+                } catch (fetchErr) {
+                    console.log('SportsDataIO fetch error, using default times:', fetchErr.message);
+                }
+            }
 
             // Generate title if not provided
             const fee = parseInt(entryFee) || 0;

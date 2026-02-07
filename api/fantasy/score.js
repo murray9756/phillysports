@@ -294,17 +294,25 @@ export default async function handler(req, res) {
                     const completionTime = new Date(endTime.getTime() + 4 * 60 * 60 * 1000);
 
                     if (now >= completionTime) {
-                        // Mark as completed and award prizes
-                        await contestsCollection.updateOne(
-                            { _id: contest._id },
-                            { $set: { status: 'completed', completedAt: now, updatedAt: now } }
-                        );
-
                         // Award prizes - winner takes all
                         const entries = await entriesCollection
                             .find({ contestId: contest._id })
                             .sort({ totalPoints: -1 })
                             .toArray();
+
+                        const topScore = entries.length > 0 ? (entries[0].totalPoints || 0) : 0;
+
+                        // Don't complete contest if no one has any points — stats likely haven't loaded yet
+                        if (topScore === 0 && entries.length > 0) {
+                            console.log(`Skipping completion for contest ${contest._id} (${contest.title}) - all entries have 0 points, waiting for stats`);
+                            continue;
+                        }
+
+                        // Mark as completed
+                        await contestsCollection.updateOne(
+                            { _id: contest._id },
+                            { $set: { status: 'completed', completedAt: now, updatedAt: now } }
+                        );
 
                         // Calculate total pot: $500 base + (entry fee × entries)
                         const basePot = 500;
@@ -399,10 +407,9 @@ export default async function handler(req, res) {
                             totalPoints += points;
                         }
 
-                        // Only update if we got stats for at least one player
-                        // or if entry currently has no scores (first scoring)
-                        const hasExistingScores = (entry.totalPoints || 0) > 0;
-                        if (playersWithStats > 0 || !hasExistingScores) {
+                        // Only update if we got stats for at least one player in this entry
+                        // Never write zeros when no stats are available
+                        if (playersWithStats > 0) {
                             await entriesCollection.updateOne(
                                 { _id: entry._id },
                                 {
