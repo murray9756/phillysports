@@ -522,6 +522,7 @@
         let currentUser = null;
         let selectedPosition = null;
         let positionFilter = '';
+        let eligiblePositions = []; // positions eligible for currently selected slot
         let searchQuery = '';
 
         let userEntry = null;
@@ -678,6 +679,7 @@
                     container.querySelectorAll('.pos-filter').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     positionFilter = btn.dataset.pos;
+                    eligiblePositions = []; // clear slot filter when manually filtering
                     renderPlayers();
                 });
             });
@@ -726,6 +728,8 @@
 
             if (positionFilter) {
                 filtered = filtered.filter(p => p.position === positionFilter);
+            } else if (eligiblePositions.length > 0) {
+                filtered = filtered.filter(p => eligiblePositions.includes(p.position));
             }
 
             if (searchQuery) {
@@ -769,14 +773,11 @@
             const slot = document.querySelector(`[data-slot="${slotName}"]`);
             if (slot) slot.style.borderColor = 'var(--accent-color)';
 
-            // Filter players to eligible positions
-            const eligible = JSON.parse(slot.dataset.eligible || '[]');
-            if (eligible.length > 0) {
-                positionFilter = '';
-                document.querySelectorAll('.pos-filter').forEach(b => b.classList.remove('active'));
-                // Show all eligible positions
-                renderPlayers();
-            }
+            // Filter players to eligible positions for this slot
+            eligiblePositions = JSON.parse(slot.dataset.eligible || '[]');
+            positionFilter = '';
+            document.querySelectorAll('.pos-filter').forEach(b => b.classList.remove('active'));
+            renderPlayers();
         }
 
         function addPlayer(player) {
