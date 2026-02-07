@@ -87,16 +87,18 @@ export default async function handler(req, res) {
                     const isPhillyGame = isPhillyTeam(game.homeTeam, sport) || isPhillyTeam(game.awayTeam, sport);
                     if (!isPhillyGame) continue;
 
-                    // Check if game is today and not already completed
+                    // Check if game is today (Eastern Time) and not already completed
                     if (game.isFinal) continue;
 
                     const gameTime = new Date(game.gameDate);
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const gameDateOnly = new Date(gameTime);
-                    gameDateOnly.setHours(0, 0, 0, 0);
 
-                    if (gameDateOnly.getTime() !== today.getTime()) continue;
+                    // Compare dates in Eastern Time to avoid UTC timezone mismatches
+                    // (e.g. a 7:30 PM ET game shows as next day in UTC)
+                    const etOptions = { timeZone: 'America/New_York' };
+                    const todayET = new Date().toLocaleDateString('en-CA', etOptions); // YYYY-MM-DD
+                    const gameET = gameTime.toLocaleDateString('en-CA', etOptions);    // YYYY-MM-DD
+
+                    if (gameET !== todayET) continue;
 
                     // Check if pool already exists for this game
                     const existingPool = await poolsCollection.findOne({
