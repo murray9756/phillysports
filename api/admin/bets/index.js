@@ -328,6 +328,28 @@ export default async function handler(req, res) {
                 });
             }
 
+            if (action === 'delete') {
+                // Delete bet and refund wager if pending
+                if (bet.status === 'pending') {
+                    await addCoins(
+                        bet.userId,
+                        bet.wagerAmount,
+                        'bet_refund',
+                        `Refund: deleted bet ${bet.awayTeam} @ ${bet.homeTeam}`,
+                        { betId: bet._id.toString() },
+                        { skipMultiplier: true }
+                    );
+                }
+
+                await betsCollection.deleteOne({ _id: bet._id });
+
+                return res.status(200).json({
+                    success: true,
+                    action: 'delete',
+                    refunded: bet.status === 'pending' ? bet.wagerAmount : 0
+                });
+            }
+
             if (action === 'trigger_scoring') {
                 // Trigger the scoring cron manually
                 const { scorePendingBets } = await import('../../bets/score.js');
@@ -340,7 +362,7 @@ export default async function handler(req, res) {
                 });
             }
 
-            return res.status(400).json({ error: 'Invalid action. Use: view, rescore, manual_settle, or trigger_scoring' });
+            return res.status(400).json({ error: 'Invalid action. Use: view, rescore, manual_settle, delete, or trigger_scoring' });
         }
 
         return res.status(405).json({ error: 'Method not allowed' });
