@@ -1,8 +1,9 @@
-// Spin the category wheel
+// Pick a category and get a question
 // POST /api/trivia/challenge/[id]/spin
+// Body: { category: "Eagles" } (optional - if omitted, picks random missing category)
 
 import { authenticate } from '../../../lib/auth.js';
-import { spinWheel, getChallengeState } from '../../../lib/trivia/challengeEngine.js';
+import { spinWheel } from '../../../lib/trivia/challengeEngine.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,10 +25,9 @@ export default async function handler(req, res) {
         }
 
         const { id } = req.query;
+        const { category } = req.body || {};
 
-        const result = await spinWheel(id, decoded.userId);
-
-        // TODO: Send Pusher event to opponent
+        const result = await spinWheel(id, decoded.userId, category || null);
 
         res.status(200).json({
             success: true,
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
             question: result.question
         });
     } catch (error) {
-        console.error('Spin wheel error:', error);
+        console.error('Pick category error:', error);
         res.status(400).json({ error: error.message });
     }
 }

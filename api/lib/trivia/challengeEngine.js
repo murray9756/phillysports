@@ -170,9 +170,10 @@ export async function declineChallenge(challengeId, userId) {
 }
 
 /**
- * Spin the category wheel
+ * Pick a category and get a question
+ * @param {string} chosenCategory - Category chosen by the player (must be one they don't have yet)
  */
-export async function spinWheel(challengeId, userId) {
+export async function spinWheel(challengeId, userId, chosenCategory = null) {
     const challenges = await getCollection('trivia_challenges');
     const questionsCollection = await getCollection('trivia_questions');
 
@@ -186,8 +187,30 @@ export async function spinWheel(challengeId, userId) {
         throw new Error('Answer current question first');
     }
 
-    // Random category
-    const category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+    // Determine which player's pieces to check
+    const isPlayer1 = challenge.challenger.userId.toString() === userId;
+    const myPieces = isPlayer1 ? challenge.player1Pieces : challenge.player2Pieces;
+
+    // Get categories the player still needs
+    const missingCategories = CATEGORIES.filter(cat => !myPieces[cat]);
+
+    let category;
+    if (chosenCategory) {
+        // Validate chosen category
+        if (!CATEGORIES.includes(chosenCategory)) {
+            throw new Error('Invalid category');
+        }
+        if (myPieces[chosenCategory]) {
+            throw new Error('You already have this category piece');
+        }
+        category = chosenCategory;
+    } else if (missingCategories.length > 0) {
+        // Random from missing categories (for bot or legacy)
+        category = missingCategories[Math.floor(Math.random() * missingCategories.length)];
+    } else {
+        // Has all pieces somehow, pick random
+        category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+    }
 
     // Get a random question from this category from the database
     // Exclude already used questions in this challenge

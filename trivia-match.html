@@ -144,50 +144,39 @@
             text-align: center;
         }
 
-        /* Spinner */
-        .spinner-container {
-            margin: 2rem auto;
-            position: relative;
-            width: 200px;
-            height: 200px;
+        /* Category Picker */
+        .category-picker {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
         }
-        .spinner-wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                var(--eagles-green) 0deg 60deg,
-                var(--phillies-red) 60deg 120deg,
-                var(--sixers-blue) 120deg 180deg,
-                var(--flyers-orange) 180deg 240deg,
-                var(--college-purple) 240deg 300deg,
-                var(--general-gray) 300deg 360deg
-            );
-            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        .category-pick-btn {
+            padding: 1rem;
+            border: 3px solid;
+            border-radius: 12px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            transition: all 0.2s;
             position: relative;
         }
-        .spinner-wheel::after {
-            content: '';
+        .category-pick-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .category-pick-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+        .category-pick-btn.eagles { border-color: var(--eagles-green); background: var(--eagles-green); }
+        .category-pick-btn.phillies { border-color: var(--phillies-red); background: var(--phillies-red); }
+        .category-pick-btn.sixers { border-color: var(--sixers-blue); background: var(--sixers-blue); }
+        .category-pick-btn.flyers { border-color: var(--flyers-orange); background: var(--flyers-orange); }
+        .category-pick-btn.college { border-color: var(--college-purple); background: var(--college-purple); }
+        .category-pick-btn.general { border-color: var(--general-gray); background: var(--general-gray); }
+        .category-pick-btn .check-mark {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 30%;
-            height: 30%;
-            background: var(--card-bg);
-            border-radius: 50%;
-        }
-        .spinner-pointer {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 20px solid var(--accent-color);
-            z-index: 10;
+            top: 4px;
+            right: 8px;
+            font-size: 0.75rem;
+            opacity: 0.9;
         }
         .spin-btn {
             margin-top: 1rem;
@@ -352,14 +341,11 @@
 
             <!-- Game Area -->
             <div class="game-area" id="gameArea">
-                <!-- Spin Phase -->
+                <!-- Category Pick Phase -->
                 <div id="spinPhase" style="display: none;">
-                    <h3>Your Turn!</h3>
-                    <div class="spinner-container">
-                        <div class="spinner-pointer"></div>
-                        <div class="spinner-wheel" id="spinnerWheel"></div>
-                    </div>
-                    <button class="spin-btn" id="spinBtn">SPIN!</button>
+                    <h3>Your Turn! Pick a Category</h3>
+                    <p style="color: var(--text-muted); margin: 0.5rem 0;">Choose a category you still need</p>
+                    <div class="category-picker" id="categoryPicker"></div>
                 </div>
 
                 <!-- Question Phase -->
@@ -524,7 +510,22 @@
 
         function showSpinPhase() {
             document.getElementById('spinPhase').style.display = 'block';
-            document.getElementById('spinBtn').disabled = false;
+
+            // Render category picker with only missing categories enabled
+            const isPlayer1 = gameState.challenger.userId === currentUser._id;
+            const myPieces = isPlayer1 ? gameState.player1Pieces : gameState.player2Pieces;
+
+            const picker = document.getElementById('categoryPicker');
+            picker.innerHTML = CATEGORIES.map(cat => {
+                const hasPiece = myPieces[cat];
+                const colorClass = CATEGORY_CLASSES[cat];
+                return `<button class="category-pick-btn ${colorClass}"
+                    onclick="pickCategory('${cat}')"
+                    ${hasPiece ? 'disabled' : ''}>
+                    ${cat}
+                    ${hasPiece ? '<span class="check-mark">&#10003;</span>' : ''}
+                </button>`;
+            }).join('');
         }
 
         function showQuestionPhase() {
@@ -606,39 +607,32 @@
             document.getElementById('gameOverOverlay').classList.add('active');
         }
 
-        // Spin wheel
-        document.getElementById('spinBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('spinBtn');
-            btn.disabled = true;
+        // Pick category
+        async function pickCategory(category) {
+            // Disable all buttons
+            document.querySelectorAll('.category-pick-btn').forEach(b => b.disabled = true);
 
             try {
                 const res = await fetch(`/api/trivia/challenge/${challengeId}/spin`, {
                     method: 'POST',
-                    credentials: 'include'
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ category })
                 });
                 const data = await res.json();
 
                 if (data.success) {
-                    // Animate spinner
-                    const wheel = document.getElementById('spinnerWheel');
-                    const categoryIndex = CATEGORIES.indexOf(data.category);
-                    const baseRotation = 360 * 5; // 5 full spins
-                    const categoryRotation = (categoryIndex * 60) + 30; // Center of slice
-                    wheel.style.transform = `rotate(${baseRotation + 360 - categoryRotation}deg)`;
-
-                    // After animation, show question
-                    setTimeout(async () => {
-                        await loadGameState();
-                    }, 3500);
+                    await loadGameState();
                 } else {
-                    alert(data.error || 'Failed to spin');
-                    btn.disabled = false;
+                    alert(data.error || 'Failed to pick category');
+                    // Re-enable buttons
+                    document.querySelectorAll('.category-pick-btn:not([disabled])').forEach(b => b.disabled = false);
                 }
             } catch (e) {
-                alert('Error spinning wheel');
-                btn.disabled = false;
+                alert('Error picking category');
+                document.querySelectorAll('.category-pick-btn:not([disabled])').forEach(b => b.disabled = false);
             }
-        });
+        }
 
         // Submit answer
         async function submitAnswer(answer) {
