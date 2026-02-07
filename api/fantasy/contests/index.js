@@ -1,7 +1,8 @@
 // Fantasy Contests API - List and Create Contests
 import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
-import { getTodayET, toSportsDataDate } from '../../lib/timezone.js';
+import { getTodayET } from '../../lib/timezone.js';
+import { fetchGamesByDate } from '../../lib/espn-stats.js';
 
 // Roster positions by sport
 const ROSTER_POSITIONS = {
@@ -37,16 +38,6 @@ const ROSTER_POSITIONS = {
         { position: 'G', count: 1 },
         { position: 'UTIL', count: 1, eligible: ['C', 'LW', 'RW', 'D'] }
     ]
-};
-
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
-
-// SportsDataIO endpoints for game data
-const SPORTSDATA_ENDPOINTS = {
-    NFL: 'nfl',
-    NBA: 'nba',
-    MLB: 'mlb',
-    NHL: 'nhl'
 };
 
 export default async function handler(req, res) {
@@ -123,46 +114,21 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid sport' });
             }
 
-            if (!SPORTSDATA_API_KEY) {
-                return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-            }
-
-            // Get games for the date from SportsDataIO
+            // Get games for the date from ESPN
             const targetDate = date || getTodayET();
-            const apiDate = toSportsDataDate(targetDate);
-            const endpoint = SPORTSDATA_ENDPOINTS[sport];
-            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${apiDate}?key=${SPORTSDATA_API_KEY}`;
-
-            const gamesResponse = await fetch(gamesUrl);
-            if (!gamesResponse.ok) {
-                let detail = `HTTP ${gamesResponse.status}`;
-                try {
-                    const errBody = await gamesResponse.json();
-                    detail = errBody.message || detail;
-                } catch (_) {}
-                console.error('SportsDataIO games fetch failed:', detail);
-                return res.status(400).json({ error: `SportsDataIO: ${detail}` });
-            }
-
-            const gamesData = await gamesResponse.json();
+            const gamesData = await fetchGamesByDate(sport, targetDate);
 
             if (!gamesData || gamesData.length === 0) {
                 return res.status(400).json({ error: `No ${sport} games found for ${targetDate}` });
             }
 
-            // Get game IDs and game times from SportsDataIO
-            const gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
+            // Extract game IDs and times
+            const gameIds = gamesData.map(g => g.id);
             const gameTimes = gamesData
-                .map(g => {
-                    const dt = g.DateTime || g.Day;
-                    if (!dt) return null;
-                    if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
-                        return new Date(dt + '-05:00');
-                    }
-                    return new Date(dt);
-                })
+                .map(g => g.gameTime ? new Date(g.gameTime) : null)
                 .filter(d => d && !isNaN(d.getTime()))
                 .sort((a, b) => a - b);
+
             const earliestGame = gameTimes[0] || new Date(targetDate + 'T19:00:00-05:00');
             const latestGame = gameTimes[gameTimes.length - 1] || earliestGame;
 
@@ -173,17 +139,14 @@ export default async function handler(req, res) {
             const contest = {
                 sport,
                 title: contestTitle,
-                // Store as noon EST to ensure correct date display
                 gameDate: new Date(targetDate + 'T12:00:00-05:00'),
-                gameDateString: targetDate, // Also store the string for easy access
+                gameDateString: targetDate,
                 gameIds,
                 salaryCap: 45000,
                 rosterPositions: ROSTER_POSITIONS[sport],
                 entryFee: fee,
-                maxEntries: 3, // Per user
+                maxEntries: 3,
                 maxTotalEntries: 1000,
-                // Prize pool is calculated dynamically: entryFee × entryCount
-                // Winner takes all
                 status: 'upcoming',
                 entryCount: 0,
                 createdAt: new Date(),

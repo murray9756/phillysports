@@ -1,9 +1,8 @@
 // Fantasy Scoring Cron - Calculate player points and update entries
 import { getCollection } from '../lib/mongodb.js';
-import { toDateStringET, toSportsDataDate } from '../lib/timezone.js';
-
-// Scoring rules by sport
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+import { toDateStringET } from '../lib/timezone.js';
+import { fetchAllPlayerStats } from '../lib/espn-stats.js';
+import { buildPlayerKey } from '../lib/player-matching.js';
 
 const SCORING = {
     NFL: {
@@ -60,51 +59,6 @@ const SCORING = {
     }
 };
 
-// Fetch player stats from SportsDataIO
-async function fetchPlayerStats(sport, date) {
-    if (!SPORTSDATA_API_KEY) {
-        console.log('No SportsDataIO API key, using simulated stats');
-        return {};
-    }
-
-    const sportEndpoints = {
-        NFL: 'nfl',
-        NBA: 'nba',
-        MLB: 'mlb',
-        NHL: 'nhl'
-    };
-
-    const endpoint = sportEndpoints[sport];
-    if (!endpoint) return {};
-
-    try {
-        // Fetch box scores for the date
-        const apiDate = toSportsDataDate(date);
-        const url = `https://api.sportsdata.io/v3/${endpoint}/stats/json/PlayerGameStatsByDate/${apiDate}?key=${SPORTSDATA_API_KEY}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            console.error(`Failed to fetch ${sport} stats:`, response.status);
-            return {};
-        }
-
-        const stats = await response.json();
-
-        // Index by player ID
-        const playerStats = {};
-        for (const player of stats) {
-            const playerId = player.PlayerID?.toString();
-            if (playerId) {
-                playerStats[playerId] = player;
-            }
-        }
-
-        return playerStats;
-    } catch (error) {
-        console.error(`Error fetching ${sport} stats:`, error.message);
-        return {};
-    }
-}
 
 // Extract display stats with point breakdowns for UI
 function extractDisplayStats(sport, stats) {
@@ -353,22 +307,21 @@ export default async function handler(req, res) {
                     }
                 }
 
-                // For live contests, fetch real stats from SportsDataIO
+                // For live contests, fetch real stats from ESPN
                 if (contest.status === 'live') {
                     const entries = await entriesCollection.find({ contestId: contest._id }).toArray();
 
-                    // Fetch player stats from SportsDataIO
+                    // Fetch player stats from ESPN box scores
                     const gameDate = contest.gameDateString || toDateStringET(contest.gameDate || contest.locksAt);
-                    console.log(`Fetching ${contest.sport} stats for date: ${gameDate}`);
-                    const playerStats = await fetchPlayerStats(contest.sport, gameDate);
+                    console.log(`Fetching ${contest.sport} stats from ESPN for date: ${gameDate}`);
+                    const playerStats = await fetchAllPlayerStats(contest.sport, gameDate);
                     const playerCount = Object.keys(playerStats).length;
-                    console.log(`Got ${playerCount} player stats from SportsDataIO`);
+                    console.log(`Got ${playerCount} player stats from ESPN`);
 
-                    // CRITICAL FIX: Don't overwrite scores if API returns no stats
-                    // This prevents wiping out valid scores when API is unavailable
+                    // Don't overwrite scores if API returns no stats
                     if (playerCount === 0) {
                         console.log(`WARNING: No stats returned for contest ${contest._id} (${contest.title}). Skipping score update to preserve existing scores.`);
-                        continue; // Skip to next contest, preserving existing scores
+                        continue;
                     }
 
                     for (const entry of entries) {
@@ -377,12 +330,13 @@ export default async function handler(req, res) {
                         let playersWithStats = 0;
 
                         for (const player of entry.lineup) {
-                            // Try both string and number formats for player ID
                             const playerId = player.playerId?.toString();
-                            const stats = playerStats[playerId] || playerStats[parseInt(playerId)] || null;
+                            // Match by name+team key (ESPN stats are keyed by "name::team")
+                            const playerKey = buildPlayerKey(player.playerName, player.team);
+                            const stats = playerStats[playerKey] || null;
 
                             if (!stats) {
-                                console.log(`No stats found for player ${player.playerName} (ID: ${playerId})`);
+                                console.log(`No stats found for player ${player.playerName} (team: ${player.team}, key: ${playerKey})`);
                                 // Preserve existing points for this player if available
                                 const existingPlayerPoints = entry.playerPoints?.find(pp => pp.playerId === playerId);
                                 if (existingPlayerPoints) {
@@ -409,7 +363,6 @@ export default async function handler(req, res) {
                         }
 
                         // Only update if we got stats for at least one player in this entry
-                        // Never write zeros when no stats are available
                         if (playersWithStats > 0) {
                             await entriesCollection.updateOne(
                                 { _id: entry._id },

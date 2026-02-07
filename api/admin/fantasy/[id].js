@@ -6,8 +6,8 @@ import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
 import { addCoins } from '../../lib/coins.js';
 import { toDateStringET } from '../../lib/timezone.js';
-
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+import { fetchAllPlayerStats } from '../../lib/espn-stats.js';
+import { buildPlayerKey } from '../../lib/player-matching.js';
 
 // Scoring rules by sport
 const SCORING = {
@@ -60,41 +60,6 @@ const SCORING = {
         shutout: 3
     }
 };
-
-// Fetch player stats from SportsDataIO
-async function fetchPlayerStats(sport, date) {
-    if (!SPORTSDATA_API_KEY) {
-        console.log('No SportsDataIO API key');
-        return {};
-    }
-
-    const sportEndpoints = { NFL: 'nfl', NBA: 'nba', MLB: 'mlb', NHL: 'nhl' };
-    const endpoint = sportEndpoints[sport];
-    if (!endpoint) return {};
-
-    try {
-        const url = `https://api.sportsdata.io/v3/${endpoint}/stats/json/PlayerGameStatsByDate/${date}?key=${SPORTSDATA_API_KEY}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            console.error(`Failed to fetch ${sport} stats:`, response.status);
-            return {};
-        }
-
-        const stats = await response.json();
-        const playerStats = {};
-        for (const player of stats) {
-            const playerId = player.PlayerID?.toString();
-            if (playerId) {
-                playerStats[playerId] = player;
-            }
-        }
-        return playerStats;
-    } catch (error) {
-        console.error(`Error fetching ${sport} stats:`, error.message);
-        return {};
-    }
-}
 
 // Calculate fantasy points
 function calculateFantasyPoints(sport, stats) {
@@ -240,17 +205,17 @@ export default async function handler(req, res) {
             const { action, gameDate } = req.body;
 
             if (action === 'rescore') {
-                // Force rescore the contest
+                // Force rescore the contest using ESPN box scores
                 const scoringDate = gameDate || contest.gameDateString ||
                     toDateStringET(contest.gameDate || contest.locksAt);
 
-                console.log(`Admin rescore: Fetching ${contest.sport} stats for ${scoringDate}`);
-                const playerStats = await fetchPlayerStats(contest.sport, scoringDate);
+                console.log(`Admin rescore: Fetching ${contest.sport} stats from ESPN for ${scoringDate}`);
+                const playerStats = await fetchAllPlayerStats(contest.sport, scoringDate);
                 const playerCount = Object.keys(playerStats).length;
 
                 if (playerCount === 0) {
                     return res.status(400).json({
-                        error: 'No stats available from API',
+                        error: 'No stats available from ESPN',
                         sport: contest.sport,
                         date: scoringDate,
                         message: 'Stats may not be available for this date. Try specifying a different gameDate.'
@@ -266,7 +231,9 @@ export default async function handler(req, res) {
 
                     for (const player of entry.lineup) {
                         const playerId = player.playerId?.toString();
-                        const stats = playerStats[playerId] || playerStats[parseInt(playerId)] || null;
+                        // Match by name+team key
+                        const playerKey = buildPlayerKey(player.playerName, player.team);
+                        const stats = playerStats[playerKey] || null;
                         const points = calculateFantasyPoints(contest.sport, stats);
                         const displayStats = stats ? extractDisplayStats(contest.sport, stats) : null;
 

@@ -131,7 +131,8 @@ export default async function handler(req, res) {
                 playerId: player.playerId,
                 playerName: player.playerName,
                 salary: player.salary,
-                playerPosition: player.playerPosition || player.position
+                playerPosition: player.playerPosition || player.position,
+                team: player.team || player.teamAbbreviation || ''
             });
         }
 

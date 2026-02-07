@@ -595,7 +595,8 @@
                             playerId: player.playerId,
                             playerName: player.playerName,
                             salary: player.salary,
-                            position: player.playerPosition
+                            position: player.playerPosition,
+                            team: player.team || player.teamAbbreviation || ''
                         };
                     }
                     updateLineupDisplay();
@@ -823,7 +824,8 @@
                 playerId: player.id,
                 playerName: player.name,
                 salary: player.salary,
-                position: player.position
+                position: player.position,
+                team: player.team || player.teamAbbreviation || ''
             };
 
             updateLineupDisplay();
@@ -912,7 +914,8 @@
                 playerId: player.playerId,
                 playerName: player.playerName,
                 salary: player.salary,
-                playerPosition: player.position
+                playerPosition: player.position,
+                team: player.team || player.teamAbbreviation || ''
             }));
 
             try {

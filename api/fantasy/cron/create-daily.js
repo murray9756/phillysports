@@ -1,16 +1,9 @@
 // Cron Job - Create Daily Fantasy Contests from Templates
-// Called by Vercel Cron or external scheduler
+// Uses ESPN for game detection (free, no API key required)
 import { getCollection } from '../../lib/mongodb.js';
+import { fetchGamesByDate } from '../../lib/espn-stats.js';
 
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 const CRON_SECRET = process.env.CRON_SECRET;
-
-const SPORTSDATA_ENDPOINTS = {
-    NFL: 'nfl',
-    NBA: 'nba',
-    MLB: 'mlb',
-    NHL: 'nhl'
-};
 
 const ROSTER_POSITIONS = {
     NFL: [
@@ -54,10 +47,6 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    if (!SPORTSDATA_API_KEY) {
-        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-    }
-
     try {
         const templatesCollection = await getCollection('fantasy_templates');
         const contestsCollection = await getCollection('fantasy_contests');
@@ -80,21 +69,9 @@ export default async function handler(req, res) {
                 continue;
             }
 
-            // Check if there are games for this sport today
-            const endpoint = SPORTSDATA_ENDPOINTS[template.sport];
-            const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-            const [yr, mo, dy] = today.split('-');
-            const apiDate = `${yr}-${months[parseInt(mo) - 1]}-${dy}`;
-            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${apiDate}?key=${SPORTSDATA_API_KEY}`;
-
             try {
-                const gamesResponse = await fetch(gamesUrl);
-                if (!gamesResponse.ok) {
-                    results.push({ template: template.name, status: 'error', reason: 'Failed to fetch games' });
-                    continue;
-                }
-
-                const gamesData = await gamesResponse.json();
+                // Check if there are games for this sport today via ESPN
+                const gamesData = await fetchGamesByDate(template.sport, today);
 
                 if (!gamesData || gamesData.length === 0) {
                     results.push({ template: template.name, status: 'skipped', reason: 'No games today' });
@@ -102,16 +79,9 @@ export default async function handler(req, res) {
                 }
 
                 // Get game IDs and times
-                const gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
+                const gameIds = gamesData.map(g => g.id);
                 const gameTimes = gamesData
-                    .map(g => {
-                        const dt = g.DateTime || g.Day;
-                        if (!dt) return null;
-                        if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
-                            return new Date(dt + '-05:00');
-                        }
-                        return new Date(dt);
-                    })
+                    .map(g => g.gameTime ? new Date(g.gameTime) : null)
                     .filter(d => d && !isNaN(d.getTime()))
                     .sort((a, b) => a - b);
 
