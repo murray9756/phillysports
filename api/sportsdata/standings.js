@@ -1,7 +1,12 @@
-// SportsDataIO Standings API
+// Standings API - Uses ESPN free API
 // GET /api/sportsdata/standings?sport=NFL
 
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+const ESPN_SPORT_PATHS = {
+    NFL: 'football/nfl',
+    NBA: 'basketball/nba',
+    MLB: 'baseball/mlb',
+    NHL: 'hockey/nhl'
+};
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,22 +17,15 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { sport, season } = req.query;
-
-    if (!SPORTSDATA_API_KEY) {
-        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-    }
+    const { sport } = req.query;
 
     try {
         const sportUpper = (sport || 'NFL').toUpperCase();
-        const currentSeason = season || getCurrentSeason(sportUpper);
-
-        const standings = await fetchStandings(sportUpper, currentSeason);
+        const standings = await fetchStandings(sportUpper);
 
         return res.status(200).json({
             success: true,
             sport: sportUpper,
-            season: currentSeason,
             standings
         });
     } catch (error) {
@@ -36,83 +34,81 @@ export default async function handler(req, res) {
     }
 }
 
-function getCurrentSeason(sport) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
+async function fetchStandings(sport) {
+    const sportPath = ESPN_SPORT_PATHS[sport];
+    if (!sportPath) throw new Error(`Unsupported sport: ${sport}`);
 
-    switch (sport) {
-        case 'NFL':
-            return month >= 3 && month <= 7 ? year - 1 : year;
-        case 'NBA':
-        case 'NHL':
-            return month >= 9 ? year + 1 : year;
-        case 'MLB':
-            return year;
-        default:
-            return year;
-    }
-}
-
-async function fetchStandings(sport, season) {
-    const endpoints = {
-        NFL: `https://api.sportsdata.io/v3/nfl/scores/json/Standings/${season}`,
-        NBA: `https://api.sportsdata.io/v3/nba/scores/json/Standings/${season}`,
-        MLB: `https://api.sportsdata.io/v3/mlb/scores/json/Standings/${season}`,
-        NHL: `https://api.sportsdata.io/v3/nhl/scores/json/Standings/${season}`
-    };
-
-    const url = `${endpoints[sport]}?key=${SPORTSDATA_API_KEY}`;
+    const url = `https://site.api.espn.com/apis/v2/sports/${sportPath}/standings`;
     const response = await fetch(url);
 
     if (!response.ok) {
-        throw new Error(`SportsDataIO API error: ${response.status}`);
+        throw new Error(`ESPN standings API error: ${response.status}`);
     }
 
     const data = await response.json();
-
-    // Group by division/conference
     const grouped = {};
 
-    data.forEach(team => {
-        const division = team.Division || team.Conference || 'League';
-        if (!grouped[division]) {
-            grouped[division] = [];
+    // ESPN returns children array with conferences/divisions
+    const children = data.children || [];
+
+    for (const conference of children) {
+        const confName = conference.name || conference.abbreviation || 'League';
+
+        // Some sports have divisions within conferences
+        const divisions = conference.children || [conference];
+
+        for (const division of divisions) {
+            const divName = division.name || confName;
+            const standings = division.standings?.entries || [];
+
+            if (!grouped[divName]) {
+                grouped[divName] = [];
+            }
+
+            for (const entry of standings) {
+                const team = entry.team || {};
+                const stats = {};
+
+                // Extract all stats into a map
+                for (const stat of (entry.stats || [])) {
+                    stats[stat.name] = stat.value;
+                    if (stat.displayValue) stats[stat.name + '_display'] = stat.displayValue;
+                }
+
+                grouped[divName].push({
+                    team: team.abbreviation || '',
+                    teamName: team.shortDisplayName || team.displayName || '',
+                    city: team.location || '',
+                    wins: stats.wins || 0,
+                    losses: stats.losses || 0,
+                    ties: stats.ties || 0,
+                    otLosses: stats.OTLosses || stats.overtimeLosses || 0,
+                    winPct: stats.winPercent || stats.winPct || (stats.wins / (stats.wins + stats.losses) || 0),
+                    gamesBack: stats.gamesBehind || stats.gamesBack || 0,
+                    streak: stats.streak_display || stats.streak || null,
+                    lastTen: stats.Last_Ten_Record_display || null,
+                    homeRecord: stats.Home_display || stats.homeRecord_display || null,
+                    awayRecord: stats.Road_display || stats.awayRecord_display || null,
+                    divisionRecord: stats.vs_div_display || stats.divisionRecord_display || null,
+                    conferenceRecord: stats.vs_conf_display || stats.conferenceRecord_display || null,
+                    pointsFor: stats.pointsFor || stats.runsScored || stats.goalsFor || 0,
+                    pointsAgainst: stats.pointsAgainst || stats.runsAgainst || stats.goalsAgainst || 0,
+                    pointDiff: stats.differential || stats.pointDifferential || 0,
+                    isPhilly: team.abbreviation === 'PHI',
+                    division: divName,
+                    conference: confName
+                });
+            }
         }
+    }
 
-        grouped[division].push({
-            team: team.Team,
-            teamName: team.Name,
-            city: team.City,
-            wins: team.Wins,
-            losses: team.Losses,
-            ties: team.Ties || 0,
-            otLosses: team.OvertimeLosses || 0,
-            winPct: team.Percentage || (team.Wins / (team.Wins + team.Losses) || 0),
-            gamesBack: team.GamesBack || team.GamesBehind || 0,
-            streak: team.Streak || team.StreakDescription,
-            lastTen: team.LastTenWins ? `${team.LastTenWins}-${team.LastTenLosses}` : null,
-            homeRecord: team.HomeWins !== undefined ? `${team.HomeWins}-${team.HomeLosses}` : null,
-            awayRecord: team.AwayWins !== undefined ? `${team.AwayWins}-${team.AwayLosses}` : null,
-            divisionRecord: team.DivisionWins !== undefined ? `${team.DivisionWins}-${team.DivisionLosses}` : null,
-            conferenceRecord: team.ConferenceWins !== undefined ? `${team.ConferenceWins}-${team.ConferenceLosses}` : null,
-            pointsFor: team.PointsFor || team.RunsScored || team.GoalsFor,
-            pointsAgainst: team.PointsAgainst || team.RunsAgainst || team.GoalsAgainst,
-            pointDiff: team.NetPoints || team.RunDifferential || (team.GoalsFor - team.GoalsAgainst),
-            isPhilly: team.Team === 'PHI',
-            division: team.Division,
-            conference: team.Conference
-        });
-    });
-
-    // Sort each division by wins (desc) then win pct
+    // Sort each division by wins desc, win pct desc
     Object.keys(grouped).forEach(div => {
         grouped[div].sort((a, b) => {
             if (b.wins !== a.wins) return b.wins - a.wins;
             return b.winPct - a.winPct;
         });
 
-        // Add rank
         grouped[div].forEach((team, idx) => {
             team.rank = idx + 1;
         });

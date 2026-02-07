@@ -10,8 +10,51 @@ import {
     calculateParlayPayout,
     recalculateParlayAfterPush
 } from '../lib/betting.js';
-import { fetchScoresByDate } from '../lib/sportsdata.js';
 import { toDateStringET } from '../lib/timezone.js';
+
+const ESPN_SPORT_PATHS = {
+    NFL: 'football/nfl',
+    NBA: 'basketball/nba',
+    MLB: 'baseball/mlb',
+    NHL: 'hockey/nhl'
+};
+
+/**
+ * Fetch scores from ESPN scoreboard for a given sport and date
+ * Returns array in unified format for findGameResult matching
+ */
+async function fetchScoresFromESPN(sport, date) {
+    const sportPath = ESPN_SPORT_PATHS[sport];
+    if (!sportPath) return [];
+
+    const espnDate = date.replace(/-/g, '');
+    const url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${espnDate}`;
+
+    const response = await fetch(url);
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    const events = data.events || [];
+
+    return events.map(event => {
+        const comp = event.competitions?.[0];
+        if (!comp) return null;
+
+        const homeTeam = comp.competitors?.find(c => c.homeAway === 'home');
+        const awayTeam = comp.competitors?.find(c => c.homeAway === 'away');
+        const status = comp.status?.type;
+
+        return {
+            HomeTeam: homeTeam?.team?.abbreviation || '',
+            AwayTeam: awayTeam?.team?.abbreviation || '',
+            HomeScore: parseInt(homeTeam?.score) || 0,
+            AwayScore: parseInt(awayTeam?.score) || 0,
+            Status: status?.completed ? 'Final' : (status?.shortDetail || 'Scheduled'),
+            IsClosed: status?.completed || false,
+            GameID: event.id
+        };
+    }).filter(Boolean);
+}
 
 // Map TheOddsAPI sport keys to our sport names
 const SPORT_KEY_MAP = {
@@ -24,7 +67,7 @@ const SPORT_KEY_MAP = {
 };
 
 /**
- * Find game result from SportsDataIO scores
+ * Find game result from ESPN scores
  * Matches by team abbreviations (converts full names to abbreviations first)
  */
 function findGameResult(bet, scoreboards) {
@@ -41,7 +84,6 @@ function findGameResult(bet, scoreboards) {
 
     // Try to find matching game
     for (const game of games) {
-        // SportsDataIO returns abbreviations
         const gameHome = (game.HomeTeam || '').toUpperCase();
         const gameAway = (game.AwayTeam || '').toUpperCase();
 
@@ -81,7 +123,7 @@ function findGameResult(bet, scoreboards) {
 
 /**
  * Team name to abbreviation mappings
- * Covers full names from TheOddsAPI to abbreviations from SportsDataIO
+ * Covers full names from TheOddsAPI to abbreviations
  */
 const TEAM_NAME_TO_ABBR = {
     // NHL
@@ -306,7 +348,7 @@ async function scorePendingBets() {
         const dt = new Date(commenceTime);
         const etDate = toDateStringET(dt);
         sportDatePairs.add(`${sport}:${etDate}`);
-        // Also check the UTC date in case SportsDataIO indexes by UTC
+        // Also check adjacent date in case of timezone differences
         const utcDate = dt.toISOString().split('T')[0];
         if (utcDate !== etDate) {
             sportDatePairs.add(`${sport}:${utcDate}`);
@@ -325,14 +367,13 @@ async function scorePendingBets() {
         }
     }
 
-    // Fetch scoreboards from SportsDataIO for all needed sport/date combinations
+    // Fetch scoreboards from ESPN for all needed sport/date combinations
     const scoreboards = {};
     for (const pair of sportDatePairs) {
         const [sport, date] = pair.split(':');
         try {
-            // Only fetch pro sports from SportsDataIO (college not supported for now)
             if (['NFL', 'NBA', 'MLB', 'NHL'].includes(sport)) {
-                const scores = await fetchScoresByDate(sport, date);
+                const scores = await fetchScoresFromESPN(sport, date);
                 if (!scoreboards[sport]) scoreboards[sport] = [];
                 scoreboards[sport].push(...scores);
             }

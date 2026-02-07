@@ -1,9 +1,6 @@
 // Vercel Serverless Function - Fetch Team Roster
-// Uses SportsDataIO for all sports data
+// Uses ESPN free API for all sports data
 
-import { fetchTeamRoster, COLLEGE_TEAMS } from './lib/sportsdata.js';
-
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 // Team configurations
 const TEAM_CONFIG = {
@@ -43,10 +40,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Invalid team' });
     }
 
-    if (!SPORTSDATA_API_KEY) {
-        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-    }
-
     try {
         let players = [];
         let teamName = '';
@@ -81,36 +74,29 @@ export default async function handler(req, res) {
                 }
             }
         } else if (collegeConfig) {
-            // College team roster
+            // College team roster via ESPN
             teamName = collegeConfig.name;
-            const teamId = COLLEGE_TEAMS[teamLower]?.id || teamLower.toUpperCase();
-
-            const url = `https://api.sportsdata.io/v3/cbb/scores/json/Players/${teamId}?key=${SPORTSDATA_API_KEY}`;
-            const response = await fetch(url);
-
-            if (response.ok) {
-                const rosterData = await response.json();
-                players = rosterData.map(player => {
-                    const fullName = `${player.FirstName || ''} ${player.LastName || ''}`.trim();
-                    const espnLink = generateESPNPlayerLink('NCAAB', fullName);
-
-                    return {
-                        name: fullName,
-                        firstName: player.FirstName,
-                        lastName: player.LastName,
-                        number: player.Jersey || '',
-                        position: player.Position || '',
-                        positionFull: player.Position || '',
-                        headshot: player.PhotoUrl || null,
-                        status: player.Status || 'Active',
-                        college: '',
-                        experience: player.Class || '',
-                        height: player.Height ? formatHeight(player.Height) : '',
-                        weight: player.Weight ? `${player.Weight} lbs` : '',
-                        playerId: player.PlayerID?.toString(),
-                        link: espnLink
-                    };
-                });
+            const COLLEGE_ESPN_IDS = {
+                'villanova': '222',
+                'penn': '219',
+                'lasalle': '2325',
+                'drexel': '2182',
+                'stjosephs': '2603',
+                'temple': '218'
+            };
+            const espnId = COLLEGE_ESPN_IDS[teamLower];
+            if (espnId) {
+                const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${espnId}/roster`;
+                const response = await fetch(url);
+                if (response.ok) {
+                    const data = await response.json();
+                    const athletes = data.athletes || [];
+                    for (const group of athletes) {
+                        for (const player of (group.items || [])) {
+                            players.push(extractESPNPlayer(player));
+                        }
+                    }
+                }
             }
         }
 

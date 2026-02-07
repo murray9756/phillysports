@@ -1,12 +1,8 @@
 // Block Pools API - List and Create Pools
-// Uses SportsDataIO for game data
 
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
-import { fetchGamesByDate, getCurrentSeason } from '../lib/sportsdata.js';
 import { getTodayET } from '../lib/timezone.js';
-
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 // Default payout structures by sport
 const DEFAULT_PAYOUTS = {
@@ -123,20 +119,33 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid sport' });
             }
 
-            // If gameId provided, fetch game details from SportsDataIO
+            // If gameId provided, fetch game details from ESPN
             let gameDetails = { homeTeam, awayTeam, gameTime };
-            if (gameId && SPORTSDATA_API_KEY) {
+            if (gameId) {
                 try {
-                    const today = getTodayET();
-                    const games = await fetchGamesByDate(sport, today);
-                    const game = games.find(g => (g.GameID || g.ScoreID)?.toString() === gameId);
-
-                    if (game) {
-                        gameDetails = {
-                            homeTeam: game.HomeTeam || homeTeam,
-                            awayTeam: game.AwayTeam || awayTeam,
-                            gameTime: new Date(game.DateTime || game.Day)
-                        };
+                    const ESPN_SPORT_PATHS = {
+                        NFL: 'football/nfl', NBA: 'basketball/nba',
+                        MLB: 'baseball/mlb', NHL: 'hockey/nhl'
+                    };
+                    const sportPath = ESPN_SPORT_PATHS[sport];
+                    if (sportPath) {
+                        const today = getTodayET().replace(/-/g, '');
+                        const url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${today}`;
+                        const response = await fetch(url);
+                        if (response.ok) {
+                            const data = await response.json();
+                            const event = (data.events || []).find(e => e.id === gameId);
+                            if (event) {
+                                const comp = event.competitions?.[0];
+                                const home = comp?.competitors?.find(c => c.homeAway === 'home');
+                                const away = comp?.competitors?.find(c => c.homeAway === 'away');
+                                gameDetails = {
+                                    homeTeam: home?.team?.abbreviation || homeTeam,
+                                    awayTeam: away?.team?.abbreviation || awayTeam,
+                                    gameTime: new Date(event.date)
+                                };
+                            }
+                        }
                     }
                 } catch (e) {
                     console.error('Error fetching game:', e);

@@ -1,6 +1,5 @@
 // Vercel Serverless Function - Fetch Philly Sports Schedule
 // Uses ESPN API (free, reliable) for all sports data
-// SportsDataIO is only used for fantasy player salaries
 
 // ESPN Team Schedule URLs
 const ESPN_SCHEDULE_URLS = {

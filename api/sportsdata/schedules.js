@@ -1,7 +1,12 @@
-// SportsDataIO Schedules API
+// Schedules API - Uses ESPN free API
 // GET /api/sportsdata/schedules?sport=NFL&team=PHI
 
-const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
+const ESPN_SPORT_PATHS = {
+    NFL: 'football/nfl',
+    NBA: 'basketball/nba',
+    MLB: 'baseball/mlb',
+    NHL: 'hockey/nhl'
+};
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -12,24 +17,17 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { sport, team, season } = req.query;
-
-    if (!SPORTSDATA_API_KEY) {
-        return res.status(500).json({ error: 'SportsDataIO API key not configured' });
-    }
+    const { sport, team } = req.query;
 
     try {
         const sportUpper = (sport || 'NFL').toUpperCase();
-        const currentSeason = season || getCurrentSeason(sportUpper);
-
-        const schedules = await fetchSchedule(sportUpper, currentSeason, team);
+        const games = await fetchSchedule(sportUpper, team);
 
         return res.status(200).json({
             success: true,
             sport: sportUpper,
-            season: currentSeason,
             team: team || 'all',
-            games: schedules
+            games
         });
     } catch (error) {
         console.error('Schedules API error:', error);
@@ -37,69 +35,58 @@ export default async function handler(req, res) {
     }
 }
 
-function getCurrentSeason(sport) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
+async function fetchSchedule(sport, team) {
+    const sportPath = ESPN_SPORT_PATHS[sport];
+    if (!sportPath) throw new Error(`Unsupported sport: ${sport}`);
 
-    switch (sport) {
-        case 'NFL':
-            return month >= 3 && month <= 8 ? `${year}PRE` : `${year}REG`;
-        case 'NBA':
-        case 'NHL':
-            return month >= 9 ? year + 1 : year;
-        case 'MLB':
-            return year;
-        default:
-            return year;
-    }
-}
-
-async function fetchSchedule(sport, season, team) {
-    const endpoints = {
-        NFL: `https://api.sportsdata.io/v3/nfl/scores/json/Schedules/${season}`,
-        NBA: `https://api.sportsdata.io/v3/nba/scores/json/Games/${season}`,
-        MLB: `https://api.sportsdata.io/v3/mlb/scores/json/Games/${season}`,
-        NHL: `https://api.sportsdata.io/v3/nhl/scores/json/Games/${season}`
-    };
-
-    const url = `${endpoints[sport]}?key=${SPORTSDATA_API_KEY}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-        throw new Error(`SportsDataIO API error: ${response.status}`);
-    }
-
-    let games = await response.json();
-
-    // Filter by team if specified
+    // If team specified, fetch team schedule; otherwise fetch today's scoreboard
+    let url;
     if (team) {
-        const teamUpper = team.toUpperCase();
-        games = games.filter(g =>
-            g.HomeTeam?.toUpperCase() === teamUpper ||
-            g.AwayTeam?.toUpperCase() === teamUpper
-        );
+        const teamLower = team.toLowerCase();
+        url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/teams/${teamLower}/schedule`;
+    } else {
+        // Fetch multiple days
+        const dates = [];
+        for (let i = -3; i <= 7; i++) {
+            const d = new Date();
+            d.setDate(d.getDate() + i);
+            dates.push(d.toISOString().split('T')[0].replace(/-/g, ''));
+        }
+        // Just fetch today's scoreboard as default
+        const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }).replace(/-/g, '');
+        url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${today}`;
     }
 
-    // Transform to consistent format
-    return games.map(game => ({
-        id: game.GameID || game.ScoreID,
-        date: game.DateTime || game.Day,
-        dateDisplay: formatGameDate(game.DateTime || game.Day),
-        homeTeam: game.HomeTeam,
-        awayTeam: game.AwayTeam,
-        homeScore: game.HomeScore,
-        awayScore: game.AwayScore,
-        status: game.Status,
-        channel: game.Channel,
-        stadium: game.StadiumDetails?.Name || game.Stadium,
-        week: game.Week,
-        isHome: team ? game.HomeTeam?.toUpperCase() === team.toUpperCase() : null,
-        // Sport-specific
-        quarter: game.Quarter,
-        period: game.Period,
-        inning: game.Inning
-    })).sort((a, b) => new Date(a.date) - new Date(b.date));
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`ESPN API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const events = data.events || [];
+
+    return events.map(event => {
+        const comp = event.competitions?.[0];
+        if (!comp) return null;
+
+        const homeTeam = comp.competitors?.find(c => c.homeAway === 'home');
+        const awayTeam = comp.competitors?.find(c => c.homeAway === 'away');
+        const status = comp.status?.type;
+
+        return {
+            id: event.id,
+            date: event.date,
+            dateDisplay: formatGameDate(event.date),
+            homeTeam: homeTeam?.team?.abbreviation || '',
+            awayTeam: awayTeam?.team?.abbreviation || '',
+            homeScore: parseInt(homeTeam?.score) || 0,
+            awayScore: parseInt(awayTeam?.score) || 0,
+            status: status?.shortDetail || status?.description || 'Scheduled',
+            channel: comp.broadcasts?.[0]?.names?.[0] || null,
+            stadium: comp.venue?.fullName || null,
+            isHome: team ? homeTeam?.team?.abbreviation?.toUpperCase() === team.toUpperCase() : null
+        };
+    }).filter(Boolean).sort((a, b) => new Date(a.date) - new Date(b.date));
 }
 
 function formatGameDate(dateStr) {

@@ -5,9 +5,41 @@ import { ObjectId } from 'mongodb';
 import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
 import { addCoins } from '../../lib/coins.js';
-import { fetchScoresByDate } from '../../lib/sportsdata.js';
 import { evaluateBet, calculatePayout, recalculateParlayAfterPush } from '../../lib/betting.js';
 import { toDateStringET } from '../../lib/timezone.js';
+
+const ESPN_SPORT_PATHS = {
+    NFL: 'football/nfl',
+    NBA: 'basketball/nba',
+    MLB: 'baseball/mlb',
+    NHL: 'hockey/nhl'
+};
+
+async function fetchScoresFromESPN(sport, date) {
+    const sportPath = ESPN_SPORT_PATHS[sport];
+    if (!sportPath) return [];
+    const espnDate = date.replace(/-/g, '');
+    const url = `https://site.api.espn.com/apis/site/v2/sports/${sportPath}/scoreboard?dates=${espnDate}`;
+    const response = await fetch(url);
+    if (!response.ok) return [];
+    const data = await response.json();
+    return (data.events || []).map(event => {
+        const comp = event.competitions?.[0];
+        if (!comp) return null;
+        const homeTeam = comp.competitors?.find(c => c.homeAway === 'home');
+        const awayTeam = comp.competitors?.find(c => c.homeAway === 'away');
+        const status = comp.status?.type;
+        return {
+            HomeTeam: homeTeam?.team?.abbreviation || '',
+            AwayTeam: awayTeam?.team?.abbreviation || '',
+            HomeScore: parseInt(homeTeam?.score) || 0,
+            AwayScore: parseInt(awayTeam?.score) || 0,
+            Status: status?.completed ? 'Final' : (status?.shortDetail || 'Scheduled'),
+            IsClosed: status?.completed || false,
+            GameID: event.id
+        };
+    }).filter(Boolean);
+}
 
 // Team name mappings for better matching
 const TEAM_MAPPINGS = {
@@ -170,7 +202,7 @@ export default async function handler(req, res) {
                 }
 
                 try {
-                    const scores = await fetchScoresByDate(sport, date);
+                    const scores = await fetchScoresFromESPN(sport, date);
                     console.log(`Fetched ${scores.length} ${sport} scores for ${date}`);
 
                     // Try to find matching game
