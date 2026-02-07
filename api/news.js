@@ -102,7 +102,8 @@ export default async function handler(req, res) {
                     description: article.description || '',
                     link: article.links?.web?.href || article.links?.mobile?.href || '#',
                     image: article.images?.[0]?.url || null,
-                    published: article.published || new Date().toISOString()
+                    published: article.published || new Date().toISOString(),
+                    source: 'ESPN'
                 });
             }
         }

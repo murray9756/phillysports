@@ -71,13 +71,14 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Contest not found' });
         }
 
-        // Check if contest is locked
+        // Check if contest is locked (admins can bypass)
         const now = new Date();
-        if (now >= new Date(contest.locksAt)) {
+        const isLocked = now >= new Date(contest.locksAt);
+        if (isLocked && !user.isAdmin) {
             return res.status(400).json({ error: 'Contest is locked. Lineups can no longer be submitted.' });
         }
 
-        if (contest.status !== 'upcoming') {
+        if (contest.status !== 'upcoming' && !user.isAdmin) {
             return res.status(400).json({ error: 'Contest is not open for entries' });
         }
 

@@ -2583,7 +2583,17 @@
             }
         }
 
-        // Validate that thumbnail background images actually loaded; replace broken ones with source logo
+        // Team color map for fallback thumbnails
+        const teamBgColors = {
+            'Eagles': '#004C54', 'eagles': '#004C54',
+            '76ers': '#006BB6', 'sixers': '#006BB6',
+            'Phillies': '#E81828', 'phillies': '#E81828',
+            'Flyers': '#F74902', 'flyers': '#F74902',
+            'Union': '#B49759', 'union': '#B49759',
+            'eSports': '#9146FF', 'esports': '#9146FF'
+        };
+
+        // Validate that thumbnail background images actually loaded; replace broken ones with team name
         function validateThumbnails() {
             const thumbs = document.querySelectorAll('.story-thumb[data-source]');
             thumbs.forEach(function(thumb) {
@@ -2594,12 +2604,13 @@
                 const img = new Image();
                 img.onload = function() {}; // Image loaded fine
                 img.onerror = function() {
-                    // Image broken — fall back to source logo
-                    const source = thumb.dataset.source;
-                    const team = thumb.dataset.team;
+                    // Image broken — show team name with team color background
+                    const team = thumb.dataset.team || '';
+                    const teamColor = teamBgColors[team] || '#333';
+                    const teamLabel = team.toUpperCase() || 'NEWS';
                     thumb.style.backgroundImage = '';
-                    thumb.style.background = 'var(--border-color)';
-                    thumb.innerHTML = getSourceLogo(source, sportEmoji[team]);
+                    thumb.style.background = teamColor;
+                    thumb.innerHTML = `<span style="color:#fff;font-weight:700;font-size:0.7rem;text-align:center;line-height:1.2;padding:4px;text-shadow:0 1px 2px rgba(0,0,0,0.3);">${teamLabel}</span>`;
                 };
                 img.src = urlMatch[1];
             });
@@ -2693,11 +2704,11 @@
             const existingHtml = container.innerHTML;
             const newsHtml = articles.map(item => {
                 const imageStyle = item.image
-                    ? `background-image:url('${item.image}');background-size:cover;background-position:center;`
+                    ? `background-image:url('${item.image}');background-size:cover;background-position:center;background-color:${item.teamColor || 'var(--border-color)'};`
                     : `background:${item.teamColor || 'var(--border-color)'};`;
                 const itemId = 'news-' + btoa(item.link || '').slice(0, 12);
                 const needsPhoto = !item.image;
-                const thumbContent = item.image ? '' : getSourceLogo(item.source, sportEmoji[item.team]);
+                const thumbContent = item.image ? '' : `<span style="color:#fff;font-weight:700;font-size:0.7rem;text-align:center;line-height:1.2;padding:4px;text-shadow:0 1px 2px rgba(0,0,0,0.3);">${(item.team || 'NEWS').toUpperCase()}</span>`;
                 const photoDataAttrs = needsPhoto
                     ? `data-needs-photo="true" data-title="${escapeHtml(item.headline || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${item.team || ''}"`
                     : `data-source="${escapeHtml(item.source || '')}" data-team="${item.team || ''}"`;
@@ -2772,10 +2783,11 @@
             }
 
             listContainer.innerHTML = items.map(item => {
-                const thumbStyle = item.thumbnail
-                    ? `background-image:url('${item.thumbnail}');`
-                    : `background:var(--border-color);`;
                 const teamTag = item.teams?.[0] || 'eagles';
+                const thumbTeamColor = teamBgColors[teamTag] || 'var(--border-color)';
+                const thumbStyle = item.thumbnail
+                    ? `background-image:url('${item.thumbnail}');background-color:${thumbTeamColor};`
+                    : `background:${thumbTeamColor};`;
                 const tagClass = teamTagClass[teamTag] || 'tag-eagles';
                 const youtubeId = getYouTubeVideoId(item.sourceUrl);
                 const isTikTok = isTikTokUrl(item.sourceUrl);
@@ -2788,11 +2800,11 @@
                     videoOverlay = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;background:linear-gradient(135deg,#25F4EE,#FE2C55);border-radius:4px;display:flex;align-items:center;justify-content:center;"><div style="width:0;height:0;border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent;margin-left:2px;"></div></div>';
                 }
 
-                // Get thumbnail - use source logo as fallback, mark for photo lookup if missing
+                // Get thumbnail - use team name as fallback, mark for photo lookup if missing
                 const needsPhoto = !item.thumbnail;
                 const thumbContent = item.thumbnail
                     ? ''
-                    : getSourceLogo(item.sourceName, '&#128240;');
+                    : `<span style="color:#fff;font-weight:700;font-size:0.7rem;text-align:center;line-height:1.2;padding:4px;text-shadow:0 1px 2px rgba(0,0,0,0.3);">${teamTag.toUpperCase()}</span>`;
                 const photoDataAttrs = needsPhoto
                     ? `data-needs-photo="true" data-title="${escapeHtml(item.title || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${teamTag}"`
                     : `data-source="${escapeHtml(item.sourceName || '')}" data-team="${teamTag}"`;
@@ -3035,12 +3047,13 @@
             // Render story list
             if (items.length > 0) {
                 listContainer.innerHTML = items.map(item => {
-                    const thumbStyle = item.thumbnail
-                        ? `background-image:url('${item.thumbnail}');`
-                        : `background:var(--border-color);`;
                     const teamTag = item.teams?.[0] || 'eagles';
+                    const thumbTeamColor = teamBgColors[teamTag] || 'var(--border-color)';
+                    const thumbStyle = item.thumbnail
+                        ? `background-image:url('${item.thumbnail}');background-color:${thumbTeamColor};`
+                        : `background:${thumbTeamColor};`;
                     const tagClass = teamTagClass[teamTag] || 'tag-eagles';
-                    const thumbContent = item.thumbnail ? '' : getSourceLogo(item.sourceName, '&#128240;');
+                    const thumbContent = item.thumbnail ? '' : `<span style="color:#fff;font-weight:700;font-size:0.7rem;text-align:center;line-height:1.2;padding:4px;text-shadow:0 1px 2px rgba(0,0,0,0.3);">${teamTag.toUpperCase()}</span>`;
 
                     return `
                         <div class="story-item-wrapper">
@@ -3092,12 +3105,12 @@
                 // Render all articles as list items (no featured)
                 listContainer.innerHTML = data.articles.slice(0, 15).map(article => {
                     const thumbStyle = article.image
-                        ? `background-image:url('${article.image}');background-size:cover;background-position:center;`
+                        ? `background-image:url('${article.image}');background-size:cover;background-position:center;background-color:${article.teamColor || 'var(--border-color)'};`
                         : `background:${article.teamColor || 'var(--border-color)'};`;
                     const itemId = 'news-' + btoa(article.link || '').slice(0, 12);
 
                     const needsPhoto = !article.image;
-                    const thumbContent = article.image ? '' : getSourceLogo(article.source, sportEmoji[article.team]);
+                    const thumbContent = article.image ? '' : `<span style="color:#fff;font-weight:700;font-size:0.7rem;text-align:center;line-height:1.2;padding:4px;text-shadow:0 1px 2px rgba(0,0,0,0.3);">${(article.team || 'NEWS').toUpperCase()}</span>`;
                     const photoDataAttrs = needsPhoto
                         ? `data-needs-photo="true" data-title="${escapeHtml(article.headline || '')}" data-description="${escapeHtml(article.description || '')}" data-team="${article.team || ''}"`
                         : `data-source="${escapeHtml(article.source || '')}" data-team="${article.team || ''}"`;
@@ -3174,13 +3187,14 @@
 
                     // Append new items
                     const newItems = data.items.map(item => {
-                        const thumbStyle = item.thumbnail
-                            ? `background-image:url('${item.thumbnail}');`
-                            : `background:var(--border-color);`;
                         const teamTag = item.teams?.[0] || 'eagles';
+                        const thumbTeamColor = teamBgColors[teamTag] || 'var(--border-color)';
+                        const thumbStyle = item.thumbnail
+                            ? `background-image:url('${item.thumbnail}');background-color:${thumbTeamColor};`
+                            : `background:${thumbTeamColor};`;
                         const tagClass = teamTagClass[teamTag] || 'tag-eagles';
                         const needsPhoto = !item.thumbnail;
-                        const thumbContent = item.thumbnail ? '' : getSourceLogo(item.sourceName, '&#128240;');
+                        const thumbContent = item.thumbnail ? '' : `<span style="color:#fff;font-weight:700;font-size:0.7rem;text-align:center;line-height:1.2;padding:4px;text-shadow:0 1px 2px rgba(0,0,0,0.3);">${teamTag.toUpperCase()}</span>`;
                         const photoDataAttrs = needsPhoto
                             ? `data-needs-photo="true" data-title="${escapeHtml(item.title || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${teamTag}"`
                             : `data-source="${escapeHtml(item.sourceName || '')}" data-team="${teamTag}"`;
