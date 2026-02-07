@@ -7,7 +7,8 @@ import { getCollection } from '../../lib/mongodb.js';
 import { ObjectId } from 'mongodb';
 
 // Bot auto-play: triggered when polling detects it's a bot's turn
-const BOT_ACCURACY = 0.65;
+// 80% accuracy — competitive but beatable
+const BOT_ACCURACY = 0.80;
 
 function pickBotAnswer(options, correctAnswer) {
     if (Math.random() < BOT_ACCURACY) return correctAnswer;
@@ -15,9 +16,36 @@ function pickBotAnswer(options, correctAnswer) {
     return wrong.length > 0 ? wrong[Math.floor(Math.random() * wrong.length)] : options[0];
 }
 
+/**
+ * Look up the correct answer for a question.
+ * Checks trivia_questions DB first, then falls back to legacy questions.
+ */
+async function lookupAnswer(questionId) {
+    // Try database first
+    if (ObjectId.isValid(questionId)) {
+        const questionsCollection = await getCollection('trivia_questions');
+        const fullQ = await questionsCollection.findOne({ _id: new ObjectId(questionId) });
+        if (fullQ) return fullQ.answer;
+    }
+
+    // Fall back to legacy questions
+    try {
+        const trivia = await import('../../lib/trivia/questions.js').catch(() => null)
+            || await import('../../trivia/index.js').catch(() => null);
+        if (trivia) {
+            const allQuestions = trivia.TRIVIA_QUESTIONS || trivia.default?.TRIVIA_QUESTIONS || [];
+            const match = allQuestions.find(q => q._id === questionId || q._id?.toString() === questionId);
+            if (match) return match.answer;
+        }
+    } catch (e) {
+        // Legacy import failed, skip
+    }
+
+    return null;
+}
+
 async function autoBotPlay(challengeId, botId) {
     const challenges = await getCollection('trivia_challenges');
-    const questionsCollection = await getCollection('trivia_questions');
     let keepPlaying = true;
     while (keepPlaying) {
         const challenge = await challenges.findOne({ _id: new ObjectId(challengeId) });
@@ -28,15 +56,13 @@ async function autoBotPlay(challengeId, botId) {
         }
         const updated = await challenges.findOne({ _id: new ObjectId(challengeId) });
         if (!updated || !updated.currentQuestion) break;
-        let correctAnswer = null;
-        const qId = updated.currentQuestion._id;
-        if (ObjectId.isValid(qId)) {
-            const fullQ = await questionsCollection.findOne({ _id: new ObjectId(qId) });
-            if (fullQ) correctAnswer = fullQ.answer;
-        }
+
+        const correctAnswer = await lookupAnswer(updated.currentQuestion._id);
+
         const botAnswer = correctAnswer
             ? pickBotAnswer(updated.currentQuestion.options, correctAnswer)
             : updated.currentQuestion.options[Math.floor(Math.random() * updated.currentQuestion.options.length)];
+
         const result = await submitAnswer(challengeId, botId, botAnswer);
         if (!result.correct || result.gameOver) keepPlaying = false;
     }

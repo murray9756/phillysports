@@ -395,6 +395,14 @@
             'College': 'college',
             'General': 'general'
         };
+        const CATEGORY_LABELS = {
+            'Eagles': 'Eagles (NFL)',
+            'Phillies': 'Phillies (MLB)',
+            '76ers': '76ers (NBA)',
+            'Flyers': 'Flyers (NHL)',
+            'College': 'College Sports',
+            'General': 'General Sports'
+        };
 
         let challengeId = null;
         let currentUser = null;
@@ -519,10 +527,11 @@
             picker.innerHTML = CATEGORIES.map(cat => {
                 const hasPiece = myPieces[cat];
                 const colorClass = CATEGORY_CLASSES[cat];
+                const label = CATEGORY_LABELS[cat] || cat;
                 return `<button class="category-pick-btn ${colorClass}"
                     onclick="pickCategory('${cat}')"
                     ${hasPiece ? 'disabled' : ''}>
-                    ${cat}
+                    ${label}
                     ${hasPiece ? '<span class="check-mark">&#10003;</span>' : ''}
                 </button>`;
             }).join('');
@@ -536,7 +545,7 @@
 
             // Set category
             const catDisplay = document.getElementById('categoryDisplay');
-            catDisplay.textContent = category;
+            catDisplay.textContent = CATEGORY_LABELS[category] || category;
             catDisplay.className = 'category-display ' + CATEGORY_CLASSES[category];
 
             // Set question stats
