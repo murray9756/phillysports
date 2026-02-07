@@ -349,7 +349,7 @@
         constructor(options = {}) {
             this.containerId = options.containerId || 'articleList';
             this.team = options.team || null; // Single team filter for team pages
-            this.categories = options.categories || ['eagles', 'phillies', 'sixers', 'flyers', 'college', 'esports', 'youth'];
+            this.categories = options.categories || ['eagles', 'phillies', 'sixers', 'flyers', 'college'];
             this.types = ['article', 'video', 'podcast']; // All types by default
             this.offset = 0;
             this.limit = options.limit || 10;
