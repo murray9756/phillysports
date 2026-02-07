@@ -39,6 +39,7 @@
                             <a href="/community/tailgates/">Tailgates</a>
                             <a href="/community/watch-parties/">Watch Parties</a>
                             <a href="/community/clubs/">Fan Clubs</a>
+                            <a href="/founders.html">Founders Club</a>
                         </div>
                         <div class="footer-links-group">
                             <h4>Connect</h4>

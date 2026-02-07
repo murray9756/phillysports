@@ -127,11 +127,23 @@
                 <a href="${logoHref}" class="header-logo">
                     ${logoHTML}
                 </a>
-                <!-- Right Column: Auth -->
+                <!-- Right Column: Auth + Founders Club -->
                 <div class="header-right">
                     <div class="header-auth" id="headerAuth">
                         <a href="/login.html" class="sign-in-btn">Sign In</a>
                         <a href="/register.html" class="auth-btn">Sign Up</a>
+                    </div>
+                    <!-- Founders Club Progress (below user panel) -->
+                    <div class="founders-club-widget" id="foundersWidget" style="display: none;">
+                        <a href="/founders.html" class="founders-progress-link" id="foundersProgress" title="Join the Founders Club - Limited to 76 members!">
+                            <span class="founders-bell">&#128276;</span>
+                            <span class="founders-text">Founders Club</span>
+                            <span class="founders-bar">
+                                <span class="founders-bar-fill" id="foundersBarFill"></span>
+                            </span>
+                            <span class="founders-count" id="foundersCount">0/76</span>
+                        </a>
+                        <a href="/founders.html#about" class="founders-info-link">What's this?</a>
                     </div>
                 </div>
                 <button class="mobile-menu-btn" aria-label="Menu">&#9776;</button>
@@ -1476,6 +1488,111 @@
         }
 
         /* ==========================================================================
+           SECTION 6B: FOUNDERS CLUB WIDGET (in header-right)
+           ========================================================================== */
+        .founders-club-widget {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+
+        .founders-progress-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.2s;
+            animation: foundersGlow 2s infinite alternate;
+        }
+
+        @keyframes foundersGlow {
+            from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+        }
+
+        .founders-progress-link:hover {
+            transform: scale(1.05);
+            border-color: #fff;
+        }
+
+        .founders-bell {
+            font-size: 1rem;
+        }
+
+        .founders-text {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .founders-bar {
+            width: 50px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .founders-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ff8c00);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .founders-count {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .founders-count.urgent {
+            color: #ff4444;
+            animation: urgentPulse 1s infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .founders-info-link {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.8rem;
+            color: #1A2744;
+            text-decoration: underline;
+            margin-left: 0.25rem;
+            transition: color 0.2s;
+        }
+
+        .founders-info-link:hover {
+            color: #8B1A28;
+        }
+
+        [data-theme="dark"] .founders-info-link {
+            color: #ffd700;
+        }
+
+        [data-theme="dark"] .founders-info-link:hover {
+            color: #fff;
+        }
+
+        /* Hide founders widget when full */
+        .founders-club-widget.full {
+            display: none !important;
+        }
+
+        /* ==========================================================================
            SECTION 7: MOBILE/RESPONSIVE STYLES
            ========================================================================== */
         @media (max-width: 1024px) {
@@ -1483,7 +1600,7 @@
         }
 
         @media (max-width: 1100px) {
-
+            .founders-club-widget { display: none !important; }
         }
 
         @media (max-width: 768px) {
@@ -1493,7 +1610,7 @@
             .feedback-link { display: none; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
-
+            .founders-club-widget { display: none !important; }
             .header-logo {
                 margin-top: 0;
                 width: 300px !important;
@@ -1663,7 +1780,7 @@
                     // Build badges array
                     const badges = [];
                     if (isPremium) badges.push('<span class="badge-premium">Premium</span>');
-
+                    if (data.user.founderNumber) badges.push(`<span class="badge-founder">#${data.user.founderNumber}</span>`);
                     if (data.user.isAdmin) badges.push('<span class="badge-admin">Admin</span>');
                     const badgesHtml = badges.length > 0 ? `<div class="user-panel-badges">${badges.join('')}</div>` : '';
 
@@ -1914,6 +2031,45 @@
         }
     });
 
+    // Fetch and display Founders Club progress
+    async function loadFoundersProgress() {
+        try {
+            const res = await fetch('/api/subscriptions/founders');
+            const data = await res.json();
+
+            if (!data.success || !data.foundersClub) return;
+
+            const { current, limit, spotsRemaining, isFull } = data.foundersClub;
+            const widgetEl = document.getElementById('foundersWidget');
+            const barFill = document.getElementById('foundersBarFill');
+            const countEl = document.getElementById('foundersCount');
+
+            if (!widgetEl) return;
+
+            if (isFull) {
+                // Hide if full
+                widgetEl.classList.add('full');
+                widgetEl.style.display = 'none';
+            } else {
+                // Show progress
+                widgetEl.style.display = 'flex';
+                const percent = (current / limit) * 100;
+                if (barFill) barFill.style.width = percent + '%';
+                if (countEl) {
+                    countEl.textContent = `${current}/${limit}`;
+
+                    // Add urgency styling when few spots left
+                    if (spotsRemaining <= 10) {
+                        countEl.classList.add('urgent');
+                        countEl.textContent = `${spotsRemaining} left!`;
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load founders progress:', e);
+        }
+    }
+
     // Highlight current page in navigation
     function highlightCurrentPage() {
         const currentPath = window.location.pathname;
@@ -1953,7 +2109,7 @@
         initMobileMenu();
         highlightCurrentPage();
         checkAuth();
-
+        loadFoundersProgress();
     }
 
     // Run on DOM ready

@@ -41,6 +41,11 @@ const premiumBenefits = [
     description: 'Get 500 Diehard Dollars added to your balance every month',
   },
   {
+    icon: 'people',
+    title: 'Founders Club Access',
+    description: 'Join exclusive events and connect with other super fans',
+  },
+  {
     icon: 'chatbubble',
     title: 'Priority Support',
     description: 'Get faster responses from our team when you need help',
@@ -137,6 +142,29 @@ export default function MembershipScreen() {
             </Text>
           </View>
         )}
+
+        {/* Founders Club Section */}
+        <View style={styles.section}>
+          <View style={[styles.foundersCard, { backgroundColor: '#1a1a2e' }]}>
+            <View style={styles.foundersHeader}>
+              <Text style={styles.foundersTitle}>Founders Club</Text>
+              <View style={styles.foundersBadge}>
+                <Text style={styles.foundersBadgeText}>LIMITED</Text>
+              </View>
+            </View>
+            <Text style={styles.foundersDescription}>
+              Be one of just 76 Founders Club members. Get lifetime premium access,
+              exclusive gear, and your name enshrined in PhillySports history.
+            </Text>
+            <TouchableOpacity
+              style={styles.foundersButton}
+              onPress={() => Linking.openURL('https://phillysports.com/founders')}
+            >
+              <Text style={styles.foundersButtonText}>Learn About Founders Club</Text>
+              <Ionicons name="arrow-forward" size={16} color="#FFD700" />
+            </TouchableOpacity>
+          </View>
+        </View>
 
         <View style={{ height: 40 }} />
       </ScrollView>
@@ -282,5 +310,56 @@ const styles = StyleSheet.create({
   ctaNote: {
     fontSize: Typography.xs,
     marginTop: Spacing.sm,
+  },
+  foundersCard: {
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    borderWidth: 2,
+    borderColor: VintageColors.gold,
+  },
+  foundersHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.sm,
+  },
+  foundersTitle: {
+    color: '#FFD700',
+    fontSize: Typography.xl,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  foundersBadge: {
+    backgroundColor: 'rgba(255,215,0,0.2)',
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 4,
+    borderRadius: BorderRadius.sm,
+  },
+  foundersBadgeText: {
+    color: '#FFD700',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  foundersDescription: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: Typography.sm,
+    lineHeight: 22,
+    marginBottom: Spacing.md,
+  },
+  foundersButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#FFD700',
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+    gap: 8,
+  },
+  foundersButtonText: {
+    color: '#FFD700',
+    fontSize: Typography.sm,
+    fontWeight: '700',
   },
 });
