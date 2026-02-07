@@ -1,7 +1,7 @@
 // Fantasy Contests API - List and Create Contests
 import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
-import { getTodayET } from '../../lib/timezone.js';
+import { getTodayET, toSportsDataDate } from '../../lib/timezone.js';
 
 // Roster positions by sport
 const ROSTER_POSITIONS = {
@@ -123,45 +123,43 @@ export default async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid sport' });
             }
 
-            const targetDate = date || getTodayET();
-            let gameIds = [];
-            let earliestGame = new Date(targetDate + 'T19:00:00-05:00'); // Default 7pm ET
-            let latestGame = new Date(targetDate + 'T22:00:00-05:00');  // Default 10pm ET
-
-            // Try to fetch games from SportsDataIO
-            if (SPORTSDATA_API_KEY) {
-                const endpoint = SPORTSDATA_ENDPOINTS[sport];
-                const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
-
-                try {
-                    const gamesResponse = await fetch(gamesUrl);
-                    if (gamesResponse.ok) {
-                        const gamesData = await gamesResponse.json();
-                        if (gamesData && gamesData.length > 0) {
-                            gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
-                            const gameTimes = gamesData
-                                .map(g => {
-                                    const dt = g.DateTime || g.Day;
-                                    if (!dt) return null;
-                                    if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
-                                        return new Date(dt + '-05:00');
-                                    }
-                                    return new Date(dt);
-                                })
-                                .filter(d => d && !isNaN(d.getTime()))
-                                .sort((a, b) => a - b);
-                            if (gameTimes.length > 0) {
-                                earliestGame = gameTimes[0];
-                                latestGame = gameTimes[gameTimes.length - 1];
-                            }
-                        }
-                    } else {
-                        console.log(`SportsDataIO games fetch returned ${gamesResponse.status}, using default times`);
-                    }
-                } catch (fetchErr) {
-                    console.log('SportsDataIO fetch error, using default times:', fetchErr.message);
-                }
+            if (!SPORTSDATA_API_KEY) {
+                return res.status(500).json({ error: 'SportsDataIO API key not configured' });
             }
+
+            // Get games for the date from SportsDataIO
+            const targetDate = date || getTodayET();
+            const apiDate = toSportsDataDate(targetDate);
+            const endpoint = SPORTSDATA_ENDPOINTS[sport];
+            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${apiDate}?key=${SPORTSDATA_API_KEY}`;
+
+            const gamesResponse = await fetch(gamesUrl);
+            if (!gamesResponse.ok) {
+                console.error('SportsDataIO games fetch failed:', gamesResponse.status);
+                return res.status(400).json({ error: 'Failed to fetch games from SportsDataIO' });
+            }
+
+            const gamesData = await gamesResponse.json();
+
+            if (!gamesData || gamesData.length === 0) {
+                return res.status(400).json({ error: `No ${sport} games found for ${targetDate}` });
+            }
+
+            // Get game IDs and game times from SportsDataIO
+            const gameIds = gamesData.map(g => (g.GameID || g.ScoreID)?.toString());
+            const gameTimes = gamesData
+                .map(g => {
+                    const dt = g.DateTime || g.Day;
+                    if (!dt) return null;
+                    if (!dt.includes('Z') && !dt.includes('+') && !dt.includes('-', 10)) {
+                        return new Date(dt + '-05:00');
+                    }
+                    return new Date(dt);
+                })
+                .filter(d => d && !isNaN(d.getTime()))
+                .sort((a, b) => a - b);
+            const earliestGame = gameTimes[0] || new Date(targetDate + 'T19:00:00-05:00');
+            const latestGame = gameTimes[gameTimes.length - 1] || earliestGame;
 
             // Generate title if not provided
             const fee = parseInt(entryFee) || 0;

@@ -1,6 +1,6 @@
 // Fantasy Scoring Cron - Calculate player points and update entries
 import { getCollection } from '../lib/mongodb.js';
-import { toDateStringET } from '../lib/timezone.js';
+import { toDateStringET, toSportsDataDate } from '../lib/timezone.js';
 
 // Scoring rules by sport
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
@@ -79,7 +79,8 @@ async function fetchPlayerStats(sport, date) {
 
     try {
         // Fetch box scores for the date
-        const url = `https://api.sportsdata.io/v3/${endpoint}/stats/json/PlayerGameStatsByDate/${date}?key=${SPORTSDATA_API_KEY}`;
+        const apiDate = toSportsDataDate(date);
+        const url = `https://api.sportsdata.io/v3/${endpoint}/stats/json/PlayerGameStatsByDate/${apiDate}?key=${SPORTSDATA_API_KEY}`;
         const response = await fetch(url);
 
         if (!response.ok) {

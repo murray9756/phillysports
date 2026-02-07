@@ -82,7 +82,10 @@ export default async function handler(req, res) {
 
             // Check if there are games for this sport today
             const endpoint = SPORTSDATA_ENDPOINTS[template.sport];
-            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${today}?key=${SPORTSDATA_API_KEY}`;
+            const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+            const [yr, mo, dy] = today.split('-');
+            const apiDate = `${yr}-${months[parseInt(mo) - 1]}-${dy}`;
+            const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${apiDate}?key=${SPORTSDATA_API_KEY}`;
 
             try {
                 const gamesResponse = await fetch(gamesUrl);
