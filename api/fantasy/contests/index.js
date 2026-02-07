@@ -135,8 +135,13 @@ export default async function handler(req, res) {
 
             const gamesResponse = await fetch(gamesUrl);
             if (!gamesResponse.ok) {
-                console.error('SportsDataIO games fetch failed:', gamesResponse.status);
-                return res.status(400).json({ error: 'Failed to fetch games from SportsDataIO' });
+                let detail = `HTTP ${gamesResponse.status}`;
+                try {
+                    const errBody = await gamesResponse.json();
+                    detail = errBody.message || detail;
+                } catch (_) {}
+                console.error('SportsDataIO games fetch failed:', detail);
+                return res.status(400).json({ error: `SportsDataIO: ${detail}` });
             }
 
             const gamesData = await gamesResponse.json();
