@@ -413,7 +413,7 @@
 
                 if (allItems.length > 0) {
                     this.renderItems(container, allItems, curatedData.hasMore);
-                    this.updateMissingThumbnails();
+                    this.updateMissingThumbnails(); this.validateThumbnails();
                     return;
                 }
 
@@ -439,7 +439,7 @@
 
             if (data.articles && data.articles.length > 0) {
                 this.renderNewsItems(container, data.articles.slice(0, this.limit));
-                this.updateMissingThumbnails();
+                this.updateMissingThumbnails(); this.validateThumbnails();
             } else {
                 container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem;">No news available</div>';
             }
@@ -482,7 +482,7 @@
             const thumbContent = thumbnail ? '' : getSourceLogo(source, sportEmoji[teamTag]);
             const photoDataAttrs = needsPhoto
                 ? `data-needs-photo="true" data-title="${escapeHtml(title || '')}" data-description="${escapeHtml(description || '')}" data-team="${teamTag}"`
-                : '';
+                : `data-source="${escapeHtml(source || '')}" data-team="${teamTag}"`;
 
             // Video overlay for YouTube/TikTok
             let videoOverlay = '';
@@ -554,7 +554,7 @@
                     const newItems = data.items.map(item => this.renderStoryItem(item, true)).join('');
                     container.insertAdjacentHTML('beforeend', newItems);
                     this.offset += 10;
-                    this.updateMissingThumbnails();
+                    this.updateMissingThumbnails(); this.validateThumbnails();
 
                     if (data.hasMore) {
                         container.insertAdjacentHTML('beforeend', `<button class="load-more-btn" id="loadMoreBtn">Load More Stories</button>`);
@@ -624,6 +624,28 @@
                     thumb.removeAttribute('data-needs-photo');
                 }
             }
+        }
+
+        // Validate that thumbnail background images actually loaded; replace broken ones with source logo
+        validateThumbnails() {
+            const thumbs = document.querySelectorAll('.story-thumb[data-source]');
+            thumbs.forEach(thumb => {
+                const bg = thumb.style.backgroundImage;
+                const urlMatch = bg && bg.match(/url\(['"]?(.*?)['"]?\)/);
+                if (!urlMatch) return;
+
+                const img = new Image();
+                img.onload = () => {}; // Image loaded fine
+                img.onerror = () => {
+                    // Image broken — fall back to source logo
+                    const source = thumb.dataset.source;
+                    const team = thumb.dataset.team;
+                    thumb.style.backgroundImage = '';
+                    thumb.style.background = 'var(--border-color)';
+                    thumb.innerHTML = getSourceLogo(source, sportEmoji[team]);
+                };
+                img.src = urlMatch[1];
+            });
         }
 
         async findPhotoForArticle(title, description, team) {

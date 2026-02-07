@@ -2583,6 +2583,28 @@
             }
         }
 
+        // Validate that thumbnail background images actually loaded; replace broken ones with source logo
+        function validateThumbnails() {
+            const thumbs = document.querySelectorAll('.story-thumb[data-source]');
+            thumbs.forEach(function(thumb) {
+                const bg = thumb.style.backgroundImage;
+                const urlMatch = bg && bg.match(/url\(['"]?(.*?)['"]?\)/);
+                if (!urlMatch) return;
+
+                const img = new Image();
+                img.onload = function() {}; // Image loaded fine
+                img.onerror = function() {
+                    // Image broken — fall back to source logo
+                    const source = thumb.dataset.source;
+                    const team = thumb.dataset.team;
+                    thumb.style.backgroundImage = '';
+                    thumb.style.background = 'var(--border-color)';
+                    thumb.innerHTML = getSourceLogo(source, sportEmoji[team]);
+                };
+                img.src = urlMatch[1];
+            });
+        }
+
         // Team tag class mapping
         const teamTagClass = {
             eagles: 'tag-eagles',
@@ -2643,7 +2665,7 @@
                     // Render all items in a unified list
                     renderAllItems(listContainer, allItems, curatedData.hasMore);
                     // Async lookup photos for missing thumbnails
-                    updateMissingThumbnails();
+                    updateMissingThumbnails(); validateThumbnails();
                     return;
                 }
 
@@ -2678,7 +2700,7 @@
                 const thumbContent = item.image ? '' : getSourceLogo(item.source, sportEmoji[item.team]);
                 const photoDataAttrs = needsPhoto
                     ? `data-needs-photo="true" data-title="${escapeHtml(item.headline || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${item.team || ''}"`
-                    : '';
+                    : `data-source="${escapeHtml(item.source || '')}" data-team="${item.team || ''}"`;
 
                 return `
                     <div class="story-item-wrapper">
@@ -2773,7 +2795,7 @@
                     : getSourceLogo(item.sourceName, '&#128240;');
                 const photoDataAttrs = needsPhoto
                     ? `data-needs-photo="true" data-title="${escapeHtml(item.title || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${teamTag}"`
-                    : '';
+                    : `data-source="${escapeHtml(item.sourceName || '')}" data-team="${teamTag}"`;
 
                 return `
                     <div class="story-item-wrapper">
@@ -3078,7 +3100,8 @@
                     const thumbContent = article.image ? '' : getSourceLogo(article.source, sportEmoji[article.team]);
                     const photoDataAttrs = needsPhoto
                         ? `data-needs-photo="true" data-title="${escapeHtml(article.headline || '')}" data-description="${escapeHtml(article.description || '')}" data-team="${article.team || ''}"`
-                        : '';
+                        : `data-source="${escapeHtml(article.source || '')}" data-team="${article.team || ''}"`;
+
                     return `
                         <div class="story-item-wrapper">
                             <a href="${article.link}" target="_blank" class="story-item" style="text-decoration:none;flex:1;">
@@ -3110,7 +3133,7 @@
                     `;
                 }).join('');
                 // Async lookup photos for missing thumbnails
-                updateMissingThumbnails();
+                updateMissingThumbnails(); validateThumbnails();
             } else {
                 listContainer.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;font-size:0.85rem;">No stories available.</div>';
             }
@@ -3160,7 +3183,7 @@
                         const thumbContent = item.thumbnail ? '' : getSourceLogo(item.sourceName, '&#128240;');
                         const photoDataAttrs = needsPhoto
                             ? `data-needs-photo="true" data-title="${escapeHtml(item.title || '')}" data-description="${escapeHtml(item.description || '')}" data-team="${teamTag}"`
-                            : '';
+                            : `data-source="${escapeHtml(item.sourceName || '')}" data-team="${teamTag}"`;
 
                         return `
                             <div class="story-item-wrapper">
@@ -3198,7 +3221,7 @@
                     storyOffset += 10;
 
                     // Update thumbnails from photo database
-                    updateMissingThumbnails();
+                    updateMissingThumbnails(); validateThumbnails();
 
                     // Add new load more if there are more
                     if (data.hasMore) {

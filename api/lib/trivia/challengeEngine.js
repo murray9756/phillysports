@@ -436,6 +436,20 @@ export async function submitAnswer(challengeId, userId, answer) {
         );
     }
 
+    // Record in trivia_answers so challenge answers count toward overall stats
+    const answersCollection = await getCollection('trivia_answers');
+    await answersCollection.insertOne({
+        userId: new ObjectId(userId),
+        questionId: questionId,
+        selectedAnswer: answer,
+        correct: isCorrect,
+        difficulty: fullQuestion.difficulty || 'medium',
+        category: category,
+        source: 'challenge',
+        challengeId: new ObjectId(challengeId),
+        answeredAt: new Date()
+    });
+
     // Determine which player
     const isPlayer1 = challenge.challenger.userId.toString() === userId;
     const piecesField = isPlayer1 ? 'player1Pieces' : 'player2Pieces';
