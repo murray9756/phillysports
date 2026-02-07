@@ -633,7 +633,7 @@ function formatBookmakerName(key) {
 async function trackAPIUsage(remaining) {
     try {
         const usage = await getCollection('api_usage');
-        const month = new Date().toISOString().slice(0, 7);
+        const month = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' }).slice(0, 7);
         await usage.updateOne(
             { api: 'odds-api', month },
             {

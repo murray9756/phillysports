@@ -11,6 +11,7 @@ import {
     recalculateParlayAfterPush
 } from '../lib/betting.js';
 import { fetchScoresByDate } from '../lib/sportsdata.js';
+import { toDateStringET } from '../lib/timezone.js';
 
 // Map TheOddsAPI sport keys to our sport names
 const SPORT_KEY_MAP = {
@@ -299,18 +300,16 @@ async function scorePendingBets() {
     // Determine which sports and dates we need scores for
     const sportDatePairs = new Set();
 
-    // Helper: get both the UTC date and the previous day (for late-night ET games stored as next day UTC)
+    // Get the Eastern Time date for the game and also check adjacent day
     function addDatePairs(sport, commenceTime) {
         if (!sport || !commenceTime) return;
         const dt = new Date(commenceTime);
+        const etDate = toDateStringET(dt);
+        sportDatePairs.add(`${sport}:${etDate}`);
+        // Also check the UTC date in case SportsDataIO indexes by UTC
         const utcDate = dt.toISOString().split('T')[0];
-        sportDatePairs.add(`${sport}:${utcDate}`);
-        // If game time is before 10:00 UTC (i.e. before 5 AM ET), also check previous day
-        // This catches evening games stored with next-day UTC dates
-        if (dt.getUTCHours() < 10) {
-            const prevDay = new Date(dt);
-            prevDay.setUTCDate(prevDay.getUTCDate() - 1);
-            sportDatePairs.add(`${sport}:${prevDay.toISOString().split('T')[0]}`);
+        if (utcDate !== etDate) {
+            sportDatePairs.add(`${sport}:${utcDate}`);
         }
     }
 

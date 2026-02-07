@@ -2,16 +2,20 @@
 import { getCollection } from '../../../lib/mongodb.js';
 import { authenticate } from '../../../lib/auth.js';
 import { getUserBenefits } from '../../../lib/subscriptions.js';
+import { getStartOfDayET } from '../../../lib/timezone.js';
 import { ObjectId } from 'mongodb';
 
-// Helper to get start of current week (Sunday)
+// Helper to get start of current week (Sunday) in Eastern Time
 function getWeekStart() {
     const now = new Date();
-    const dayOfWeek = now.getDay();
-    const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - dayOfWeek);
-    weekStart.setHours(0, 0, 0, 0);
-    return weekStart;
+    const etDateStr = now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const etDay = new Date(etDateStr + 'T12:00:00Z').getDay();
+    const sundayDate = new Date(now);
+    sundayDate.setDate(sundayDate.getDate() - etDay);
+    const sundayStr = sundayDate.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+    const tzAbbr = now.toLocaleString('en-US', { timeZone: 'America/New_York', timeZoneName: 'short' });
+    const offset = tzAbbr.includes('EDT') ? '-04:00' : '-05:00';
+    return new Date(`${sundayStr}T00:00:00${offset}`);
 }
 
 // Helper to get free entries used this week

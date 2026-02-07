@@ -2,27 +2,60 @@
 // EST = UTC-5, EDT = UTC-4
 
 /**
- * Get current date/time in Eastern Time
- */
-export function getEasternTime() {
-    return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-}
-
-/**
  * Get today's date string in Eastern Time (YYYY-MM-DD)
  */
 export function getTodayET() {
-    const et = getEasternTime();
-    return et.toISOString().split('T')[0];
+    return new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 }
 
 /**
  * Get yesterday's date string in Eastern Time (YYYY-MM-DD)
  */
 export function getYesterdayET() {
-    const et = getEasternTime();
-    et.setDate(et.getDate() - 1);
-    return et.toISOString().split('T')[0];
+    const now = new Date();
+    now.setDate(now.getDate() - 1);
+    return now.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+}
+
+/**
+ * Convert any date to YYYY-MM-DD string in Eastern Time
+ */
+export function toDateStringET(date) {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+}
+
+/**
+ * Get start of today in Eastern Time as a UTC Date (for MongoDB queries)
+ * Returns a Date object representing midnight ET today
+ */
+export function getStartOfDayET() {
+    const todayStr = getTodayET();
+    const tzAbbr = new Date().toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+        timeZoneName: 'short'
+    });
+    const offset = tzAbbr.includes('EDT') ? '-04:00' : '-05:00';
+    return new Date(`${todayStr}T00:00:00${offset}`);
+}
+
+/**
+ * Get start of a specific date in Eastern Time as a UTC Date
+ */
+export function getStartOfDateET(dateStr) {
+    const tzAbbr = new Date().toLocaleString('en-US', {
+        timeZone: 'America/New_York',
+        timeZoneName: 'short'
+    });
+    const offset = tzAbbr.includes('EDT') ? '-04:00' : '-05:00';
+    return new Date(`${dateStr}T00:00:00${offset}`);
+}
+
+/**
+ * Get current month string in Eastern Time (YYYY-MM)
+ */
+export function getMonthET() {
+    return getTodayET().slice(0, 7);
 }
 
 /**
@@ -68,9 +101,7 @@ export function formatGameDate(dateString) {
  */
 export function isToday(dateString) {
     if (!dateString) return false;
-    const gameDate = formatGameDate(dateString);
-    const today = formatGameDate(new Date().toISOString());
-    return gameDate === today;
+    return toDateStringET(dateString) === getTodayET();
 }
 
 /**

@@ -1,6 +1,8 @@
 // SportsDataIO API integration
 // Unified helper for fetching sports data across NFL, NBA, MLB, NHL, NCAAF, NCAAB
 
+import { toDateStringET } from './timezone.js';
+
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
 // Sport configurations
@@ -66,7 +68,7 @@ export async function fetchGamesByDate(sport, date) {
         throw new Error(`Unsupported sport: ${sport}`);
     }
 
-    const targetDate = typeof date === 'string' ? date : date.toISOString().split('T')[0];
+    const targetDate = typeof date === 'string' ? date : toDateStringET(date);
     const url = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
 
     const response = await fetch(url);
@@ -88,7 +90,7 @@ export async function fetchScoresByDate(sport, date) {
         throw new Error(`Unsupported sport: ${sport}`);
     }
 
-    const targetDate = typeof date === 'string' ? date : date.toISOString().split('T')[0];
+    const targetDate = typeof date === 'string' ? date : toDateStringET(date);
     const url = `https://api.sportsdata.io/v3/${config.endpoint}/scores/json/ScoresByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
 
     const response = await fetch(url);

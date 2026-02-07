@@ -5,6 +5,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
+import { getStartOfDayET } from '../lib/timezone.js';
 import { getUserInfo } from '../lib/community.js';
 import {
     validateEventData,
@@ -239,8 +240,7 @@ async function handleCreateTailgate(req, res) {
         const tailgatesColl = await getCollection('tailgates');
 
         // Rate limit: max 3 tailgates per day
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const today = getStartOfDayET();
         const recentCount = await tailgatesColl.countDocuments({
             hostId: new ObjectId(auth.userId),
             createdAt: { $gte: today }

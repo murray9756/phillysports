@@ -3,6 +3,7 @@
 // Supports contestId filtering to show only players from games in the contest
 
 import { getCollection } from '../lib/mongodb.js';
+import { getTodayET } from '../lib/timezone.js';
 
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
     };
 
     try {
-        const targetDate = date || new Date().toISOString().split('T')[0];
+        const targetDate = date || getTodayET();
         const sportUpper = sport.toUpperCase();
         debugInfo.steps.push(`Starting fetch for ${sportUpper} on ${targetDate}`);
 

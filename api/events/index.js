@@ -5,6 +5,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { formatWatchParty, formatTailgate, TEAMS } from '../lib/social.js';
+import { toDateStringET } from '../lib/timezone.js';
 
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -142,7 +143,7 @@ export default async function handler(req, res) {
         if (view === 'calendar') {
             const groupedByDate = {};
             events.forEach(event => {
-                const dateKey = new Date(event.eventDate).toISOString().split('T')[0];
+                const dateKey = toDateStringET(event.eventDate);
                 if (!groupedByDate[dateKey]) {
                     groupedByDate[dateKey] = [];
                 }

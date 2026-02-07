@@ -4,6 +4,7 @@
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
 import { fetchGamesByDate, getCurrentSeason } from '../lib/sportsdata.js';
+import { getTodayET } from '../lib/timezone.js';
 
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
@@ -126,7 +127,7 @@ export default async function handler(req, res) {
             let gameDetails = { homeTeam, awayTeam, gameTime };
             if (gameId && SPORTSDATA_API_KEY) {
                 try {
-                    const today = new Date().toISOString().split('T')[0];
+                    const today = getTodayET();
                     const games = await fetchGamesByDate(sport, today);
                     const game = games.find(g => (g.GameID || g.ScoreID)?.toString() === gameId);
 

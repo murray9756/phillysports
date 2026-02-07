@@ -47,7 +47,7 @@ async function fetchUpcomingOdds(sport, team) {
     const endDate = new Date(today);
     endDate.setDate(endDate.getDate() + 7);
 
-    const formatDate = (d) => d.toISOString().split('T')[0];
+    const formatDate = (d) => d.toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
 
     // Calculate current NFL season (season starts in Sept, so Jan-Aug = previous year)
     const currentYear = today.getFullYear();

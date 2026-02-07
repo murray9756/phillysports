@@ -7,6 +7,7 @@ import { authenticate } from '../../lib/auth.js';
 import { addCoins } from '../../lib/coins.js';
 import { fetchScoresByDate } from '../../lib/sportsdata.js';
 import { evaluateBet, calculatePayout, recalculateParlayAfterPush } from '../../lib/betting.js';
+import { toDateStringET } from '../../lib/timezone.js';
 
 // Team name mappings for better matching
 const TEAM_MAPPINGS = {
@@ -150,7 +151,7 @@ export default async function handler(req, res) {
                     debug: {
                         homeTeamNormalized: normalizeTeamForMatching(bet.homeTeam),
                         awayTeamNormalized: normalizeTeamForMatching(bet.awayTeam),
-                        commenceDate: bet.commenceTime ? new Date(bet.commenceTime).toISOString().split('T')[0] : null
+                        commenceDate: bet.commenceTime ? toDateStringET(bet.commenceTime) : null
                     }
                 });
             }
@@ -162,7 +163,7 @@ export default async function handler(req, res) {
                 }
 
                 const sport = bet.sport;
-                const date = bet.commenceTime ? new Date(bet.commenceTime).toISOString().split('T')[0] : null;
+                const date = bet.commenceTime ? toDateStringET(bet.commenceTime) : null;
 
                 if (!sport || !date) {
                     return res.status(400).json({ error: 'Missing sport or date info on bet' });

@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import { authenticate } from '../lib/auth.js';
 import { getCollection } from '../lib/mongodb.js';
 import { rateLimit } from '../lib/rateLimit.js';
+import { getStartOfDayET } from '../lib/timezone.js';
 
 const REWARD_COINS = 100;
 
@@ -67,8 +68,7 @@ export default async function handler(req, res) {
         // If logged in, check daily submission limit and award coins
         if (userId) {
             // Check how many submissions today (limit to 5 rewarded per day)
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            const today = getStartOfDayET();
 
             const todaySubmissions = await feedback.countDocuments({
                 userId: new ObjectId(userId),

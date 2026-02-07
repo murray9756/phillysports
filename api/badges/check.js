@@ -3,6 +3,7 @@ import { getCollection } from '../lib/mongodb.js';
 import { ObjectId } from 'mongodb';
 import { authenticate } from '../lib/auth.js';
 import { BADGES } from './index.js';
+import { getTodayET, getYesterdayET, toDateStringET, getStartOfDayET } from '../lib/timezone.js';
 
 // Get user's stat value for a requirement type
 function getUserStat(user, reqType, team = null) {
@@ -113,13 +114,11 @@ export default async function handler(req, res) {
 
         // Handle login streak
         if (action === 'login') {
-            const today = new Date().toISOString().split('T')[0];
-            const lastLogin = user.lastLoginDate ? new Date(user.lastLoginDate).toISOString().split('T')[0] : null;
+            const today = getTodayET();
+            const lastLogin = user.lastLoginDate ? toDateStringET(user.lastLoginDate) : null;
 
             if (lastLogin !== today) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayStr = yesterday.toISOString().split('T')[0];
+                const yesterdayStr = getYesterdayET();
 
                 if (lastLogin === yesterdayStr) {
                     // Continue streak

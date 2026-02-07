@@ -4,6 +4,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 import { transferCoins } from '../lib/coins.js';
+import { getStartOfDayET } from '../lib/timezone.js';
 
 const uri = process.env.MONGODB_URI;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -81,8 +82,7 @@ export default async function handler(req, res) {
         }
 
         // Check daily tip limit
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const today = getStartOfDayET();
 
         const dailyTipsSent = await transactionsCollection.aggregate([
             {

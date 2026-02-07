@@ -5,6 +5,7 @@
 import { authenticate } from '../lib/auth.js';
 import { getCollection } from '../lib/mongodb.js';
 import { fetchScoresByDate } from '../lib/sportsdata.js';
+import { toDateStringET } from '../lib/timezone.js';
 
 const TEAM_NAME_TO_ABBR = {
     'philadelphia flyers': 'PHI', 'flyers': 'PHI',
@@ -42,14 +43,12 @@ export default async function handler(req, res) {
         for (const bet of pendingBets) {
             const sport = bet.sport;
             const dt = new Date(bet.commenceTime);
+            const etDate = toDateStringET(dt);
             const utcDate = dt.toISOString().split('T')[0];
-            const utcHour = dt.getUTCHours();
 
-            const datesToCheck = [utcDate];
-            if (utcHour < 10) {
-                const prevDay = new Date(dt);
-                prevDay.setUTCDate(prevDay.getUTCDate() - 1);
-                datesToCheck.push(prevDay.toISOString().split('T')[0]);
+            const datesToCheck = [etDate];
+            if (utcDate !== etDate) {
+                datesToCheck.push(utcDate);
             }
 
             const homeAbbr = normalizeTeamName(bet.homeTeam);
@@ -63,8 +62,8 @@ export default async function handler(req, res) {
                 homeAbbr,
                 awayAbbr,
                 commenceTime: bet.commenceTime,
+                etDate,
                 utcDate,
-                utcHour,
                 datesToCheck,
                 apiResults: []
             };

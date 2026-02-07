@@ -1,6 +1,7 @@
 // Fantasy Contests API - List and Create Contests
 import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
+import { getTodayET } from '../../lib/timezone.js';
 
 // Roster positions by sport
 const ROSTER_POSITIONS = {
@@ -127,7 +128,7 @@ export default async function handler(req, res) {
             }
 
             // Get games for the date from SportsDataIO
-            const targetDate = date || new Date().toISOString().split('T')[0];
+            const targetDate = date || getTodayET();
             const endpoint = SPORTSDATA_ENDPOINTS[sport];
             const gamesUrl = `https://api.sportsdata.io/v3/${endpoint}/scores/json/GamesByDate/${targetDate}?key=${SPORTSDATA_API_KEY}`;
 

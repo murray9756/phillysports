@@ -5,6 +5,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb.js';
 import { authenticate } from '../lib/auth.js';
+import { getStartOfDayET } from '../lib/timezone.js';
 import { getUserInfo } from '../lib/community.js';
 import {
     validateEventData,
@@ -204,8 +205,7 @@ async function handleCreateParty(req, res) {
         const parties = await getCollection('watch_parties');
 
         // Rate limit: max 3 parties per day
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const today = getStartOfDayET();
         const recentCount = await parties.countDocuments({
             hostId: new ObjectId(auth.userId),
             createdAt: { $gte: today }

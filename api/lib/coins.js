@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { getCollection } from './mongodb.js';
 import { getCoinMultiplier } from './subscriptions.js';
+import { getStartOfDayET } from './timezone.js';
 
 // Earning limits
 export const DAILY_COMMENT_COIN_LIMIT = 50;
@@ -289,8 +290,7 @@ export async function getDailyEarnings(userId, category) {
     const transactions = await getCollection('transactions');
     const userIdObj = typeof userId === 'string' ? new ObjectId(userId) : userId;
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = getStartOfDayET();
 
     const result = await transactions.aggregate([
         {

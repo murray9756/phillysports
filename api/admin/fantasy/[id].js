@@ -5,6 +5,7 @@ import { ObjectId } from 'mongodb';
 import { getCollection } from '../../lib/mongodb.js';
 import { authenticate } from '../../lib/auth.js';
 import { addCoins } from '../../lib/coins.js';
+import { toDateStringET } from '../../lib/timezone.js';
 
 const SPORTSDATA_API_KEY = process.env.SPORTSDATA_API_KEY;
 
@@ -241,7 +242,7 @@ export default async function handler(req, res) {
             if (action === 'rescore') {
                 // Force rescore the contest
                 const scoringDate = gameDate || contest.gameDateString ||
-                    new Date(contest.gameDate || contest.locksAt).toISOString().split('T')[0];
+                    toDateStringET(contest.gameDate || contest.locksAt);
 
                 console.log(`Admin rescore: Fetching ${contest.sport} stats for ${scoringDate}`);
                 const playerStats = await fetchPlayerStats(contest.sport, scoringDate);

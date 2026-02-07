@@ -4,6 +4,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 const jwt = require('jsonwebtoken');
 
 import { addCoins, deductCoins, getDailyEarnings } from '../lib/coins.js';
+import { getStartOfDayET } from '../lib/timezone.js';
 
 const uri = process.env.MONGODB_URI;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
@@ -147,8 +148,7 @@ export default async function handler(req, res) {
                 try {
                     const decoded = jwt.verify(token, JWT_SECRET);
 
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
+                    const today = getStartOfDayET();
 
                     const todayAnswers = await db.collection('trivia_answers')
                         .find({
@@ -229,8 +229,7 @@ export default async function handler(req, res) {
 
             const answersCollection = db.collection('trivia_answers');
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            const today = getStartOfDayET();
 
             // Check if already answered this question today
             const existingAnswer = await answersCollection.findOne({
